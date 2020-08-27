@@ -40,4 +40,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function register($request)
+    {
+        $createdUser = User::create(
+                array_merge($request->only([
+                    'name',
+                    'email',
+                ]), ['password' => bcrypt($request->password)])
+            );
+
+        return $createdUser;
+    }
 }
