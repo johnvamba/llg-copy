@@ -20,11 +20,11 @@ abstract class TestCase extends BaseTestCase
     }
 
     /** 
-     * Run artisan artisan command migrate & passport installation 
+     * Run artisan artisan command 
+     * passport install
      */
     public function command()
     {
-        \Artisan::call('migrate',['-vvv' => true]);
         \Artisan::call('passport:install',['-vvv' => true]);
     }
 }

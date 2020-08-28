@@ -41,6 +41,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * Register new user
+     */
     public static function register($request)
     {
         $createdUser = User::create(
