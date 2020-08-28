@@ -16,6 +16,7 @@ class UserTest extends TestCase
 
     protected $user;
     protected $profile;
+    protected $goalType;
 
     public function setUp(): void
     {
@@ -27,6 +28,8 @@ class UserTest extends TestCase
         $this->profile = factory(UserProfile::class)->create([
                 'user_id' => $this->user->id
             ]);
+
+        $this->goalType = ['Weekly', 'Yearly'];
     }
 
     /** @test */
@@ -156,5 +159,21 @@ class UserTest extends TestCase
             ]);
 
         Storage::disk('public')->assertExists("img/{$file->hashName()}");
+    }
+
+    /** @test */
+    public function a_user_can_set_needs_goal()
+    {
+        $this->actingAs($this->user, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $response = $this->post("api/user-goal/", [
+                'user_id' => $this->user->id,
+                'type' => $this->goalType[random_int(0, 1)],
+                'need' => random_int(1, 20)
+            ]);
+        
+        $response->assertStatus(202);
     }
 }

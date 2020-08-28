@@ -21,5 +21,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', 'AuthController@register');
 
 Route::group(['middleware' => ['auth:api']], function () {
+    /** User Module */
     Route::resource('users', 'UserController');
+
+    /** Goal Module */
+    Route::resource('goals', 'GoalController');
+    Route::post('user-goal', 'GoalController@setUserGoal');
 });
