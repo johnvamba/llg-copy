@@ -16,7 +16,7 @@ class CreateGoalsTable extends Migration
         Schema::create('goals', function (Blueprint $table) {
             $table->id();
             $table->morphs('model');
-            $table->string('type');
+            $table->string('term');
             $table->integer('need');
             $table->enum('status', ['in progress', 'achieved'])->default('in progress');
             $table->timestamps();

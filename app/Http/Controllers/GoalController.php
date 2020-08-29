@@ -47,9 +47,11 @@ class GoalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(GoalStoreRequest $request, Goal $goal)
     {
         //
+        $goal->update($request->validated());
+        return response()->json($goal, 202);
     }
 
     /**
@@ -71,7 +73,7 @@ class GoalController extends Controller
     public function setUserGoal(GoalStoreRequest $request)
     {
         $goal = Goal::make([
-            'type' => $request->type,
+            'term' => $request->term,
             'need' => $request->need
         ]);
 

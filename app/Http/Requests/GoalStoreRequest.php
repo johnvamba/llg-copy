@@ -24,9 +24,9 @@ class GoalStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required',
-            'type' => 'required',
-            'need' => 'required'
+            'term' => 'required',
+            'need' => 'required',
+            'status' => 'sometimes|required'
         ];
     }
 }

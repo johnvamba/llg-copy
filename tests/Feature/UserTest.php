@@ -10,13 +10,13 @@ use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use App\User;
 use App\UserProfile;
+use App\Goal;
 
 class UserTest extends TestCase
 {
 
     protected $user;
     protected $profile;
-    protected $goalType;
 
     public function setUp(): void
     {
@@ -28,8 +28,12 @@ class UserTest extends TestCase
         $this->profile = factory(UserProfile::class)->create([
                 'user_id' => $this->user->id
             ]);
+        $this->user->assignRole('user');
 
-        $this->goalType = ['Weekly', 'Yearly'];
+        factory(Goal::class)->create([
+            'model_id' => $this->user->id,
+            'model_type' => 'App\User'
+        ]);
     }
 
     /** @test */
@@ -59,14 +63,8 @@ class UserTest extends TestCase
     /** @test */
     public function a_user_cant_register_using_email_exist()
     {
-        $user = factory(User::class)->create();
-
-        factory(UserProfile::class)->make([
-                'user_id' => $user->id 
-            ]);
-
         $response = $this->json('POST', 'api/register', [
-                'email' => $user->email,
+                'email' => $this->user->email,
                 'password' => $this->faker->password,
                 'name' => $this->faker->name,
                 'age' => 18,
@@ -159,21 +157,5 @@ class UserTest extends TestCase
             ]);
 
         Storage::disk('public')->assertExists("img/{$file->hashName()}");
-    }
-
-    /** @test */
-    public function a_user_can_set_needs_goal()
-    {
-        $this->actingAs($this->user, 'api');
-
-        $this->withoutExceptionHandling();
-
-        $response = $this->post("api/user-goal/", [
-                'user_id' => $this->user->id,
-                'type' => $this->goalType[random_int(0, 1)],
-                'need' => random_int(1, 20)
-            ]);
-        
-        $response->assertStatus(202);
     }
 }
