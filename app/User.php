@@ -41,6 +41,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function goals()
+    {
+        return $this->morphMany('App\Goal', 'model');
+    }
+
     /**
      * Register new user
      */
