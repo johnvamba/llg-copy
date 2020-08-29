@@ -80,7 +80,6 @@ class GoalController extends Controller
         $result = auth()->user()->goals()->save($goal);
 
         return response()->json([
-                'success' => true,
                 'message' => 'Sucessfully saved.',
                 'data' => $result
             ], 202);

@@ -19,6 +19,7 @@ class UserController extends Controller
     public function index()
     {
         //
+        return response()->json(User::with('profile')->paginate());
     }
 
     /**
@@ -41,6 +42,13 @@ class UserController extends Controller
     public function show(User $user)
     {
         //
+        $profile = UserProfile::where('user_id', $user->id)->first();
+        $user['profile'] = $profile;
+
+        return response()->json([
+                'success' => true,
+                'data' => $user
+            ], 200);
     }
 
     /**
@@ -83,7 +91,6 @@ class UserController extends Controller
         });
 
         return response()->json([
-                'success' => true,
                 'message' => 'Sucessfully updated',
             ], 202);
     }
@@ -94,8 +101,18 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        try {
+            $user->delete();
+            
+            return response()->json([
+                    'message' => 'User successfully deleted.'
+                ], 204);
+        } catch (\Exception $e) {
+            return response()->json([
+                    'message' => 'An error occurred. Please try again.'
+                ], 500);
+        }
     }
 }

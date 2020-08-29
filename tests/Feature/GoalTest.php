@@ -50,7 +50,6 @@ class GoalTest extends TestCase
         
         $response->assertStatus(202);
         $response->assertJsonStructure([
-                'success',
                 'message',
                 'data'
             ]);

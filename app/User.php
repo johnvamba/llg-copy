@@ -7,12 +7,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
     use Notifiable;
     use HasApiTokens;
     use HasRoles;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -44,6 +46,11 @@ class User extends Authenticatable
     public function goals()
     {
         return $this->morphMany('App\Goal', 'model');
+    }
+
+    public function profile()
+    {
+        return $this->hasOne('App\UserProfile');
     }
 
     /**

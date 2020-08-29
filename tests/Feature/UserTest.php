@@ -10,11 +10,11 @@ use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use App\User;
 use App\UserProfile;
-use App\Goal;
 
 class UserTest extends TestCase
 {
 
+    protected $admin;
     protected $user;
     protected $profile;
 
@@ -22,18 +22,20 @@ class UserTest extends TestCase
     {
         parent::setUp();
 
+        Role::create(['name' => 'admin']);
         Role::create(['name' => 'user']);
+
+        $this->admin = factory(User::class)->create();
+        factory(UserProfile::class)->make([
+                'user_id' => $this->admin->id
+            ]);
+        $this->admin->assignRole('admin');
 
         $this->user = factory(User::class)->create();
         $this->profile = factory(UserProfile::class)->create([
                 'user_id' => $this->user->id
             ]);
         $this->user->assignRole('user');
-
-        factory(Goal::class)->create([
-            'model_id' => $this->user->id,
-            'model_type' => 'App\User'
-        ]);
     }
 
     /** @test */
@@ -54,7 +56,6 @@ class UserTest extends TestCase
 
         $response->assertStatus(202);
         $response->assertJsonStructure([
-                'success',
                 'message',
                 'data'
             ]);
@@ -100,7 +101,6 @@ class UserTest extends TestCase
 
         $response->assertStatus(202);
         $response->assertJsonStructure([
-                'success',
                 'message',
                 'data'
             ]);
@@ -125,10 +125,7 @@ class UserTest extends TestCase
         $response = $this->json('PATCH', "api/users/{$this->user->id}", $params);
 
         $response->assertStatus(202);
-        $response->assertJsonStructure([
-                'success',
-                'message'
-            ]);
+        $response->assertJsonStructure(['message']);
     }
 
     /** @test */
@@ -151,11 +148,47 @@ class UserTest extends TestCase
         $response = $this->json('PATCH', "api/users/{$this->user->id}", $params);
 
         $response->assertStatus(202);
-        $response->assertJsonStructure([
-                'success',
-                'message'
-            ]);
+        $response->assertJsonStructure(['message']);
 
         Storage::disk('public')->assertExists("img/{$file->hashName()}");
+    }
+
+    /** @test */
+    public function a_admin_can_fetch_all_users()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $response = $this->get("api/users");
+        $response->assertStatus(200);
+        $response->assertJsonCount(2, 'data');
+    }
+
+    /** @test */
+    public function a_admin_can_view_a_user_profile()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $response = $this->get("api/users/{$this->user->id}");
+        $response->assertStatus(200);
+        $response->assertJsonStructure(['data']);
+    }
+
+    /** @test */
+    public function a_admin_can_delete_a_user()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $user = factory(User::class)->create();
+        $response = $this->delete("api/users/{$user->id}");
+        $response->assertStatus(204);
+        
+        $this->assertDatabaseMissing(
+                'users', 
+                $user->toArray()
+            );
     }
 }
