@@ -27,6 +27,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Needs Met resource module */
     Route::resource('needs-met', 'NeedsMetController');
 
-    /** Offered Service resource module */
+    /** Service Offered resource module */
     Route::resource('service-offer', 'ServiceOfferController');
+
+    /** Stories resource module */
+    Route::resource('stories', 'StoryController');
 });

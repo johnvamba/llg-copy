@@ -2,31 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ServiceOfferStoreRequest;
+use App\Http\Requests\StoryStoreRequest;
 use Illuminate\Http\Request;
-use App\Tag;
 use App\Content;
-use App\ServiceOffer;
+use App\Tag;
 use DB;
 
-class ServiceOfferController extends Controller
+class StoryController extends Controller
 {
     /**
-     * Display a listing of the resource with media.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $contents = Content::with('serviceOffer')
-                ->where('type', 'service')
-                ->paginate();
-        
-        foreach ($contents as $content) {
-            $content->getMedia('feature_photo');
+        $stories = Content::where('type', 'story')->paginate();
+
+        foreach ($stories as $story) {
+            $story->getMedia('photo');
         }
 
-        return response()->json($contents, 200);
+        return response()->json($stories, 200);
     }
 
     /**
@@ -35,9 +32,8 @@ class ServiceOfferController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ServiceOfferStoreRequest $request)
+    public function store(StoryStoreRequest $request)
     {
-        //
         $result = DB::transaction(function () use ($request) {
             $content = Content::createContent($request);
 
@@ -49,13 +45,10 @@ class ServiceOfferController extends Controller
             if ($request->hasFile('media')) {
                 $content
                     ->addMedia($request->file('media'))
-                    ->toMediaCollection('feature_photo', env('FILESYSTEM_DRIVER'));
+                    ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
             }
             
-            $service = ServiceOffer::createdServiceOffer($request, $content->id);
-            
-            $content['service'] = $service;
-            $content->getMedia('feature_photo');
+            $content->getMedia('photo');
 
             return $content;
         });
@@ -67,19 +60,15 @@ class ServiceOfferController extends Controller
     }
 
     /**
-     * Display the specified resource with media.
+     * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
-        $content = Content::with('serviceOffer')
-            ->where('id', $id)
-            ->first();
-
-        $content->getMedia('feature_photo');
+        $content = Content::find($id);
+        $content->getMedia('photo');
 
         return response()->json($content, 200);
     }
@@ -102,11 +91,10 @@ class ServiceOfferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Content $content)
+    public function destroy($id)
     {
-        //
         try {
-            $content->delete();
+            Content::find($id)->delete();
             
             return response()->json([
                     'message' => 'Service Offer successfully deleted.'

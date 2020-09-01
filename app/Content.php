@@ -15,6 +15,8 @@ class Content extends Model implements HasMedia
 
     protected $guarded = [];
 
+    protected $with = ['tags'];
+
     public function tags()
     {
         return $this->morphMany('App\Tag', 'model');
