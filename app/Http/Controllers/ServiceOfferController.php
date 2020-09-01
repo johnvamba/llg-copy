@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ServiceOfferStoreRequest;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Tag;
 use App\Content;
@@ -12,7 +13,7 @@ use DB;
 class ServiceOfferController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource with media.
      *
      * @return \Illuminate\Http\Response
      */
@@ -21,6 +22,10 @@ class ServiceOfferController extends Controller
         $contents = Content::with('serviceOffer')
                 ->where('type', 'service')
                 ->paginate();
+        
+        foreach ($contents as $content) {
+            $content->getMedia('feature_photo');
+        }
 
         return response()->json($contents, 200);
     }
@@ -36,14 +41,22 @@ class ServiceOfferController extends Controller
         //
         $result = DB::transaction(function () use ($request) {
             $content = Content::createContent($request);
-            $service = ServiceOffer::createdServiceOffer($request, $content->id);
 
             if ($request->tags) {
                 $tags = Tag::createTag($content, $request->tags);
                 $content['tags'] = $tags;
             }
 
+            if ($request->hasFile('media')) {
+                $content
+                    ->addMedia($request->file('media'))
+                    ->toMediaCollection('feature_photo', env('FILESYSTEM_DRIVER'));
+            }
+            
+            $service = ServiceOffer::createdServiceOffer($request, $content->id);
+            
             $content['service'] = $service;
+            $content->getMedia('feature_photo');
 
             return $content;
         });
@@ -55,7 +68,7 @@ class ServiceOfferController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource with media.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -66,6 +79,8 @@ class ServiceOfferController extends Controller
         $result = Content::with('serviceOffer')
             ->where('id', $id)
             ->first();
+
+        $result->getMedia('feature_photo');
 
         return response()->json($result, 200);
     }

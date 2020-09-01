@@ -4,10 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Content extends Model
+class Content extends Model implements HasMedia
 {
     //
+    use InteractsWithMedia;
     use SoftDeletes;
 
     protected $guarded = [];

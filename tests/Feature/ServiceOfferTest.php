@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use App\User;
 use App\UserProfile;
@@ -198,6 +200,67 @@ class ServiceOfferTest extends TestCase
                 'updated_at',
                 'deleted_at',
                 'service_offer'
+            ]);
+    }
+
+    /** @test */
+    public function a_user_can_create_service_offer_with_media()
+    {
+        Storage::fake('public');
+
+        $this->actingAs($this->user, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $file = UploadedFile::fake()->image('avatar.jpg');
+
+        $response = $this->post('api/service-offer', [
+                'serviceType' => $this->serviceType->id,
+                'title' => $this->faker->text,
+                'description' => $this->faker->text,
+                'location' => $this->faker->address,
+                'lat' => $this->faker->latitude,
+                'lng' => $this->faker->longitude,
+                'type' => 'service',
+                'status' => 'pending',
+                'media' => $file
+            ]);
+
+        $response->assertStatus(202);
+        $response->assertJsonStructure([
+                'message',
+                'data'
+            ]);
+    }
+
+    /** @test */
+    public function a_user_can_create_service_offer_with_media_and_tags()
+    {
+        Storage::fake('public');
+
+        $this->actingAs($this->user, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $file = UploadedFile::fake()->image('avatar.jpg');
+
+        $response = $this->post('api/service-offer', [
+                'serviceType' => $this->serviceType->id,
+                'title' => $this->faker->text,
+                'description' => $this->faker->text,
+                'location' => $this->faker->address,
+                'lat' => $this->faker->latitude,
+                'lng' => $this->faker->longitude,
+                'type' => 'service',
+                'status' => 'pending',
+                'tags' => $this->faker->words,
+                'media' => $file
+            ]);
+
+        $response->assertStatus(202);
+        $response->assertJsonStructure([
+                'message',
+                'data'
             ]);
     }
 
