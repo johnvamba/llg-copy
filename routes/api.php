@@ -14,17 +14,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::post('register', 'AuthController@register');
 
 Route::group(['middleware' => ['auth:api']], function () {
-    /** User Module */
+    /** User resource module */
     Route::resource('users', 'UserController');
 
-    /** Goal Module */
-    Route::resource('goals', 'GoalController');
+    /** Goal resource module */
     Route::post('user-goal', 'GoalController@setUserGoal');
+    Route::resource('goals', 'GoalController');
+
+    /** Needs Met resource module */
+    Route::resource('needs-met', 'NeedsMetController');
+
+    /** Offered Service resource module */
+    Route::resource('service-offer', 'ServiceOfferController');
 });
