@@ -22,6 +22,7 @@ class CreateUserProfilesTable extends Migration
             $table->string('lng');
             $table->text('bio')->nullable();
             $table->text('photo')->nullable();
+            $table->text('preference');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

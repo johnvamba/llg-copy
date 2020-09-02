@@ -33,7 +33,8 @@ class UserTest extends TestCase
 
         $this->user = factory(User::class)->create();
         $this->profile = factory(UserProfile::class)->create([
-                'user_id' => $this->user->id
+                'user_id' => $this->user->id,
+                'preference' => json_encode(['Health', 'Food'])
             ]);
         $this->user->assignRole('user');
     }
@@ -52,6 +53,11 @@ class UserTest extends TestCase
                 'lat' => $this->faker->latitude,
                 'lng' => $this->faker->longitude,
                 'bio' => $this->faker->text,
+                'preference' => json_encode([
+                    'Housing',
+                    'Food',
+                    'Health'
+                ])
             ]);
 
         $response->assertStatus(202);

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\NeedsMetCategory;
 
 class UserProfile extends Model
 {
@@ -16,6 +17,9 @@ class UserProfile extends Model
      */
     public static function createProfile($request, $id)
     {
+        $preference = $request->preference ?: 
+                NeedsMetCategory::all()->pluck('name');
+
         $profile = UserProfile::create(
                 array_merge(
                     $request->only(
@@ -25,7 +29,10 @@ class UserProfile extends Model
                         'lat',
                         'lng',
                         'photo'
-                    ), ['user_id' => $id]
+                    ), [
+                        'user_id' => $id,
+                        'preference' => $preference
+                    ]
                 )
             );
 

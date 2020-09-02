@@ -32,7 +32,8 @@ class RegisterStoreRequest extends FormRequest
             'lat' => 'required',
             'lng' => 'required',
             'bio' => 'required',
-            'photo' => 'sometimes|required|image'
+            'preference' => 'sometimes|required',
+            'photo' => 'sometimes|required|image',
         ];
     }
 }
