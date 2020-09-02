@@ -6,7 +6,7 @@ use App\Goal;
 use Faker\Generator as Faker;
 
 $factory->define(Goal::class, function (Faker $faker) {
-    $term = ['Weekly', 'Yearly'];
+    $term = ['month', 'year'];
 
     return [
         'term' => $term[random_int(0,1)],

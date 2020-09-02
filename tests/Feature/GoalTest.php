@@ -33,7 +33,7 @@ class GoalTest extends TestCase
                 'model_type' => 'App\User'
             ]);
 
-        $this->goalTerm = ['Weekly', 'Yearly'];
+        $this->goalTerm = ['month', 'year'];
     }
 
     /** @test */
