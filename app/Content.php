@@ -32,6 +32,16 @@ class Content extends Model implements HasMedia
         return $this->hasOne('App\ServiceOffer');
     }
 
+    public function appreciates()
+    {
+        return $this->hasMany('App\AppreciateStory');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany('App\CommentStory');
+    }
+
     /**
      * Create a Content [needs, service or story]
      * @return object

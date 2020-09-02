@@ -127,6 +127,41 @@ class NeedsMetTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_update_needs_met()
+    {
+        $this->actingAs($this->user, 'api');
+
+        $this->withoutExceptionHandling();
+        $this->needs->save();
+
+        $response = $this->patch("api/needs-met/{$this->content->id}", [
+                'needs_met_category_id' => $this->category->id,
+                'needs_met_type_id' => $this->needsType->id,
+                'title' => 'new title',
+                'description' => $this->content->description,
+                'goal' => $this->needs->goal,
+                'raised' => 100.00,
+                'location' => $this->needs->location,
+                'lat' => $this->needs->lat,
+                'lng' => $this->needs->lng,
+                'type' => $this->content->type,
+                'status' => $this->content->status
+            ]);
+
+        $response->assertStatus(202);
+        $response->assertJsonStructure([
+                'id',
+                'title',
+                'description',
+                'type',
+                'status',
+                'created_at',
+                'updated_at',
+                'needs_met'
+            ]);
+    }
+
+    /** @test */
     public function a_user_can_delete_needs_met()
     {
         $this->actingAs($this->user, 'api');

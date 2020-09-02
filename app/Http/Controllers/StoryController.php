@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentStoryStoreRequest;
 use App\Http\Requests\StoryStoreRequest;
+use App\Http\Requests\StoryUpdateRequest;
 use Illuminate\Http\Request;
 use App\Content;
 use App\Tag;
+use App\AppreciateStory;
+use App\CommentStory;
 use DB;
 
 class StoryController extends Controller
@@ -17,7 +21,9 @@ class StoryController extends Controller
      */
     public function index()
     {
-        $stories = Content::where('type', 'story')->paginate();
+        $stories = Content::with(['appreciates', 'comments'])
+            ->where('type', 'story')
+            ->paginate();
 
         foreach ($stories as $story) {
             $story->getMedia('photo');
@@ -60,6 +66,44 @@ class StoryController extends Controller
     }
 
     /**
+     * Appreciation of story
+     *
+     * @param content
+     * @return \Illuminate\Http\Response
+     */
+    public function appreciate(Content $content)
+    {
+        $result = AppreciateStory::create([
+                'content_id' => $content->id,
+                'user_id' => auth()->user()->id
+            ]);
+
+        return response()->json([
+                'message' => 'Success'
+            ], 202);
+    }
+
+    /**
+     * Comment to story
+     *
+     * @param content
+     * @return \Illuminate\Http\Response
+     */
+    public function comment(CommentStoryStoreRequest $request,Content $content)
+    {
+        $result = CommentStory::create([
+                'content_id' => $content->id,
+                'user_id' => auth()->user()->id,
+                'comment' => $request->comment
+            ]);
+
+        return response()->json([
+                'message' => 'Success',
+                'data' => $result
+            ], 202);
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -67,7 +111,10 @@ class StoryController extends Controller
      */
     public function show($id)
     {
-        $content = Content::find($id);
+        $content = Content::with(['appreciates', 'comments'])
+            ->where('id', $id)
+            ->first();
+            
         $content->getMedia('photo');
 
         return response()->json($content, 200);
@@ -80,9 +127,12 @@ class StoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoryUpdateRequest $request, $id)
     {
-        //
+        $content = Content::findOrFail($id);
+        $content->update($request->validated());
+
+        return response()->json($content, 202);
     }
 
     /**

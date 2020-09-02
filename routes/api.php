@@ -31,5 +31,23 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('service-offer', 'ServiceOfferController');
 
     /** Stories resource module */
+    Route::post('stories/appreciate/{content}', 'StoryController@appreciate');
+    Route::post('stories/comment/{content}', 'StoryController@comment');
     Route::resource('stories', 'StoryController');
+
+    /** Group resource module */
+    Route::post('groups/participant/{group}', 'GroupController@addParticipant');
+    Route::post('groups/join-request/{group}', 'GroupController@joinRequest');
+    Route::get('groups/join-request/{group}', 'GroupController@getJoinRequest');
+    Route::get('groups/messages/{group}', 'GroupController@message');
+    Route::post('groups/message/send', 'GroupController@addMessage');
+    Route::resource('groups', 'GroupController');
+
+    /** Orgnization resource module */
+    Route::post('organizations/{organization}/needs-met', 'OrganizationController@createNeedsMet');
+    Route::post('organizations/{organization}/contents', 'OrganizationController@contents');
+    Route::resource('organizations', 'OrganizationController');
+
+    /** Community resource module */
+    Route::resource('communities', 'CommunityController');
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ServiceOfferStoreRequest;
+use App\Http\Requests\ServiceOfferUpdateRequest;
 use Illuminate\Http\Request;
 use App\Tag;
 use App\Content;
@@ -50,12 +51,12 @@ class ServiceOfferController extends Controller
                 $content
                     ->addMedia($request->file('media'))
                     ->toMediaCollection('feature_photo', env('FILESYSTEM_DRIVER'));
+                $content->getMedia('feature_photo');
             }
             
             $service = ServiceOffer::createdServiceOffer($request, $content->id);
             
             $content['service'] = $service;
-            $content->getMedia('feature_photo');
 
             return $content;
         });
@@ -91,9 +92,29 @@ class ServiceOfferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ServiceOfferUpdateRequest $request, $id)
     {
-        //
+        $content = Content::findOrFail($id);
+        $content->update(
+                request()->only([
+                    'title',
+                    'description',
+                    'type',
+                    'status'
+                ])
+            );
+
+        $serviceOffer = ServiceOffer::where('content_id', $content->id)->first();
+        $serviceOffer->update(request()->only([
+                'service_type_id',
+                'location',
+                'lat',
+                'lng',
+            ]));
+
+        $content['service'] = $serviceOffer;
+
+        return response()->json($content, 202);
     }
 
     /**

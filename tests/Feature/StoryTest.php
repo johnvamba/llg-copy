@@ -35,10 +35,10 @@ class StoryTest extends TestCase
         factory(UserProfile::class)->make([
             'user_id' => $this->user->id
         ]);
-        $this->org->assignRole('user');
+        $this->user->assignRole('user');
 
         $this->content = factory(Content::class)->create([
-            'user_id' => $this->user->id,
+            'user_id' => $this->org->id,
             'type' => 'story'
         ]);
     }
@@ -136,6 +136,29 @@ class StoryTest extends TestCase
     }
 
     /** @test */
+    public function a_org_admin_can_update_story()
+    {
+        $this->actingAs($this->org, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $response = $this->patch("api/stories/{$this->content->id}", [
+                'title' => 'new title',
+            ]);
+        
+        $response->assertStatus(202);
+        $response->assertJsonStructure([
+                'id',
+                'title',
+                'description',
+                'type',
+                'status',
+                'created_at',
+                'updated_at'
+            ]);
+    }
+
+    /** @test */
     public function a_org_admin_can_delete_story()
     {
         $this->actingAs($this->org, 'api');
@@ -174,5 +197,38 @@ class StoryTest extends TestCase
         $response = $this->get("api/stories/{$this->content->id}");
 
         $response->assertStatus(200);
+    }
+
+    /** @test */
+    public function a_user_can_appreciate_stories()
+    {
+        $this->actingAs($this->user, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $response = $this->post("api/stories/appreciate/{$this->content->id}");
+
+        $response->assertStatus(202);
+        $response->assertJsonStructure([
+                'message'
+            ]);
+    }
+
+    /** @test */
+    public function a_user_can_comment_stories()
+    {
+        $this->actingAs($this->user, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $response = $this->post("api/stories/comment/{$this->content->id}",[
+                'comment' => "nice story"
+            ]);
+
+        $response->assertStatus(202);
+        $response->assertJsonStructure([
+                'message',
+                'data'
+            ]);
     }
 }

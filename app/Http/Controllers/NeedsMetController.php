@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\NeedsMetStoreRequest;
+use App\Http\Requests\NeedsMetUpdateRequest;
 use App\Content;
 use App\NeedsMet;
 use App\Tag;
@@ -75,9 +76,33 @@ class NeedsMetController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(NeedsMetUpdateRequest $request, $id)
     {
         //
+        $content = Content::findOrFail($id);
+        $content->update(
+                request()->only([
+                    'title',
+                    'description',
+                    'type',
+                    'status'
+                ])
+            );
+
+        $needsMet = NeedsMet::where('content_id', $content->id)->first();
+        $needsMet->update(request()->only([
+                'needs_met_category_id',
+                'needs_met_type_id',
+                'location',
+                'lat',
+                'lng',
+                'raised',
+                'goal',
+            ]));
+
+        $content['needs_met'] = $needsMet;
+
+        return response()->json($content, 202);
     }
 
     /**

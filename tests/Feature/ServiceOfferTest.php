@@ -142,6 +142,38 @@ class ServiceOfferTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_update_service_offer()
+    {
+        $this->actingAs($this->user, 'api');
+
+        $this->withoutExceptionHandling();
+        $this->service->save();
+
+        $response = $this->patch("api/service-offer/{$this->content->id}", [
+                'service_type_id' => $this->service->service_type_id,
+                'title' => $this->faker->text,
+                'description' => $this->faker->text,
+                'location' => $this->service->location,
+                'lat' => $this->service->lat,
+                'lng' => $this->service->lng,
+                'type' => $this->content->type,
+                'status' => $this->content->status
+            ]);
+
+        $response->assertStatus(202);
+        $response->assertJsonStructure([
+                'id',
+                'title',
+                'description',
+                'type',
+                'status',
+                'created_at',
+                'deleted_at',
+                'service'
+            ]);
+    }
+
+    /** @test */
     public function a_user_can_delete_service_offer()
     {
         $this->actingAs($this->user, 'api');
