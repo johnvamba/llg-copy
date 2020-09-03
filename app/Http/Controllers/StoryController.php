@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FeaturedStoryStoreRequest;
 use App\Http\Requests\CommentStoryStoreRequest;
 use App\Http\Requests\StoryStoreRequest;
 use App\Http\Requests\StoryUpdateRequest;
@@ -10,6 +11,8 @@ use App\Content;
 use App\Tag;
 use App\AppreciateStory;
 use App\CommentStory;
+use App\FeaturedStory;
+use Carbon\Carbon;
 use DB;
 
 class StoryController extends Controller
@@ -23,11 +26,30 @@ class StoryController extends Controller
     {
         $stories = Content::with(['appreciates', 'comments'])
             ->where('type', 'story')
+            ->orderBy('created_at', 'desc')
             ->paginate();
 
         foreach ($stories as $story) {
             $story->getMedia('photo');
         }
+
+        return response()->json($stories, 200);
+    }
+
+    /**
+     * Display featured stories
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function featuredStory(Request $request)
+    {
+        $stories = FeaturedStory::with('contents')
+            ->where([
+                ['start_date', '>=', Carbon::now()->toDateString()],
+                ['end_date', '<=', Carbon::now()->toDateString()]
+            ])
+            ->inRandomOrder()
+            ->first();
 
         return response()->json($stories, 200);
     }
@@ -63,6 +85,27 @@ class StoryController extends Controller
                 'message' => 'Successfully created.',
                 'data' => $result
             ], 202);
+    }
+
+    /**
+     * Featured a story
+     * 
+     * @param request
+     * @return \Illuminate\Http\Response
+    */
+    public function addFeaturedStory(FeaturedStoryStoreRequest $request, Content $content)
+    {
+        $featuredStory = FeaturedStory::create(
+                array_merge(
+                    request()->only([
+                        'start_date',
+                        'end_date'
+                    ]),
+                    ["content_id" => $content->id]
+                )
+            );
+        
+        return response()->json($featuredStory, 202);
     }
 
     /**

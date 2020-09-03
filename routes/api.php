@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
 
 Route::group(['middleware' => ['auth:api']], function () {
@@ -25,6 +26,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('goals', 'GoalController');
 
     /** Needs Met resource module */
+    Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsMetController@nearby');
     Route::resource('needs-met', 'NeedsMetController');
 
     /** Service Offered resource module */
@@ -33,6 +35,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Stories resource module */
     Route::post('stories/appreciate/{content}', 'StoryController@appreciate');
     Route::post('stories/comment/{content}', 'StoryController@comment');
+    Route::post('stories/featured/{content}', 'StoryController@addFeaturedStory');
+    Route::get('stories/featured', 'StoryController@featuredStory');
     Route::resource('stories', 'StoryController');
 
     /** Group resource module */

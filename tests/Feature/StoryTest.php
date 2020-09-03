@@ -11,11 +11,13 @@ use Tests\TestCase;
 use App\User;
 use App\UserProfile;
 use App\Content;
+use App\FeaturedStory;
 
 class StoryTest extends TestCase
 {
     protected $org;
     protected $user;
+    protected $admin;
     protected $content;
 
     public function setUp(): void
@@ -23,7 +25,14 @@ class StoryTest extends TestCase
         parent::setUp();
 
         Role::create(['name' => 'user']);
+        Role::create(['name' => 'admin']);
         Role::create(['name' => 'organisation admin']);
+
+        $this->admin = factory(User::class)->create();
+        factory(UserProfile::class)->make([
+            'user_id' => $this->admin->id
+        ]);
+        $this->admin->assignRole('admin');
 
         $this->org = factory(User::class)->create();
         factory(UserProfile::class)->make([
@@ -230,5 +239,64 @@ class StoryTest extends TestCase
                 'message',
                 'data'
             ]);
+    }
+
+    /** @test */
+    public function a_admin_can_set_featured_stories()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $response = $this->post("api/stories/featured/{$this->content->id}",[
+                'start_date' => '2020-09-05',
+                'end_date' => '2020-09-10'
+            ]);
+
+        $response->assertStatus(202);
+        $response->assertJsonStructure([
+                'id',
+                'content_id',
+                'start_date',
+                'end_date',
+                'created_at',
+                'updated_at',
+            ]);
+    }
+
+    /** @test */
+    public function a_admin_cant_set_featured_stories_when_invalid_date()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $response = $this->json("POST", "api/stories/featured/{$this->content->id}",[
+                'start_date' => '2020-09-11',
+                'end_date' => '2020-09-10'
+            ]);
+
+        $response->assertStatus(422);
+    }
+
+    /** @test */
+    public function a_user_can_fetch_featured_stories()
+    {
+        $this->actingAs($this->user, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $contents = factory(Content::class, 3)->create([
+            'user_id' => $this->org->id,
+            'type' => 'story'
+        ]);
+
+        foreach ($contents as $content) {
+            factory(FeaturedStory::class)->create([
+                'content_id' => $content->id
+            ]);
+        }
+
+        $response = $this->get("api/stories/featured");
+
+        $response->assertStatus(200);
     }
 }

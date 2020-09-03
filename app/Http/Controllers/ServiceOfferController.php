@@ -21,6 +21,7 @@ class ServiceOfferController extends Controller
     {
         $contents = Content::with('serviceOffer')
                 ->where('type', 'service')
+                ->orderBy('created_at', 'desc')
                 ->paginate();
         
         foreach ($contents as $content) {

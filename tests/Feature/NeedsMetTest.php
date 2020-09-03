@@ -194,6 +194,7 @@ class NeedsMetTest extends TestCase
     public function a_user_can_view_needs_met()
     {
         $this->actingAs($this->user, 'api');
+
         $this->withoutExceptionHandling();
 
         $content = factory(Content::class)->create([
@@ -221,6 +222,33 @@ class NeedsMetTest extends TestCase
                 'deleted_at',
                 'needs_met'
             ]);
+    }
+
+    public function a_user_can_fetch_nearby_needs()
+    {
+        $this->actingAs($this->user, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $contents = factory(Content::class, 4)->create([
+            'user_id' => $this->user->id,
+            'type' => 'needs',
+        ]);
+
+        foreach($contents as $content) {
+            factory(NeedsMet::class)->create([
+                'content_id' => $content->id,
+                'needs_met_category_id' => $this->category->id,
+                'needs_met_type_id' => $this->needsType->id
+            ]);
+        }
+
+        $response = $this->json(
+                "POST",
+                "api/needs-met/nearby/{$this->faker->latitude}/{$this->faker->longitude}"
+            );
+
+        $response->assertStatus(200);
     }
 
 }

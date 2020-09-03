@@ -5,15 +5,40 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\RegisterStoreRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\UserProfile;
 use DB;
 
 class AuthController extends Controller
 {
+    /**
+     * User's login
+     * 
+     */
+    public function login(Request $request)
+    {
+        if (Auth::attempt([
+            'email' => $request->email, 
+            'password' => $request->password
+        ])) {
+            $user = User::where('email', $request->email)->first();
+
+            return response()->json([
+                'message' => 'Successfully authenticated.',
+                'token' => $user->createToken('api')->accessToken
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Invalid email or password'
+        ], 400);
+    }
+
 
     /**  
      * Register a user
+     * 
      * @return json
     */
     public function register(RegisterStoreRequest $request)

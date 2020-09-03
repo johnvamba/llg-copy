@@ -20,10 +20,49 @@ class NeedsMetController extends Controller
     public function index()
     {
         $contents = Content::with('needsMet')
-                ->where('type', 'needs')
-                ->paginate();
+            ->where('type', 'needs')
+            ->orderBy('created_at', 'desc')
+            ->paginate();
 
         return response()->json($contents, 200);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function nearby(Request $request, $lat, $lng)
+    {   
+        $tags = [];
+
+        if ($request->tags) {
+            $tags = Tag::where('model_type', 'App\Content')
+                ->whereIn('name', json_decode($request->tags))
+                ->groupBy('model_id')
+                ->pluck('model_id');
+        }
+
+        $needs = NeedsMet::select('needs_mets.*')
+            ->with(['content', 'category', 'type'])
+            ->selectRaw('( 6367 * acos( cos( radians(?) ) 
+                * cos( radians( lat ) ) * cos( radians( lng ) 
+                - radians(?) ) + sin( radians(?) ) 
+                * sin( radians( lat ) ) ) ) AS distance', 
+                [$lat, $lng, $lat]);
+
+        if ($request->type)
+            $needs->where('needs_met_type_id', $request->type);
+
+        if ($request->amount)
+            $needs->where('raised', '<=', $request->amount);
+
+        if ($tags)
+            $needs->whereIn('needs_mets.content_id', $tags);
+
+        $results = $needs->orderBy('distance')->paginate();
+            
+        return response()->json($results, 200);
     }
 
     /**
