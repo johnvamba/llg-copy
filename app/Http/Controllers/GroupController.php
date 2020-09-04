@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GroupUpdateRequest;
 use App\Http\Requests\GroupStoreRequest;
-use App\Http\Requests\CommunityUpdateRequest;
-use App\Http\Requests\GroupMessageStoreRequest;
-use App\Http\Controllers\CommunityController;
 use Illuminate\Http\Request;
-use App\Group;
-use App\Community;
 use App\GroupParticipant;
-use App\GroupChat;
+use App\Group;
 use App\Goal;
+use App\Tag;
+use App\GroupChat;
 use DB;
 
 class GroupController extends Controller
@@ -23,41 +21,41 @@ class GroupController extends Controller
      */
     public function index()
     {
-        //
-        $groups = Community::with('group', 'group.participants')
-            ->where('type', 'group')
+        $groups = Group::with('user')
+            ->orderBy('created_at', 'desc')
             ->paginate();
 
         foreach ($groups as $group) {
-            $group->getMedia('photo');
+            $group->getMedia();
         }
 
-        return response()->json($groups, 200);
+        return response()->json($groups);
     }
 
     /**
-     * Get join request in a group
+     * Display join request of a group.
      *
      * @return \Illuminate\Http\Response
      */
-    public function getJoinRequest(Group $group)
+    public function getJoinRequest(Request $request, Group $group)
     {
         $participants = GroupParticipant::with('user')
-            ->where('group_id', $group->id)
+            ->where('status', 'pending')
             ->get();
 
         return response()->json($participants, 200);
     }
 
     /**
-     * Get messages in group
+     * Display the messages of a group.
      *
      * @return \Illuminate\Http\Response
      */
-    public function message(Group $group)
+    public function messages(Request $request, Group $group)
     {
         $chats = GroupChat::with('user')
             ->where('group_id', $group->id)
+            ->orderBy('created_at', 'desc')
             ->get();
 
         return response()->json($chats, 200);
@@ -69,104 +67,95 @@ class GroupController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(GroupStoreRequest $request, CommunityController $communityCtrl)
+    public function store(GroupStoreRequest $request)
     {
-        $result = DB::transaction(function () use ($request, $communityCtrl) {
-                $community = $communityCtrl->store($request, 'group');
+        $result = DB::transaction(function () use ($request) {
+            $group = Group::create(
+                    array_merge(
+                        request()->only([
+                            'name',
+                            'description',
+                            'privacy',
+                            'location',
+                            'lat',
+                            'lng'
+                        ]), ["user_id" => auth()->user()->id]
+                    )
+                );
 
-                $goal = Goal::make([
-                    'term' => $request->term,
-                    'need' => $request->need,
-                ]);
-                $community->goals()->save($goal);
+            $goal = Goal::make(request()->only([
+                    'need',
+                    'term'
+                ]));
 
-                if ($request->hasFile('media')) {
-                    $community
-                        ->addMedia($request->file('media'))
-                        ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
-                    $community->getMedia('photo');
-                }
+            $createdGoal = $group->goals()->save($goal);
 
-                $group = Group::create([
-                        'community_id' => $community->id,
-                        'user_id' => auth()->user()->id
-                    ]);
+            if ($request->tags) {
+                $tags = Tag::createTag($group, $request->tags);
+                $group['tags'] = $tags;
+            }
 
-                $community['group'] = $group;
+            if ($request->hasFile('media')) {
+                $group
+                    ->addMedia($request->file('media'))
+                    ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
 
-                return $community;
-            });
+                $group->getMedia('photo');
+            }
 
-        return response()->json([
-                'message' => 'Successfully created',
-                'data' => $result
-            ], 202);
+            $group['goal'] = $createdGoal;
+
+            return $group;
+        });
+
+        return response()->json($result, 202);
     }
 
     /**
-     * Add Participant in a group
+     * User participating in group
      *
-     * @param Group group
+     * @param  json
      * @return \Illuminate\Http\Response
      */
-    public function addParticipant(Group $group)
+    public function addParticipant(Request $request, Group $group)
     {
-        $result = GroupParticipant::create([
+        $participant = GroupParticipant::create([
                 'group_id' => $group->id,
                 'user_id' => auth()->user()->id
             ]);
 
-        return response()->json([
-                'message' => 'Request successfully send',
-                'data' => $result
-            ], 202);
+        return response()->json($participant, 202);
     }
-
+    
     /**
-     * Join request approval
+     * Add a new message in group
      *
-     * @param  request, group
+     * @param  json
      * @return \Illuminate\Http\Response
      */
-    public function joinRequest(Request $request, Group $group)
+    public function addMessage(Request $request, Group $group)
     {
-        try {
-            GroupParticipant::where([
-                ['group_id', '=', $group->id],
-                ['user_id', '=', $request->participant]
-            ])->update(['status' => $request->status]);
+        $chat = GroupChat::create([
+                'group_id' => $group->id,
+                'sender' => auth()->user()->id,
+                'message' => $request->message
+            ]);
 
-            return response()->json([
-                    'message' => 'User successfully '.$request->status
-                ], 202);
-        } catch(\Exception $e) {
-            return response()->json([
-                'message' => 'An error occurred. Please try again.'
-            ], 500);
-        }
+        return response()->json($chat, 202);
     }
-
+    
     /**
-     * Add message in group
+     * Join Request action [approve, deny]
      *
-     * @param  request, group
+     * @param json
      * @return \Illuminate\Http\Response
      */
-    public function addMessage(GroupMessageStoreRequest $request)
+    public function joinRequest(Request $request, $id)
     {
-        try {
-            $message = GroupChat::create([
-                    'group_id' => $request->group_id,
-                    'sender' => auth()->user()->id,
-                    'message' => $request->message,
-                ]);
+        $participant = GroupParticipant::find($id);
+        $participant->update(request()->only(['status']));
 
-            return response()->json($message, 202);
-        } catch(\Exception $e) {
-            return response()->json([
-                'message' => 'An error occurred. Please try again.'
-            ], 500);
-        }
+        return response()->json($participant, 202);
     }
 
     /**
@@ -177,13 +166,11 @@ class GroupController extends Controller
      */
     public function show($id)
     {
-        $group = Community::with('group', 'group.participants')
-            ->where('id', $id)
-            ->first();
-
+        $group = Group::with('user', 'participants', 'participants.user')
+            ->where('id', $id)->first();
         $group->getMedia('photo');
 
-        return response()->json($group, 200);
+        return response()->json($group);
     }
 
     /**
@@ -193,13 +180,11 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CommunityUpdateRequest $request, $id)
+    public function update(GroupUpdateRequest $request, Group $group)
     {
-        //
-        $community = Community::findOrFail($id);
-        $community->update($request->validated());
+        $group->update($request->validated());
 
-        return response()->json($community, 202);
+        return response()->json($group, 202);
     }
 
     /**
@@ -210,12 +195,8 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        //
         try {
-            $community = Community::find($group->community_id);
-
             $group->delete();
-            $community->delete();
             
             return response()->json([
                     'message' => 'Group successfully deleted.'

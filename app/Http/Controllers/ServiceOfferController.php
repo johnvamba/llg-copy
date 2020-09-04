@@ -5,30 +5,47 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ServiceOfferStoreRequest;
 use App\Http\Requests\ServiceOfferUpdateRequest;
 use Illuminate\Http\Request;
-use App\Tag;
-use App\Content;
 use App\ServiceOffer;
+use App\Tag;
 use DB;
 
 class ServiceOfferController extends Controller
 {
     /**
-     * Display a listing of the resource with media.
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $contents = Content::with('serviceOffer')
-                ->where('type', 'service')
-                ->orderBy('created_at', 'desc')
-                ->paginate();
-        
-        foreach ($contents as $content) {
-            $content->getMedia('feature_photo');
+        $serviceOffers = ServiceOffer::with('user','serviceType', 'organization')
+            ->where('status', 'approved')
+            ->orderBy('created_at', 'desc')
+            ->paginate();
+
+        foreach ($serviceOffers as $serviceOffer) {
+            $serviceOffer->getMedia('photo');
         }
 
-        return response()->json($contents, 200);
+        return response()->json($serviceOffers);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getServicesRequest()
+    {
+        $serviceOffers = ServiceOffer::with('user','serviceType', 'organization')
+            ->where('status', 'pending')
+            ->paginate();
+
+        foreach ($serviceOffers as $serviceOffer) {
+            $serviceOffer->getMedia('photo');
+        }
+
+        return response()->json($serviceOffers);
     }
 
     /**
@@ -39,51 +56,68 @@ class ServiceOfferController extends Controller
      */
     public function store(ServiceOfferStoreRequest $request)
     {
-        //
         $result = DB::transaction(function () use ($request) {
-            $content = Content::createContent($request);
+                $serviceOffer = ServiceOffer::create(
+                        array_merge(
+                            request()->only([
+                                'service_type_id',
+                                'organization_id',
+                                'name',
+                                'title',
+                                'description',
+                                'location',
+                                'lat',
+                                'lng'
+                            ]), ['user_id' => auth()->user()->id]
+                        )
+                    );
 
-            if ($request->tags) {
-                $tags = Tag::createTag($content, $request->tags);
-                $content['tags'] = $tags;
-            }
+                if ($request->tags) {
+                    $tags = Tag::createTag($serviceOffer, $request->tags);
+                    $serviceOffer['tags'] = $tags;
+                }
+        
+                if ($request->hasFile('media')) {
+                    $serviceOffer
+                        ->addMedia($request->file('media'))
+                        ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
+        
+                    $serviceOffer->getMedia('photo');
+                }
 
-            if ($request->hasFile('media')) {
-                $content
-                    ->addMedia($request->file('media'))
-                    ->toMediaCollection('feature_photo', env('FILESYSTEM_DRIVER'));
-                $content->getMedia('feature_photo');
-            }
-            
-            $service = ServiceOffer::createdServiceOffer($request, $content->id);
-            
-            $content['service'] = $service;
+                return $serviceOffer;
+            });
 
-            return $content;
-        });
-
-        return response()->json([
-                'message' => 'Successfully created.',
-                'data' => $result
-            ], 202);
+        return response()->json($result, 202);
     }
 
     /**
-     * Display the specified resource with media.
+     * Service offer request action [approve, deny]
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function requestAction(Request $request, ServiceOffer $serviceOffer)
+    {
+        $serviceOffer->update(request()->only('status'));
+
+        return response()->json($serviceOffer, 202);
+    }
+
+    /**
+     * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
-        $content = Content::with('serviceOffer')
+        $serviceOffer = ServiceOffer::with('user', 'serviceType', 'organization')
             ->where('id', $id)
             ->first();
+        $serviceOffer->getMedia('photo');
 
-        $content->getMedia('feature_photo');
-
-        return response()->json($content, 200);
+        return response()->json($serviceOffer);
     }
 
     /**
@@ -93,29 +127,11 @@ class ServiceOfferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ServiceOfferUpdateRequest $request, $id)
+    public function update(ServiceOfferUpdateRequest $request, ServiceOffer $serviceOffer)
     {
-        $content = Content::findOrFail($id);
-        $content->update(
-                request()->only([
-                    'title',
-                    'description',
-                    'type',
-                    'status'
-                ])
-            );
+        $serviceOffer->update($request->validated());
 
-        $serviceOffer = ServiceOffer::where('content_id', $content->id)->first();
-        $serviceOffer->update(request()->only([
-                'service_type_id',
-                'location',
-                'lat',
-                'lng',
-            ]));
-
-        $content['service'] = $serviceOffer;
-
-        return response()->json($content, 202);
+        return response()->json($serviceOffer, 202);
     }
 
     /**
@@ -124,11 +140,10 @@ class ServiceOfferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Content $content)
+    public function destroy(ServiceOffer $serviceOffer)
     {
-        //
         try {
-            $content->delete();
+            $serviceOffer->delete();
             
             return response()->json([
                     'message' => 'Service Offer successfully deleted.'

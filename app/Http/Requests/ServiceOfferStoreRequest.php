@@ -24,15 +24,15 @@ class ServiceOfferStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'serviceType' => 'required',
+            'service_type_id' => 'required',
+            'organization_id' => 'required',
             'name' => 'sometimes|required',
             'title' => 'required',
             'description' => 'required',
             'location' => 'required',
             'lat' => 'required',
             'lng' => 'required',
-            'tags' => 'sometimes|required',
-            'status' => 'required'
+            'tags' => 'sometimes|required'
         ];
     }
 }

@@ -24,14 +24,14 @@ class ServiceOfferUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'service_type_id' => 'required',
-            'title' => 'required',
-            'description' => 'required',
-            'type' => 'required',
-            'status' => 'required',
-            'location' => 'required',
-            'lat' => 'required',
-            'lng' => 'required',
+            'service_type_id' => 'sometimes|required',
+            'organization_id' => 'sometimes|required',
+            'title' => 'sometimes|required',
+            'name' => 'sometimes|required',
+            'description' => 'sometimes|required',
+            'location' => 'sometimes|required',
+            'lat' => 'sometimes|required',
+            'lng' => 'sometimes|required'
         ];
     }
 }

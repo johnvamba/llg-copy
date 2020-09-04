@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\FeaturedStoryStoreRequest;
-use App\Http\Requests\CommentStoryStoreRequest;
 use App\Http\Requests\StoryStoreRequest;
 use App\Http\Requests\StoryUpdateRequest;
 use Illuminate\Http\Request;
-use App\Content;
-use App\Tag;
-use App\AppreciateStory;
-use App\CommentStory;
-use App\FeaturedStory;
 use Carbon\Carbon;
+use App\Story;
+use App\Tag;
+use App\StoryAppreciate;
+use App\CommentStory;
 use DB;
 
 class StoryController extends Controller
@@ -24,8 +21,12 @@ class StoryController extends Controller
      */
     public function index()
     {
-        $stories = Content::with(['appreciates', 'comments'])
-            ->where('type', 'story')
+        $stories = Story::with(
+                'user', 
+                'organization', 
+                'appreciates',
+                'appreciates.user',
+            )
             ->orderBy('created_at', 'desc')
             ->paginate();
 
@@ -33,25 +34,34 @@ class StoryController extends Controller
             $story->getMedia('photo');
         }
 
-        return response()->json($stories, 200);
+        return response()->json($stories);
     }
 
     /**
-     * Display featured stories
+     * Display featured story
      *
      * @return \Illuminate\Http\Response
      */
-    public function featuredStory(Request $request)
+    public function featuredStory()
     {
-        $stories = FeaturedStory::with('contents')
+        $date = Carbon::now()->toDateString();
+
+        $story = Story::with(
+                'user', 
+                'organization', 
+                'appreciates',
+                'appreciates.user',
+            )
             ->where([
-                ['start_date', '>=', Carbon::now()->toDateString()],
-                ['end_date', '<=', Carbon::now()->toDateString()]
+                ['featured_start_date', '>=', $date],
+                ['featured_end_date', '>=', $date]
             ])
             ->inRandomOrder()
             ->first();
 
-        return response()->json($stories, 200);
+        $story->getMedia('photo');
+
+        return response()->json($story);
     }
 
     /**
@@ -63,87 +73,69 @@ class StoryController extends Controller
     public function store(StoryStoreRequest $request)
     {
         $result = DB::transaction(function () use ($request) {
-            $content = Content::createContent($request);
+                $story = Story::create(
+                        array_merge(
+                            request()->only([
+                                'organization_id',
+                                'title',
+                                'description',
+                                'featured_start_date',
+                                'featured_end_date'
+                            ]),
+                            ["user_id" => auth()->user()->id]
+                        )
+                    );
 
-            if ($request->tags) {
-                $tags = Tag::createTag($content, $request->tags);
-                $content['tags'] = $tags;
-            }
-
-            if ($request->hasFile('media')) {
-                $content
-                    ->addMedia($request->file('media'))
-                    ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
-            }
-            
-            $content->getMedia('photo');
-
-            return $content;
-        });
-
-        return response()->json([
-                'message' => 'Successfully created.',
-                'data' => $result
-            ], 202);
-    }
-
-    /**
-     * Featured a story
-     * 
-     * @param request
-     * @return \Illuminate\Http\Response
-    */
-    public function addFeaturedStory(FeaturedStoryStoreRequest $request, Content $content)
-    {
-        $featuredStory = FeaturedStory::create(
-                array_merge(
-                    request()->only([
-                        'start_date',
-                        'end_date'
-                    ]),
-                    ["content_id" => $content->id]
-                )
-            );
+                if ($request->tags) {
+                    $tags = Tag::createTag($story, $request->tags);
+                    $story['tags'] = $tags;
+                }
         
-        return response()->json($featuredStory, 202);
+                if ($request->hasFile('media')) {
+                    $story
+                        ->addMedia($request->file('media'))
+                        ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
+        
+                    $story->getMedia('photo');
+                }
+
+                return $story;
+            });
+
+        return response()->json($result, 202);
     }
 
     /**
-     * Appreciation of story
+     * Appreciate story
      *
-     * @param content
+     * @param  json
      * @return \Illuminate\Http\Response
      */
-    public function appreciate(Content $content)
+    public function addAppreciate(Story $story)
     {
-        $result = AppreciateStory::create([
-                'content_id' => $content->id,
+        $appreciate = StoryAppreciate::create([
+                'story_id' => $story->id,
                 'user_id' => auth()->user()->id
             ]);
 
-        return response()->json([
-                'message' => 'Success'
-            ], 202);
+        return response()->json($appreciate, 202);
     }
 
     /**
      * Comment to story
      *
-     * @param content
+     * @param json
      * @return \Illuminate\Http\Response
      */
-    public function comment(CommentStoryStoreRequest $request,Content $content)
+    public function addComment(Request $request, Story $story)
     {
-        $result = CommentStory::create([
-                'content_id' => $content->id,
+        $comment = CommentStory::create([
+                'story_id' => $story->id,
                 'user_id' => auth()->user()->id,
                 'comment' => $request->comment
             ]);
 
-        return response()->json([
-                'message' => 'Success',
-                'data' => $result
-            ], 202);
+        return response()->json($comment, 202);
     }
 
     /**
@@ -152,15 +144,20 @@ class StoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Story $story)
     {
-        $content = Content::with(['appreciates', 'comments'])
-            ->where('id', $id)
+        $result = Story::with(
+                'user', 
+                'organization', 
+                'appreciates',
+                'appreciates.user',
+            )
+            ->where('id', $story->id)
             ->first();
-            
-        $content->getMedia('photo');
 
-        return response()->json($content, 200);
+        $result->getMedia('photo');
+
+        return response()->json($result);
     }
 
     /**
@@ -170,12 +167,11 @@ class StoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoryUpdateRequest $request, $id)
+    public function update(StoryUpdateRequest $request, Story $story)
     {
-        $content = Content::findOrFail($id);
-        $content->update($request->validated());
+        $story->update($request->validated());
 
-        return response()->json($content, 202);
+        return response()->json($story, 202);
     }
 
     /**
@@ -184,13 +180,13 @@ class StoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Story $story)
     {
         try {
-            Content::find($id)->delete();
+            $story->delete();
             
             return response()->json([
-                    'message' => 'Service Offer successfully deleted.'
+                    'message' => 'Story successfully deleted.'
                 ], 204);
         } catch (\Exception $e) {
             return response()->json([

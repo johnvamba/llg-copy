@@ -10,6 +10,7 @@ use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use App\User;
 use App\UserProfile;
+use App\NeedsCategory;
 
 class UserTest extends TestCase
 {
@@ -37,6 +38,8 @@ class UserTest extends TestCase
                 'preference' => json_encode(['Health', 'Food'])
             ]);
         $this->user->assignRole('user');
+
+        factory(NeedsCategory::class)->create();
     }
 
     /** @test */
@@ -53,11 +56,11 @@ class UserTest extends TestCase
                 'lat' => $this->faker->latitude,
                 'lng' => $this->faker->longitude,
                 'bio' => $this->faker->text,
-                'preference' => json_encode([
+                'preference' => [
                     'Housing',
                     'Food',
                     'Health'
-                ])
+                ]
             ]);
 
         $response->assertStatus(202);

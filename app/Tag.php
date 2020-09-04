@@ -14,18 +14,20 @@ class Tag extends Model
         return $this->morphTo();
     }
 
+    /**
+     * Create a tag of a model
+     * 
+     * @return collection
+     */
     public static function createTag($model, $tags)
-    {
-        $createdTag = [];
+    {   
+        $results = [];
 
         foreach ($tags as $tag) {
-            $makeTag = Tag::make([
-                    'name' => $tag
-                ]);
-
-            $createdTag[] = $model->tags()->save($makeTag);
+            $makeTag = Tag::make(['name' => $tag]);
+            $results[] = $model->tags()->save($makeTag);
         }
 
-        return $createdTag;
+        return $results;
     }
 }

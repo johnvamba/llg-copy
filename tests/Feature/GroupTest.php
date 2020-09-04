@@ -2,53 +2,59 @@
 
 namespace Tests\Feature;
 
+use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Spatie\Permission\Models\Role;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use App\User;
 use App\UserProfile;
-use App\Community;
 use App\Group;
-use App\GroupParticipant;
+use App\Goal;
 use App\GroupChat;
+use App\GroupParticipant;
 
 class GroupTest extends TestCase
 {
+    protected $admin;
     protected $user;
-    protected $community;
-    protected $group;
+    protected $gues;
     protected $goalTerm;
 
     public function setUp(): void
     {
         parent::setUp();
 
+        Role::create(['name' => 'admin']);
         Role::create(['name' => 'user']);
 
+        $this->admin = factory(User::class)->create();
+        factory(UserProfile::class)->make([
+            'user_id' => $this->admin->id,
+            'preference' => json_encode(['Health', 'Food'])
+        ]);
+        $this->admin->assignRole('admin');
+        
         $this->user = factory(User::class)->create();
         factory(UserProfile::class)->make([
-            'user_id' => $this->user->id
+            'user_id' => $this->user->id,
+            'preference' => json_encode(['Health', 'Food'])
         ]);
         $this->user->assignRole('user');
 
-        $this->community = factory(Community::class)->create([
-            'privacy' => 'public',
-            'type' => 'group'
+        $this->guest = factory(User::class)->create();
+        factory(UserProfile::class)->make([
+            'user_id' => $this->user->id,
+            'preference' => json_encode(['Health', 'Food'])
         ]);
-
-        $this->group = factory(Group::class)->create([
-                'community_id' => $this->community->id,
-                'user_id' => $this->user->id
-            ]);
+        $this->guest->assignRole('user');
 
         $this->goalTerm = ['month', 'year'];
     }
 
     /** @test */
-    public function a_user_can_create_group_without_photo()
+    public function a_user_can_create_group()
     {
         $this->actingAs($this->user, 'api');
 
@@ -57,35 +63,19 @@ class GroupTest extends TestCase
         $response = $this->post('api/groups', [
                 'name' => $this->faker->text,
                 'description' => $this->faker->text,
+                'privacy' => 'public',
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
                 'lng' => $this->faker->longitude,
-                'privacy' => 'public',
                 'term' => $this->goalTerm[random_int(0, 1)],
                 'need' => 20
             ]);
 
         $response->assertStatus(202);
-        $response->assertJsonStructure([
-                'message',
-                'data' => [
-                    'id',
-                    'name',
-                    'description',
-                    'location',
-                    'lat',
-                    'lng',
-                    'privacy',
-                    'type',
-                    'created_at',
-                    'updated_at',
-                    'group'
-                ]
-            ]);
     }
 
     /** @test */
-    public function a_user_can_create_group_with_photo()
+    public function a_user_can_create_group_with_media()
     {
         Storage::fake('public');
 
@@ -98,118 +88,79 @@ class GroupTest extends TestCase
         $response = $this->post('api/groups', [
                 'name' => $this->faker->text,
                 'description' => $this->faker->text,
+                'privacy' => 'public',
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
                 'lng' => $this->faker->longitude,
-                'privacy' => 'public',
-                'media' => $file,
                 'term' => $this->goalTerm[random_int(0, 1)],
-                'need' => 20
+                'need' => 20,
+                'media' => $file
             ]);
 
         $response->assertStatus(202);
-        $response->assertJsonStructure([
-                'message',
-                'data' => [
-                    'id',
-                    'name',
-                    'description',
-                    'location',
-                    'lat',
-                    'lng',
-                    'privacy',
-                    'type',
-                    'created_at',
-                    'updated_at',
-                    'group',
-                    'media'
-                ]
-            ]);
     }
 
     /** @test */
-    public function a_user_cant_create_group_without_name()
+    public function a_user_can_create_group_with_media_and_tags()
     {
+        Storage::fake('public');
+
         $this->actingAs($this->user, 'api');
 
-        $response = $this->json('POST', 'api/groups', [
+        $this->withoutExceptionHandling();
+
+        $file = UploadedFile::fake()->image('avatar.jpg');
+
+        $response = $this->post('api/groups', [
+                'name' => $this->faker->text,
                 'description' => $this->faker->text,
+                'privacy' => 'public',
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
                 'lng' => $this->faker->longitude,
-                'privacy' => 'public',
                 'term' => $this->goalTerm[random_int(0, 1)],
-                'need' => 20
+                'need' => 20,
+                'tags' => $this->faker->words,
+                'media' => $file
             ]);
-
-        $response->assertStatus(422);
-    }
-
-    /** @test */
-    public function a_user_can_be_a_participant_in_a_group()
-    {
-        $this->withoutExceptionHandling();
-
-        $user = factory(User::class)->create();
-        factory(UserProfile::class)->make([
-            'user_id' => $this->user->id
-        ]);
-        $user->assignRole('user');
-
-        $this->actingAs($user, 'api');
-
-        $response = $this->post("api/groups/participant/{$this->group->id}");
 
         $response->assertStatus(202);
-        $response->assertJsonStructure([
-                'message',
-                'data' => [
-                    'group_id',
-                    'user_id',
-                    'created_at',
-                    'updated_at'
-                ]
-            ]);
     }
 
     /** @test */
     public function a_user_can_fetch_groups()
     {
-        $this->actingAs($this->user, 'api');
+        $this->actingAs($this->admin, 'api');
 
         $this->withoutExceptionHandling();
 
-        $response = $this->get("api/groups");
+        factory(Group::class, 5)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $response = $this->get('api/groups');
 
         $response->assertStatus(200);
-        $response->assertJsonCount(1,'data');
     }
 
     /** @test */
     public function a_user_can_view_group()
     {
-        $this->actingAs($this->user, 'api');
+        $this->actingAs($this->admin, 'api');
 
         $this->withoutExceptionHandling();
 
-        $response = $this->get("api/groups/{$this->community->id}");
+        $group = factory(Group::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+        factory(Goal::class)->make([
+            'model_id' => $group->id,
+            'model_type' => 'App\Group'
+        ]);
+
+        $response = $this->get("api/groups/{$group->id}");
 
         $response->assertStatus(200);
-        $response->assertJsonStructure([
-                'id',
-                'name',
-                'description',
-                'location',
-                'lat',
-                'lng',
-                'privacy',
-                'type',
-                'status',
-                'group' => [
-                    'participants'
-                ],
-                'media'
-            ]);
     }
 
     /** @test */
@@ -219,8 +170,16 @@ class GroupTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $response = $this->patch("api/groups/{$this->community->id}", [
-                'privacy' => 'private'
+        $group = factory(Group::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+        factory(Goal::class)->make([
+            'model_id' => $group->id,
+            'model_type' => 'App\Group'
+        ]);
+
+        $response = $this->patch("api/groups/{$group->id}", [
+                'description' => $this->faker->text
             ]);
 
         $response->assertStatus(202);
@@ -233,181 +192,144 @@ class GroupTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $response = $this->delete("api/groups/{$this->group->id}");
+        $group = factory(Group::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+        factory(Goal::class)->make([
+            'model_id' => $group->id,
+            'model_type' => 'App\Group'
+        ]);
+
+        $response = $this->delete("api/groups/{$group->id}");
 
         $response->assertStatus(204);
     }
 
     /** @test */
-    public function a_group_owner_can_accept_participant()
+    public function a_user_can_participate_in_a_group()
     {
+        $this->actingAs($this->guest, 'api');
+
         $this->withoutExceptionHandling();
 
-        $user = factory(User::class)->create();
-        factory(UserProfile::class)->make([
-            'user_id' => $user->id
+        $group = factory(Group::class)->create([
+            'user_id' => $this->user->id,
         ]);
-        $user->assignRole('user');
-        factory(GroupParticipant::class)->create([
-            'group_id' => $this->group->id,
-            'user_id' => $user->id,
-            'status' => 'pending'
+        factory(Goal::class)->make([
+            'model_id' => $group->id,
+            'model_type' => 'App\Group'
         ]);
 
-        $this->actingAs($this->user, 'api');
-
-        $response = $this->post("api/groups/join-request/{$this->group->id}", [
-                'participant' => $user->id,
-                'status' => 'approved'
-            ]);
+        $response = $this->post("api/groups/{$group->id}/participate");
 
         $response->assertStatus(202);
     }
 
     /** @test */
-    public function a_group_owner_can_deny_participant()
+    public function a_grou_owner_can_check_join_request()
     {
+        $this->actingAs($this->guest, 'api');
+
         $this->withoutExceptionHandling();
 
-        $user = factory(User::class)->create();
-        factory(UserProfile::class)->make([
-            'user_id' => $user->id
+        $group = factory(Group::class)->create([
+            'user_id' => $this->user->id,
         ]);
-        $user->assignRole('user');
+        factory(Goal::class)->make([
+            'model_id' => $group->id,
+            'model_type' => 'App\Group'
+        ]);
         factory(GroupParticipant::class)->create([
-            'group_id' => $this->group->id,
-            'user_id' => $user->id,
+            'group_id' => $group->id,
+            'user_id' => $this->guest->id,
             'status' => 'pending'
         ]);
 
-        $this->actingAs($this->user, 'api');
-
-        $response = $this->post("api/groups/join-request/{$this->group->id}", [
-                'participant' => $user->id,
-                'status' => 'denied'
-            ]);
-
-        $response->assertStatus(202);
-    }
-
-    /** @test */
-    public function a_group_owner_can_fetch_participants()
-    {
-        $this->withoutExceptionHandling();
-
-        $user = factory(User::class)->create();
-        factory(UserProfile::class)->make([
-            'user_id' => $user->id
-        ]);
-        $user->assignRole('user');
-        factory(GroupParticipant::class)->create([
-            'group_id' => $this->group->id,
-            'user_id' => $user->id,
-            'status' => 'pending'
-        ]);
-
-        $this->actingAs($this->user, 'api');
-
-        $response = $this->get("api/groups/join-request/{$this->group->id}");
+        $response = $this->get("api/groups/{$group->id}/join-request");
 
         $response->assertStatus(200);
     }
 
     /** @test */
-    public function a_user_can_send_message_in_group()
+    public function a_group_owner_can_approved_participant()
     {
-        $this->withoutExceptionHandling();
-
-        $user = factory(User::class)->create();
-        factory(UserProfile::class)->make([
-            'user_id' => $user->id
-        ]);
-        $user->assignRole('user');
-        factory(GroupParticipant::class)->create([
-            'group_id' => $this->group->id,
-            'user_id' => $user->id,
-            'status' => 'approved'
-        ]);
-
-        $this->actingAs($user, 'api');
-
-        $response = $this->post("api/groups/message/send", [
-                'group_id' => $this->group->id,
-                'message' => 'new message'
-            ]);
-
-        $response->assertStatus(202);
-    }
-
-    /** @test */
-    public function a_user_can_fetch_messages_in_group()
-    {
-        $this->withoutExceptionHandling();
-
-        $user = factory(User::class)->create();
-        factory(UserProfile::class)->make([
-            'user_id' => $user->id
-        ]);
-        $user->assignRole('user');
-        factory(GroupParticipant::class)->create([
-            'group_id' => $this->group->id,
-            'user_id' => $user->id,
-            'status' => 'approved'
-        ]);
-
-        $this->actingAs($user, 'api');
-
-        factory(GroupChat::class)->create([
-            'group_id' => $this->group->id,
-            'sender' => $this->user->id
-        ]);
-
-        $response = $this->get("api/groups/messages/{$this->group->id}");
-
-        $response->assertStatus(200);
-    }
-
-    /** @test */
-    public function a_user_can_create_group_and_set_goal()
-    {
-        Storage::fake('public');
-
         $this->actingAs($this->user, 'api');
 
         $this->withoutExceptionHandling();
 
-        $file = UploadedFile::fake()->image('avatar.jpg');
+        $group = factory(Group::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+        factory(Goal::class)->make([
+            'model_id' => $group->id,
+            'model_type' => 'App\Group'
+        ]);
+        $participant = factory(GroupParticipant::class)->create([
+            'group_id' => $group->id,
+            'user_id' => $this->guest->id
+        ]);
 
-        $response = $this->post('api/groups', [
-                'name' => $this->faker->text,
-                'description' => $this->faker->text,
-                'location' => $this->faker->address,
-                'lat' => $this->faker->latitude,
-                'lng' => $this->faker->longitude,
-                'privacy' => 'public',
-                'media' => $file,
-                'term' => $this->goalTerm[random_int(0, 1)],
-                'need' => 20
+        $response = $this->post("api/groups/join-request/{$participant->id}", [
+                "status" => 'approved'
             ]);
 
         $response->assertStatus(202);
-        $response->assertJsonStructure([
-                'message',
-                'data' => [
-                    'id',
-                    'name',
-                    'description',
-                    'location',
-                    'lat',
-                    'lng',
-                    'privacy',
-                    'type',
-                    'created_at',
-                    'updated_at',
-                    'group',
-                    'media'
-                ]
-            ]);
     }
 
+    /** @test */
+    public function a_user_can_send_message_in_a_group()
+    {
+        $this->actingAs($this->guest, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $group = factory(Group::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+        factory(Goal::class)->make([
+            'model_id' => $group->id,
+            'model_type' => 'App\Group'
+        ]);
+        factory(GroupParticipant::class)->create([
+            'group_id' => $group->id,
+            'user_id' => $this->guest->id,
+            'status' => 'approved'
+        ]);
+
+        $response = $this->post("api/groups/message/{$group->id}", [
+                "message" => 'new message'
+            ]);
+
+        $response->assertStatus(202);
+    }
+
+    /** @test */
+    public function a_user_can_fetch_message_of_group()
+    {
+        $this->actingAs($this->guest, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $group = factory(Group::class)->create([
+            'user_id' => $this->user->id,
+        ]);
+        factory(Goal::class)->make([
+            'model_id' => $group->id,
+            'model_type' => 'App\Group'
+        ]);
+        factory(GroupParticipant::class)->create([
+            'group_id' => $group->id,
+            'user_id' => $this->guest->id,
+            'status' => 'approved'
+        ]);
+        factory(GroupChat::class,3)->create([
+            'group_id' => $group->id,
+            'sender' => $this->guest->id,
+            'message' => $this->faker->text
+        ]);
+
+        $response = $this->get("api/groups/messages/{$group->id}");
+
+        $response->assertStatus(200);
+    }
 }

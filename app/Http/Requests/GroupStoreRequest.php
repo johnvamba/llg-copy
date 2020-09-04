@@ -29,7 +29,7 @@ class GroupStoreRequest extends FormRequest
             'location' => 'required',
             'lat' => 'required',
             'lng' => 'required',
-            'privacy' => 'sometimes|required',
+            'privacy' => 'required',
             'term' => 'required',
             'need' => 'required',
         ];

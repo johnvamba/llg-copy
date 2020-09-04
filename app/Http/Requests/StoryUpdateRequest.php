@@ -26,9 +26,9 @@ class StoryUpdateRequest extends FormRequest
         return [
             'title' => 'sometimes|required',
             'description' => 'sometimes|required',
+            'featured_start_date' => 'sometimes|required|date',
+            'featured_end_date' => 'sometimes|required|date|after_or_equal:featured_start_date',
             'tags' => 'sometimes|required',
-            'type' => 'sometimes|required',
-            'status' => 'sometimes|required',
             'media' => 'sometimes|required|image'
         ];
     }

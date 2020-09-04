@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OrganizationUpdateRequest;
 use App\Http\Requests\OrganizationStoreRequest;
-use App\Http\Requests\NeedsMetStoreRequest;
-use App\Http\Requests\CommunityStoreRequest;
 use Illuminate\Http\Request;
-use App\CommunityContent;
-use App\Community;
-use App\Content;
-use App\NeedsMet;
-use App\Tag;
+use App\Organization;
 use DB;
 
 class OrganizationController extends Controller
@@ -22,11 +17,13 @@ class OrganizationController extends Controller
      */
     public function index()
     {
-        $organizations = Community::with(['contents','contents.details'])
-            ->where('type', 'organization')
-            ->paginate();
+        $orgs = Organization::orderBy('created_at', 'desc')->paginate();
 
-        return response()->json($organizations, 200);
+        foreach ($orgs as $org) {
+            $org->getMedia('photo');
+        }
+
+        return response()->json($orgs);
     }
 
     /**
@@ -37,69 +34,28 @@ class OrganizationController extends Controller
      */
     public function store(OrganizationStoreRequest $request)
     {
+        //
         $result = DB::transaction(function () use ($request) {
-                $organization = Community::create(
-                    array_merge(
-                        request()->only([
-                            'name',
-                            'description',
-                            'location',
-                            'lat',
-                            'lng'
-                        ]),
-                        ['type' => 'organization']
-                    )
-                );
+                $org = Organization::create(request()->only([
+                        'name',
+                        'description',
+                        'location',
+                        'lat',
+                        'lng'
+                    ]));
 
                 if ($request->hasFile('media')) {
-                    $organization
+                    $org
                         ->addMedia($request->file('media'))
                         ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
-                    
-                    $organization->getMedia('photo');
+
+                    $org->getMedia('photo');
                 }
 
-                return $organization;
+                return $org;
             });
 
-        return response()->json([
-            'message' => 'Successfully created.',
-            'data' => $result
-        ], 202);
-    }
-
-    /**
-     * Create orgs needs met
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function createNeedsMet(NeedsMetStoreRequest $request, $id)
-    {
-        $result = DB::transaction(function () use ($request, $id) {
-                $content = Content::createContent($request);
-                $needsmet = NeedsMet::createNeedsMet($request, $content->id);
-
-                if ($request->tags) {
-                    $tags = Tag::createTag($content, $request->tags);
-                    $content['tags'] = $tags;
-                }
-
-                $community = CommunityContent::create([
-                        'community_id' => $id,
-                        'content_id' => $content->id
-                    ]);
-
-                $content['community'] = $community;
-                $content['needs_met'] = $needsmet;
-
-                return $content;
-            });
-
-        return response()->json([
-                'message' => 'Successfully created.',
-                'data' => $result
-            ], 202);
+        return response()->json($result, 202);
     }
 
     /**
@@ -110,11 +66,10 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
-        $organization = Community::with(['contents','contents.details'])
-            ->where('id', $id)
-            ->first();
+        $org = Organization::findOrFail($id);
+        $org->getMedia('photo');
 
-        return response()->json($organization, 200);
+        return response()->json($org);
     }
 
     /**
@@ -124,22 +79,12 @@ class OrganizationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CommunityStoreRequest $request, $id)
+    public function update(OrganizationUpdateRequest $request, $id)
     {
-        //
-        $community = Community::findOrFail($id);
-        $community->update(
-                request()->only([
-                    'name',
-                    'description',
-                    'location',
-                    'lat',
-                    'lng',
-                    'type'
-                ])
-            );
+        $org = Organization::findOrFail($id);
+        $org->update($request->validated());
 
-        return response()->json($community, 202);
+        return response()->json($org, 202);
     }
 
     /**
@@ -150,6 +95,17 @@ class OrganizationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $org = Organization::findOrFail($id);
+            $org->delete();
+            
+            return response()->json([
+                    'message' => 'Organization successfully deleted.'
+                ], 204);
+        } catch (\Exception $e) {
+            return response()->json([
+                    'message' => 'An error occurred. Please try again.'
+                ], 500);
+        }
     }
 }
