@@ -34,9 +34,9 @@ const Login = () => {
 
     return (
         <div className="flex flex-wrap h-screen">
-            <div className="relative w-full md:w-1/3 bg-blue-500">
-                <div className="absolute bottom-0 p-12">
-                    <p className="text-white text-2xl font-semibold">Title</p>
+            <div className="flex w-full md:w-1/3 bg-blue-500 p-12">
+                <div className="flex flex-col justify-end">
+                    <p className="text-white text-2xl font-semibold align-text-bottom">Title</p>
                     <p className="text-gray-200 text-lg font-medium">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                         sed do eiusmod tempor incididunt ut labore et dolore
@@ -47,13 +47,13 @@ const Login = () => {
 
             <div className="w-full md:w-2/3 mb-16">
                 <div className="flex flex-col justify-center items-center h-full">
-                    <form
-                        className="w-full md:w-2/5"
-                    >
-                        <p className="text-center text-2xl text-blue-400 py-10 font-semibold">
+                    <p className="text-center text-2xl text-blue-400 py-4 font-semibold">
                             Sign In Here
-                        </p>
+                    </p>
 
+                    <form
+                        className="w-3/5 xs:w-2/4 sm:w-2/4 md:w-2/4 lg:w-2/5 xl:w-2/5"
+                    >
                         <TextInput
                             label="Email"
                             name="email"
@@ -72,9 +72,10 @@ const Login = () => {
                             onChange={handleChange}
                         />
 
-                        <div className="flex flex-row">
+                        <div className="flex flex-row flex-wrap">
                             <div className="flex-1">
                                 <Checkbox 
+                                    className="text-sm"
                                     animation="smooth"
                                     color="primary" 
                                     shape="curve" 
@@ -86,7 +87,7 @@ const Login = () => {
                             </div>
 
                             <div className="flex-1 justify-center text-right">
-                                <Link className="text-blue-500 font-medium" to="/forgot-password">Forgot Password?</Link>
+                                <Link className="text-sm text-blue-500 font-medium" to="/forgot-password">Forgot Password?</Link>
                             </div>
                         </div>
 

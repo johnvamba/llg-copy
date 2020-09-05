@@ -7,3 +7,5 @@ mix.react('resources/js/app.js', 'public/js')
         processCssUrls: false,
         postCss: [tailwindcss('./tailwind.config.js')],
     });
+
+mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/webfonts');

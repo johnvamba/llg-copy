@@ -71891,11 +71891,11 @@ var ForgotPassword = function ForgotPassword() {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "flex flex-wrap h-screen"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "relative w-full md:w-1/3 bg-blue-500"
+    className: "flex w-full md:w-1/3 bg-blue-500 p-12"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "absolute bottom-0 p-12"
+    className: "flex flex-col justify-end"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-    className: "text-white text-2xl font-semibold"
+    className: "text-white text-2xl font-semibold align-text-bottom"
   }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
     className: "text-gray-200 text-lg font-medium"
   }, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -71903,11 +71903,14 @@ var ForgotPassword = function ForgotPassword() {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "flex flex-col justify-center items-center h-full"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
-    className: "w-full md:w-2/5"
+    className: "w-2/3 xs:w-2/4 sm:w-2/4 md:w-2/4 lg:w-2/5 xl:w-2/5 mt-2 mb-10"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__["Link"], {
-    "class": "text-sm text-gray-500",
+    className: "text-sm text-gray-500 inline-flex items-center",
     to: "/"
-  }, "Go Back"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: "fa fa-angle-left mr-2",
+    "aria-hidden": "true"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Go Back")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "py-10 text-center"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
     className: "text-2xl pb-2 text-blue-400 font-semibold"
@@ -72041,22 +72044,22 @@ var Login = function Login() {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "flex flex-wrap h-screen"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-    className: "relative w-full md:w-1/3 bg-blue-500"
+    className: "flex w-full md:w-1/3 bg-blue-500 p-12"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-    className: "absolute bottom-0 p-12"
+    className: "flex flex-col justify-end"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", {
-    className: "text-white text-2xl font-semibold"
+    className: "text-white text-2xl font-semibold align-text-bottom"
   }, "Title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", {
     className: "text-gray-200 text-lg font-medium"
   }, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "w-full md:w-2/3 mb-16"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "flex flex-col justify-center items-center h-full"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("form", {
-    className: "w-full md:w-2/5"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("p", {
-    className: "text-center text-2xl text-blue-400 py-10 font-semibold"
-  }, "Sign In Here"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_TextInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    className: "text-center text-2xl text-blue-400 py-4 font-semibold"
+  }, "Sign In Here"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("form", {
+    className: "w-3/5 xs:w-2/4 sm:w-2/4 md:w-2/4 lg:w-2/5 xl:w-2/5"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_TextInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
     label: "Email",
     name: "email",
     type: "email",
@@ -72071,10 +72074,11 @@ var Login = function Login() {
     placeholder: "********",
     onChange: handleChange
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
-    className: "flex flex-row"
+    className: "flex flex-row flex-wrap"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "flex-1"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(pretty_checkbox_react__WEBPACK_IMPORTED_MODULE_4__["Checkbox"], {
+    className: "text-sm",
     animation: "smooth",
     color: "primary",
     shape: "curve",
@@ -72083,7 +72087,7 @@ var Login = function Login() {
   }, "Remember me")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "flex-1 justify-center text-right"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_5__["Link"], {
-    className: "text-blue-500 font-medium",
+    className: "text-sm text-blue-500 font-medium",
     to: "/forgot-password"
   }, "Forgot Password?"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Button__WEBPACK_IMPORTED_MODULE_3__["default"], {
     title: "Sign In",

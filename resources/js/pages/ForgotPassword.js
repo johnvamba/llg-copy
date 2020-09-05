@@ -16,9 +16,9 @@ const ForgotPassword = () => {
 
     return (
         <div className="flex flex-wrap h-screen">
-            <div className="relative w-full md:w-1/3 bg-blue-500">
-                <div className="absolute bottom-0 p-12">
-                    <p className="text-white text-2xl font-semibold">Title</p>
+            <div className="flex w-full md:w-1/3 bg-blue-500 p-12">
+                <div className="flex flex-col justify-end">
+                    <p className="text-white text-2xl font-semibold align-text-bottom">Title</p>
                     <p className="text-gray-200 text-lg font-medium">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                         sed do eiusmod tempor incididunt ut labore et dolore
@@ -30,9 +30,12 @@ const ForgotPassword = () => {
             <div className="w-full md:w-2/3">
                 <div className="flex flex-col justify-center items-center h-full">
                     <form
-                        className="w-full md:w-2/5"
+                        className="w-2/3 xs:w-2/4 sm:w-2/4 md:w-2/4 lg:w-2/5 xl:w-2/5 mt-2 mb-10"
                     >
-                        <Link class="text-sm text-gray-500" to="/">Go Back</Link>
+                        <Link className="text-sm text-gray-500 inline-flex items-center" to="/">
+                            <i className="fa fa-angle-left mr-2" aria-hidden="true"></i>
+                            <span>Go Back</span>
+                        </Link>
 
                         <div className="py-10 text-center">
                             <p className="text-2xl pb-2 text-blue-400 font-semibold">
