@@ -9,3 +9,5 @@ mix.react('resources/js/app.js', 'public/js')
     });
 
 mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/webfonts');
+
+mix.browserSync('lovelivegenerously.test');

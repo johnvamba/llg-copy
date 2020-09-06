@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\RegisterStoreRequest;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +17,7 @@ class AuthController extends Controller
      * User's login
      * 
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         if (Auth::attempt([
             'email' => $request->email, 
@@ -32,7 +33,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Invalid email or password'
-        ], 400);
+        ], 401);
     }
 
 

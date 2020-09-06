@@ -1,13 +1,16 @@
-import React, {lazy} from 'react';
+import React from 'react';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom';
-import Login from '../pages/Login'
-import ForgotPassword from '../pages/ForgotPassword'
+import Login from '../auth/Login'
+import ForgotPassword from '../auth/ForgotPassword'
+import ResetPassword from '../auth/ResetPassword'
 
-const RootRoute = () => (
+const AppRoute = () => (
     <Switch>
         <Route exact path="/" component={Login}/>
+        <Route exact path="/login" component={Login}/>
         <Route exact path="/forgot-password" component={ForgotPassword}/>
+        <Route exact path="/reset-password" component={ResetPassword}/>
     </Switch>
 )
 
-export default RootRoute;
+export default AppRoute;
