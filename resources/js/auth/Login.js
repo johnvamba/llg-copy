@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import Button from '../components/Button';
 import { Checkbox } from 'pretty-checkbox-react';
-import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Cookie from 'js-cookie'
 
 import 'pretty-checkbox';
 
@@ -24,16 +25,34 @@ const Login = () => {
 
     const handleSubmit = async () => {
         try {
-            let response = await axios.post('api/login', form);
+            let {data} = await axios.post('api/login', form);
+
+            if (data.user.roles[0].name == 'organization admin') {
+                Cookie.set("oToken_org_admin", data.token);
+                
+                window.location.href = '/admin/dashboard';
+            } else if (data.user.roles[0].name == 'admin') {
+                Cookie.set("oToken_admin", data.token);
+
+                window.location.href = '/admin/dashboard';
+            } else {
+                alert("user is not allowed to sign in here");
+            }
         } catch(err) {
-            let errors = err.response;
+            let response = err.response;
             
-            if (errors.status == 422) {
-                setErrors(errors.data.errors)
-            } else if (errors.status == 401) {
-                setError(errors.data.errors)
+            if (response.status == 422) {
+                setErrors(response.data.errors)
+                setError(null)
+            } else if (response.status == 401) {
+                setError(response.data.message)
+                setErrors({})
             }
         }
+    }
+
+    if (Cookie.get('oToken_admin')) {
+        window.location.href = '/admin/dashboard'
     }
 
     return (
@@ -58,15 +77,19 @@ const Login = () => {
                     <form
                         className="w-3/5 xs:w-2/4 sm:w-2/4 md:w-2/4 lg:w-2/5 xl:w-2/5"
                     >
+                        {error && 
+                            <p className="text-red-500 text-xs italic">* {error}</p>
+                        }
+
                         <div className="relative">
                             <label className="block text-gray-500 text-sm font-semibold mb-2">
                                 Email
                             </label>
 
                             <input
-                                name="Email"
+                                name="email"
                                 type="email"
-                                value={form.email}
+                                value={form.email || ``}
                                 placeholder="Email address"
                                 onChange={handleChange}
                                 className="w-full border-b border-t-0 border-l-0 

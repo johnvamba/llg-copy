@@ -1,7 +1,7 @@
 import React, {useState, useCallback} from 'react';
 import TextInput from '../components/TextInput';
 import Button from '../components/Button';
-import {BrowserRouter, Link, Route, Switch} from 'react-router-dom';
+import {Link} from 'react-router-dom';
  
 const ForgotPassword = () => {
     const [email, setEmail] = useState(null);

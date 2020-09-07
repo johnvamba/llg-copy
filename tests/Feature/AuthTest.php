@@ -42,13 +42,11 @@ class AuthTest extends TestCase
     /** @test */
     public function a_user_cant_login_invalid_password()
     {
-        $this->withoutExceptionHandling();
-        
         $response = $this->post('api/login', [
                 'email' => $this->user->email,
-                'password' => 'secret'
+                'password' => '12345678'
             ]);
 
-        $response->assertStatus(400);
+        $response->assertStatus(401);
     }
 }

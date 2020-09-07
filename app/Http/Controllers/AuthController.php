@@ -23,11 +23,12 @@ class AuthController extends Controller
             'email' => $request->email, 
             'password' => $request->password
         ])) {
-            $user = User::where('email', $request->email)->first();
+            $user = User::with('roles')->where('email', $request->email)->first();
 
             return response()->json([
                 'message' => 'Successfully authenticated.',
-                'token' => $user->createToken('api')->accessToken
+                'token' => $user->createToken('api')->accessToken,
+                'user' => $user
             ]);
         }
 
