@@ -10,6 +10,9 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+        <script src="{{ mix('assets/canvasjs.min.js') }}"></script>
+        <script src="{{ mix('assets/canvasjs.react.js') }}"></script>
     </head>
     <body>
         <div id="app"></div>

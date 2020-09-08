@@ -3,6 +3,8 @@ const tailwindcss = require('tailwindcss');
 
 mix.react('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
+    .js('resources/assets/canvasjs.min.js', 'public/assets')
+    .js('resources/assets/canvasjs.react.js', 'public/assets')
     .options({
         processCssUrls: false,
         postCss: [tailwindcss('./tailwind.config.js')],

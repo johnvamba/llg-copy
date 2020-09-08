@@ -16,7 +16,7 @@ const Sidebar = () => {
     }
 
     return (
-        <div className="w-64 border-r h-full">
+        <div className="flex flex-col w-64 border-r">
             <div className="px-8 py-3 text-white">
                 <div className="flex flex-row justify-center items-center my-4">
                     <img className="rounded-full h-12 w-12" src="http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp" />

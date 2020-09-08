@@ -3,7 +3,7 @@ import React from 'react';
 const Organizations = () => {
 
     return (
-        <div>
+        <div className="flex">
             <h1>Organizations</h1>
         </div>
     )

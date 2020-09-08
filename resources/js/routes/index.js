@@ -1,5 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Link, Route, Switch} from 'react-router-dom';
+
+import PublicRoutes from './public-routes'
 import Login from '../auth/Login'
 import ForgotPassword from '../auth/ForgotPassword'
 import ResetPassword from '../auth/ResetPassword'
@@ -12,10 +14,10 @@ const AppRoute = () => {
 
     return (
         <Switch>
-            <Route exact path="/" component={Login}/>
-            <Route exact path="/login" component={Login}/>
-            <Route exact path="/forgot-password" component={ForgotPassword}/>
-            <Route exact path="/reset-password" component={ResetPassword}/>
+            <PublicRoutes exact path="/" component={Login}/>
+            <PublicRoutes exact path="/login" component={Login}/>
+            <PublicRoutes exact path="/forgot-password" component={ForgotPassword}/>
+            <PublicRoutes exact path="/reset-password" component={ResetPassword}/>
 
             <PrivateRoute path="/admin" component={Home}/>
 

@@ -13,6 +13,10 @@ const Login = () => {
     const [error, setError] = useState(null);
     const [errors, setErrors] = useState({});
 
+    if (Cookie.get('oToken_admin')) {
+        window.location.href = '/admin'
+    }
+
     const handleCheck = useCallback(() => {
         setRemember(prev => !prev);
     }, []);
@@ -30,11 +34,11 @@ const Login = () => {
             if (data.user.roles[0].name == 'organization admin') {
                 Cookie.set("oToken_org_admin", data.token);
                 
-                window.location.href = '/admin/dashboard';
+                window.location.href = '/admin';
             } else if (data.user.roles[0].name == 'admin') {
                 Cookie.set("oToken_admin", data.token);
 
-                window.location.href = '/admin/dashboard';
+                window.location.href = '/admin';
             } else {
                 alert("user is not allowed to sign in here");
             }
@@ -49,10 +53,6 @@ const Login = () => {
                 setErrors({})
             }
         }
-    }
-
-    if (Cookie.get('oToken_admin')) {
-        window.location.href = '/admin/dashboard'
     }
 
     return (

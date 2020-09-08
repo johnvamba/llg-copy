@@ -1,6 +1,7 @@
 import React from 'react';
 import Dashboard from '../pages/dashboard';
 import Users from '../pages/users';
+import Offers from '../pages/offers';
 import Organizations from '../pages/organizations';
 import NotFound from '../../components/NotFound';
 
@@ -14,6 +15,11 @@ const routes = [
         path: '/dashboard',
         exact: true,
         component: () => <Dashboard />
+    },
+    {
+        path: '/offers',
+        exact: true,
+        component: () => <Offers />
     },
     {
         path: '/users',

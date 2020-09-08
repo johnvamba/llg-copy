@@ -6,7 +6,7 @@ import RecentActivities from './pages/recent-activities';
 import Content from './content';
 
 const Home = () => {
-
+    
     const logout = async () => {
         if (Cookie.get("oToken_admin")) {
             Cookie.set("oToken_admin", "")
@@ -18,7 +18,7 @@ const Home = () => {
 
     return (
         <Router basename="/admin">
-            <div className="h-screen flex">
+            <div className="min-h-screen flex">
                 <Sidebar />
                 
                 <div className="flex flex-1 flex-col">
@@ -40,7 +40,7 @@ const Home = () => {
                             >
                                 Admin
                             </button>
-                            <Link className="mr-6 text-lg" to="/admin/dashboard">
+                            <Link className="mr-6 text-lg" to="/">
                                 <i className="fa fa-bell" aria-hidden="true"></i>
                             </Link>
                             <button className="mr-8 text-xl focus:outline-none" onClick={logout}>
