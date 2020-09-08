@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\RegisterStoreRequest;
 use Illuminate\Support\Facades\Storage;
@@ -16,23 +17,24 @@ class AuthController extends Controller
      * User's login
      * 
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         if (Auth::attempt([
             'email' => $request->email, 
             'password' => $request->password
         ])) {
-            $user = User::where('email', $request->email)->first();
+            $user = User::with('roles')->where('email', $request->email)->first();
 
             return response()->json([
                 'message' => 'Successfully authenticated.',
-                'token' => $user->createToken('api')->accessToken
+                'token' => $user->createToken('api')->accessToken,
+                'user' => $user
             ]);
         }
 
         return response()->json([
             'message' => 'Invalid email or password'
-        ], 400);
+        ], 401);
     }
 
 
