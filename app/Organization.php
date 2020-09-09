@@ -16,6 +16,11 @@ class Organization extends Model implements HasMedia
 
     protected $with = ['needs'];
 
+    public function customerCredential()
+    {
+        return $this->morphOne('App\CustomerCredential', 'model');
+    }
+
     public function needs()
     {
         return $this->morphMany('App\Need', 'model');

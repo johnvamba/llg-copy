@@ -6,6 +6,7 @@ use App\Http\Requests\OrganizationUpdateRequest;
 use App\Http\Requests\OrganizationStoreRequest;
 use Illuminate\Http\Request;
 use App\Organization;
+use App\OrganizationCredential;
 use DB;
 
 class OrganizationController extends Controller
@@ -24,6 +25,19 @@ class OrganizationController extends Controller
         }
 
         return response()->json($orgs);
+    }
+
+    /**
+     * Get organization credential
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getCredential(Request $request, Organization $organization)
+    {
+        $credential = OrganizationCredential::find($organization->id);
+
+        return response()->json($credential);
     }
 
     /**
@@ -56,6 +70,27 @@ class OrganizationController extends Controller
             });
 
         return response()->json($result, 202);
+    }
+
+    /**
+     * Add organization stripe credential
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function addCredential(Request $request, Organization $organization)
+    {
+        $credential = OrganizationCredential::create(
+                array_merge(
+                    request()->only([
+                        'secret_key',
+                        'publishable_key'
+                    ]),
+                    ['organization_id' => $organization->id]
+                )
+            );
+
+        return response()->json($credential, 202);
     }
 
     /**

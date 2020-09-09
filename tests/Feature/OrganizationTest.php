@@ -142,5 +142,36 @@ class OrganizationTest extends TestCase
 
         $this->assertDatabaseMissing('organizations', $selectedOrg->toArray());
     }
+
+    /** @test */
+    public function a_org_admin_can_add_stripe_account()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+        
+        $org = factory(Organization::class)->create();
+
+        $response = $this->post("api/organizations/{$org->id}/credential", [
+                'secret_key' => 'secret',
+                'publishable_key' => 'publish'
+            ]);
+
+        $response->assertStatus(202);
+    }
+
+    /** @test */
+    public function a_org_admin_can_fetc_stripe_account()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+        
+        $org = factory(Organization::class)->create();
+
+        $response = $this->get("api/organizations/{$org->id}/credential");
+
+        $response->assertStatus(200);
+    }
 }
 

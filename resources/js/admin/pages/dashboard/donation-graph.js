@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import moment from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
@@ -6,7 +6,6 @@ import CanvasJSReact from '../../../../assets/canvasjs.react';
 
 const DonationGraph = () => {
     const [startDate, setStartDate] = useState(new Date());
-    const calendarRef = useRef(null);
 
     var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
