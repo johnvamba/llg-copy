@@ -35,7 +35,7 @@ const DonationGraph = () => {
         }]
     }
 
-    const ExampleCustomInput = ({ value, onClick }) => (
+    const CustomInput = ({ value, onClick }) => (
         <button className="example-custom-input text-blue-400 focus:outline-none" onClick={onClick}>
             {value}
             <span className="text-black pl-2">
@@ -45,7 +45,7 @@ const DonationGraph = () => {
     );
 
     return (
-        <div className="w-full shadow-lg bg-white p-4">
+        <div className="w-full shadow-lg bg-white p-4 rounded-lg">
             <div className="flex flex-row px-2 pt-2 pb-4">
                 <div className="flex flex-1">
                     <p>Donations by type</p>
@@ -55,7 +55,9 @@ const DonationGraph = () => {
                     <DatePicker
                         selected={startDate}
                         onChange={date => setStartDate(date)}
-                        customInput={<ExampleCustomInput />}
+                        customInput={<CustomInput />}
+                        dateFormat="MMMM yyyy"
+                        showMonthYearPicker
                     />  
                 </div>
             </div>
