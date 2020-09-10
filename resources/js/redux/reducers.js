@@ -1,8 +1,12 @@
 import {combineReducers} from 'redux';
 import {reducer as UsersReducer} from './users/reducer';
+import {reducer as RecentActivitiesReducer} from './recent-activities/reducer';
+import {reducer as TopDonorsReducer} from './top-donors/reducer';
 
 const appReducers = combineReducers({
-    UsersReducer: UsersReducer
+    UsersReducer: UsersReducer,
+    RecentActivitiesReducer: RecentActivitiesReducer,
+    TopDonorsReducer: TopDonorsReducer,
 });
 
 const rootReducer = (state, action) => {

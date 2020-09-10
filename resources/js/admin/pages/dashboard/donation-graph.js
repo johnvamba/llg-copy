@@ -3,6 +3,7 @@ import moment from 'moment'
 import DatePicker from 'react-datepicker'
 import "react-datepicker/dist/react-datepicker.css";
 import CanvasJSReact from '../../../../assets/canvasjs.react';
+import DateCustomInput from './dateCustomInput';
 
 const DonationGraph = () => {
     const [startDate, setStartDate] = useState(new Date());
@@ -34,15 +35,6 @@ const DonationGraph = () => {
         }]
     }
 
-    const CustomInput = ({ value, onClick }) => (
-        <button className="example-custom-input text-blue-400 focus:outline-none" onClick={onClick}>
-            {value}
-            <span className="text-black pl-2">
-                <i class="fas fa-angle-down"></i>
-            </span>
-        </button>
-    );
-
     return (
         <div className="w-full shadow-lg bg-white p-4 rounded-lg">
             <div className="flex flex-row px-2 pt-2 pb-4">
@@ -54,7 +46,7 @@ const DonationGraph = () => {
                     <DatePicker
                         selected={startDate}
                         onChange={date => setStartDate(date)}
-                        customInput={<CustomInput />}
+                        customInput={<DateCustomInput />}
                         dateFormat="MMMM yyyy"
                         showMonthYearPicker
                     />  

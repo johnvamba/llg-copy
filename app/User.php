@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->hasOne('App\UserProfile');
     }
 
+    public function invoice()
+    {
+        return $this->hasMany('App\Invoice');
+    }
+
     /**
      * Register new user
      */

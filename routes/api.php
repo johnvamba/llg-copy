@@ -60,4 +60,12 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('payment/need/{need}', 'PaymentController@donateNeed');
     Route::post('payment/organization/{organization}', 'PaymentController@donateOrganization');
     Route::resource('payments', 'PaymentController');
+
+    /** Invoice resource module */
+    Route::get('invoice/top-donors', 'InvoiceController@getTopDonors');
+    Route::resource('invoices', 'InvoiceController');
+
+    /** Activities resource module */
+    Route::post('activity/recents', 'ActivityController@recent');
+    Route::resource('activities', 'ActivityController');
 });

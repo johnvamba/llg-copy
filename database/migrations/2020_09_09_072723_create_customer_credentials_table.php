@@ -18,8 +18,7 @@ class CreateCustomerCredentialsTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->morphs('model');
             $table->string('customer_id');
-            $table->string('card_number')->nullable();
-            $table->string('card_brand')->nullable();
+            $table->string('card_id')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Controllers\ActivityController;
 use App\User;
 use App\Need;
 use App\CustomerCredential;
 use App\OrganizationCredential;
+use App\Invoice;
 use DB;
 
 class PaymentController extends Controller
@@ -65,11 +68,18 @@ class PaymentController extends Controller
     {
         //
     }
-
-    public function donateNeed(Request $request, Need $need)
-    {
-        $customer;
-
+    
+    /**
+     * Need donation
+     * 
+     * @param request, need
+     * @return \Illuminate\Http\Response
+     */
+    public function donateNeed(
+        Request $request, 
+        ActivityController $activity, 
+        Need $need
+    ){
         $org = $need->model;
 
         $key = OrganizationCredential::where(
@@ -79,47 +89,102 @@ class PaymentController extends Controller
 
         \Stripe\Stripe::setApiKey($key->secret_key);
         
-        $credential = CustomerCredential::where(
-                    'user_id', auth()->user()->id
-                )
-                ->first();
+        $credential = CustomerCredential::where([
+                ['user_id', auth()->user()->id],
+                ['model_id', $org->id]
+            ])
+            ->first();
+
+        try {
+            if (!$credential) {
+                $credential = new CustomerCredential;
+    
+                if (!$credential->customer_id) {
+                    $createdCustomer = \Stripe\Customer::create([
+                            'name' => auth()->user()->name,
+                            'email' => auth()->user()->email
+                        ]);
         
-        if (!$credential) {
-            $credential = new CustomerCredential;
-
-            if (!$credential->customer_id) {
-                $createdCustomer = \Stripe\Customer::create([
-                        'name' => auth()->user()->name,
-                        'email' => auth()->user()->email
-                    ]);
+                    $credential->customer_id = $createdCustomer->id;
+                }
+        
+                if (!$credential->card_id) {
+                    $card = \Stripe\Customer::createSource(
+                            $credential->customer_id,
+                            ['source' => $request->token]
+                        );
     
-                $credential->customer_id = $createdCustomer->id;
+                    $credential->card_id = $card->id;
+                }
+    
+                $credential->user_id = auth()->user()->id;
+    
+                $org->customerCredential()->save($credential);
             }
     
-            if (!$credential->card_number) {
-                $credential->customer_id = $request->card_number;
-            }
+            $description = 'donated to '.$need->title;
+    
+            $charge = \Stripe\Charge::create([
+                    'customer' => $credential->customer_id,
+                    'amount' => $request->amount,
+                    'currency' => $request->currency,
+                    'description' => $description
+                ]);
 
-            $credential->user_id = auth()->user()->id;
+            $uuid = (string) Str::uuid();
+    
+            $initInvoice = Invoice::make([
+                    'user_id' => auth()->user()->id,
+                    'receipt' => $uuid,
+                    'charge_id' => $charge->id,
+                    'description' => $description,
+                    'amount' => $request->amount,
+                ]);
+    
+            $invoice = $need->invoices()->save($initInvoice);
 
-            $org->customerCredential()->save($credential);
+            $activity->store($need, [
+                    'description' => 'donated to ',
+                    'highlight_description' => $need->title,
+                ]);
+    
+            return response()->json([
+                    'message' => 'Successfully donated.',
+                    'data' => $invoice
+                ], 202);
+                
+        } catch(\Stripe\Exception\CardException $e) {
+            return response()->json([
+                'message' => $e->getError()->message,
+                'status' => $e->getHttpStatus(),
+                'type' => $e->getError()->type,
+                'code' => $e->getError()->code,
+                'param' => $e->getError()->param,
+            ], 403);
+        } catch (\Stripe\Exception\RateLimitException $e) {
+            return response()->json([
+                'message' => 'Too many requests made, too quickly.',
+            ], 429);
+        } catch (\Stripe\Exception\InvalidRequestException $e) {
+            return response()->json([
+                'message' => "Invalid parameters were supplied.",
+            ], 402);
+        } catch (\Stripe\Exception\AuthenticationException $e) {
+            return response()->json([
+                'message' => "Authentication Failed",
+            ], 401);
+        } catch (\Stripe\Exception\ApiConnectionException $e) {
+            return response()->json([
+                'message' => "Something went wrong, Please try again.",
+            ], 504);
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            return response()->json([
+                'message' => "Something went wrong, Please try again.",
+            ], 500);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => "Server error, Please try again.",
+            ], 503);
         }
-
-        $card = \Stripe\PaymentMethod::retrieve(
-            $request->token,
-        );
-
-        if (!$card->customer) {
-            $card->attach(['customer' => $customer->id]);
-        }
-
-        $charge = \Stripe\Charge::create([
-            'source' => $request->token,
-            'amount' => $request->amount,
-            'currency' => $request->currency,
-            'description' => 'test donation'
-        ]);
-
-        return response()->json($charge, 202);
     }
 }

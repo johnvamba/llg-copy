@@ -22,17 +22,14 @@ const StripeForm = () => {
         const cardElement = elements.getElement(CardElement);
 
         // Use your card Element with other Stripe.js APIs
-        const { error, paymentMethod } = await stripe.createPaymentMethod({
-            type: 'card',
-            card: cardElement,
-        });
-
-        if (error) {
-            console.log('[error]', error);
-            setError(error);
-        } else {
-            console.log('[PaymentMethod]', paymentMethod);
-        }
+        const response = await stripe.createToken(cardElement);
+        console.log(response);
+        // if (error) {
+        //     console.log('[error]', error);
+        //     setError(error);
+        // } else {
+        //     console.log('[PaymentMethod]', paymentMethod);
+        // }
     };
 
     return (
