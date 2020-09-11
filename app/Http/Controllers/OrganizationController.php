@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Arr;
 use App\Http\Requests\OrganizationUpdateRequest;
 use App\Http\Requests\OrganizationStoreRequest;
 use Illuminate\Http\Request;
@@ -25,6 +26,30 @@ class OrganizationController extends Controller
         }
 
         return response()->json($orgs);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getOrganizations(Request $request)
+    {
+        $results['columns'] = ['id', 'name', 'description', 'location'];
+
+        $orgs = Organization::orderBy('created_at', 'desc')
+            ->limit($request->limit)
+            ->get()
+            ->map->only('id', 'name', 'description', 'location');
+
+        $results['data'] = $orgs;
+        $results['module'] = [
+                'name' => 'organizations',
+                'singular' => 'organisation',
+                'plural' => 'organisations' 
+            ];
+
+        return response()->json($results);
     }
 
     /**

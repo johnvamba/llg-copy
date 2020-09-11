@@ -52,6 +52,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('groups', 'GroupController');
 
     /** Orgnization resource module */
+    Route::post('organization/table', 'OrganizationController@getOrganizations');
     Route::get('organizations/{organization}/credential', 'OrganizationController@getCredential');
     Route::post('organizations/{organization}/credential', 'OrganizationController@addCredential');
     Route::resource('organizations', 'OrganizationController');
@@ -62,6 +63,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('payments', 'PaymentController');
 
     /** Invoice resource module */
+    Route::get('invoice/donated-by-terms', 'InvoiceController@getDonatedByTerms');
     Route::get('invoice/top-donors', 'InvoiceController@getTopDonors');
     Route::resource('invoices', 'InvoiceController');
 

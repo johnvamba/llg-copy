@@ -31,11 +31,7 @@ const Login = () => {
         try {
             let {data} = await axios.post('api/login', form);
 
-            if (data.user.roles[0].name == 'organization admin') {
-                Cookie.set("oToken_org_admin", data.token);
-                
-                window.location.href = '/admin';
-            } else if (data.user.roles[0].name == 'admin') {
+            if (data.user.roles[0].name == 'admin') {
                 Cookie.set("oToken_admin", data.token);
 
                 window.location.href = '/admin';
@@ -153,10 +149,11 @@ const Login = () => {
                         </div>
 
                         <Button
-                            title="Sign In"
-                            style="text-white font-semibold mt-8 bg-blue-400 hover:bg-blue-500"
+                            className="w-full text-white font-semibold mt-8 bg-blue-400 hover:bg-blue-500"
                             onClick={handleSubmit}
-                        />
+                        >
+                            Sign In
+                        </Button>
                     </form>
                 </div>
             </div>

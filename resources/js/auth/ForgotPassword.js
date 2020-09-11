@@ -4,6 +4,7 @@ import Button from '../components/Button';
 import {Link} from 'react-router-dom';
  
 const ForgotPassword = () => {
+    const [errors, setErrors] = useState({});
     const [email, setEmail] = useState(null);
 
     const handleChange = (event) => {
@@ -54,13 +55,15 @@ const ForgotPassword = () => {
                             value={email}
                             placeholder="Email address"
                             onChange={handleChange}
+                            errors={errors}
                         />
 
                         <Button
-                            title="Send"
-                            style="text-white mt-4 bg-blue-400 hover:bg-blue-500"
+                            className="w-full text-white mt-4 bg-blue-400 hover:bg-blue-500"
                             onClick={handleSubmit}
-                        />
+                        >
+                            Send
+                        </Button>
 
                         <p className="mt-6 text-center text-sm text-gray-500">
                             Did you remember your password?

@@ -6,6 +6,7 @@ const TextInput = ({
     type,
     placeholder,
     value,
+    errors,
     ...rest
 }) => {
 
@@ -24,6 +25,10 @@ const TextInput = ({
                 className="w-full border-b border-t-0 border-l-0 border-r-0 border-grey-dark
                 focus:outline-none"
             />
+
+            {errors[name] && 
+                <p className="text-red-500 text-xs italic">{errors[name][0]}</p>
+            }
         </div>
     )
 }

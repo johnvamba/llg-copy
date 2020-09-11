@@ -72,6 +72,31 @@ class InvoiceTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    /** @test */
+    public function a_admin_can_get_total_donated_today()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $need = factory(Need::class)->create([
+                'model_id' => $this->org->id,
+                'model_type' => 'App\Organization',
+                'needs_category_id' => $this->category->id,
+                'needs_type_id' => $this->type->id,
+            ]);
+
+        factory(Invoice::class, 5)->create([
+                'user_id' => $this->user->id,
+                'model_id' => $need->id,
+                'model_type' => 'App\Need'
+            ]);
+
+        $response = $this->get('api/invoice/donated-by-terms');
+
+        $response->assertStatus(200);
+    }
 }
 
 

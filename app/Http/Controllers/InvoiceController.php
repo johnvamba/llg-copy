@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Invoice;
+use Carbon\Carbon;
 
 class InvoiceController extends Controller
 {
@@ -16,6 +17,42 @@ class InvoiceController extends Controller
     public function index()
     {
         //
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getDonatedByTerms(Request $request)
+    {
+        $date = Carbon::now();
+
+        $donationToday = Invoice::where(
+                'created_at', $date->toDateString()
+            )
+            ->get()
+            ->sum('amount');
+
+        $donationInWeek = Invoice::where([
+                ['created_at', '>=', $date->startOfWeek()->toDateString()],
+                ['created_at', '<=', $date->endOfWeek()->toDateString()]
+            ])
+            ->get()
+            ->sum('amount');
+        
+        $donationInMonth = Invoice::where([
+                ['created_at', '>=', $date->startOfMonth()->toDateString()],
+                ['created_at', '<=', $date->endOfMonth()->toDateString()]
+            ])
+            ->get()
+            ->sum('amount');
+
+        $donation['today'] = round($donationToday, 2);
+        $donation['week'] = round($donationInWeek, 2);
+        $donation['month'] = round($donationInMonth, 2);
+
+        return response()->json($donation);
     }
 
     /**

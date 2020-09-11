@@ -1,23 +1,20 @@
 import React from 'react';
 
 const Button = ({
-    title,
     type,
-    style,
+    className = "",
     onClick,
+    children,
     ...rest
-}) => {
-
-    return (
-        <button
-            {...rest}
-            type={type || `button`}
-            onClick={onClick}
-            className={`p-2 rounded w-full ${style}`}
-        >
-            {title}
-        </button>
-    )
-}
+}) => (
+    <button
+        type={type || `button`}
+        onClick={onClick}
+        className={`p-2 rounded focus:outline-none px-4 ${className}`}
+        {...rest}
+    >
+        {children}
+    </button>
+)
 
 export default Button;

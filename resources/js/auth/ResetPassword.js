@@ -120,10 +120,11 @@ const ResetPassword = () => {
                         {errors.password_confirmation && <p className="text-red-500 text-xs italic">{errors.password_confirmation[0]}</p>}
 
                         <Button
-                            title="Reset"
-                            style="text-white font-semibold mt-8 bg-blue-400 hover:bg-blue-500"
+                            className="w-full text-white font-semibold mt-8 bg-blue-400 hover:bg-blue-500"
                             onClick={handleSubmit}
-                        />
+                        >
+                            Reset
+                        </Button>
 
                         <p className="mt-6 text-center text-sm text-gray-500">
                             Did you remember your password?
