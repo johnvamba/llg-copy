@@ -21,7 +21,6 @@ const RecentActivities = () => {
                 'limit': 3,
                 'date': moment()
             });
-
             dispatch(RecentActivtiesActions.setTodayActivities(data));
         } 
 
@@ -38,7 +37,7 @@ const RecentActivities = () => {
     }, []);
 
     return (
-        <aside className="w-1/4 flex flex-col border-l">
+        <aside className="flex flex-col xs:2/5 md:2/5 border-l">
             <div className="pl-6 pt-4">
                 <h1>Recent Activities</h1>
             </div>

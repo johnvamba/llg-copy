@@ -50,14 +50,14 @@ const Home = () => {
                     </header>
 
                     <div className="flex flex-row h-full">
-                        <section className="w-9/12">
+                        <section className="flex flex-col w-full">
                             <div className="h-16 flex jutify-center items-center pl-12 border-b">
                                 <h1>Dashboard</h1>
                             </div>
 
                             <Content />
                         </section>
-
+                        
                         <RecentActivities />
                     </div>
                 </div>

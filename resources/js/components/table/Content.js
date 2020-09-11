@@ -33,22 +33,20 @@ const Content = ({
                             className="border px-4 py-1"
                             key={`${row.id}.${index}`}
                         >
-                            <div className="flex flex-wrap justify-center items-center">
-                                <NavLink to={`/${module.name}/edit/${row.id}`}>
-                                    <Button
-                                        className="m-2 bg-blue-500 text-xs text-white hover:bg-blue-600"
-                                    >
-                                        <i className="fas fa-edit"></i>
-                                    </Button>
-                                </NavLink>
-
+                            <NavLink to={`/${module.name}/edit/${row.id}`}>
                                 <Button
-                                    onClick={() => handleDelete(row)}
-                                    className="m-2 bg-red-500 text-xs text-white hover:bg-red-600"
+                                    className="m-2 bg-blue-500 text-xs text-white hover:bg-blue-600"
                                 >
-                                    <i className="fas fa-trash"></i>
+                                    <i className="fas fa-edit"></i>
                                 </Button>
-                            </div>
+                            </NavLink>
+
+                            <Button
+                                onClick={() => handleDelete(row)}
+                                className="m-2 bg-red-500 text-xs text-white hover:bg-red-600"
+                            >
+                                <i className="fas fa-trash"></i>
+                            </Button>
                        </td>
                     </tr>
                 ))

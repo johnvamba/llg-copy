@@ -49,7 +49,7 @@ const CreateOrganization = () => {
             
             <form onSubmit={handleSubmit}>
                 <div className="bg-white shadow-lg mt-4 mb-10 rounded-sm">
-                    <div className="w-64 p-6">
+                    <div className="w-full sm:w-full md:w-3/5 xl:w-2/5 p-6">
                         <TextInput
                             label="Name"
                             name="name"

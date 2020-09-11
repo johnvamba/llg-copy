@@ -25,7 +25,7 @@ const Dashboard = () => {
     }, [])
 
     return (
-        <div className="flex flex-col bg-gray-100">
+        <div className="w-full flex flex-col bg-gray-100">
             <div className="flex flex-col shadow-lg w-full bg-white rounded-lg">
                 <div className="border-b p-6">
                     <h2>Donations</h2>

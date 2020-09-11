@@ -71,9 +71,15 @@ class InvoiceController extends Controller
             $user['donated'] = $user->invoice->sum('amount');
         }
 
-        $sorted = $users->sortByDesc('donated');
+        $hasDonated = $users->filter(function ($user) {
+                return $user->donated > 0;
+            });
 
-        return response()->json($sorted->values()->all());
+
+        $sorted = $hasDonated->sortByDesc('donated');
+        $result = $sorted->values()->take(10)->all();
+
+        return response()->json($result);
     }
 
     /**
