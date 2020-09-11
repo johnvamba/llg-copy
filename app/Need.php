@@ -26,6 +26,16 @@ class Need extends Model implements HasMedia
         return $this->morphMany('App\Tag', 'model');
     }
 
+    public function invoices()
+    {
+        return $this->morphMany('App\Invoice', 'model');
+    }
+
+    public function activity()
+    {
+        return $this->morphMany('App\Activity', 'model');
+    }
+
     public function category()
     {
         return $this->belongsTo('App\NeedsCategory', 'needs_category_id');

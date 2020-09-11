@@ -14,14 +14,14 @@ const ListItem = ({
     
     return (
         <div className={`flex flex-row flex-wrap my-4 ${containerSyle}`}>
-            <div className="flex flex-1 items-center">
+            <div className="flex flex-1">
                 {avatar && 
                     <img 
                         className={`rounded-full ${avatarStyle}`} 
                         src={avatar} 
                     />}
 
-                <div className="ml-4">
+                <div className="ml-4 flex flex-col justify-center">
                     <>
                         <p className={`mr-2 text-xs`}>
                             <span className={`${titleStyle}`}>{title}</span>

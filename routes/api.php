@@ -52,5 +52,22 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('groups', 'GroupController');
 
     /** Orgnization resource module */
+    Route::post('organization/table', 'OrganizationController@getOrganizations');
+    Route::get('organizations/{organization}/credential', 'OrganizationController@getCredential');
+    Route::post('organizations/{organization}/credential', 'OrganizationController@addCredential');
     Route::resource('organizations', 'OrganizationController');
+
+    /** Payment resource module */
+    Route::post('payment/need/{need}', 'PaymentController@donateNeed');
+    Route::post('payment/organization/{organization}', 'PaymentController@donateOrganization');
+    Route::resource('payments', 'PaymentController');
+
+    /** Invoice resource module */
+    Route::get('invoice/donated-by-terms', 'InvoiceController@getDonatedByTerms');
+    Route::get('invoice/top-donors', 'InvoiceController@getTopDonors');
+    Route::resource('invoices', 'InvoiceController');
+
+    /** Activities resource module */
+    Route::post('activity/recents', 'ActivityController@recent');
+    Route::resource('activities', 'ActivityController');
 });

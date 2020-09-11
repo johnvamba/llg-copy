@@ -1,7 +1,6 @@
 import {
     SET_USERS
 } from './types';
-import rootReducer from '../reducers';
 
 let initialState = {
     users: []

@@ -1,7 +1,41 @@
-import React from 'react';
-import ListItem from '../../../components/ListItem'
+import React, {useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import moment from 'moment';
+import * as RecentActivtiesActions from '../../../redux/recent-activities/actions'
+
+import ActivitySection from './activity-section';
 
 const RecentActivities = () => {
+    const todayActivities = useSelector(
+            state => state.RecentActivitiesReducer.todayActivities
+        );
+    const yesterdayActivities = useSelector(
+            state => state.RecentActivitiesReducer.yesterdayActivities
+        );
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        async function getTodayActivities() {
+            let {data} = await axios.post('/api/activity/recents', {
+                'limit': 3,
+                'date': moment()
+            });
+
+            dispatch(RecentActivtiesActions.setTodayActivities(data));
+        } 
+
+        async function getYesterdayActivities() {
+            let {data} = await axios.post('/api/activity/recents', {
+                'limit': 3,
+                'date': moment().subtract(1, 'days')
+            });
+            dispatch(RecentActivtiesActions.setYesterdayActivities(data));
+        } 
+
+        getTodayActivities();
+        getYesterdayActivities();
+    }, []);
 
     return (
         <aside className="w-1/4 flex flex-col border-l">
@@ -9,33 +43,8 @@ const RecentActivities = () => {
                 <h1>Recent Activities</h1>
             </div>
 
-            <div className="flex flex-col">
-                <div className="w-24 flex justify-center bg-gray-100 rounded-br-full rounded-tr-full py-2 mt-4">
-                    <p className="text-gray-600 text-sm">
-                        Today
-                    </p>
-                </div>
-
-                <div className="px-6">
-                    <ListItem 
-                        avatar={`http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp`}
-                        avatarStyle="h-12 w-12"
-                        title="john Doe"
-                        description="donated"
-                        hightLightDescription="$500.00"
-                        status="Just now"
-                    />
-
-                    <ListItem 
-                        avatar={`http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp`}
-                        avatarStyle="h-12 w-12"
-                        title="john Doe"
-                        description="volunteered for a "
-                        hightLightDescription="Cleaning Service"
-                        status="Just now"
-                    />
-                </div>
-            </div>
+            <ActivitySection title="Today" data={todayActivities} />
+            <ActivitySection title="Yesterday" data={yesterdayActivities} />
         </aside>
     )
 }

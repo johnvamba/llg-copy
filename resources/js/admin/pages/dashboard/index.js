@@ -1,9 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import * as DonationsActions from '../../../redux/donations/actions';
 import Donations from './donations';
 import DonationGraph from './donation-graph';
 import TopDonors from './top-donors';
 
 const Dashboard = () => {
+    const donations = useSelector(
+            state => state.DonationsReducer
+        );
+        
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        async function fetchDonations() {
+            let {data} = await axios.get('/api/invoice/donated-by-terms');
+
+            dispatch(DonationsActions.setTodayDonation(data.today));
+            dispatch(DonationsActions.setWeekDonation(data.week));
+            dispatch(DonationsActions.setMonthDonation(data.month));
+        }
+
+        fetchDonations()
+    }, [])
 
     return (
         <div className="flex flex-col bg-gray-100">
@@ -14,18 +33,18 @@ const Dashboard = () => {
                 <div className="flex flex-row flex-wrap">
                     <Donations 
                         title="Donated today"
-                        amount="4,231.00"
+                        amount={donations.todayDonation}
                         percentage="12"
                     />
 
                     <Donations 
                         title="Donated this week"
-                        amount="32,231.00"
+                        amount={donations.weekDonation}
                     />
 
                     <Donations 
                         title="Donated this month"
-                        amount="62,231.00"
+                        amount={donations.monthDonation}
                     />
                 </div>
             </div>
