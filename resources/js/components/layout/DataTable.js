@@ -1,17 +1,21 @@
 import React from 'react';
 import Table from '../table/';
+import Pagination from '../table/Pagination';
 import Button from '../Button';
 import { NavLink } from 'react-router-dom';
 
 const DataTable = ({
     module = {},
     tableHeader,
-    tableRow,
-    limitChange
+    tableRow = {},
+    activePage,
+    changeLimit,
+    changePage,
+    offset
 }) => {
 
-    const handlePage = (e) => {
-        limitChange(e.target.value);
+    const handleLimit = (e) => {
+        changeLimit(e.target.value);
     }
 
     return (
@@ -22,7 +26,7 @@ const DataTable = ({
                         Show
                     </label>
                     <div className="relative">
-                        <select onChange={handlePage} className="block appearance-none w-full bg-white-200 border border-gray-200 text-gray-700 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+                        <select onChange={handleLimit} className="block appearance-none w-full bg-white-200 border border-gray-200 text-gray-700 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                             <option>5</option>
                             <option>10</option>
                             <option>20</option>
@@ -47,6 +51,13 @@ const DataTable = ({
                 module={module}
                 headers={tableHeader}
                 contents={tableRow}
+            />
+
+            <Pagination 
+                currentPage={activePage}
+                records={tableRow.data} 
+                offset={offset}
+                handleChangePage={changePage}
             />
         </div>
     )

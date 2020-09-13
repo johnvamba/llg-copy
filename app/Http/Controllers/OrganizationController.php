@@ -38,9 +38,9 @@ class OrganizationController extends Controller
         $results['columns'] = ['id', 'name', 'description', 'location'];
 
         $orgs = Organization::orderBy('created_at', 'desc')
-            ->limit($request->limit)
             ->get()
-            ->map->only('id', 'name', 'description', 'location');
+            ->map->only('id', 'name', 'description', 'location')
+            ->chunk($request->limit);
 
         $results['data'] = $orgs;
         $results['module'] = [

@@ -37,14 +37,16 @@ const RecentActivities = () => {
     }, []);
 
     return (
-        <aside className="flex flex-col xs:2/5 md:2/5 border-l">
-            <div className="pl-6 pt-4">
-                <h1>Recent Activities</h1>
-            </div>
+        <div className="flex flex-col w-full md:w-64 xl:w-64 border-l">
+            <aside>
+                <div className="pl-6 pt-4">
+                    <h1>Recent Activities</h1>
+                </div>
 
-            <ActivitySection title="Today" data={todayActivities} />
-            <ActivitySection title="Yesterday" data={yesterdayActivities} />
-        </aside>
+                <ActivitySection title="Today" data={todayActivities} />
+                <ActivitySection title="Yesterday" data={yesterdayActivities} />
+            </aside>
+        </div>
     )
 }
 

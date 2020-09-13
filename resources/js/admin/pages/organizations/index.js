@@ -5,6 +5,8 @@ import * as OrganizationsActions from '../../../redux/organizations/actions';
 import DataTable from '../../../components/layout/DataTable';
 
 const Organizations = () => {
+    const [page, setPage] = useState(1);
+    const [offset, setOffset] = useState(0);
     const [limit, setLimit] = useState(5);
     const organizations = useSelector(
             state => state.OrganizationsReducer.organizations
@@ -24,8 +26,12 @@ const Organizations = () => {
         fetchOrg()
     }, [limit]);
 
-    const handleLimitChange = (value) => {
-        setLimit(parseInt(value));
+    const handleLimitChange = (limit) => {
+        setLimit(parseInt(limit));
+    }
+
+    const handleChangePage = (page) => {
+        setPage(parseInt(page));
     }
 
     return (
@@ -34,7 +40,10 @@ const Organizations = () => {
                 module={organizations.module}
                 tableHeader={organizations.columns}
                 tableRow={organizations}
-                limitChange={handleLimitChange}
+                changeLimit={handleLimitChange}
+                activePage={page}
+                offset={offset}
+                changePage={handleChangePage}
             />
         </div>
     )

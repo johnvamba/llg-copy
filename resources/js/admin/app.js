@@ -18,11 +18,11 @@ const Home = () => {
 
     return (
         <Router basename="/admin">
-            <div className="min-h-screen flex">
+            <div className="flex h-screen">
                 <Sidebar />
                 
                 <div className="flex flex-1 flex-col">
-                    <header className="h-16 border-b flex flex-row">
+                    <header className="flex flex-rowl h-16 border-b">
                         <div className="flex flex-1 items-center pl-12">
                             <button className="text-gray-500 mr-4 focus:outline-none">
                                 <i className="fa fa-search" aria-hidden="true"></i>
