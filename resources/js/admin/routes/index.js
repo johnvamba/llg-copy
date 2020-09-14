@@ -1,6 +1,8 @@
 import React from 'react';
 import Dashboard from '../pages/dashboard';
 import Users from '../pages/users';
+import CreateUser from '../pages/users/create';
+import EditUser from '../pages/users/edit';
 import Offers from '../pages/offers';
 import Organizations from '../pages/organizations';
 import CreateOrganization from '../pages/organizations/create';
@@ -27,6 +29,16 @@ const routes = [
         path: '/users',
         exact: true,
         component: () => <Users />
+    },
+    {
+        path: '/users/create',
+        exact: true,
+        component: () => <CreateUser />
+    },
+    {
+        path: '/users/edit/:id',
+        exact: true,
+        component: () => <EditUser />
     },
     {
         path: '/organizations',

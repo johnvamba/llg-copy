@@ -80,6 +80,31 @@ class OrganizationTest extends TestCase
     }
 
     /** @test */
+    public function a_org_admin_can_create_organization_with_stripe_credentials()
+    {
+        Storage::fake('public');
+
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $file = UploadedFile::fake()->image('avatar.jpg');
+
+        $response = $this->post('api/organizations', [
+                'name' => $this->faker->text,
+                'description' => $this->faker->text,
+                'location' => $this->faker->address,
+                'lat' => $this->faker->latitude,
+                'lng' => $this->faker->longitude,
+                'media' => $file,
+                'secretKey' => $this->faker->text,
+                'publishableKey' => $this->faker->text,
+            ]);
+
+        $response->assertStatus(202);
+    }
+
+    /** @test */
     public function a_org_admin_can_fetch_orgs()
     {
         $this->actingAs($this->admin, 'api');

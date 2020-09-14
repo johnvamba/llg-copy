@@ -83,6 +83,14 @@ class OrganizationController extends Controller
                         'lng'
                     ]));
 
+                if ($request->secretKey && $request->publishableKey) {
+                    OrganizationCredential::create([
+                        'organization_id' => $org->id,
+                        'secret_key' => $request->secretKey,
+                        'publishable_key' => $request->publishableKey,
+                    ]);
+                }
+
                 if ($request->hasFile('media')) {
                     $org
                         ->addMedia($request->file('media'))

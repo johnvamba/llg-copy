@@ -2,6 +2,7 @@ import React from 'react';
 
 const TextInput = ({
     label,
+    labelStyle,
     name,
     type,
     placeholder,
@@ -12,7 +13,7 @@ const TextInput = ({
 
     return (
         <div className="relative mb-4">
-            <label className="block text-gray-500 text-sm font-semibold mb-2">
+            <label className={`font-thin ${labelStyle} block text-gray-500 text-sm mb-2`}>
                 {label}
             </label>
 

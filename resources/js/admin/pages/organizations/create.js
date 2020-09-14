@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
 import Button from '../../../components/Button';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const CreateOrganization = () => {
     const [errors, setErrors] = useState({});
@@ -13,7 +13,7 @@ const CreateOrganization = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         let errors = "";
 
         try {
@@ -22,8 +22,8 @@ const CreateOrganization = () => {
 
             window.location.href = "/admin/organizations"
         } catch (err) {
-            let {data} = err.response;
-            
+            let { data } = err.response;
+
             errors = data.errors;
         }
 
@@ -31,7 +31,7 @@ const CreateOrganization = () => {
     }
 
     const handleChange = (e) => {
-        let inputs = {...form};
+        let inputs = { ...form };
         inputs[e.target.name] = e.target.value;
         setForm(inputs);
     }
@@ -46,10 +46,14 @@ const CreateOrganization = () => {
             <p className="text-gray-dark text-xl">
                 Create Organisation
             </p>
-            
+
             <form onSubmit={handleSubmit}>
-                <div className="bg-white shadow-lg mt-4 mb-10 rounded-sm">
-                    <div className="w-full sm:w-full md:w-3/5 xl:w-2/5 p-6">
+                <div className="flex flex-row bg-white shadow-lg mt-4 mb-10 rounded-sm p-4">
+                    <div className="flex flex-col flex-1 sm:w-full md:w-3/5 xl:w-2/5 m-2">
+                        <p className="text-gray-dark text-sm mb-4">
+                            Details
+                        </p>
+
                         <TextInput
                             label="Name"
                             name="name"
@@ -77,9 +81,33 @@ const CreateOrganization = () => {
                             errors={errors}
                         />
                     </div>
+
+                    <div className="flex flex-col flex-1 m-2">
+                        <p className="text-gray-dark text-sm mb-4">
+                            Stripe Credentials
+                        </p>
+
+                        <TextInput
+                            label="Secret Key"
+                            name="secretKey"
+                            value={form.secretKey || ``}
+                            placeholder="Enter stripe secret key"
+                            onChange={handleChange}
+                            errors={errors}
+                        />
+
+                        <TextInput
+                            label="Publishable Key"
+                            name="publishableKey"
+                            value={form.publishableKey || ``}
+                            placeholder="Enter stripe publishable key"
+                            onChange={handleChange}
+                            errors={errors}
+                        />
+                    </div>
                 </div>
 
-                <Button 
+                <Button
                     type="submit"
                     className="text-white bg-blue-500 hover:bg-blue-600"
                 >

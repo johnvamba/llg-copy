@@ -56,6 +56,7 @@ const ForgotPassword = () => {
                             placeholder="Email address"
                             onChange={handleChange}
                             errors={errors}
+                            labelStyle="font-semibold"
                         />
 
                         <Button

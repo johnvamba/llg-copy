@@ -19,6 +19,7 @@ Route::post('register', 'AuthController@register');
 
 Route::group(['middleware' => ['auth:api']], function () {
     /** User resource module */
+    Route::post('users/lists', 'UserController@getUsers');
     Route::resource('users', 'UserController');
 
     /** Goal resource module */
@@ -52,7 +53,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('groups', 'GroupController');
 
     /** Orgnization resource module */
-    Route::post('organization/table', 'OrganizationController@getOrganizations');
+    Route::post('organization/lists', 'OrganizationController@getOrganizations');
     Route::get('organizations/{organization}/credential', 'OrganizationController@getCredential');
     Route::post('organizations/{organization}/credential', 'OrganizationController@addCredential');
     Route::resource('organizations', 'OrganizationController');

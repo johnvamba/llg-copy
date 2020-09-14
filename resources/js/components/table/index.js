@@ -5,16 +5,21 @@ import Content from './Content';
 const Table = ({
     module,
     headers,
-    contents
+    data = [],
+    currentPage
 }) => {
+
+    const records = data.length > 0 ? data[currentPage - 1] : [];
 
     return (
         <div className="rounded shadow bg-white">
             <table className="stripe hover w-full pt-1 pb-1">
                 <Header columns={headers}/>
                 <Content 
-                    rows={contents} 
+                    columns={headers}
+                    data={records} 
                     module={module} 
+                    currentPage={currentPage}
                 />
             </table>
         </div>

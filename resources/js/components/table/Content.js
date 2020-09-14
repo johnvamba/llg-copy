@@ -1,24 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '../../components/Button'
 import { NavLink } from 'react-router-dom';
 
-const Content = ({ 
+const Content = ({
     module = {},
-    rows = {}
+    columns = [],
+    data = {},
+    currentPage = 0
 }) => {
-    let {columns, data} = rows;
 
     const handleDelete = async (row) => {
-        const {data} = await axios.delete(`/api/${module.name}/${row.id}`);
+        const { data } = await axios.delete(`/api/${module.name}/${row.id}`);
 
-        console.log(data);
         window.location.href = `/admin/${module.name}`;
+    }
+
+    if (currentPage === 0) {
+        return (
+            <tbody>
+                <tr>
+                    <td colSpan={columns.length + 1} className="border-t px-4 py-1">
+                        No results found
+                    </td>
+                </tr>
+            </tbody>
+        )
     }
 
     return (
         <tbody>
-            {data &&
-                data.map((row, index) => (
+            {
+                Object.values(data).map((row, index) => (
                     <tr key={`${row}.${index}`} className="hover:bg-gray-100">
                        {columns.map((column, i) => (
                             <td 
@@ -31,7 +43,7 @@ const Content = ({
 
                        <td
                             className="border px-4 py-1"
-                            key={`${row.id}.${index}`}
+                            key={`${row.id}`}
                         >
                             <NavLink to={`/${module.name}/edit/${row.id}`}>
                                 <Button

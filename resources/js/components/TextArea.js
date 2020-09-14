@@ -12,7 +12,7 @@ const TextArea = ({
 
     return (
         <div className="relative mb-4">
-            <label className="block text-gray-500 text-sm font-semibold mb-2">
+            <label className="font-thin block text-gray-500 text-sm mb-2">
                 {label}
             </label>
 

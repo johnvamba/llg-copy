@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserStoreRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Support\Facades\Storage;
@@ -23,14 +24,67 @@ class UserController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getUsers(Request $request)
+    {
+        //
+        $results['columns'] = ['id', 'name', 'email'];
+
+        $users = User::orderBy('created_at', 'desc')
+                    ->get()
+                    ->chunk($request->limit);
+
+        $results['data'] = $users;
+        $results['module'] = [
+                'name' => 'users',
+                'singular' => 'user',
+                'plural' => 'users' 
+            ];
+
+        return response()->json($results);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        //
+        $result = DB::transaction(function () use ($request) {
+            $user = User::create(
+                array_merge(
+                    request()->only([
+                        'name',
+                        'email'
+                    ]),
+                    ['password' => bcrypt($request->password)]
+                )
+            );
+
+            $user['profile'] = UserProfile::createProfile($request, $user->id);
+
+            if ($request->hasFile('photo')) {
+                $path = Storage::disk(env('FILESYSTEM_DRIVER'))
+                    ->putFile(
+                        'img', 
+                        $request->file('photo')
+                    );
+
+                $url = Storage::disk(env('FILESYSTEM_DRIVER'))
+                    ->url($path);
+
+                UserProfile::uploadPhoto($url, $user->id);
+            }
+
+            return $user;
+        });
+
+        return response()->json($result, 202);
     }
 
     /**
@@ -64,7 +118,6 @@ class UserController extends Controller
             User::find(auth()->user()->id)
                 ->update(request()->only(
                         'name',
-                        'email'
                     ));
 
             UserProfile::where('user_id', auth()->user()->id)

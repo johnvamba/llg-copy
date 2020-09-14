@@ -6,7 +6,6 @@ import DataTable from '../../../components/layout/DataTable';
 
 const Organizations = () => {
     const [page, setPage] = useState(1);
-    const [offset, setOffset] = useState(0);
     const [limit, setLimit] = useState(5);
     const organizations = useSelector(
             state => state.OrganizationsReducer.organizations
@@ -16,7 +15,7 @@ const Organizations = () => {
 
     useEffect(() => {
         async function fetchOrg() {
-            let {data} = await axios.post('/api/organization/table', {
+            let {data} = await axios.post('/api/organization/lists', {
                     limit: limit
                 });
 
@@ -38,11 +37,9 @@ const Organizations = () => {
         <div className="flex flex-col flex-wrap">
             <DataTable
                 module={organizations.module}
-                tableHeader={organizations.columns}
-                tableRow={organizations}
+                records={organizations}
                 changeLimit={handleLimitChange}
-                activePage={page}
-                offset={offset}
+                currentPage={page}
                 changePage={handleChangePage}
             />
         </div>

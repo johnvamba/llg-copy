@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class UserUpdateRequest extends FormRequest
 {
@@ -21,10 +22,11 @@ class UserUpdateRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
         return [
             'name' => 'sometimes|required',
+            'email' => 'sometimes|required|unique:users,email,'.$request->id,
             'age' => 'sometimes|required',
             'location' => 'sometimes|required',
             'lat' => 'sometimes|required',

@@ -6,12 +6,10 @@ import { NavLink } from 'react-router-dom';
 
 const DataTable = ({
     module = {},
-    tableHeader,
-    tableRow = {},
-    activePage,
+    records = [],
+    currentPage,
     changeLimit,
     changePage,
-    offset
 }) => {
 
     const handleLimit = (e) => {
@@ -49,15 +47,15 @@ const DataTable = ({
 
             <Table
                 module={module}
-                headers={tableHeader}
-                contents={tableRow}
+                headers={records.columns}
+                data={records.data}
+                currentPage={currentPage}
             />
 
             <Pagination 
-                currentPage={activePage}
-                records={tableRow.data} 
-                offset={offset}
-                handleChangePage={changePage}
+                currentPage={currentPage}
+                records={records.data} 
+                onChangePage={changePage}
             />
         </div>
     )
