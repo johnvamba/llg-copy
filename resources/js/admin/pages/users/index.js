@@ -22,7 +22,7 @@ const Users = () => {
         }
 
         fetchData();
-    }, []);
+    }, [limit]);
 
     const handleLimitChange = (limit) => {
         setLimit(parseInt(limit));

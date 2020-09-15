@@ -1,5 +1,11 @@
 import React from 'react';
 import Dashboard from '../pages/dashboard';
+import Needs from '../pages/needs';
+import CreateNeeds from '../pages/needs/create';
+import EidtNeeds from '../pages/needs/edit';
+import NeedsCategory from '../pages/needs-category';
+import CreateNeedsCategory from '../pages/needs-category/create';
+import EditNeedsCategory from '../pages/needs-category/edit';
 import Users from '../pages/users';
 import CreateUser from '../pages/users/create';
 import EditUser from '../pages/users/edit';
@@ -19,6 +25,36 @@ const routes = [
         path: '/dashboard',
         exact: true,
         component: () => <Dashboard />
+    },
+    {
+        path: '/needs',
+        exact: true,
+        component: () => <Needs />
+    },
+    {
+        path: '/needs/create',
+        exact: true,
+        component: () => <CreateNeeds />
+    },
+    {
+        path: '/needs/edit/:id',
+        exact: true,
+        component: () => <EidtNeeds />
+    },
+    {
+        path: '/needs/category',
+        exact: true,
+        component: () => <NeedsCategory />
+    },
+    {
+        path: '/needs/category/create',
+        exact: true,
+        component: () => <CreateNeedsCategory />
+    },
+    {
+        path: '/needs/category/edit/:id',
+        exact: true,
+        component: () => <EditNeedsCategory />
     },
     {
         path: '/offers',

@@ -3,6 +3,7 @@ import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
 import Button from '../../../components/Button';
 import { Link } from 'react-router-dom';
+import { swalCreate } from '../../../components/helpers/alerts';
 
 const CreateOrganization = () => {
     const [errors, setErrors] = useState({});
@@ -20,7 +21,7 @@ const CreateOrganization = () => {
             let response = await axios.post('/api/organizations', form)
             console.log(response);
 
-            window.location.href = "/admin/organizations"
+            await swalCreate("/admin/organizations")
         } catch (err) {
             let { data } = err.response;
 

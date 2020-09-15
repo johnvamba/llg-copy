@@ -126,6 +126,20 @@ class NeedTest extends TestCase
     }
 
     /** @test */
+    public function a_org_admin_can_get_needs()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $response = $this->post('api/need/lists', [
+                'limit' => 5
+            ]);
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
     public function a_user_can_fetch_needs()
     {
         $this->actingAs($this->admin, 'api');

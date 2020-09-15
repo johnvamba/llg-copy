@@ -4,6 +4,9 @@ import {reducer as RecentActivitiesReducer} from './recent-activities/reducer';
 import {reducer as TopDonorsReducer} from './top-donors/reducer';
 import {reducer as OrganizationsReducer} from './organizations/reducer';
 import {reducer as DonationsReducer} from './donations/reducer';
+import {reducer as NeedsCategoriesReducer} from './needs-categories/reducer';
+import {reducer as NeedsReducer} from './needs/reducer';
+import {reducer as OffersReducer} from './offers/reducer';
 
 const appReducers = combineReducers({
     UsersReducer: UsersReducer,
@@ -11,6 +14,9 @@ const appReducers = combineReducers({
     TopDonorsReducer: TopDonorsReducer,
     OrganizationsReducer: OrganizationsReducer,
     DonationsReducer: DonationsReducer,
+    NeedsCategoriesReducer: NeedsCategoriesReducer,
+    NeedsReducer: NeedsReducer,
+    OffersReducer: OffersReducer,
 });
 
 const rootReducer = (state, action) => {

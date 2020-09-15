@@ -27,16 +27,28 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('goals', 'GoalController');
 
     /** Need resource module */
+    Route::post('need/lists', 'NeedsController@getNeeds');
     Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsController@nearby');
     Route::resource('needs', 'NeedsController');
 
-    /** Neet Met resource module */
+    /** Needs Categories resource module */
+    Route::post('needs-category/lists', 'NeedsCategoryController@getCategories');
+    Route::resource('needs-categories', 'NeedsCategoryController');
+
+    /** Needs Types resource module */
+    Route::resource('needs-types', 'NeedsTypeController');
+    
+    /** Needs Met resource module */
     Route::resource('needs-met', 'NeedsMetController');
 
     /** Service Offered resource module */
+    Route::post('offer/lists', 'ServiceOfferController@getOffers');
     Route::get('service-offer/user/request', 'ServiceOfferController@getServicesRequest');
     Route::post('service-offer/{serviceOffer}/request', 'ServiceOfferController@requestAction');
     Route::resource('service-offer', 'ServiceOfferController');
+
+    /** Offers Types resource module */
+    Route::resource('offers-types', 'OffersTypeController');
 
     /** Stories resource module */
     Route::get('featured/stories', 'StoryController@featuredStory');

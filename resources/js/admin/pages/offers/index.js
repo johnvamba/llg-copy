@@ -1,10 +1,47 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import * as OffersAction from '../../../redux/offers/actions';
+import DataTable from '../../../components/layout/DataTable';
 
 const Offers = () => {
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(5);
+
+    const offers = useSelector(
+            state => state.OffersReducer.offers
+        )
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        async function fetchData() {
+            let {data} = await axios.post('/api/offer/lists', {
+                    'limit': limit
+                });
+
+            dispatch(OffersAction.setOffers(data))
+        }
+
+        fetchData();
+    }, [limit]);
     
+    const handleLimitChange = (limit) => {
+        setLimit(parseInt(limit));
+    }
+
+    const handleChangePage = (page) => {
+        setPage(parseInt(page));
+    }
+
     return (
-        <div className="flex">
-            <h1>Offers</h1>
+        <div className="flex flex-col">
+            <DataTable
+                module={offers.module}
+                records={offers}
+                changeLimit={handleLimitChange}
+                currentPage={page}
+                changePage={handleChangePage}
+            />
         </div>
     )
 }

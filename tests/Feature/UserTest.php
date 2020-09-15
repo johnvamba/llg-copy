@@ -223,16 +223,16 @@ class UserTest extends TestCase
 
         $file = UploadedFile::fake()->image('avatar.jpg');
 
-        $response = $this->json('POST', "api/users/", [
+        $response = $this->post("api/users/", [
                 'name' => $this->faker->name,
+                'email' => $this->faker->email,
                 'age' => 18,
                 'location' => $this->faker->address,
                 'lat' => 12.323,
                 'lng' => 12.323,
                 'bio' => $this->faker->text,
-                'email' => $this->faker->email,
-                'password' => 'secret',
-                'password_confirmation' => 'secre',
+                'password' => 'password',
+                'password_confirmation' => 'password',
                 'photo' => $file
             ]);
 

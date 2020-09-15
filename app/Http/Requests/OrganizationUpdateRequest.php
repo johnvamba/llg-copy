@@ -29,7 +29,9 @@ class OrganizationUpdateRequest extends FormRequest
             'location' => 'sometimes|required',
             'lat' => 'sometimes|required',
             'lng' => 'sometimes|required',
-            'media' => 'sometimes|required'
+            'media' => 'sometimes|required',
+            'secretKey' => 'sometimes|required',
+            'publishableKey' => 'sometimes|required'
         ];
     }
 }

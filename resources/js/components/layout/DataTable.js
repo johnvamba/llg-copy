@@ -36,7 +36,7 @@ const DataTable = ({
                 </div>
 
                 <div className="flex flex-1 justify-end py-2">
-                    <NavLink to={`/${module.name}/create`}>
+                    <NavLink to={`${module.path}/create`}>
                         <Button className="uppercase text-xs text-white bg-blue-500 hover:bg-blue-600" title="test">
                             <i className="fas fa-plus pr-2"></i>
                             <span>{`add ${module.singular}`}</span>

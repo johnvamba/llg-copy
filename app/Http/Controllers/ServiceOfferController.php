@@ -35,6 +35,42 @@ class ServiceOfferController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function getOffers(Request $request)
+    {
+        $results['columns'] = [
+                'id',
+                'title',
+                'description',
+                'location',
+            ];
+
+        $serviceOffers = ServiceOffer::where('status', 'approved')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map->only(
+                'id', 
+                'title', 
+                'description', 
+                'location', 
+            )
+            ->chunk($request->limit);
+
+        $results['data'] = $serviceOffers;
+        $results['module'] = [
+            'path' => '/offers',
+            'endpoint' => 'service-offer',
+            'singular' => 'offer',
+            'plural' => 'offers',
+        ];
+
+        return response()->json($results);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getServicesRequest()
     {
         $serviceOffers = ServiceOffer::with('user','serviceType', 'organization')

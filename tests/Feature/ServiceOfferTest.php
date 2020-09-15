@@ -131,6 +131,26 @@ class ServiceOfferTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_get_service_offers()
+    {
+        $this->actingAs($this->user, 'api');
+
+        $this->withoutExceptionHandling();
+
+        factory(ServiceOffer::class, 5)->create([
+            'service_type_id' => $this->service->id,
+            'organization_id' => $this->org->id,
+            'user_id' => $this->user->id
+        ]);
+
+        $response = $this->post('api/offer/lists', [
+                'limit' => 5
+            ]);
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
     public function a_user_can_view_service_offer()
     {
         $this->actingAs($this->user, 'api');

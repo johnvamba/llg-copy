@@ -26,7 +26,6 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'name' => 'sometimes|required',
-            'email' => 'sometimes|required|unique:users,email,'.$request->id,
             'age' => 'sometimes|required',
             'location' => 'sometimes|required',
             'lat' => 'sometimes|required',

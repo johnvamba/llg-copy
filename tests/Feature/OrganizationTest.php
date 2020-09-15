@@ -152,6 +152,26 @@ class OrganizationTest extends TestCase
     }
 
     /** @test */
+    public function a_org_admin_can_update_org_with_stripe_keys()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+        
+        $org = factory(Organization::class, 4)->create();
+        $selectedOrg = $org[0];
+
+        $response = $this->patch("api/organizations/{$selectedOrg->id}", [
+                'name' => $this->faker->text,
+                'description' => $this->faker->text,
+                'secretKey' => $this->faker->text,
+                'publishableKey' => $this->faker->text
+            ]);
+
+        $response->assertStatus(202);
+    }
+
+    /** @test */
     public function a_org_admin_can_delete_org()
     {
         $this->actingAs($this->admin, 'api');

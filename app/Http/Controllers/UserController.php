@@ -39,9 +39,10 @@ class UserController extends Controller
 
         $results['data'] = $users;
         $results['module'] = [
-                'name' => 'users',
+                'path' => '/users',
                 'singular' => 'user',
-                'plural' => 'users' 
+                'plural' => 'users',
+                'endpoint' => 'users' 
             ];
 
         return response()->json($results);

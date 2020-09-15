@@ -6,7 +6,7 @@ const Table = ({
     module,
     headers,
     data = [],
-    currentPage
+    currentPage,
 }) => {
 
     const records = data.length > 0 ? data[currentPage - 1] : [];

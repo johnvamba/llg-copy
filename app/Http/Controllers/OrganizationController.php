@@ -19,7 +19,7 @@ class OrganizationController extends Controller
      */
     public function index()
     {
-        $orgs = Organization::orderBy('created_at', 'desc')->paginate();
+        $orgs = Organization::orderBy('created_at', 'desc')->get();
 
         foreach ($orgs as $org) {
             $org->getMedia('photo');
@@ -44,9 +44,10 @@ class OrganizationController extends Controller
 
         $results['data'] = $orgs;
         $results['module'] = [
-                'name' => 'organizations',
+                'path' => '/organizations',
                 'singular' => 'organisation',
-                'plural' => 'organisations' 
+                'plural' => 'organisations',
+                'endpoint' => 'organizations' 
             ];
 
         return response()->json($results);
@@ -150,8 +151,31 @@ class OrganizationController extends Controller
     public function update(OrganizationUpdateRequest $request, $id)
     {
         $org = Organization::findOrFail($id);
-        $org->update($request->validated());
+        $org->update(request()->except([
+                'needs',
+                'secretKey', 
+                'publishableKey',
+                'created_at',
+                'updated_at',
+                'deleted_at'
+            ]));
 
+        if ($request->secretKey && $request->publishableKey) {
+            $credential = OrganizationCredential::where(
+                    'organization_id', $org->id
+                )
+                ->first();
+    
+            if (!$credential) {
+                $credential = new OrganizationCredential;
+            }
+            
+            $credential->organization_id = $org->id;
+            $credential->secret_key = $request->secretKey;
+            $credential->publishable_key = $request->publishableKey;
+            $credential->save();
+        }
+        
         return response()->json($org, 202);
     }
 

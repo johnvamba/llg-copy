@@ -33,6 +33,46 @@ class NeedsController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getNeeds(Request $request)
+    {
+        //
+        $results['columns'] = [
+                'id',
+                'title',
+                'description',
+                'location',
+                'raised',
+                'goal',
+            ];
+
+        $needs = Need::orderBy('created_at', 'desc')
+            ->get()
+            ->map->only(
+                'id', 
+                'title', 
+                'description', 
+                'location', 
+                'raised',
+                'goal'
+            )
+            ->chunk($request->limit);
+
+        $results['data'] = $needs;
+        $results['module'] = [
+                'path' => '/needs',
+                'endpoint' => 'needs',
+                'singular' => 'need',
+                'plural' => 'needs',
+            ];
+
+        return response()->json($results);
+    }
+
+    /**
      * Display a listing of the resource nearby.
      *
      * @return \Illuminate\Http\Response

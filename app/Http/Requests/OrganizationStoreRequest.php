@@ -30,8 +30,8 @@ class OrganizationStoreRequest extends FormRequest
             'lat' => 'required',
             'lng' => 'required',
             'media' => 'sometimes|required',
-            'secretKey' => 'required',
-            'publishableKey' => 'required',
+            'secretKey' => 'sometimes|required',
+            'publishableKey' => 'sometimes|required',
         ];
     }
 }

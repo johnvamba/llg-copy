@@ -1,25 +1,22 @@
 import React, { useState } from 'react';
-import Button from '../../components/Button'
-import { NavLink } from 'react-router-dom';
+import UserActions from '../../admin/pages/users/actions';
+import OrganizationActions from '../../admin/pages/organizations/actions';
+import NeedsCategoryActions from '../../admin/pages/needs-category/actions';
+import NeedsActions from '../../admin/pages/needs/actions';
 
 const Content = ({
     module = {},
     columns = [],
     data = {},
-    currentPage = 0
+    currentPage = 0,
 }) => {
+    console.log(data);
 
-    const handleDelete = async (row) => {
-        const { data } = await axios.delete(`/api/${module.name}/${row.id}`);
-
-        window.location.href = `/admin/${module.name}`;
-    }
-
-    if (currentPage === 0) {
+    if (data.length === 0) {
         return (
             <tbody>
                 <tr>
-                    <td colSpan={columns.length + 1} className="border-t px-4 py-1">
+                    <td colSpan={columns.length + 1} className="text-gray-500 border-t px-4 py-3">
                         No results found
                     </td>
                 </tr>
@@ -27,39 +24,45 @@ const Content = ({
         )
     }
 
+    const actions = row => {
+        switch (module.singular) {
+            case 'user':
+                return <UserActions module={module} row={row} />
+                break;
+            case 'organisation':
+                return <OrganizationActions module={module} row={row} />
+                break;
+            case 'category':
+                return <NeedsCategoryActions module={module} row={row} />
+                break;
+            case 'need':
+                return <NeedsActions module={module} row={row} />
+                break;
+            default:
+                break;
+        }
+    }
+
     return (
         <tbody>
             {
                 Object.values(data).map((row, index) => (
                     <tr key={`${row}.${index}`} className="hover:bg-gray-100">
-                       {columns.map((column, i) => (
-                            <td 
-                                className="border px-4 py-1" 
+                        {columns.map((column, i) => (
+                            <td
+                                className="border px-4 py-1"
                                 key={`${column}.${i}`}
                             >
                                 {row[column]}
-                            </td>   
-                       ))}
+                            </td>
+                        ))}
 
-                       <td
+                        <td
                             className="border px-4 py-1"
                             key={`${row.id}`}
                         >
-                            <NavLink to={`/${module.name}/edit/${row.id}`}>
-                                <Button
-                                    className="m-2 bg-blue-500 text-xs text-white hover:bg-blue-600"
-                                >
-                                    <i className="fas fa-edit"></i>
-                                </Button>
-                            </NavLink>
-
-                            <Button
-                                onClick={() => handleDelete(row)}
-                                className="m-2 bg-red-500 text-xs text-white hover:bg-red-600"
-                            >
-                                <i className="fas fa-trash"></i>
-                            </Button>
-                       </td>
+                            { actions(row) }
+                        </td>
                     </tr>
                 ))
             }

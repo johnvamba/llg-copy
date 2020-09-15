@@ -29,7 +29,7 @@ const Sidebar = () => {
             </div>
 
             <nav className="mx-6 text-sm">
-                <div 
+                <div
                     className={`mt-6 
                     ${location.pathname == "/dashboard" ? "text-blue-400" : "text-gray-400"}`}
                 >
@@ -40,49 +40,82 @@ const Sidebar = () => {
                 </div>
 
                 <div className="mt-6 text-gray-400">
-                    <button onClick={() => handleOpen('need')} className="flex items-center focus:outline-none">
-                        <i className="text-xl fa fa-heart" aria-hidden="true"></i>
+                    <button
+                        onClick={() => handleOpen('need')}
+                        className={`relative w-full flex items-center focus:outline-none
+                        ${(location.pathname == "/needs") || (location.pathname == "/needs/category") ? "text-blue-400" : "text-gray-400"}`}
+                    >
+                        <i className="text-xl fab fa-gratipay"></i>
                         <span className="px-4">Needs</span>
+
+                        <div className="absolute inset-y-0 right-0 text-gray-400">
+                            <svg
+                                className="fill-current h-6 w-6"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                            >
+                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                            </svg>
+                        </div>
                     </button>
 
                     {show.need &&
                         <div className={`ml-8`}>
-                            <div className="mt-4">
-                                <Link to="/dashboard">
-                                    Needs 1
+                            <div
+                                className={`mt-4 
+                                ${location.pathname == "/needs" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/needs">
+                                    Contents
                                 </Link>
                             </div>
 
-                            <div className="mt-4">
-                                <Link to="/dashboard">
-                                    Needs 2
+                            <div
+                                className={`mt-4 
+                                ${location.pathname == "/needs/category" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/needs/category">
+                                    Categories
                                 </Link>
                             </div>
                         </div>
                     }
                 </div>
 
-                <div 
+                <div
                     className={`mt-6 
                     ${location.pathname == "/offers" ? "text-blue-400" : "text-gray-400"}`}
                 >
                     <Link to="/offers" className="flex items-center">
-                        <i className="text-xl fa fa-th-large" aria-hidden="true"></i>
+                        <i className="text-xl fas fa-hand-holding-heart"></i>
                         <span className="px-4">Offers</span>
                     </Link>
                 </div>
 
                 <div className="mt-6 text-gray-400">
-                    <button onClick={() => handleOpen('story')} className="flex items-center focus:outline-none">
-                        <i className="text-xl fa fa-heart" aria-hidden="true"></i>
+                    <button 
+                        onClick={() => handleOpen('story')} 
+                        className="relative flex items-center focus:outline-none w-full"
+                    >
+                        <i className="text-xl fas fa-leaf"></i>
                         <span className="px-4">Stories</span>
+
+                        <div className="absolute inset-y-0 right-0 text-gray-400">
+                            <svg
+                                className="fill-current h-6 w-6"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                            >
+                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                            </svg>
+                        </div>
                     </button>
 
                     {show.story &&
                         <div className={`ml-8`}>
                             <div className="mt-4">
                                 <Link to="/dashboard">
-                                    Stories 1
+                                    Contents
                                 </Link>
                             </div>
 
@@ -95,23 +128,43 @@ const Sidebar = () => {
                     }
                 </div>
 
-                <div 
+                <div
                     className={`mt-6 
                     ${location.pathname == "/users" ? "text-blue-400" : "text-gray-400"}`}
                 >
                     <Link to="/users" className="flex items-center">
-                        <i className="text-xl fa fa-user" aria-hidden="true"></i>
+                        <i className="text-xl far fa-user"></i>
                         <span className="px-4">Users</span>
                     </Link>
                 </div>
 
-                <div 
+                <div
                     className={`mt-6 
                     ${location.pathname == "/organizations" ? "text-blue-400" : "text-gray-400"}`}
                 >
                     <Link to="/organizations" className="flex items-center">
                         <i className="text-xl fa fa-th-large" aria-hidden="true"></i>
                         <span className="px-4">Organisations</span>
+                    </Link>
+                </div>
+
+                <div
+                    className={`mt-6 
+                    ${location.pathname == "/push-notifications" ? "text-blue-400" : "text-gray-400"}`}
+                >
+                    <Link to="/organizations" className="flex items-center">
+                        <i className="text-xl far fa-bell"></i>
+                        <span className="px-4">Push Notifications</span>
+                    </Link>
+                </div>
+
+                <div
+                    className={`mt-6 
+                    ${location.pathname == "/api" ? "text-blue-400" : "text-gray-400"}`}
+                >
+                    <Link to="/organizations" className="flex items-center">
+                        <i className="text-xl fas fa-key"></i>
+                        <span className="px-4">API</span>
                     </Link>
                 </div>
             </nav>
