@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Spatie\Permission\Models\Role;
 use App\Http\Requests\UserStoreRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserUpdateRequest;
@@ -20,7 +21,7 @@ class UserController extends Controller
     public function index()
     {
         //
-        return response()->json(User::with('profile')->paginate());
+        return response()->json(User::with('profile')->get());
     }
 
     /**
@@ -66,6 +67,9 @@ class UserController extends Controller
                     ['password' => bcrypt($request->password)]
                 )
             );
+
+            $role = Role::find($request->role);
+            $user->assignRole($role->name);
 
             $user['profile'] = UserProfile::createProfile($request, $user->id);
 
@@ -115,19 +119,19 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $user)
     {
-        DB::transaction(function () use ($request, $user) {
-            User::find(auth()->user()->id)
+        $result = DB::transaction(function () use ($request, $user) {
+            User::find($user->id)
                 ->update(request()->only(
                         'name',
                     ));
 
-            UserProfile::where('user_id', auth()->user()->id)
+            UserProfile::where('user_id', $user->id)
                 ->update(request()->only(
                     'age',
                     'location',
                     'lat',
                     'lng',
-                    'bio'
+                    'bio',
                 ));
 
             if ($request->hasFile('photo')) {
@@ -142,10 +146,13 @@ class UserController extends Controller
 
                 UserProfile::uploadPhoto($url, $user->id);
             }
+
+            return User::with('profile')->find($user->id);
         });
 
         return response()->json([
                 'message' => 'Sucessfully updated',
+                'data' => $result
             ], 202);
     }
 

@@ -41,7 +41,7 @@ const Home = () => {
                                 Admin
                             </button>
                             <Link className="mr-6 text-lg" to="/">
-                                <i className="fa fa-bell" aria-hidden="true"></i>
+                                <i className="far fa-bell"></i>
                             </Link>
                             <button className="mr-8 text-xl focus:outline-none" onClick={logout}>
                                 <i className="fa fa-sign-out-alt" aria-hidden="true"></i>

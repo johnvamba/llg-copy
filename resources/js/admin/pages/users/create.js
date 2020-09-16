@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
+import Select from '../../../components/Select';
 import Button from '../../../components/Button';
+import Location from '../../../components/Location';
 import { Link } from 'react-router-dom';
 import { swalCreate } from '../../../components/helpers/alerts';
 
 const CreateUser = () => {
+    const [roles, setRoles] = useState([]);
     const [errors, setErrors] = useState({});
-    const [form, setForm] = useState({
-        lat: 8.492381,
-        lng: 124.654649
-    });
+    const [form, setForm] = useState({});
+
+    useEffect(() => {
+        async function fetchData() {
+            let { data } = await axios.get('/api/roles');
+            setRoles(data);
+        }
+
+        fetchData();
+    }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,6 +43,14 @@ const CreateUser = () => {
     const handleChange = (e) => {
         let inputs = { ...form };
         inputs[e.target.name] = e.target.value;
+        setForm(inputs);
+    }
+
+    const handleLocation = (input) => {
+        let inputs = { ...form };
+        inputs['location'] = input.formatted_address;
+        inputs['lat'] = input.geometry.location.lat();
+        inputs['lng'] = input.geometry.location.lng();
         setForm(inputs);
     }
 
@@ -73,12 +90,11 @@ const CreateUser = () => {
                             errors={errors}
                         />
 
-                        <TextInput
+                        <Location
                             label="Location"
                             name="location"
-                            value={form.location || ``}
-                            placeholder="Enter location"
-                            onChange={handleChange}
+                            placesSelected={handleLocation}
+                            className="border-b"
                             errors={errors}
                         />
 
@@ -91,7 +107,14 @@ const CreateUser = () => {
                             errors={errors}
                         />
 
-
+                        <Select
+                            label="Role"
+                            name="role"
+                            value={form.role || ``}
+                            data={roles}
+                            onChange={handleChange}
+                            errors={errors}
+                        />
                     </div>
 
                     <div className="flex flex-col flex-1 m-2">

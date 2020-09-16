@@ -3,6 +3,8 @@ import UserActions from '../../admin/pages/users/actions';
 import OrganizationActions from '../../admin/pages/organizations/actions';
 import NeedsCategoryActions from '../../admin/pages/needs-category/actions';
 import NeedsActions from '../../admin/pages/needs/actions';
+import OffersActions from '../../admin/pages/offers/actions';
+import StoriesActions from '../../admin/pages/stories/actions';
 
 const Content = ({
     module = {},
@@ -37,6 +39,12 @@ const Content = ({
                 break;
             case 'need':
                 return <NeedsActions module={module} row={row} />
+                break;
+            case 'offer':
+                return <OffersActions module={module} row={row} />
+                break;
+            case 'story':
+                return <StoriesActions module={module} row={row} />
                 break;
             default:
                 break;

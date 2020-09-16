@@ -95,7 +95,8 @@ const Sidebar = () => {
                 <div className="mt-6 text-gray-400">
                     <button 
                         onClick={() => handleOpen('story')} 
-                        className="relative flex items-center focus:outline-none w-full"
+                        className={`relative flex items-center focus:outline-none w-full
+                        ${(location.pathname == "/stories") ? "text-blue-400" : "text-gray-400"}`}
                     >
                         <i className="text-xl fas fa-leaf"></i>
                         <span className="px-4">Stories</span>
@@ -113,15 +114,12 @@ const Sidebar = () => {
 
                     {show.story &&
                         <div className={`ml-8`}>
-                            <div className="mt-4">
-                                <Link to="/dashboard">
+                            <div 
+                                className={`mt-4
+                                ${(location.pathname == "/stories") ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/stories">
                                     Contents
-                                </Link>
-                            </div>
-
-                            <div className="mt-4">
-                                <Link to="/dashboard">
-                                    Stories 2
                                 </Link>
                             </div>
                         </div>

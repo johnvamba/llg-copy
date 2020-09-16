@@ -2,15 +2,13 @@ import React, { useState } from 'react';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
 import Button from '../../../components/Button';
+import Location from '../../../components/Location';
 import { Link } from 'react-router-dom';
 import { swalCreate } from '../../../components/helpers/alerts';
 
 const CreateOrganization = () => {
     const [errors, setErrors] = useState({});
-    const [form, setForm] = useState({
-        lat: 8.492381,
-        lng: 124.654649
-    });
+    const [form, setForm] = useState({});
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,9 +29,38 @@ const CreateOrganization = () => {
         setErrors(errors || {});
     }
 
+    const handleUpload = (e) => {
+        console.log(e.target.name);
+        let files = e.target.files || e.dataTransfer.files;
+        if (!files.length) {
+            delete form[e.target.name];
+            return;
+        }
+
+        createImage(files[0], e.target.name);
+    }
+
+    const createImage = (file, key) => {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+            let inputs = { ...form };
+            inputs[key] = e.target.result;
+            setForm(inputs);
+        };
+        reader.readAsDataURL(file);
+    }
+
     const handleChange = (e) => {
         let inputs = { ...form };
         inputs[e.target.name] = e.target.value;
+        setForm(inputs);
+    }
+
+    const handleLocation = (input) => {
+        let inputs = { ...form };
+        inputs['location'] = input.formatted_address;
+        inputs['lat'] = input.geometry.location.lat();
+        inputs['lng'] = input.geometry.location.lng();
         setForm(inputs);
     }
 
@@ -51,6 +78,15 @@ const CreateOrganization = () => {
             <form onSubmit={handleSubmit}>
                 <div className="flex flex-row bg-white shadow-lg mt-4 mb-10 rounded-sm p-4">
                     <div className="flex flex-col flex-1 sm:w-full md:w-3/5 xl:w-2/5 m-2">
+                        <label className="font-thin text-sm text-gray-500 mb-2">Photo</label>
+                        <input
+                            type="file"
+                            name="photo"
+                            accept="image/*"
+                            onChange={handleUpload}
+                            className="mb-4"
+                        />
+
                         <p className="text-gray-dark text-sm mb-4">
                             Details
                         </p>
@@ -73,17 +109,25 @@ const CreateOrganization = () => {
                             errors={errors}
                         />
 
-                        <TextInput
+                        <Location
                             label="Location"
                             name="location"
-                            value={form.location || ``}
-                            placeholder="Enter location"
-                            onChange={handleChange}
+                            placesSelected={handleLocation}
+                            className="border-b"
                             errors={errors}
                         />
                     </div>
 
                     <div className="flex flex-col flex-1 m-2">
+                        <label className="font-thin text-sm text-gray-500 mb-2">Cover Photo</label>
+                        <input
+                            type="file"
+                            name="cover_photo"
+                            accept="image/*"
+                            onChange={handleUpload}
+                            className="mb-4"
+                        />
+
                         <p className="text-gray-dark text-sm mb-4">
                             Stripe Credentials
                         </p>

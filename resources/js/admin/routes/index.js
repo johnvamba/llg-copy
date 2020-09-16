@@ -10,6 +10,9 @@ import Users from '../pages/users';
 import CreateUser from '../pages/users/create';
 import EditUser from '../pages/users/edit';
 import Offers from '../pages/offers';
+import EditOffer from '../pages/offers/edit';
+import Stories from '../pages/stories';
+import EditStory from '../pages/stories/edit';
 import Organizations from '../pages/organizations';
 import CreateOrganization from '../pages/organizations/create';
 import EditOrganization from '../pages/organizations/edit';
@@ -60,6 +63,21 @@ const routes = [
         path: '/offers',
         exact: true,
         component: () => <Offers />
+    },
+    {
+        path: '/offers/edit/:id',
+        exact: true,
+        component: () => <EditOffer />
+    },
+    {
+        path: '/stories',
+        exact: true,
+        component: () => <Stories />
+    },
+    {
+        path: '/stories/edit/:id',
+        exact: true,
+        component: () => <EditStory />
     },
     {
         path: '/users',

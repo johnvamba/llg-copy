@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
 import Button from '../../../components/Button';
+import Location from '../../../components/Location';
 import { Link, useParams } from 'react-router-dom';
+import { swalUpdate } from '../../../components/helpers/alerts';
 
 const EditUser = () => {
     const [errors, setErrors] = useState({});
@@ -16,19 +18,19 @@ const EditUser = () => {
             setForm({
                 id: data.data?.id,
                 name: data.data?.name,
-                location:  data.data.profile?.location,
-                age:  data.data?.profile.age,
-                lat:  data.data?.profile.lat,
-                lng:  data.data?.profile.lng,
-                bio:  data.data?.profile.bio,
+                location: data.data.profile?.location,
+                age: data.data?.profile.age,
+                lat: data.data?.profile.lat,
+                lng: data.data?.profile.lng,
+                bio: data.data?.profile.bio,
                 email: data.data.email,
             });
 
         }
-        
+
         fetchData()
     }, [])
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -37,7 +39,7 @@ const EditUser = () => {
         try {
             let response = await axios.patch(`/api/users/${id}`, form)
 
-            window.location.href = "/admin/users"
+            await swalUpdate("/admin/users")
         } catch (err) {
             let { data } = err.response;
 
@@ -50,6 +52,14 @@ const EditUser = () => {
     const handleChange = (e) => {
         let inputs = { ...form };
         inputs[e.target.name] = e.target.value;
+        setForm(inputs);
+    }
+
+    const handleLocation = (input) => {
+        let inputs = { ...form };
+        inputs['location'] = input.formatted_address;
+        inputs['lat'] = input.geometry.location.lat();
+        inputs['lng'] = input.geometry.location.lng();
         setForm(inputs);
     }
 
@@ -80,6 +90,16 @@ const EditUser = () => {
                                 onChange={handleChange}
                                 errors={errors}
                             />
+                            
+                            <TextInput
+                                type="email"
+                                label="Email"
+                                name="email"
+                                value={form.email || ``}
+                                placeholder="Enter email"
+                                onChange={handleChange}
+                                errors={errors}
+                            />
 
                             <TextInput
                                 label="Age"
@@ -90,12 +110,12 @@ const EditUser = () => {
                                 errors={errors}
                             />
 
-                            <TextInput
+                            <Location
                                 label="Location"
                                 name="location"
-                                value={form.location || ``}
-                                placeholder="Enter location"
-                                onChange={handleChange}
+                                defaultValue={form.location || ``}
+                                placesSelected={handleLocation}
+                                className="border-b"
                                 errors={errors}
                             />
 

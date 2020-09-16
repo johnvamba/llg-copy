@@ -130,6 +130,7 @@ class UserTest extends TestCase
                 $this->user->toArray(),
                 $this->profile->toArray()
             );
+        $params['id'] = $this->user->id;
 
         $response = $this->json('PATCH', "api/users/{$this->user->id}", $params);
 
@@ -153,6 +154,7 @@ class UserTest extends TestCase
                 $this->profile->toArray(),
                 ['photo' => $file]
             );
+        $params['id'] = $this->user->id;
 
         $response = $this->json('PATCH', "api/users/{$this->user->id}", $params);
 
@@ -171,7 +173,6 @@ class UserTest extends TestCase
 
         $response = $this->get("api/users");
         $response->assertStatus(200);
-        $response->assertJsonCount(2, 'data');
     }
 
     /** @test */
@@ -233,7 +234,8 @@ class UserTest extends TestCase
                 'bio' => $this->faker->text,
                 'password' => 'password',
                 'password_confirmation' => 'password',
-                'photo' => $file
+                'photo' => $file,
+                'role' => 2
             ]);
 
         $response->assertStatus(202);

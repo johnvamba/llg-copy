@@ -34,6 +34,7 @@ class UserStoreRequest extends FormRequest
             'bio' => 'required',
             'preference' => 'sometimes|required',
             'photo' => 'sometimes|required|image',
+            'role' => 'required'
         ];
     }
 }

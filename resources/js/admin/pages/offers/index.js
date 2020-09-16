@@ -19,6 +19,8 @@ const Offers = () => {
                     'limit': limit
                 });
 
+            console.log(data);
+
             dispatch(OffersAction.setOffers(data))
         }
 
@@ -41,6 +43,7 @@ const Offers = () => {
                 changeLimit={handleLimitChange}
                 currentPage={page}
                 changePage={handleChangePage}
+                canAdd={false}
             />
         </div>
     )

@@ -23,8 +23,8 @@ const TextInput = ({
                 value={value || ``}
                 type={type || `text`}
                 placeholder={placeholder}
-                className="w-full border-b border-t-0 border-l-0 border-r-0 border-grey-dark
-                focus:outline-none"
+                className={`w-full border-b border-t-0 border-l-0 border-r-0 border-grey-dark
+                focus:outline-none`}
             />
 
             {errors[name] && 

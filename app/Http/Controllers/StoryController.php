@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Http\Requests\StoryStoreRequest;
 use App\Http\Requests\StoryUpdateRequest;
 use Illuminate\Http\Request;
@@ -35,6 +36,34 @@ class StoryController extends Controller
         }
 
         return response()->json($stories);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getStories(Request $request)
+    {
+        $results['columns'] = [
+                'id',
+                'title',
+                'description',
+            ];
+
+        $stories = Story::orderBy('created_at', 'desc')
+            ->get()
+            ->chunk($request->limit);
+
+        $results['data'] = $stories;
+        $results['module'] = [
+                'path' => '/stories',
+                'endpoint' => 'stories',
+                'singular' => 'story',
+                'path' => 'stories',
+            ];
+
+        return response()->json($results);
     }
 
     /**
@@ -86,17 +115,21 @@ class StoryController extends Controller
                         )
                     );
 
+                if ($request->get('media')) {
+                    $image = $request->get('media');
+                    $name = time();
+                    $extension = explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+                    
+                    $story 
+                        ->addMediaFromBase64($image)
+                        ->usingName($name)
+                        ->usingFileName($name.'.'.$extension)
+                        ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
+                }
+
                 if ($request->tags) {
                     $tags = Tag::createTag($story, $request->tags);
                     $story['tags'] = $tags;
-                }
-        
-                if ($request->hasFile('media')) {
-                    $story
-                        ->addMedia($request->file('media'))
-                        ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
-        
-                    $story->getMedia('photo');
                 }
 
                 return $story;

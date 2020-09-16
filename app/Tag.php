@@ -23,7 +23,7 @@ class Tag extends Model
     {   
         $results = [];
 
-        foreach ($tags as $tag) {
+        foreach (json_decode($tags) as $tag) {
             $makeTag = Tag::make(['name' => $tag]);
             $results[] = $model->tags()->save($makeTag);
         }

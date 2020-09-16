@@ -29,7 +29,8 @@ class OrganizationStoreRequest extends FormRequest
             'location' => 'required',
             'lat' => 'required',
             'lng' => 'required',
-            'media' => 'sometimes|required',
+            'photo' => 'sometimes|required',
+            'cover_photo' => 'sometimes|required',
             'secretKey' => 'sometimes|required',
             'publishableKey' => 'sometimes|required',
         ];

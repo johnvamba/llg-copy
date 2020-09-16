@@ -90,7 +90,7 @@ class NeedTest extends TestCase
                 'lng' => $this->faker->longitude,
                 'raised' => 50.00,
                 'goal' => 100.00,
-                'tags' => $this->faker->words
+                'tags' => json_encode($this->faker->words)
             ]);
 
         $response->assertStatus(202);
@@ -118,8 +118,8 @@ class NeedTest extends TestCase
                 'lng' => $this->faker->longitude,
                 'raised' => 50.00,
                 'goal' => 100.00,
-                'tags' => $this->faker->words,
-                'media' => $file
+                'tags' => json_encode($this->faker->words),
+                'photo' => $file
             ]);
 
         $response->assertStatus(202);

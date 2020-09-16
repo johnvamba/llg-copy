@@ -74,10 +74,29 @@ class StoryTest extends TestCase
                 'description' => $this->faker->text,
                 'featured_start_date' => '2020-09-03',
                 'featured_end_date' => '2020-09-05',
-                'tags' => $this->faker->words
+                'tags' => json_encode($this->faker->words)
             ]);
 
         $response->assertStatus(202);
+    }
+
+    /** @test */
+    public function a_admin_can_fetch_stories()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        factory(Story::class, 5)->create([
+            'organization_id' => $this->org->id,
+            'user_id' => $this->admin->id
+        ]);
+
+        $response = $this->post('api/story/lists', [
+                'limit' => 5
+            ]);
+
+        $response->assertStatus(200);
     }
 
     /** @test */

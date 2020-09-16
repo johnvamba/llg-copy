@@ -3,6 +3,7 @@ import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
 import Select from '../../../components/Select';
 import Button from '../../../components/Button';
+import Location from '../../../components/Location';
 import { Link } from 'react-router-dom';
 import { swalCreate } from '../../../components/helpers/alerts';
 import ReactTagInput from "@pathofdev/react-tag-input";
@@ -28,7 +29,7 @@ const CreateNeeds = () => {
 
         fetchOrganization();
     }, [])
-    
+
     useEffect(() => {
         async function fetchCategory() {
             let { data } = await axios.get('/api/needs-categories');
@@ -53,7 +54,7 @@ const CreateNeeds = () => {
         let errors = "";
 
         try {
-            form['tags'] = tags;
+            form['tags'] = JSON.stringify(tags);
 
             let response = await axios.post('/api/needs', form)
 
@@ -73,8 +74,33 @@ const CreateNeeds = () => {
         setForm(inputs);
     }
 
-    const handleTags = (tag) => {
-        console.log(tag);
+    const handleLocation = (input) => {
+        let inputs = { ...form };
+        inputs['location'] = input.formatted_address;
+        inputs['lat'] = input.geometry.location.lat();
+        inputs['lng'] = input.geometry.location.lng();
+        setForm(inputs);
+    }
+
+    const handleUpload = (e) => {
+        console.log(e.target.name);
+        let files = e.target.files || e.dataTransfer.files;
+        if (!files.length) {
+            delete form[e.target.name];
+            return;
+        }
+
+        createImage(files[0], e.target.name);
+    }
+
+    const createImage = (file, key) => {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+            let inputs = { ...form };
+            inputs[key] = e.target.result;
+            setForm(inputs);
+        };
+        reader.readAsDataURL(file);
     }
 
     return (
@@ -91,6 +117,19 @@ const CreateNeeds = () => {
             <form onSubmit={handleSubmit}>
                 <div className="flex bg-white shadow-lg mt-4 mb-10 rounded-sm p-4">
                     <div className="flex flex-col w-1/2">
+                        <label 
+                            className="font-thin text-sm text-gray-500 mb-2 text-sm"
+                        >
+                            Photo
+                        </label>
+                        <input
+                            type="file"
+                            name="photo"
+                            accept="image/*"
+                            onChange={handleUpload}
+                            className="mb-4"
+                        />
+                        
                         <Select
                             label="Organisation"
                             name="organization"
@@ -136,12 +175,11 @@ const CreateNeeds = () => {
                             errors={errors}
                         />
 
-                        <TextInput
+                        <Location
                             label="Location"
                             name="location"
-                            value={form.location || ``}
-                            placeholder="Enter location"
-                            onChange={handleChange}
+                            placesSelected={handleLocation}
+                            className="border-b"
                             errors={errors}
                         />
 
@@ -155,7 +193,7 @@ const CreateNeeds = () => {
                             errors={errors}
                         />
 
-                        <label className="text-gray-600 font-thin">
+                        <label className="text-gray-500 font-thin text-sm">
                             Tags
                         </label>
                         <ReactTagInput

@@ -80,7 +80,7 @@ class ServiceOfferTest extends TestCase
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
                 'lng' => $this->faker->longitude,
-                'tags' => $this->faker->words
+                'tags' => json_encode($this->faker->words)
             ]);
 
         $response->assertStatus(202);
@@ -105,7 +105,7 @@ class ServiceOfferTest extends TestCase
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
                 'lng' => $this->faker->longitude,
-                'tags' => $this->faker->words,
+                'tags' => json_encode($this->faker->words),
                 'media' => $file
             ]);
 

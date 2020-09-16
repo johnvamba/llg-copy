@@ -24,12 +24,13 @@ class StoryStoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'organization_id' => 'required',
             'title' => 'required',
             'description' => 'required',
             'featured_start_date' => 'sometimes|required',
             'featured_end_date' => 'sometimes|required|date|after_or_equal:featured_start_date',
             'tags' => 'sometimes|required',
-            'media' => 'sometimes|required|image'
+            'media' => 'sometimes|required'
         ];
     }
 }

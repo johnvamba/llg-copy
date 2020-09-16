@@ -19,6 +19,9 @@ Route::post('register', 'AuthController@register');
 
 Route::group(['middleware' => ['auth:api']], function () {
     /** User resource module */
+    Route::resource('roles', 'RoleController');
+
+    /** User resource module */
     Route::post('users/lists', 'UserController@getUsers');
     Route::resource('users', 'UserController');
 
@@ -51,6 +54,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('offers-types', 'OffersTypeController');
 
     /** Stories resource module */
+    Route::post('story/lists', 'StoryController@getStories');
     Route::get('featured/stories', 'StoryController@featuredStory');
     Route::post('stories/{story}/appreciate', 'StoryController@addAppreciate');
     Route::post('stories/{story}/comments', 'StoryController@addComment');

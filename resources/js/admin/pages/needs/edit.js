@@ -3,8 +3,9 @@ import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
 import Select from '../../../components/Select';
 import Button from '../../../components/Button';
+import Location from '../../../components/Location';
 import { Link, useParams } from 'react-router-dom';
-import { swalCreate } from '../../../components/helpers/alerts';
+import { swalUpdate } from '../../../components/helpers/alerts';
 
 const EditNeeds = () => {
     const [types, setTypes] = useState([]);
@@ -33,7 +34,7 @@ const EditNeeds = () => {
 
         fetchOrganization();
     }, [])
-    
+
     useEffect(() => {
         async function fetchCategory() {
             let { data } = await axios.get('/api/needs-categories');
@@ -60,9 +61,9 @@ const EditNeeds = () => {
         try {
             delete form['media'];
 
-            let response = await axios.patch(`/api/needs/${id}` , form)
+            let response = await axios.patch(`/api/needs/${id}`, form)
 
-            await swalCreate("/admin/needs")
+            await swalUpdate("/admin/needs")
         } catch (err) {
             let { data } = err.response;
 
@@ -78,8 +79,12 @@ const EditNeeds = () => {
         setForm(inputs);
     }
 
-    const handleTags = (tag) => {
-        console.log(tag);
+    const handleLocation = (input) => {
+        let inputs = { ...form };
+        inputs['location'] = input.formatted_address;
+        inputs['lat'] = input.geometry.location.lat();
+        inputs['lng'] = input.geometry.location.lng();
+        setForm(inputs);
     }
 
     return (
@@ -114,12 +119,12 @@ const EditNeeds = () => {
                             errors={errors}
                         />
 
-                        <TextInput
+                        <Location
                             label="Location"
                             name="location"
-                            value={form.location || ``}
-                            placeholder="Enter location"
-                            onChange={handleChange}
+                            defaultValue={form.location || ``}
+                            placesSelected={handleLocation}
+                            className="border-b"
                             errors={errors}
                         />
 

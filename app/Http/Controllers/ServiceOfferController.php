@@ -44,8 +44,7 @@ class ServiceOfferController extends Controller
                 'location',
             ];
 
-        $serviceOffers = ServiceOffer::where('status', 'approved')
-            ->orderBy('created_at', 'desc')
+        $serviceOffers = ServiceOffer::orderBy('created_at', 'desc')
             ->get()
             ->map->only(
                 'id', 

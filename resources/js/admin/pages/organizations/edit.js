@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
 import Button from '../../../components/Button';
+import Location from '../../../components/Location';
 import { Link, useParams } from 'react-router-dom';
 import { swalUpdate } from '../../../components/helpers/alerts';
 
@@ -14,7 +15,6 @@ const EditOrganization = () => {
     useEffect(() => {
         const fetchData = async () => {
             const { data } = await axios.get(`/api/organizations/${id}`);
-            delete data['media'];
             setForm(data);
         }
 
@@ -29,6 +29,7 @@ const EditOrganization = () => {
         let errors = "";
 
         try {
+            delete form['media'];
             let response = await axios.patch(`/api/organizations/${id}`, form)
 
             await swalUpdate("/admin/organizations");
@@ -44,6 +45,14 @@ const EditOrganization = () => {
     const handleChange = (e) => {
         let inputs = { ...form };
         inputs[e.target.name] = e.target.value;
+        setForm(inputs);
+    }
+
+    const handleLocation = (input) => {
+        let inputs = { ...form };
+        inputs['location'] = input.formatted_address;
+        inputs['lat'] = input.geometry.location.lat();
+        inputs['lng'] = input.geometry.location.lng();
         setForm(inputs);
     }
 
@@ -83,12 +92,12 @@ const EditOrganization = () => {
                             errors={errors}
                         />
 
-                        <TextInput
+                        <Location
                             label="Location"
                             name="location"
-                            value={form.location || ``}
-                            placeholder="Enter location"
-                            onChange={handleChange}
+                            defaultValue={form.location || ``}
+                            placesSelected={handleLocation}
+                            className="border-b"
                             errors={errors}
                         />
                     </div>

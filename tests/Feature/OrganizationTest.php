@@ -73,7 +73,8 @@ class OrganizationTest extends TestCase
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
                 'lng' => $this->faker->longitude,
-                'media' => $file
+                'photo' => $file,
+                'cover_photo' => $file,
             ]);
 
         $response->assertStatus(202);
@@ -96,7 +97,8 @@ class OrganizationTest extends TestCase
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
                 'lng' => $this->faker->longitude,
-                'media' => $file,
+                'photo' => $file,
+                'cover_photo' => $file,
                 'secretKey' => $this->faker->text,
                 'publishableKey' => $this->faker->text,
             ]);

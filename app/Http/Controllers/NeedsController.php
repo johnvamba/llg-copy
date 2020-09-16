@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Http\Requests\NeedsStoreRequest;
 use App\Http\Requests\NeedsUpdateRequest;
 use Illuminate\Http\Request;
@@ -145,9 +146,15 @@ class NeedsController extends Controller
                     $createdNeed['tags'] = $tags;
                 }
 
-                if ($request->hasFile('media')) {
-                    $createdNeed
-                        ->addMedia($request->file('media'))
+                if ($request->get('photo')) {
+                    $image = $request->get('photo');
+                    $name = time().'-'.Str::random(20);
+                    $extension = explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+                    
+                    $createdNeed 
+                        ->addMediaFromBase64($image)
+                        ->usingName($name)
+                        ->usingFileName($name.'.'.$extension)
                         ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
 
                     $createdNeed->getMedia('photo');

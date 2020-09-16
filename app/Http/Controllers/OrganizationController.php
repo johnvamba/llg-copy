@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
 use App\Http\Requests\OrganizationUpdateRequest;
 use App\Http\Requests\OrganizationStoreRequest;
@@ -92,12 +93,32 @@ class OrganizationController extends Controller
                     ]);
                 }
 
-                if ($request->hasFile('media')) {
-                    $org
-                        ->addMedia($request->file('media'))
+                if ($request->get('photo')) {
+                    $image = $request->get('photo');
+                    $name = time().'-'.Str::random(40);
+                    $extension = explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+                    
+                    $org 
+                        ->addMediaFromBase64($image)
+                        ->usingName($name)
+                        ->usingFileName($name.'.'.$extension)
                         ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
 
                     $org->getMedia('photo');
+                }
+
+                if ($request->get('cover_photo')) {
+                    $image = $request->get('cover_photo');
+                    $name = time().'-'.Str::random(40);
+                    $extension = explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+                    
+                    $org 
+                        ->addMediaFromBase64($image)
+                        ->usingName($name)
+                        ->usingFileName($name.'.'.$extension)
+                        ->toMediaCollection('cover_photo', env('FILESYSTEM_DRIVER'));
+                    
+                    $org->getMedia('cover_photo');
                 }
 
                 return $org;

@@ -10,6 +10,7 @@ const DataTable = ({
     currentPage,
     changeLimit,
     changePage,
+    canAdd = true
 }) => {
 
     const handleLimit = (e) => {
@@ -18,7 +19,7 @@ const DataTable = ({
 
     return (
         <div>
-            <div className="flex flex-row">
+            <div className="flex flex-row py-2">
                 <div className="flex flex-1 items-center">
                     <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mr-2" htmlFor="grid-state">
                         Show
@@ -35,14 +36,18 @@ const DataTable = ({
                     </div>
                 </div>
 
-                <div className="flex flex-1 justify-end py-2">
-                    <NavLink to={`${module.path}/create`}>
-                        <Button className="uppercase text-xs text-white bg-blue-500 hover:bg-blue-600" title="test">
-                            <i className="fas fa-plus pr-2"></i>
-                            <span>{`add ${module.singular}`}</span>
-                        </Button>
-                    </NavLink>
-                </div>
+                {canAdd &&
+                    (
+                        <div className="flex flex-1 justify-end">
+                            <NavLink to={`${module.path}/create`}>
+                                <Button className="uppercase text-xs text-white bg-blue-500 hover:bg-blue-600" title="test">
+                                    <i className="fas fa-plus pr-2"></i>
+                                    <span>{`add ${module.singular}`}</span>
+                                </Button>
+                            </NavLink>
+                        </div>
+                    )
+                }
             </div>
 
             <Table
@@ -52,9 +57,9 @@ const DataTable = ({
                 currentPage={currentPage}
             />
 
-            <Pagination 
+            <Pagination
                 currentPage={currentPage}
-                records={records.data} 
+                records={records.data}
                 onChangePage={changePage}
             />
         </div>

@@ -13,6 +13,8 @@
 
         <script src="{{ mix('assets/canvasjs.min.js') }}"></script>
         <script src="{{ mix('assets/canvasjs.react.js') }}"></script>
+        
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=[API_KEY]&libraries=places"></script>
     </head>
     <body>
         <div id="app"></div>

@@ -120,7 +120,7 @@ class GroupTest extends TestCase
                 'lng' => $this->faker->longitude,
                 'term' => $this->goalTerm[random_int(0, 1)],
                 'need' => 20,
-                'tags' => $this->faker->words,
+                'tags' => json_encode($this->faker->words),
                 'media' => $file
             ]);
 
