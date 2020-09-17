@@ -78,6 +78,23 @@ class NeedsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function getRecentAdded(Request $request)
+    {
+        $needs = Need::with('type')
+            ->orderBy('created_at')->take(3)->get();
+
+        foreach($needs as $need) {
+            $need->getMedia('photo');
+        }
+
+        return response()->json($needs);
+    }
+
+    /**
+     * Display a listing of the resource nearby.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function nearby(Request $request, $lat, $lng)
     {
         $tags = [];

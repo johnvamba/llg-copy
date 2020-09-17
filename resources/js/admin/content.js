@@ -5,7 +5,7 @@ import routes from './routes';
 const Content = () => {
     
     return (
-        <div className="relative flex-1 overflow-auto p-12 bg-gray-100">
+        <div className="relative flex-1 overflow-auto bg-gray-100">
             <Switch>
                 { routes.map((route, index) => (
                     <Route

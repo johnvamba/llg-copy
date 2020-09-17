@@ -36,7 +36,7 @@ const ListItem = ({
                     </>
 
                     {status &&
-                        <p className="text-gray-500 text-xs">{status}</p>
+                        <p className="text-gray-500 capitalize text-xs">{status}</p>
                     }
                 </div>
             </div>

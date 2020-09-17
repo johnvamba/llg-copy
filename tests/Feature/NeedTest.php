@@ -140,6 +140,25 @@ class NeedTest extends TestCase
     }
 
     /** @test */
+    public function a_admin_can_fetch_recent_added_needs()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        factory(Need::class, 5)->create([
+            'model_id' => $this->org->id,
+            'model_type' => 'App\Organization',
+            'needs_category_id' => $this->category->id,
+            'needs_type_id' => $this->type->id,
+        ]);
+
+        $response = $this->get('api/need/recent-added');
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
     public function a_user_can_fetch_needs()
     {
         $this->actingAs($this->admin, 'api');

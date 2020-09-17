@@ -18,7 +18,7 @@ const Home = () => {
 
     return (
         <Router basename="/admin">
-            <div className="flex h-screen">
+            <div className="flex min-h-screen">
                 <Sidebar />
                 
                 <div className="flex flex-1 flex-col">
@@ -50,11 +50,7 @@ const Home = () => {
                     </header>
 
                     <div className="flex flex-row h-full">
-                        <section className="flex flex-col w-full">
-                            <div className="h-16 flex jutify-center items-center pl-12 border-b">
-                                <h1>Dashboard</h1>
-                            </div>
-
+                        <section className="flex w-full">
                             <Content />
                         </section>
                         

@@ -22,8 +22,8 @@ const TopDonors = () => {
     }, []);
 
     return (
-        <div className="flex flex-col w-full p-4 shadow-lg bg-white rounded-lg">
-            <div className="px-4 pt-2 pb-4">
+        <div className="flex flex-col w-full p-4 border bg-white rounded-lg">
+            <div className="pb-4 text-sm">
                 <p>Top Donors</p>
             </div>
 

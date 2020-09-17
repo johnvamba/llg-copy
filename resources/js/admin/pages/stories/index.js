@@ -34,7 +34,7 @@ const Stories = () => {
     }
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col p-12">
             <DataTable
                 module={stories.module}
                 records={stories}

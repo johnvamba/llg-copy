@@ -240,4 +240,14 @@ class UserTest extends TestCase
 
         $response->assertStatus(202);
     }
+
+    /** @test */
+    public function a_admin_can_get_user_statistics()
+    {
+        $this->actingAs($this->user, 'api');
+
+        $response = $this->get('api/user/stats');
+
+        $response->assertStatus(200);
+    }
 }

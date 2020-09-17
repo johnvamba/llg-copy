@@ -9,6 +9,7 @@ use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Support\Facades\Storage;
 use App\User;
 use App\UserProfile;
+use Carbon\Carbon;
 use DB;
 
 class UserController extends Controller
@@ -22,6 +23,27 @@ class UserController extends Controller
     {
         //
         return response()->json(User::with('profile')->get());
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getUsersStatistics(Request $request)
+    {
+        $date = Carbon::now();
+
+        $users['Total Users'] = User::withTrashed()->get()->count();
+        $users['Active Users'] = User::all()->count();     
+        $users['New Users'] = User::where([
+                ['created_at', '>=', $date->startOfYear()->toDateString()], 
+                ['created_at', '<=', $date->endOfYear()->toDateString()]
+            ])
+            ->get()
+            ->count();
+            
+        return response()->json($users);
     }
 
     /**

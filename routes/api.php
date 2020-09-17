@@ -18,10 +18,11 @@ Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
 
 Route::group(['middleware' => ['auth:api']], function () {
-    /** User resource module */
+    /** Role resource module */
     Route::resource('roles', 'RoleController');
 
     /** User resource module */
+    Route::get('user/stats', 'UserController@getUsersStatistics');
     Route::post('users/lists', 'UserController@getUsers');
     Route::resource('users', 'UserController');
 
@@ -31,6 +32,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Need resource module */
     Route::post('need/lists', 'NeedsController@getNeeds');
+    Route::get('need/recent-added', 'NeedsController@getRecentAdded');
     Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsController@nearby');
     Route::resource('needs', 'NeedsController');
 

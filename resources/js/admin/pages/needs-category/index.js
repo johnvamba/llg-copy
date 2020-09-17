@@ -34,7 +34,7 @@ const NeedsCategory = () => {
     }
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col p-12">
             <DataTable
                 module={categories.module}
                 records={categories}
