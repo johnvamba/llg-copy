@@ -17,6 +17,7 @@ class CreateInvoicesTable extends Migration
             $table->id();
             $table->uuid('receipt');
             $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('organization_id')->unsigned();
             $table->morphs('model');
             $table->string('charge_id');
             $table->string('description');
@@ -24,6 +25,7 @@ class CreateInvoicesTable extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('organization_id')->references('id')->on('organizations');
         });
     }
 

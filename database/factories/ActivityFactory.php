@@ -8,6 +8,6 @@ use Faker\Generator as Faker;
 $factory->define(Activity::class, function (Faker $faker) {
     return [
         'description' => $faker->text,
-        'highlight_description' => $faker->text
+        'short_description' => $faker->text
     ];
 });

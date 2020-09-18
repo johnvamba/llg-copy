@@ -77,7 +77,7 @@ const CreateOffer = () => {
     }
 
     return (
-        <div>
+        <div className="p-12">
             <Link className="mb-4 text-sm text-gray-500 inline-flex items-center" to="/offers">
                 <i className="fa fa-angle-left mr-2" aria-hidden="true"></i>
                 <span>Go Back</span>

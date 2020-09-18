@@ -60,7 +60,7 @@ class ActivityController extends Controller
         $initActivity = Activity::make([
                 'user_id' => auth()->user()->id,
                 'description' => $details['description'],
-                'highlight_description' => $details['highlight_description'],
+                'short_description' => $details['short_description'],
             ]);
 
         $activity = $model->activity()->save($initActivity);

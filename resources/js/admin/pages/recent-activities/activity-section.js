@@ -17,9 +17,11 @@ const ActivitySection = ({title, data}) => {
                         avatar={`http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp`}
                         avatarStyle="h-12 w-12"
                         title={record.user.name}
+                        titleStyle="capitalize"
                         description={record.description}
-                        hightLightDescription={record.highlight_description}
+                        shortDescription={record.short_description}
                         status={record.created}
+                        statusStyle="font-thin"
                     />
                 </div> ))
             }

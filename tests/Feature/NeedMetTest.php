@@ -58,8 +58,7 @@ class NeedMetTest extends TestCase
         $this->withoutExceptionHandling();
 
         $needs = factory(Need::class, 5)->create([
-            'model_id' => $this->org->id,
-            'model_type' => 'App\Organization',
+            'organization_id' => $this->org->id,
             'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
@@ -81,8 +80,7 @@ class NeedMetTest extends TestCase
         $this->withoutExceptionHandling();
 
         $needs = factory(Need::class, 5)->create([
-            'model_id' => $this->org->id,
-            'model_type' => 'App\Organization',
+            'organization_id' => $this->org->id,
             'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
@@ -93,6 +91,29 @@ class NeedMetTest extends TestCase
         ]);
 
         $response = $this->get("api/needs-met");
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    public function a_admin_can_fetch_need_met_total()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $needs = factory(Need::class, 5)->create([
+            'organization_id' => $this->org->id,
+            'needs_category_id' => $this->category->id,
+            'needs_type_id' => $this->type->id,
+        ]);
+
+        factory(NeedMet::class)->create([
+            'user_id' => $this->user->id,
+            'need_id' => $needs[0]->id
+        ]);
+
+        $response = $this->get("api/needs-mets/total");
 
         $response->assertStatus(200);
     }

@@ -206,11 +206,10 @@ class OrganizationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Organization $organization)
     {
         try {
-            $org = Organization::findOrFail($id);
-            $org->delete();
+            $organization->delete();
             
             return response()->json([
                     'message' => 'Organization successfully deleted.'

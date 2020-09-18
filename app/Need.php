@@ -16,11 +16,6 @@ class Need extends Model implements HasMedia
 
     protected $with = ['tags'];
 
-    public function model()
-    {
-        return $this->morphTo();
-    }
-
     public function tags()
     {
         return $this->morphMany('App\Tag', 'model');

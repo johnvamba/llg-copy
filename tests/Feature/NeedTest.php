@@ -147,13 +147,30 @@ class NeedTest extends TestCase
         $this->withoutExceptionHandling();
 
         factory(Need::class, 5)->create([
-            'model_id' => $this->org->id,
-            'model_type' => 'App\Organization',
+            'organization_id' => $this->org->id,
             'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
 
         $response = $this->get('api/need/recent-added');
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    public function a_admin_can_fetch_total_needs()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        factory(Need::class, 5)->create([
+            'organization_id' => $this->org->id,
+            'needs_category_id' => $this->category->id,
+            'needs_type_id' => $this->type->id,
+        ]);
+
+        $response = $this->get('api/needs/open/total');
 
         $response->assertStatus(200);
     }
@@ -166,8 +183,7 @@ class NeedTest extends TestCase
         $this->withoutExceptionHandling();
 
         factory(Need::class, 5)->create([
-            'model_id' => $this->org->id,
-            'model_type' => 'App\Organization',
+            'organization_id' => $this->org->id,
             'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
@@ -185,8 +201,7 @@ class NeedTest extends TestCase
         $this->withoutExceptionHandling();
 
         $needs = factory(Need::class, 5)->create([
-            'model_id' => $this->org->id,
-            'model_type' => 'App\Organization',
+            'organization_id' => $this->org->id,
             'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
@@ -206,8 +221,7 @@ class NeedTest extends TestCase
         $this->withoutExceptionHandling();
 
         $needs = factory(Need::class, 5)->create([
-            'model_id' => $this->org->id,
-            'model_type' => 'App\Organization',
+            'organization_id' => $this->org->id,
             'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
@@ -229,8 +243,7 @@ class NeedTest extends TestCase
         $this->withoutExceptionHandling();
 
         $needs = factory(Need::class, 5)->create([
-            'model_id' => $this->org->id,
-            'model_type' => 'App\Organization',
+            'organization_id' => $this->org->id,
             'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);

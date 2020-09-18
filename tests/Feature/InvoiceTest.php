@@ -56,13 +56,13 @@ class InvoiceTest extends TestCase
         $this->withoutExceptionHandling();
 
         $need = factory(Need::class)->create([
-                'model_id' => $this->org->id,
-                'model_type' => 'App\Organization',
+                'organization_id' => $this->org->id,
                 'needs_category_id' => $this->category->id,
                 'needs_type_id' => $this->type->id,
             ]);
 
         factory(Invoice::class, 5)->create([
+                'organization_id' => $this->org->id,
                 'user_id' => $this->user->id,
                 'model_id' => $need->id,
                 'model_type' => 'App\Need'
@@ -74,26 +74,51 @@ class InvoiceTest extends TestCase
     }
 
     /** @test */
-    public function a_admin_can_get_total_donated_today()
+    public function a_admin_can_get_total_donations()
     {
         $this->actingAs($this->admin, 'api');
 
         $this->withoutExceptionHandling();
 
         $need = factory(Need::class)->create([
-                'model_id' => $this->org->id,
-                'model_type' => 'App\Organization',
+                'organization_id' => $this->org->id,
                 'needs_category_id' => $this->category->id,
                 'needs_type_id' => $this->type->id,
             ]);
 
         factory(Invoice::class, 5)->create([
+                'organization_id' => $this->org->id,
                 'user_id' => $this->user->id,
                 'model_id' => $need->id,
                 'model_type' => 'App\Need'
             ]);
 
-        $response = $this->get('api/invoice/donated-by-terms');
+        $response = $this->get('api/invoice/donations');
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
+    public function a_admin_can_get_needs_donations()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $need = factory(Need::class)->create([
+                'organization_id' => $this->org->id,
+                'needs_category_id' => $this->category->id,
+                'needs_type_id' => $this->type->id,
+            ]);
+
+        factory(Invoice::class, 5)->create([
+                'organization_id' => $this->org->id,
+                'user_id' => $this->user->id,
+                'model_id' => $need->id,
+                'model_type' => 'App\Need'
+            ]);
+
+        $response = $this->get('api/invoice/needs/donations');
 
         $response->assertStatus(200);
     }

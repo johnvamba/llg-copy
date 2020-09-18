@@ -2,11 +2,15 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as DonationsActions from '../../../redux/donations/actions';
 import Card from './card';
+import NeedsOpen from './needs-open';
+import NeedsMet from './needs-met';
+import OffersHelp from './offers-help';
+import Donations from './donations';
 import UserMonitoring from './user-monitoring/';
 import DonationGraph from './donation-graph';
 import TopDonors from './top-donors';
-import RecentNeeds from './recent-needs/';
-import NearbyOrganizations from './nearby-organizations/';
+import RecentNeeds from './recent-needs';
+import NearbyOrganizations from './nearby-organizations';
 
 const Dashboard = () => {
 
@@ -26,26 +30,13 @@ const Dashboard = () => {
 
             <div className="w-full flex flex-col bg-gray-100 px-12 pt-8 pb-8">
                 <div className="flex flex-row space-x-3">
-                    <Card
-                        title="Open Needs"
-                        amount={32}
-                    />
-                    <Card
-                        title="Total Needs Met"
-                        amount={21}
-                    />
-                    <Card
-                        title="Offers to Help"
-                        amount={5}
-                    />
-                    <Card
-                        title="Donations this month"
-                        amount={`$3,320.00`}
-                    />
-                    <Card
-                        title="Total Donations"
-                        amount={`$43,320.00`}
-                    />
+                    <NeedsOpen />
+                    
+                    <NeedsMet />
+                    
+                    <OffersHelp />
+
+                    <Donations />
                 </div>
 
                 <div className="mt-8 w-full">

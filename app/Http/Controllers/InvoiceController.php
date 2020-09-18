@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\User;
 use App\Invoice;
+use App\Need;
 use Carbon\Carbon;
+use DB;
 
 class InvoiceController extends Controller
 {
@@ -24,32 +27,18 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getDonatedByTerms(Request $request)
+    public function getDonations(Request $request)
     {
         $date = Carbon::now();
 
-        $donationToday = Invoice::where(
-                'created_at', $date->toDateString()
-            )
-            ->get()
-            ->sum('amount');
-
-        $donationInWeek = Invoice::where([
-                ['created_at', '>=', $date->startOfWeek()->toDateString()],
-                ['created_at', '<=', $date->endOfWeek()->toDateString()]
-            ])
-            ->get()
-            ->sum('amount');
+        $donations = Invoice::sum('amount');
         
         $donationInMonth = Invoice::where([
                 ['created_at', '>=', $date->startOfMonth()->toDateString()],
                 ['created_at', '<=', $date->endOfMonth()->toDateString()]
-            ])
-            ->get()
-            ->sum('amount');
+            ])->sum('amount');
 
-        $donation['today'] = round($donationToday, 2);
-        $donation['week'] = round($donationInWeek, 2);
+        $donation['donations'] = round($donations, 2);
         $donation['month'] = round($donationInMonth, 2);
 
         return response()->json($donation);
@@ -60,21 +49,83 @@ class InvoiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function getNeedsDonations(Request $request)
+    {
+        $date = Carbon::now();
+
+        $results['year'] = $date->year;
+
+        for ($counter = 0; $counter < 12; $counter++) {
+            $newDate = $date->month($counter+1)->day(1)->hour(0)->minute(0)->second(0)->toDateString();
+            $startDate = Carbon::parse($newDate)->startOfMonth()->toDateString();
+            $endDate = Carbon::parse($newDate)->endOfMonth()->toDateString();
+
+            $invoiceDonations = Invoice::whereHasMorph(
+                    'model',
+                    'App\Need',
+                    function(Builder $query) {
+                        $query->where('needs_type_id', 1);
+                    }
+                )->where([
+                    ['created_at', '>=', $startDate],
+                    ['created_at', '<=', $endDate],
+                ])->get();
+
+            $invoiceFundraises = Invoice::whereHasMorph(
+                    'model',
+                    'App\Need',
+                    function(Builder $query) {
+                        $query->where('needs_type_id', 2);
+                    }
+                )->where([
+                    ['created_at', '>=', $startDate],
+                    ['created_at', '<=', $endDate],
+                ])->get();
+
+            $invoiceVolunteers = Invoice::whereHasMorph(
+                    'model',
+                    'App\Need',
+                    function(Builder $query) {
+                        $query->where('needs_type_id', 3);
+                    }
+                )->where([
+                    ['created_at', '>=', $startDate],
+                    ['created_at', '<=', $endDate],
+                ])->get();
+
+            $results['donation'][$counter] = $invoiceDonations->sum('amount');
+            $results['fundraise'][$counter] = $invoiceFundraises->sum('amount');
+            $results['volunteer'][$counter] = $invoiceVolunteers->sum('amount');
+        }
+
+        return response()->json($results);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getTopDonors(Request $request)
     {
         $users = User::with(['invoice' => function($query) {
-                $query->where('model_type', 'App\Need');
-            },'invoice.model'])
+                    $query->with('organization')
+                    ->select(DB::raw('invoices.*, SUM(amount) as donations, count(*) as total'))
+                    ->groupBy(['user_id', 'organization_id'])
+                    ->orderBy('donations', 'desc');
+            }, 'invoice.model'])
             ->get();
 
         foreach ($users as $user) {
-            $user['donated'] = $user->invoice->sum('amount');
+            if (count($user->invoice) > 0) {
+                $user['donated'] = $user->invoice->first()->donations;
+                $user['organization'] = $user->invoice->first()->organization;
+            }
         }
 
         $hasDonated = $users->filter(function ($user) {
                 return $user->donated > 0;
             });
-
 
         $sorted = $hasDonated->sortByDesc('donated');
         $result = $sorted->values()->take(10)->all();

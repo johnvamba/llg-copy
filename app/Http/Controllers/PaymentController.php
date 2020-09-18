@@ -145,7 +145,7 @@ class PaymentController extends Controller
 
             $activity->store($need, [
                     'description' => 'donated to ',
-                    'highlight_description' => $need->title,
+                    'short_description' => $need->title,
                 ]);
     
             return response()->json([

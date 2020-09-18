@@ -27,7 +27,9 @@ const Login = () => {
         setForm(inputs);
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
         try {
             let {data} = await axios.post('api/login', form);
 
@@ -71,6 +73,7 @@ const Login = () => {
                     </p>
 
                     <form
+                        onSubmit={handleSubmit}
                         className="w-3/5 xs:w-2/4 sm:w-2/4 md:w-2/4 lg:w-2/5 xl:w-2/5"
                     >
                         {error && 
@@ -149,8 +152,8 @@ const Login = () => {
                         </div>
 
                         <Button
+                            type="submit"
                             className="w-full text-white font-semibold mt-8 bg-blue-400 hover:bg-blue-500"
-                            onClick={handleSubmit}
                         >
                             Sign In
                         </Button>

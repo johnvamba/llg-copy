@@ -1,25 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Chart from "react-apexcharts";
 
 const DonationGraph = () => {
-    const [startDate, setStartDate] = useState(new Date());
+    const [data, setData] = useState({
+        donation: [],
+        fundraise: [],
+        volunteer: [],
+    });
+
+    useEffect(() => {
+        async function fetchData() {
+            let {data} = await axios.get('/api/invoice/needs/donations');
+            setData(data)
+        }
+
+        fetchData();
+    }, []);
 
     const option = {
         series: [{
             name: 'Donations',
-            data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+            data: data.donation
         }, {
             name: 'Fundraise',
-            data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+            data: data.fundraise
         }, {
             name: 'Volunteer',
-            data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+            data: data.volunteer
         }],
         options: {
+            title: {
+                text: 'Needs',
+                align: 'left',
+                style: {
+                    fontWeight: 'thin'
+                }
+            },
+            theme: {
+                mode: 'light', 
+                monochrome: {
+                    enabled: true,
+                    color: '#008FFB',
+                    shadeTo: 'light',
+                    shadeIntensity: 0.65
+                },
+            },
             chart: {
                 type: 'bar',
-                height: 350
+                height: '500px'
             },
+            legend: {
+                position: 'top',
+                offsetX: 100,
+                offsetY: -28
+            },  
             plotOptions: {
                 bar: {
                     horizontal: false,
@@ -36,7 +70,7 @@ const DonationGraph = () => {
                 colors: ['transparent']
             },
             xaxis: {
-                categories: ['Feb 2020', 'Mar 2020', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                categories: ['Jan '+data.year, 'Feb '+data.year, 'Mar '+data.year, 'Apr '+data.year, 'May '+data.year, 'Jun '+data.year, 'Jul '+data.year, 'Aug '+data.year, 'Setp '+data.year, 'Oct '+data.year, 'Nov '+data.year, 'Dec '+data.year],
             },
             fill: {
                 opacity: 1
@@ -47,24 +81,23 @@ const DonationGraph = () => {
                         return "$ " + val
                     }
                 }
+            },
+            grid: {
+                show: true,
+                strokeDashArray: 3
             }
-        },
-
-
+        }
     };
 
     return (
-        <div className="w-full border bg-white p-4 rounded-lg h-full">
-            <div className="pt-2 pb-4 text-sm">
-                <p>Needs</p>
-            </div>
+        <div className="w-full border bg-white pt-4 px-2 rounded-lg h-full">
             <div className="flex flex-col justify-center">
                 <Chart
                     options={option.options}
                     series={option.series}
                     type="bar"
-                    height={350}
-                    width={`100%`}
+                    height={400}
+                    width={400}
                 />
             </div>
         </div>

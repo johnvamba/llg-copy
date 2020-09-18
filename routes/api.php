@@ -34,6 +34,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('need/lists', 'NeedsController@getNeeds');
     Route::get('need/recent-added', 'NeedsController@getRecentAdded');
     Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsController@nearby');
+    Route::get('needs/open/total', 'NeedsController@getTotalNeedsOpen');
     Route::resource('needs', 'NeedsController');
 
     /** Needs Categories resource module */
@@ -44,10 +45,12 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('needs-types', 'NeedsTypeController');
     
     /** Needs Met resource module */
+    Route::get('needs-mets/total', 'NeedsMetController@getTotalNeedsMet');
     Route::resource('needs-met', 'NeedsMetController');
 
     /** Service Offered resource module */
     Route::post('offer/lists', 'ServiceOfferController@getOffers');
+    Route::get('service-offer/help/total', 'ServiceOfferController@getTotalOffers');
     Route::get('service-offer/user/request', 'ServiceOfferController@getServicesRequest');
     Route::post('service-offer/{serviceOffer}/request', 'ServiceOfferController@requestAction');
     Route::resource('service-offer', 'ServiceOfferController');
@@ -82,7 +85,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('payments', 'PaymentController');
 
     /** Invoice resource module */
-    Route::get('invoice/donated-by-terms', 'InvoiceController@getDonatedByTerms');
+    Route::get('invoice/donations', 'InvoiceController@getDonations');
+    Route::get('invoice/needs/donations', 'InvoiceController@getNeedsDonations');
     Route::get('invoice/top-donors', 'InvoiceController@getTopDonors');
     Route::resource('invoices', 'InvoiceController');
 

@@ -4,11 +4,13 @@ const ListItem = ({
     avatar,
     avatarStyle,
     title,
-    description,
-    hightLightDescription,
-    status,
-    right,
     titleStyle,
+    description,
+    descriptionStyle,
+    shortDescription,
+    status,
+    statusStyle,
+    right,
     containerSyle,
 }) => {
     
@@ -27,8 +29,8 @@ const ListItem = ({
                             <span className={`${titleStyle}`}>{title}</span>
 
                             {description && 
-                                <span className="text-gray-800 font-thin"> {description} 
-                                    <span className="text-blue-400 font-semibold"> {hightLightDescription}
+                                <span className={`text-gray-800 font-thin`}> {description} 
+                                    <span className="text-blue-400 font-semibold"> {shortDescription}
                                     </span>
                                 </span>
                             }
@@ -36,7 +38,9 @@ const ListItem = ({
                     </>
 
                     {status &&
-                        <p className="text-gray-500 capitalize text-xs">{status}</p>
+                        <p className={`text-gray-500 capitalize text-xs ${statusStyle}`}>
+                            {status}
+                        </p>
                     }
                 </div>
             </div>

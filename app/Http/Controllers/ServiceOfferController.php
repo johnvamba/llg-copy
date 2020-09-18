@@ -29,6 +29,20 @@ class ServiceOfferController extends Controller
 
         return response()->json($serviceOffers);
     }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getTotalOffers()
+    {
+        $serviceOffers = ServiceOffer::where(
+                'status', 'approved'
+            )->count();
+
+        return response()->json($serviceOffers);
+    }
 
     /**
      * Display a listing of the resource.

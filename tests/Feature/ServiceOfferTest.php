@@ -131,6 +131,24 @@ class ServiceOfferTest extends TestCase
     }
 
     /** @test */
+    public function a_admin_can_fetch_offers_help()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        factory(ServiceOffer::class, 5)->create([
+            'service_type_id' => $this->service->id,
+            'organization_id' => $this->org->id,
+            'user_id' => $this->user->id
+        ]);
+
+        $response = $this->get('api/service-offer/help/total');
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
     public function a_user_can_get_service_offers()
     {
         $this->actingAs($this->user, 'api');

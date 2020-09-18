@@ -8,6 +8,7 @@ use App\Http\Requests\NeedsUpdateRequest;
 use Illuminate\Http\Request;
 use App\Organization;
 use App\Need;
+use App\NeedMet;
 use App\Tag;
 use DB;
 
@@ -29,6 +30,19 @@ class NeedsController extends Controller
             $need->model;
             $need->getMedia('photo');
         }
+
+        return response()->json($needs);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getTotalNeedsOpen(Request $request)
+    {
+        //
+        $needs = Need::whereRaw('raised < goal')->count();
 
         return response()->json($needs);
     }
@@ -81,7 +95,9 @@ class NeedsController extends Controller
     public function getRecentAdded(Request $request)
     {
         $needs = Need::with('type')
-            ->orderBy('created_at')->take(3)->get();
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
 
         foreach($needs as $need) {
             $need->getMedia('photo');
@@ -144,23 +160,26 @@ class NeedsController extends Controller
         $result = DB::transaction(function () use ($request) {
                 $org = Organization::find($request->organization);
 
-                $need = Need::make(request()->only([
-                        'needs_category_id',
-                        'needs_type_id',
-                        'title',
-                        'description',
-                        'location',
-                        'lat',
-                        'lng',
-                        'raised',
-                        'goal'
-                    ]));
-
-                $createdNeed = $org->needs()->save($need);
+                $need = Need::create(
+                    array_merge(
+                        request()->only([
+                            'needs_category_id',
+                            'needs_type_id',
+                            'title',
+                            'description',
+                            'location',
+                            'lat',
+                            'lng',
+                            'raised',
+                            'goal'
+                        ]),
+                        ["organization_id" => $org->id]
+                    )
+                );
 
                 if ($request->tags) {
-                    $tags = Tag::createTag($createdNeed, $request->tags);
-                    $createdNeed['tags'] = $tags;
+                    $tags = Tag::createTag($need, $request->tags);
+                    $need['tags'] = $tags;
                 }
 
                 if ($request->get('photo')) {
@@ -168,16 +187,16 @@ class NeedsController extends Controller
                     $name = time().'-'.Str::random(20);
                     $extension = explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
                     
-                    $createdNeed 
+                    $need 
                         ->addMediaFromBase64($image)
                         ->usingName($name)
                         ->usingFileName($name.'.'.$extension)
                         ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
 
-                    $createdNeed->getMedia('photo');
+                    $need->getMedia('photo');
                 }
 
-                return $createdNeed;
+                return $need;
             });
 
         return response()->json($result, 202);
