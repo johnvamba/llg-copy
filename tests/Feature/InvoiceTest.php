@@ -57,7 +57,6 @@ class InvoiceTest extends TestCase
 
         $need = factory(Need::class)->create([
                 'organization_id' => $this->org->id,
-                'needs_category_id' => $this->category->id,
                 'needs_type_id' => $this->type->id,
             ]);
 
@@ -82,7 +81,6 @@ class InvoiceTest extends TestCase
 
         $need = factory(Need::class)->create([
                 'organization_id' => $this->org->id,
-                'needs_category_id' => $this->category->id,
                 'needs_type_id' => $this->type->id,
             ]);
 
@@ -107,7 +105,6 @@ class InvoiceTest extends TestCase
 
         $need = factory(Need::class)->create([
                 'organization_id' => $this->org->id,
-                'needs_category_id' => $this->category->id,
                 'needs_type_id' => $this->type->id,
             ]);
 

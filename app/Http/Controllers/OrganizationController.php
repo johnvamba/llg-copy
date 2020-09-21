@@ -9,6 +9,7 @@ use App\Http\Requests\OrganizationStoreRequest;
 use Illuminate\Http\Request;
 use App\Organization;
 use App\OrganizationCredential;
+use App\OrganizationHasCategory;
 use DB;
 
 class OrganizationController extends Controller
@@ -68,6 +69,29 @@ class OrganizationController extends Controller
     }
 
     /**
+     * Display a listing of the resource nearby.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function nearby(Request $request, $lat, $lng)
+    {
+        $orgs = Organization::select('organizations.*')
+            ->selectRaw('( 6367 * acos( cos( radians(?) ) 
+                * cos( radians( lat ) ) * cos( radians( lng ) 
+                - radians(?) ) + sin( radians(?) ) 
+                * sin( radians( lat ) ) ) ) AS distance', 
+                [$lat, $lng, $lat]);
+
+        $results = $orgs->orderBy('distance')->get();
+
+        foreach($results as $result) {
+            $result->getMedia();
+        } 
+            
+        return response()->json($results, 200);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -75,8 +99,10 @@ class OrganizationController extends Controller
      */
     public function store(OrganizationStoreRequest $request)
     {
-        //
         $result = DB::transaction(function () use ($request) {
+                $categories = $request->category ?:
+                                OrganizationCategory::all()->pluck('name');
+
                 $org = Organization::create(request()->only([
                         'name',
                         'description',
@@ -84,6 +110,16 @@ class OrganizationController extends Controller
                         'lat',
                         'lng'
                     ]));
+
+                if ($request->category) {
+                    foreach($request->category as $value) {
+                        $hasCategory = OrganizationHasCategory::make([
+                                'organization_category_id' => $value
+                            ]);
+                            
+                        $org->categories()->save($hasCategory);
+                    }
+                }
 
                 if ($request->secretKey && $request->publishableKey) {
                     OrganizationCredential::create([
@@ -172,14 +208,28 @@ class OrganizationController extends Controller
     public function update(OrganizationUpdateRequest $request, $id)
     {
         $org = Organization::findOrFail($id);
+
         $org->update(request()->except([
-                'needs',
-                'secretKey', 
-                'publishableKey',
-                'created_at',
-                'updated_at',
-                'deleted_at'
-            ]));
+            'category',
+            'needs',
+            'secretKey', 
+            'publishableKey',
+            'created_at',
+            'updated_at',
+            'deleted_at'
+        ]));
+        
+        if (gettype($request->category) === 'array') {
+            $org->categories()->delete();
+
+            foreach($request->category as $value) {
+                $hasCategory = OrganizationHasCategory::make([
+                        'organization_category_id' => $value
+                    ]);
+
+                $org->categories()->save($hasCategory);
+            }
+        }
 
         if ($request->secretKey && $request->publishableKey) {
             $credential = OrganizationCredential::where(

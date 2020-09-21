@@ -11,11 +11,13 @@ use Tests\TestCase;
 use App\User;
 use App\UserProfile;
 use App\Organization;
+use App\OrganizationCategory;
 
 class OrganizationTest extends TestCase
 {
     protected $admin;
     protected $user;
+    protected $category;
 
     public function setUp(): void
     {
@@ -36,6 +38,8 @@ class OrganizationTest extends TestCase
             'preference' => json_encode(['Health', 'Food'])
         ]);
         $this->user->assignRole('user');
+
+        $this->category = factory(OrganizationCategory::class, 5)->create();
     }
 
     /** @test */
@@ -45,7 +49,13 @@ class OrganizationTest extends TestCase
 
         $this->withoutExceptionHandling();
 
+        $categories = [];
+        foreach($this->category as $data) {
+            array_push($categories, $data->id);
+        }
+
         $response = $this->post('api/organizations', [
+                'category' => $categories,
                 'name' => $this->faker->text,
                 'description' => $this->faker->text,
                 'location' => $this->faker->address,
@@ -67,7 +77,13 @@ class OrganizationTest extends TestCase
 
         $file = UploadedFile::fake()->image('avatar.jpg');
 
+        $categories = [];
+        foreach($this->category as $data) {
+            array_push($categories, $data->id);
+        }
+
         $response = $this->post('api/organizations', [
+                'category' => $categories,
                 'name' => $this->faker->text,
                 'description' => $this->faker->text,
                 'location' => $this->faker->address,
@@ -91,7 +107,13 @@ class OrganizationTest extends TestCase
 
         $file = UploadedFile::fake()->image('avatar.jpg');
 
+        $categories = [];
+        foreach($this->category as $data) {
+            array_push($categories, $data->id);
+        }
+
         $response = $this->post('api/organizations', [
+                'category' => $categories,
                 'name' => $this->faker->text,
                 'description' => $this->faker->text,
                 'location' => $this->faker->address,
@@ -145,7 +167,13 @@ class OrganizationTest extends TestCase
         $org = factory(Organization::class, 4)->create();
         $selectedOrg = $org[0];
 
+        $categories = [];
+        foreach($this->category as $data) {
+            array_push($categories, $data->id);
+        }
+
         $response = $this->patch("api/organizations/{$selectedOrg->id}", [
+                'category' => $categories,
                 'name' => $this->faker->text,
                 'description' => $this->faker->text
             ]);
@@ -163,7 +191,13 @@ class OrganizationTest extends TestCase
         $org = factory(Organization::class, 4)->create();
         $selectedOrg = $org[0];
 
+        $categories = [];
+        foreach($this->category as $data) {
+            array_push($categories, $data->id);
+        }
+
         $response = $this->patch("api/organizations/{$selectedOrg->id}", [
+                'category' => $categories,
                 'name' => $this->faker->text,
                 'description' => $this->faker->text,
                 'secretKey' => $this->faker->text,
@@ -208,7 +242,7 @@ class OrganizationTest extends TestCase
     }
 
     /** @test */
-    public function a_org_admin_can_fetc_stripe_account()
+    public function a_org_admin_can_fetch_stripe_account()
     {
         $this->actingAs($this->admin, 'api');
 

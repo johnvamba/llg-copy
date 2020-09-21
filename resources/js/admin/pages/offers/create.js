@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
 import Button from '../../../components/Button';
-import Select from '../../../components/Select';
+//import Select from '../../../components/Select';
 import { Link } from 'react-router-dom';
 import { swalCreate } from '../../../components/helpers/alerts';
 import ReactTagInput from "@pathofdev/react-tag-input";
@@ -94,7 +94,7 @@ const CreateOffer = () => {
                             Details
                         </p>
 
-                        <Select
+                        {/* <Select
                             label="Organisation"
                             name="organization_id"
                             value={form.organization_id || ``}
@@ -110,7 +110,7 @@ const CreateOffer = () => {
                             data={types}
                             onChange={handleChange}
                             errors={errors}
-                        />
+                        /> */}
 
                         {showOtherName && (
                             <TextInput

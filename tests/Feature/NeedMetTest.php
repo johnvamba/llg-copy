@@ -59,7 +59,6 @@ class NeedMetTest extends TestCase
 
         $needs = factory(Need::class, 5)->create([
             'organization_id' => $this->org->id,
-            'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
 
@@ -81,7 +80,6 @@ class NeedMetTest extends TestCase
 
         $needs = factory(Need::class, 5)->create([
             'organization_id' => $this->org->id,
-            'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
 
@@ -104,7 +102,6 @@ class NeedMetTest extends TestCase
 
         $needs = factory(Need::class, 5)->create([
             'organization_id' => $this->org->id,
-            'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
 

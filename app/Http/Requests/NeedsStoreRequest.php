@@ -25,7 +25,7 @@ class NeedsStoreRequest extends FormRequest
     {
         return [
             'organization' => 'required',
-            'needs_category_id' => 'required',
+            'category' => 'required',
             'needs_type_id' => 'required',
             'title' => 'required',
             'description' => 'required',

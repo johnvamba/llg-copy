@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
-import Select from '../../../components/Select';
 import Button from '../../../components/Button';
 import Location from '../../../components/Location';
 import { Link, useParams } from 'react-router-dom';

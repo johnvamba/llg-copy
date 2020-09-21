@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
-import Select from '../../../components/Select';
+//import Select from '../../../components/Select';
 import Button from '../../../components/Button';
 import Location from '../../../components/Location';
 import { Link } from 'react-router-dom';
@@ -106,15 +106,6 @@ const CreateUser = () => {
                             onChange={handleChange}
                             errors={errors}
                         />
-
-                        <Select
-                            label="Role"
-                            name="role"
-                            value={form.role || ``}
-                            data={roles}
-                            onChange={handleChange}
-                            errors={errors}
-                        />
                     </div>
 
                     <div className="flex flex-col flex-1 m-2">
@@ -150,6 +141,15 @@ const CreateUser = () => {
                             onChange={handleChange}
                             errors={errors}
                         />
+
+                        {/* <Select
+                            label="Role"
+                            name="role"
+                            value={form.role || ``}
+                            data={roles}
+                            onChange={handleChange}
+                            errors={errors}
+                        /> */}
                     </div>
                 </div>
 

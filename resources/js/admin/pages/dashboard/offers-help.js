@@ -15,7 +15,7 @@ const OffersHelp = () => {
 
     return (
         <Card
-            title="Offer to Help"
+            title="Offers to Help"
             amount={total}
         />
     )

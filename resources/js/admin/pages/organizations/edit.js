@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
 import Button from '../../../components/Button';
+import CustomSelect from '../../../components/CustomSelect';
 import Location from '../../../components/Location';
 import { Link, useParams } from 'react-router-dom';
 import { swalUpdate } from '../../../components/helpers/alerts';
 
 const EditOrganization = () => {
+    const [categories, setCategories] = useState([]);
     const [errors, setErrors] = useState({});
     const [form, setForm] = useState({});
 
@@ -21,8 +23,21 @@ const EditOrganization = () => {
         fetchData()
     }, [])
 
-    console.log(id);
+    useEffect(() => {
+        async function fetchData() {
+            let results = [];
+            let {data} = await axios.get('/api/organizations-categories');
+            
+            data.map((record) => {
+                results.push({value: record.id, label: record.name})
+            })
 
+            setCategories(results);
+        }
+
+        fetchData();
+    }, [])
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -53,6 +68,20 @@ const EditOrganization = () => {
         inputs['location'] = input.formatted_address;
         inputs['lat'] = input.geometry.location.lat();
         inputs['lng'] = input.geometry.location.lng();
+        setForm(inputs);
+    }
+
+    const handleSelect = (values) => {
+        let inputs = { ...form };
+        
+        if (values) {
+            inputs['category'] = values.map(data => {
+                return data.value   
+            });
+        } else {
+            inputs['category'] = [];
+        }
+        
         setForm(inputs);
     }
 
@@ -98,6 +127,15 @@ const EditOrganization = () => {
                             defaultValue={form.location || ``}
                             placesSelected={handleLocation}
                             className="border-b"
+                            errors={errors}
+                        />
+
+                        <CustomSelect 
+                            label="Category"
+                            name="category"
+                            options={categories} 
+                            onChange={handleSelect}
+                            isMulti={true}
                             errors={errors}
                         />
                     </div>

@@ -24,6 +24,7 @@ class OrganizationStoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'category' => 'required',
             'name' => 'required',
             'description' => 'required',
             'location' => 'required',

@@ -31,9 +31,9 @@ class Need extends Model implements HasMedia
         return $this->morphMany('App\Activity', 'model');
     }
 
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo('App\NeedsCategory', 'needs_category_id');
+        return $this->morphMany('App\OrganizationHasCategory', 'model');
     }
 
     public function type()

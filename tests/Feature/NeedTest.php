@@ -46,7 +46,7 @@ class NeedTest extends TestCase
 
         $this->org = factory(Organization::class)->create();
         $this->type = factory(NeedsType::class)->create();
-        $this->category = factory(NeedsCategory::class)->create();
+        $this->category = factory(NeedsCategory::class, 5)->create();
     }
 
     /** @test */
@@ -56,9 +56,14 @@ class NeedTest extends TestCase
 
         $this->withoutExceptionHandling();
 
+        $categories = [];
+        foreach($this->category as $data) {
+            array_push($categories, $data->id);
+        }
+
         $response = $this->post('api/needs', [
                 'organization' => $this->org->id,
-                'needs_category_id' => $this->category->id,
+                'category' => $categories,
                 'needs_type_id' => $this->type->id,
                 'title' => $this->faker->text,
                 'description' => $this->faker->text,
@@ -79,9 +84,14 @@ class NeedTest extends TestCase
 
         $this->withoutExceptionHandling();
 
+        $categories = [];
+        foreach($this->category as $data) {
+            array_push($categories, $data->id);
+        }
+
         $response = $this->post('api/needs', [
                 'organization' => $this->org->id,
-                'needs_category_id' => $this->category->id,
+                'category' => $categories,
                 'needs_type_id' => $this->type->id,
                 'title' => $this->faker->text,
                 'description' => $this->faker->text,
@@ -106,10 +116,15 @@ class NeedTest extends TestCase
         $this->withoutExceptionHandling();
 
         $file = UploadedFile::fake()->image('avatar.jpg');
+        
+        $categories = [];
+        foreach($this->category as $data) {
+            array_push($categories, $data->id);
+        }
 
         $response = $this->post('api/needs', [
                 'organization' => $this->org->id,
-                'needs_category_id' => $this->category->id,
+                'category' => $categories,
                 'needs_type_id' => $this->type->id,
                 'title' => $this->faker->text,
                 'description' => $this->faker->text,
@@ -148,7 +163,6 @@ class NeedTest extends TestCase
 
         factory(Need::class, 5)->create([
             'organization_id' => $this->org->id,
-            'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
 
@@ -166,7 +180,6 @@ class NeedTest extends TestCase
 
         factory(Need::class, 5)->create([
             'organization_id' => $this->org->id,
-            'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
 
@@ -184,7 +197,6 @@ class NeedTest extends TestCase
 
         factory(Need::class, 5)->create([
             'organization_id' => $this->org->id,
-            'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
 
@@ -202,7 +214,6 @@ class NeedTest extends TestCase
 
         $needs = factory(Need::class, 5)->create([
             'organization_id' => $this->org->id,
-            'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
 
@@ -222,7 +233,6 @@ class NeedTest extends TestCase
 
         $needs = factory(Need::class, 5)->create([
             'organization_id' => $this->org->id,
-            'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
 
@@ -244,7 +254,6 @@ class NeedTest extends TestCase
 
         $needs = factory(Need::class, 5)->create([
             'organization_id' => $this->org->id,
-            'needs_category_id' => $this->category->id,
             'needs_type_id' => $this->type->id,
         ]);
 

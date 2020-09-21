@@ -7,6 +7,8 @@ use App\Http\Requests\NeedsStoreRequest;
 use App\Http\Requests\NeedsUpdateRequest;
 use Illuminate\Http\Request;
 use App\Organization;
+use App\NeedsCategory;
+use App\NeedHasCategory;
 use App\Need;
 use App\NeedMet;
 use App\Tag;
@@ -22,7 +24,7 @@ class NeedsController extends Controller
     public function index()
     {
         //
-        $needs = Need::with('category', 'type')
+        $needs = Need::with('type')
             ->orderBy('created_at', 'desc')
             ->paginate();
 
@@ -139,7 +141,7 @@ class NeedsController extends Controller
         if ($tags)
             $needs->whereIn('id', $tags);
 
-        $results = $needs->orderBy('distance')->paginate();
+        $results = $needs->orderBy('distance')->get();
 
         foreach($results as $result) {
             $result->model;
@@ -160,6 +162,9 @@ class NeedsController extends Controller
         $result = DB::transaction(function () use ($request) {
                 $org = Organization::find($request->organization);
 
+                $category = $request->category ?:
+                                NeedsCategory::all()->pluck('name');
+
                 $need = Need::create(
                     array_merge(
                         request()->only([
@@ -176,6 +181,16 @@ class NeedsController extends Controller
                         ["organization_id" => $org->id]
                     )
                 );
+
+                if ($request->category) {
+                    foreach($request->category as $value) {
+                        $hasCategory = NeedHasCategory::make([
+                                'needs_category_id' => $value
+                            ]);
+                            
+                        $need->categories()->save($hasCategory);
+                    }
+                }
 
                 if ($request->tags) {
                     $tags = Tag::createTag($need, $request->tags);
@@ -210,7 +225,7 @@ class NeedsController extends Controller
      */
     public function show(Need $need)
     {
-        $need = Need::with('category', 'type')->where('id', $need->id)->first();
+        $need = Need::with('type')->where('id', $need->id)->first();
         $need->model;
         $need->getMedia('photo');
 
@@ -226,7 +241,24 @@ class NeedsController extends Controller
      */
     public function update(NeedsUpdateRequest $request, Need $need)
     {
-        $need->update($request->validated());
+        $need->update($request->only([
+                'title',
+                'description',
+                'location',
+                'raised',
+                'goal',
+            ]));
+
+        if (gettype($request->category) === 'array') {
+            foreach($request->category as $value) {
+                $hasCategory = NeedHasCategory::make([
+                        'needs_category_id' => $value
+                    ]);
+                    
+                $need->categories()->save($hasCategory);
+            }
+        }
+
         return response()->json($need, 202);
     }
 

@@ -73,10 +73,14 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('groups/message/{group}', 'GroupController@addMessage');
     Route::resource('groups', 'GroupController');
 
+    /** Orgnization Categories resource module */
+    Route::resource('organizations-categories', 'OrganizationCategoryController');
+
     /** Orgnization resource module */
     Route::post('organization/lists', 'OrganizationController@getOrganizations');
     Route::get('organizations/{organization}/credential', 'OrganizationController@getCredential');
     Route::post('organizations/{organization}/credential', 'OrganizationController@addCredential');
+    Route::post('organizations/nearby/{lat}/{lng}', 'OrganizationController@nearby');
     Route::resource('organizations', 'OrganizationController');
 
     /** Payment resource module */

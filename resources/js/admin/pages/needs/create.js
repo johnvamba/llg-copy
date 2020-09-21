@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
-import Select from '../../../components/Select';
+import CustomSelect from '../../../components/CustomSelect';
 import Button from '../../../components/Button';
 import Location from '../../../components/Location';
 import { Link } from 'react-router-dom';
@@ -23,8 +23,14 @@ const CreateNeeds = () => {
 
     useEffect(() => {
         async function fetchOrganization() {
+            let results = [];
             let { data } = await axios.get('/api/organizations');
-            setOrganizations(data);
+
+            data.map((record) => {
+                results.push({ value: record.id, label: record.name })
+            })
+
+            setOrganizations(results);
         }
 
         fetchOrganization();
@@ -32,8 +38,14 @@ const CreateNeeds = () => {
 
     useEffect(() => {
         async function fetchCategory() {
+            let results = [];
             let { data } = await axios.get('/api/needs-categories');
-            setCategories(data);
+
+            data.map((record) => {
+                results.push({ value: record.id, label: record.name })
+            })
+
+            setCategories(results);
         }
 
         fetchCategory();
@@ -41,8 +53,14 @@ const CreateNeeds = () => {
 
     useEffect(() => {
         async function fetchType() {
+            let results = [];
             let { data } = await axios.get('/api/needs-types');
-            setTypes(data);
+
+            data.map((record) => {
+                results.push({ value: record.id, label: record.name })
+            })
+
+            setTypes(results);
         }
 
         fetchType();
@@ -66,6 +84,24 @@ const CreateNeeds = () => {
         }
 
         setErrors(errors || {});
+    }
+
+    const handleSelect = (values, key) => {
+        let inputs = { ...form };
+
+        if (typeof (values) === 'object' && values) {
+            if (values.hasOwnProperty('value')) {
+                inputs[key] = values.value;
+            } else {
+                inputs[key] = values.map(data => {
+                    return data.value
+                });
+            }
+        } else {
+            inputs[key] = null;
+        }
+
+        setForm(inputs);
     }
 
     const handleChange = (e) => {
@@ -115,94 +151,99 @@ const CreateNeeds = () => {
             </p>
 
             <form onSubmit={handleSubmit}>
-                <div className="flex bg-white shadow-lg mt-4 mb-10 rounded-sm p-4">
-                    <div className="flex flex-col w-1/2">
-                        <label 
-                            className="font-thin text-sm text-gray-500 mb-2 text-sm"
-                        >
-                            Photo
-                        </label>
-                        <input
-                            type="file"
-                            name="photo"
-                            accept="image/*"
-                            onChange={handleUpload}
-                            className="mb-4"
-                        />
-                        
-                        <Select
-                            label="Organisation"
-                            name="organization"
-                            value={form.organization || ``}
-                            data={organizations}
-                            onChange={handleChange}
-                            errors={errors}
-                        />
+                <div className="bg-white shadow-lg mt-4 mb-10 rounded-sm p-4">
+                    <div className="flex flex-row space-x-4">
+                        <div className="flex flex-1 flex-col">
+                            <label
+                                className="font-thin text-sm text-gray-500 text-sm"
+                            >
+                                Photo
+                                </label>
 
-                        <Select
-                            label="Type"
-                            name="needs_type_id"
-                            value={form.needs_type_id || ``}
-                            data={types}
-                            onChange={handleChange}
-                            errors={errors}
-                        />
+                            <input
+                                type="file"
+                                name="photo"
+                                accept="image/*"
+                                onChange={handleUpload}
+                                className="mb-4 pt-4"
+                            />
 
-                        <Select
-                            label="Category"
-                            name="needs_category_id"
-                            value={form.needs_category_id || ``}
-                            data={categories}
-                            onChange={handleChange}
-                            errors={errors}
-                        />
+                            <CustomSelect
+                                label="Category"
+                                name="category"
+                                data={categories}
+                                onChange={handleSelect}
+                                errors={errors}
+                                isMulti={true}
+                            />
 
-                        <TextInput
-                            label="Title"
-                            name="title"
-                            value={form.title || ``}
-                            placeholder="Enter title"
-                            onChange={handleChange}
-                            errors={errors}
-                        />
+                            <TextInput
+                                label="Title"
+                                name="title"
+                                value={form.title || ``}
+                                placeholder="Enter title"
+                                onChange={handleChange}
+                                errors={errors}
+                            />
 
-                        <TextArea
-                            label="Description"
-                            name="description"
-                            value={form.description || ``}
-                            placeholder="Enter description"
-                            onChange={handleChange}
-                            errors={errors}
-                        />
+                            <TextArea
+                                label="Description"
+                                name="description"
+                                value={form.description || ``}
+                                placeholder="Enter description"
+                                onChange={handleChange}
+                                errors={errors}
+                            />
 
-                        <Location
-                            label="Location"
-                            name="location"
-                            placesSelected={handleLocation}
-                            className="border-b"
-                            errors={errors}
-                        />
+                            <label className="text-gray-500 font-thin text-sm">
+                                Tags
+                            </label>
+                            <ReactTagInput
+                                tags={tags}
+                                onChange={(newTags) => setTags(newTags)}
+                            />
+                            {errors['tags'] &&
+                                <p className="text-red-500 text-xs italic">{errors['tags'][0]}</p>
+                            }
 
-                        <TextInput
-                            type="number"
-                            label="Goal"
-                            name="goal"
-                            value={form.goal || ``}
-                            placeholder="e.g. 1000"
-                            onChange={handleChange}
-                            errors={errors}
-                        />
+                        </div>
 
-                        <label className="text-gray-500 font-thin text-sm">
-                            Tags
-                        </label>
-                        <ReactTagInput
-                            tags={tags}
-                            onChange={(newTags) => setTags(newTags)}
-                        />
-                        {errors['tags'] &&
-                            <p className="text-red-500 text-xs italic">{errors['tags'][0]}</p>
-                        }
+                        <div className="flex flex-1 flex-col">
+                            <CustomSelect
+                                label="Organisation"
+                                name="organization"
+                                data={organizations}
+                                onChange={handleSelect}
+                                errors={errors}
+                            />
+
+                            <CustomSelect
+                                label="Type"
+                                name="needs_type_id"
+                                data={types}
+                                onChange={handleSelect}
+                                errors={errors}
+                            />
+
+                            <Location
+                                label="Location"
+                                name="location"
+                                placesSelected={handleLocation}
+                                className="border-b"
+                                errors={errors}
+                            />
+
+                            <TextInput
+                                type="number"
+                                label="Goal"
+                                name="goal"
+                                value={form.goal || ``}
+                                placeholder="e.g. 1000"
+                                onChange={handleChange}
+                                errors={errors}
+                            />
+                        </div>
+
                     </div>
                 </div>
 

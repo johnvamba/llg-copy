@@ -138,6 +138,16 @@ const Sidebar = () => {
 
                 <div
                     className={`mt-6 
+                    ${location.pathname == "/users" ? "text-blue-400" : "text-gray-400"}`}
+                >
+                    <Link to="/users" className="flex items-center">
+                        <i className="text-xl fas fa-user-friends"></i>
+                        <span className="px-4">Groups</span>
+                    </Link>
+                </div>
+
+                <div
+                    className={`mt-6 
                     ${location.pathname == "/organizations" ? "text-blue-400" : "text-gray-400"}`}
                 >
                     <Link to="/organizations" className="flex items-center">

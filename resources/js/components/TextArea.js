@@ -11,7 +11,7 @@ const TextArea = ({
 }) => {
 
     return (
-        <div className="relative mb-4">
+        <div className="relative mb-2">
             <label className="font-thin block text-gray-500 text-sm mb-2">
                 {label}
             </label>

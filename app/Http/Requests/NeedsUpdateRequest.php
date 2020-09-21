@@ -24,7 +24,7 @@ class NeedsUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'needs_category_id' => 'sometimes|required',
+            'category' => 'sometimes|required',
             'needs_type_id' => 'sometimes|required',
             'title' => 'sometimes|required',
             'description' => 'sometimes|required',

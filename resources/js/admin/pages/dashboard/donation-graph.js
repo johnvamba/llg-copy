@@ -91,13 +91,12 @@ const DonationGraph = () => {
 
     return (
         <div className="w-full border bg-white pt-4 px-2 rounded-lg h-full">
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-center w-full">
                 <Chart
                     options={option.options}
                     series={option.series}
                     type="bar"
                     height={400}
-                    width={400}
                 />
             </div>
         </div>

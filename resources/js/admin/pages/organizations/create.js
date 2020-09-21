@@ -1,14 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
 import Button from '../../../components/Button';
+import CustomSelect from '../../../components/CustomSelect';
 import Location from '../../../components/Location';
 import { Link } from 'react-router-dom';
 import { swalCreate } from '../../../components/helpers/alerts';
 
 const CreateOrganization = () => {
+    const [categories, setCategories] = useState([]);
     const [errors, setErrors] = useState({});
     const [form, setForm] = useState({});
+
+    useEffect(() => {
+        async function fetchData() {
+            let results = [];
+            let {data} = await axios.get('/api/organizations-categories');
+            
+            data.map((record) => {
+                results.push({value: record.id, label: record.name})
+            })
+
+            setCategories(results);
+        }
+
+        fetchData();
+    }, [])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,7 +34,6 @@ const CreateOrganization = () => {
 
         try {
             let response = await axios.post('/api/organizations', form)
-            console.log(response);
 
             await swalCreate("/admin/organizations")
         } catch (err) {
@@ -61,6 +77,20 @@ const CreateOrganization = () => {
         inputs['location'] = input.formatted_address;
         inputs['lat'] = input.geometry.location.lat();
         inputs['lng'] = input.geometry.location.lng();
+        setForm(inputs);
+    }
+
+    const handleSelect = (values) => {
+        let inputs = { ...form };
+        
+        if (values) {
+            inputs['category'] = values.map(data => {
+                return data.value   
+            });
+        } else {
+            inputs['category'] = [];
+        }
+        
         setForm(inputs);
     }
 
@@ -114,6 +144,16 @@ const CreateOrganization = () => {
                             name="location"
                             placesSelected={handleLocation}
                             className="border-b"
+                            errors={errors}
+                        />
+
+                        <CustomSelect 
+                            label="Category"
+                            name="category"
+                            options={categories} 
+                            onChange={handleSelect}
+                            isMulti={true}
+                            className="border-0"
                             errors={errors}
                         />
                     </div>

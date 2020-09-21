@@ -15,7 +15,6 @@ class CreateNeedsTable extends Migration
     {
         Schema::create('needs', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('needs_category_id')->unsigned();
             $table->bigInteger('needs_type_id')->unsigned();
             $table->bigInteger('organization_id')->unsigned();
             $table->string('title');
@@ -28,7 +27,6 @@ class CreateNeedsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('needs_category_id')->references('id')->on('needs_categories');
             $table->foreign('needs_type_id')->references('id')->on('needs_types');
             $table->foreign('organization_id')->references('id')->on('organizations');
         });
