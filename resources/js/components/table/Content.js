@@ -18,8 +18,8 @@ const Content = ({
         return (
             <tbody>
                 <tr>
-                    <td colSpan={columns.length + 1} className="text-gray-500 border-t px-4 py-3">
-                        No results found
+                    <td colSpan={columns.length + 1} className="text-gray-500 border-t px-4 py-8 text-xs">
+                        No results found.
                     </td>
                 </tr>
             </tbody>

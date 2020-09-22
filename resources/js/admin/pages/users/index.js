@@ -7,8 +7,8 @@ const Users = () => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
     const users = useSelector(
-            state => state.UsersReducer.users
-        );
+        state => state.UsersReducer.users
+    );
 
     const disptach = useDispatch();
 
@@ -33,15 +33,22 @@ const Users = () => {
     }
 
     return (
-        <div className="flex flex-col p-12">
-            <DataTable
-                module={users.module}
-                records={users}
-                changeLimit={handleLimitChange}
-                currentPage={page}
-                changePage={handleChangePage}
-            />
-        </div>
+        <>
+            <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
+                <div className="flex flex-1">
+                    <h1>Users</h1>
+                </div>
+            </div>
+            <div className="flex flex-col p-12">
+                <DataTable
+                    module={users.module}
+                    records={users}
+                    changeLimit={handleLimitChange}
+                    currentPage={page}
+                    changePage={handleChangePage}
+                />
+            </div>
+        </>
     )
 }
 

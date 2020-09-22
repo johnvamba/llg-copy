@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Builder;
 use App\Http\Requests\OrganizationUpdateRequest;
 use App\Http\Requests\OrganizationStoreRequest;
 use Illuminate\Http\Request;
@@ -81,6 +82,12 @@ class OrganizationController extends Controller
                 - radians(?) ) + sin( radians(?) ) 
                 * sin( radians( lat ) ) ) ) AS distance', 
                 [$lat, $lng, $lat]);
+
+        if ($request->filter) {
+            $orgs->whereHas('categories', function($query) use ($request) {
+                    $query->whereIn('organization_category_id', $request->filter);
+                });
+        }
 
         $results = $orgs->orderBy('distance')->get();
 

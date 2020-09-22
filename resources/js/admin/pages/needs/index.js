@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {useSelector, useDispatch} from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import * as NeedsActions from '../../../redux/needs/actions';
 import DataTable from '../../../components/layout/DataTable';
 
@@ -8,16 +8,16 @@ const Needs = () => {
     const [limit, setLimit] = useState(5);
 
     const needs = useSelector(
-            state => state.NeedsReducer.needs
-        )
+        state => state.NeedsReducer.needs
+    )
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         async function fetchData() {
-            let {data} = await axios.post('/api/need/lists', {
-                    'limit': limit
-                });
+            let { data } = await axios.post('/api/need/lists', {
+                'limit': limit
+            });
 
             dispatch(NeedsActions.setNeeds(data));
         }
@@ -34,15 +34,27 @@ const Needs = () => {
     }
 
     return (
-        <div className="flex flex-col p-12">
-            <DataTable
-                module={needs.module}
-                records={needs}
-                changeLimit={handleLimitChange}
-                currentPage={page}
-                changePage={handleChangePage}
-            />
-        </div>
+        <>
+            <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
+                <ol className="list-reset flex text-grey-dark text-base">
+                    <li className="font-thin">Needs</li>
+                    <li><span className="mx-2">/</span></li>
+                    <li><a href="#" className="text-blue-400 font-semibold">Contents</a></li>
+                    <li><span className="mx-2">/</span></li>
+                    <li className="font-thin">Categories</li>
+                </ol>
+            </div>
+
+            <div className="flex flex-col p-12">
+                <DataTable
+                    module={needs.module}
+                    records={needs}
+                    changeLimit={handleLimitChange}
+                    currentPage={page}
+                    changePage={handleChangePage}
+                />
+            </div>
+        </>
     )
 }
 

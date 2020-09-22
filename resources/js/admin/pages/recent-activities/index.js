@@ -37,7 +37,7 @@ const RecentActivities = () => {
     }, []);
 
     return (
-        <div className="flex flex-col w-full md:w-64 xl:w-64 border-l">
+        <div className="flex flex-shrink-0 flex-col w-full md:w-64 xl:w-64 border-l">
             <aside>
                 <div className="pl-6 pt-4">
                     <h1>Recent Activities</h1>

@@ -250,6 +250,8 @@ class NeedsController extends Controller
             ]));
 
         if (gettype($request->category) === 'array') {
+            $need->categories()->delete();
+            
             foreach($request->category as $value) {
                 $hasCategory = NeedHasCategory::make([
                         'needs_category_id' => $value

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
 import Button from '../../../components/Button';
+import CustomSelect from '../../../components/CustomSelect';
 import Location from '../../../components/Location';
 import { Link, useParams } from 'react-router-dom';
 import { swalUpdate } from '../../../components/helpers/alerts';
@@ -36,8 +37,14 @@ const EditNeeds = () => {
 
     useEffect(() => {
         async function fetchCategory() {
+            let results = [];
             let { data } = await axios.get('/api/needs-categories');
-            setCategories(data);
+
+            data.map((record) => {
+                results.push({ value: record.id, label: record.name })
+            })
+
+            setCategories(results);
         }
 
         fetchCategory();
@@ -83,6 +90,24 @@ const EditNeeds = () => {
         inputs['location'] = input.formatted_address;
         inputs['lat'] = input.geometry.location.lat();
         inputs['lng'] = input.geometry.location.lng();
+        setForm(inputs);
+    }
+
+    const handleSelect = (values, key) => {
+        let inputs = { ...form };
+
+        if (typeof (values) === 'object' && values) {
+            if (values.hasOwnProperty('value')) {
+                inputs[key] = values.value;
+            } else {
+                inputs[key] = values.map(data => {
+                    return data.value
+                });
+            }
+        } else {
+            inputs[key] = null;
+        }
+
         setForm(inputs);
     }
 
@@ -135,6 +160,15 @@ const EditNeeds = () => {
                             placeholder="e.g. 1000"
                             onChange={handleChange}
                             errors={errors}
+                        />
+
+                        <CustomSelect
+                            label="Category"
+                            name="category"
+                            data={categories}
+                            onChange={handleSelect}
+                            errors={errors}
+                            isMulti={true}
                         />
                     </div>
                 </div>

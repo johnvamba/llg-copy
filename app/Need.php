@@ -33,7 +33,7 @@ class Need extends Model implements HasMedia
 
     public function categories()
     {
-        return $this->morphMany('App\OrganizationHasCategory', 'model');
+        return $this->morphMany('App\NeedHasCategory', 'model');
     }
 
     public function type()

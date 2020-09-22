@@ -34,16 +34,25 @@ const Stories = () => {
     }
 
     return (
-        <div className="flex flex-col p-12">
-            <DataTable
-                module={stories.module}
-                records={stories}
-                changeLimit={handleLimitChange}
-                currentPage={page}
-                changePage={handleChangePage}
-                canAdd={false}
-            />
-        </div>
+        <>
+            <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
+                <ol className="list-reset flex text-grey-dark text-base">
+                    <li className="font-thin">Stories</li>
+                    <li><span className="mx-2">/</span></li>
+                    <li><a href="#" className="text-blue-400 font-semibold">Contents</a></li>
+                </ol>
+            </div>
+            <div className="flex flex-col p-12">
+                <DataTable
+                    module={stories.module}
+                    records={stories}
+                    changeLimit={handleLimitChange}
+                    currentPage={page}
+                    changePage={handleChangePage}
+                    canAdd={false}
+                />
+            </div>
+        </>
     )
 }
 

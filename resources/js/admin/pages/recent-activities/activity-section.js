@@ -1,7 +1,7 @@
 import React from 'react';
 import ListItem from '../../../components/ListItem';
 
-const ActivitySection = ({title, data}) => {
+const ActivitySection = ({ title, data }) => {
 
     return (
         <div className="flex flex-col">
@@ -11,9 +11,9 @@ const ActivitySection = ({title, data}) => {
                 </p>
             </div>
 
-            { data.map((record, index) => (
+            {data.map((record, index) => (
                 <div className="px-6" key={`${record.id}.${index}`}>
-                    <ListItem 
+                    <ListItem
                         avatar={`http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp`}
                         avatarStyle="h-12 w-12"
                         title={record.user.name}
@@ -23,7 +23,17 @@ const ActivitySection = ({title, data}) => {
                         status={record.created}
                         statusStyle="font-thin"
                     />
-                </div> ))
+                </div>))
+            }
+
+            {data.length === 0 &&
+                (
+                    <div className="flex justify-center items-center py-8">
+                        <p className="text-gray-500 capitalize text-xs">
+                            No activity {title}.
+                        </p>
+                    </div>
+                )
             }
         </div>
     )

@@ -34,15 +34,26 @@ const NeedsCategory = () => {
     }
 
     return (
-        <div className="flex flex-col p-12">
-            <DataTable
-                module={categories.module}
-                records={categories}
-                changeLimit={handleLimitChange}
-                currentPage={page}
-                changePage={handleChangePage}
-            />
-        </div>
+        <>
+            <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
+                <ol className="list-reset flex text-grey-dark text-base">
+                    <li className="font-thin">Needs</li>
+                    <li><span className="mx-2">/</span></li>
+                    <li className="font-thin">Contents</li>
+                    <li><span className="mx-2">/</span></li>
+                    <li><a href="#" className="text-blue-400 font-semibold">Categories</a></li>
+                </ol>
+            </div>
+            <div className="flex flex-col p-12">
+                <DataTable
+                    module={categories.module}
+                    records={categories}
+                    changeLimit={handleLimitChange}
+                    currentPage={page}
+                    changePage={handleChangePage}
+                />
+            </div>
+        </>
     )
 }
 

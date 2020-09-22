@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import { GoogleMap, withGoogleMap, withScriptjs } from "react-google-maps"
-import Marker from './marker';
+import React, { useEffect, useState, useCallback } from 'react';
+import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api"
 import Style from './style';
 
 const defaultMapOptions = {
@@ -12,29 +11,48 @@ const defaultMapOptions = {
     styles: Style.mapStyle
 };
 
-const Map = withScriptjs(withGoogleMap((props) => {
+const containerStyle = {
+    width: '100%',
+    height: '440px'
+};
 
-    const center = {
-        lat: -33.868782,
-        lng: 151.207583
-    }
+const Map = ({markers, lat, lng}) => {
+    const [showInfo, setShowInfo] = useState(false);
 
     return (
         <GoogleMap
-            defaultZoom={8}
-            defaultCenter={center}
-            mapTypeId='roadmap'
-            defaultOptions={defaultMapOptions}
-            defaultZoom={14}
+            id="nearby-organization"
+            mapContainerStyle={containerStyle}
+            options={defaultMapOptions}
+            zoom={14}
+            center={{lat: lat, lng: lng}}
         >
-            {props.isMarkerShown && 
-                <Marker 
-                    {...center}
-                    props={props}
-                />
+            {
+                markers.map(org => (
+                    <Marker
+                        key={org.id}
+                        position={{ lat: parseFloat(org.lat), lng: parseFloat(org.lng) }}
+                        onClick={() => { setShowInfo(true) }}
+                    >
+                        {showInfo &&
+                            (
+                                <InfoWindow
+                                    onCloseClick={() => {
+                                        setShowInfo(false);
+                                    }}
+                                    position={{ lat: parseFloat(org.lat), lng: parseFloat(org.lng) }}
+                                >
+                                    <div>
+                                        <p>{org.name}</p>
+                                    </div>
+                                </InfoWindow>
+                            )
+                        }
+                    </Marker>
+                ))
             }
-        </GoogleMap >
+        </GoogleMap>
     )
-}))
+}
 
 export default Map;

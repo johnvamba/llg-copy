@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Sidebar from '../components/Sidebar';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import Cookie from 'js-cookie';
 import RecentActivities from './pages/recent-activities';
 import Content from './content';
+import OrganizationView from './pages/organizations/view';
 
 const Home = () => {
-    
+    const org = false;
+
     const logout = async () => {
         if (Cookie.get("oToken_admin")) {
             Cookie.set("oToken_admin", "")
@@ -20,7 +22,7 @@ const Home = () => {
         <Router basename="/admin">
             <div className="flex min-h-screen">
                 <Sidebar />
-                
+
                 <div className="flex flex-1 flex-col">
                     <header className="flex flex-rowl h-16 border-b">
                         <div className="flex flex-1 items-center pl-12">
@@ -49,12 +51,16 @@ const Home = () => {
                         </div>
                     </header>
 
-                    <div className="flex flex-row h-full">
+                    <div className="relative flex flex-row h-full">
                         <section className="flex w-full">
                             <Content />
                         </section>
-                        
+
                         <RecentActivities />
+
+                        {org && <div className="absolute z-40 right-0 top-0 flex md:w-2/5 bg-white border-l h-full">
+                            <OrganizationView />
+                        </div>}
                     </div>
                 </div>
             </div>
