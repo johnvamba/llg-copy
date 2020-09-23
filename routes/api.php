@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('need/recent-added', 'NeedsController@getRecentAdded');
     Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsController@nearby');
     Route::get('needs/open/total', 'NeedsController@getTotalNeedsOpen');
+    Route::post('needs/organization/{organization}', 'NeedsController@getOrganizationNeeds');
     Route::resource('needs', 'NeedsController');
 
     /** Needs Categories resource module */
@@ -75,6 +76,10 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Orgnization Categories resource module */
     Route::resource('organizations-categories', 'OrganizationCategoryController');
+    
+    /** Orgnization Members resource module */
+    Route::post('organization/{organization}/members', 'OrganizationMemberController@index');
+    Route::resource('organization-members', 'OrganizationMemberController');
 
     /** Orgnization resource module */
     Route::post('organization/lists', 'OrganizationController@getOrganizations');

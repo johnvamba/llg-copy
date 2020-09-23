@@ -48,6 +48,32 @@ class NeedsController extends Controller
 
         return response()->json($needs);
     }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getOrganizationNeeds(Request $request, Organization $organization)
+    {
+        $needs = Need::with('type')
+            ->where('organization_id', $organization->id);
+
+        switch($request->type) {
+            case 'active':
+                $needs->whereRaw('raised < goal');
+                break;
+            case 'past':
+                $needs->whereRaw('raised >= goal');
+                break;
+            default:
+                break;
+        }
+    
+        $results = $needs->get();
+    
+        return response()->json($results);
+    }
 
     /**
      * Display a listing of the resource.

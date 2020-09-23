@@ -12,7 +12,7 @@ import TopDonors from './top-donors';
 import RecentNeeds from './recent-needs';
 import NearbyOrganizations from './nearby-organizations';
 
-const Dashboard = () => {
+const Dashboard = ({...props}) => {
 
     return (
         <>
@@ -55,7 +55,7 @@ const Dashboard = () => {
                 <div className="mt-8 w-full">
                     <div className="flex flex-row">
                         <div className="flex flex-1 mr-4">
-                            <NearbyOrganizations />
+                            <NearbyOrganizations {...props} />
                         </div>
 
                         <div className="flex flex-1 ml-4">

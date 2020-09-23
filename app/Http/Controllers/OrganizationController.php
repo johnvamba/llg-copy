@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Http\Requests\OrganizationUpdateRequest;
 use App\Http\Requests\OrganizationStoreRequest;
 use Illuminate\Http\Request;
+use App\Need;
 use App\Organization;
 use App\OrganizationCredential;
 use App\OrganizationHasCategory;
@@ -199,7 +200,10 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
-        $org = Organization::findOrFail($id);
+        $org = Organization::with('categories', 'categories.category')
+            ->where('id', $id)
+            ->first();
+
         $org->getMedia('photo');
 
         return response()->json($org);
@@ -217,14 +221,15 @@ class OrganizationController extends Controller
         $org = Organization::findOrFail($id);
 
         $org->update(request()->except([
-            'category',
-            'needs',
-            'secretKey', 
-            'publishableKey',
-            'created_at',
-            'updated_at',
-            'deleted_at'
-        ]));
+                'category',
+                'categories',
+                'needs',
+                'secretKey', 
+                'publishableKey',
+                'created_at',
+                'updated_at',
+                'deleted_at'
+            ]));
         
         if (gettype($request->category) === 'array') {
             $org->categories()->delete();

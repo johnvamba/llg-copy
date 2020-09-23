@@ -3,7 +3,7 @@ import Map from '../../../components/helpers/map/';
 import { Checkbox } from 'pretty-checkbox-react';
 import 'pretty-checkbox';
 
-const NearbyOrganizations = () => {
+const NearbyOrganizations = ({...props}) => {
     const [categories, setCategories] = useState([]);
     const [showFilter, setShowFilter] = useState(false);
     const [filter, setFilter] = useState([]);
@@ -125,6 +125,7 @@ const NearbyOrganizations = () => {
                 <Map 
                     {...center}
                     markers={markers}
+                    {...props}
                 />
             </div>
         </div>

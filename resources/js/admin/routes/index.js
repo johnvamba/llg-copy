@@ -27,7 +27,7 @@ const routes = [
     {
         path: '/dashboard',
         exact: true,
-        component: () => <Dashboard />
+        component: (props) => <Dashboard {...props}/>
     },
     {
         path: '/needs',

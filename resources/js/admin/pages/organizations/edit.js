@@ -45,6 +45,7 @@ const EditOrganization = () => {
 
         try {
             delete form['media'];
+
             let response = await axios.patch(`/api/organizations/${id}`, form)
 
             await swalUpdate("/admin/organizations");

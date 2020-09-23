@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api"
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api"
 import Style from './style';
 
 const defaultMapOptions = {
@@ -16,8 +16,12 @@ const containerStyle = {
     height: '440px'
 };
 
-const Map = ({markers, lat, lng}) => {
-    const [showInfo, setShowInfo] = useState(false);
+const Map = ({markers, lat, lng, ...props}) => {
+
+    const handleClick = async(org) => {
+        let {data} = await axios.get(`/api/organizations/${org}`);
+        props.onViewOrganization(data);
+    }
 
     return (
         <GoogleMap
@@ -32,23 +36,8 @@ const Map = ({markers, lat, lng}) => {
                     <Marker
                         key={org.id}
                         position={{ lat: parseFloat(org.lat), lng: parseFloat(org.lng) }}
-                        onClick={() => { setShowInfo(true) }}
-                    >
-                        {showInfo &&
-                            (
-                                <InfoWindow
-                                    onCloseClick={() => {
-                                        setShowInfo(false);
-                                    }}
-                                    position={{ lat: parseFloat(org.lat), lng: parseFloat(org.lng) }}
-                                >
-                                    <div>
-                                        <p>{org.name}</p>
-                                    </div>
-                                </InfoWindow>
-                            )
-                        }
-                    </Marker>
+                        onClick={() => { handleClick(org.id) }}
+                    />
                 ))
             }
         </GoogleMap>

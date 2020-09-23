@@ -24,7 +24,7 @@ class OrganizationUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'category' => 'required',
+            'category' => 'sometimes|required',
             'name' => 'sometimes|required',
             'description' => 'sometimes|required',
             'location' => 'sometimes|required',

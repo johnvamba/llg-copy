@@ -263,4 +263,41 @@ class NeedTest extends TestCase
 
         $response->assertStatus(204);
     }
+
+    /** @test */
+    public function a_admin_can_fetch_active_needs()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        factory(Need::class, 5)->create([
+            'organization_id' => $this->org->id,
+            'needs_type_id' => $this->type->id,
+        ]);
+
+        $response = $this->post("api/needs/organization/{$this->org->id}", [
+                'type' => 'active'
+            ]);
+
+        $response->assertStatus(200);
+    }
+
+    public function a_admin_can_fetch_past_needs()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        factory(Need::class, 5)->create([
+            'organization_id' => $this->org->id,
+            'needs_type_id' => $this->type->id,
+        ]);
+
+        $response = $this->post("api/needs/organization/{$this->org->id}", [
+                'type' => 'past'
+            ]);
+
+        $response->assertStatus(200);
+    }
 }

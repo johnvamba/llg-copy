@@ -7,7 +7,7 @@ import Content from './content';
 import OrganizationView from './pages/organizations/view';
 
 const Home = () => {
-    const org = false;
+    const [organization, setOrganization] = useState(null);
 
     const logout = async () => {
         if (Cookie.get("oToken_admin")) {
@@ -16,6 +16,11 @@ const Home = () => {
             Cookie.set("oToken_org_admin", "")
         }
         window.location = '/login';
+    }
+
+    const handleViewOrganization = value => {
+        console.log(value);
+        setOrganization(value)
     }
 
     return (
@@ -53,13 +58,16 @@ const Home = () => {
 
                     <div className="relative flex flex-row h-full">
                         <section className="flex w-full">
-                            <Content />
+                            <Content onViewOrganization={handleViewOrganization}/>
                         </section>
 
                         <RecentActivities />
 
-                        {org && <div className="absolute z-40 right-0 top-0 flex md:w-2/5 bg-white border-l h-full">
-                            <OrganizationView />
+                        {organization && <div className="absolute z-40 right-0 top-0 md:w-2/5 h-full flex bg-white border-l">
+                            <OrganizationView 
+                                data={organization}
+                                onHandleView={handleViewOrganization}
+                            />
                         </div>}
                     </div>
                 </div>

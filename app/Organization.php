@@ -28,4 +28,9 @@ class Organization extends Model implements HasMedia
     {
         return $this->morphMany('App\OrganizationHasCategory', 'model');
     }
+
+    public function needs()
+    {
+        return $this->hasMany('App\Need');
+    }
 }

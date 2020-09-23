@@ -14,4 +14,9 @@ class OrganizationHasCategory extends Model
     {
         return $this->morphTo();
     }
+
+    public function category()
+    {
+        return $this->belongsTo('App\OrganizationCategory', 'organization_category_id');
+    }
 }
