@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class OrganizationUpdateRequest extends FormRequest
 {
@@ -21,11 +22,12 @@ class OrganizationUpdateRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(Request $request)
     {
         return [
             'category' => 'sometimes|required',
             'name' => 'sometimes|required',
+            'email' => 'required|unique:organizations,email,'.$request->id,
             'description' => 'sometimes|required',
             'location' => 'sometimes|required',
             'lat' => 'sometimes|required',

@@ -84,34 +84,43 @@ const ViewOrganisation = ({ data, ...props }) => {
 
                 <div className="px-8 pb-6 pt-2">
                     <p className="pb-4">{data.name}</p>
-                    <div className="flex items-center pb-4">
-                        <i className="fas fa-globe text-gray-400 mr-4"></i>
-                        <span className="text-sm text-blue-400">
-                            www.organisation.com
-                    </span>
-                    </div>
+                    {data.site &&
+                        (<div className="flex items-center pb-4">
+                            <i className="fas fa-globe text-gray-400 mr-4"></i>
+
+                            <a className="text-sm text-blue-400" href={`https://${data.site}`} target="_blank">
+                                {data.site}
+                            </a>
+                        </div>)
+                    }
 
                     <div className="flex flex-row items-center space-x-4">
-                        <div className="flex items-center">
-                            <i className="fas fa-phone-alt text-gray-400 mr-4"></i>
-                            <span className="text-sm text-blue-400">
-                                (02) 9876 5432
-                        </span>
-                        </div>
+                        {data.phone_number &&
+                            (<div className="flex items-center">
+                                <i className="fas fa-phone-alt text-gray-400 mr-4"></i>
+                                <span className="text-sm text-blue-400">
+                                    {data.phone_number}
+                                </span>
+                            </div>)
+                        }
 
-                        <div className="flex items-center">
-                            <i className="fas fa-envelope text-gray-400 mr-4"></i>
-                            <span className="text-sm text-blue-400">
-                                organisation@gmail.com
-                        </span>
-                        </div>
+                        {data.email &&
+                            (<div className="flex items-center">
+                                <i className="fas fa-envelope text-gray-400 mr-4"></i>
+
+                                <a className="text-sm text-blue-400" href={`mailto:${data.email}`} target="_blank">
+                                    {data.email}
+                                </a>
+                            </div>)
+                        }
                     </div>
 
                     <p className="text-sm text-gray-600 font-thin py-4">
                         {data.description}
                     </p>
 
-                    <MemberThumbnails 
+                    <MemberThumbnails
+                        org={data.id}
                         members={members}
                     />
                 </div>

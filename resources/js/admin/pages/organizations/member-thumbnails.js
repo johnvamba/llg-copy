@@ -1,6 +1,7 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom'
 
-const MemberThumbnails = ({ members = [] }) => {
+const MemberThumbnails = ({ org, members = [] }) => {
     return (
         <div>
             <p className="text-gray-700 font-thin text-sm mb-3">
@@ -41,12 +42,14 @@ const MemberThumbnails = ({ members = [] }) => {
                 </div>
 
                 <div className="flex flex-initial justify-end items-center">
-                    <button
-                        className="border-2 border-blue-400 px-6 h-10 rounded-lg text-blue-400"
-                    >
-                        <i className="fas fa-plus mr-4"></i>
-                        <span>Invite</span>
-                    </button>
+                    <NavLink to={`/organizations/${org}/invite`}>
+                        <button
+                            className="border-2 border-blue-400 px-6 h-10 rounded-lg text-blue-400"
+                        >
+                            <i className="fas fa-plus mr-4"></i>
+                            <span>Invite</span>
+                        </button>
+                    </NavLink>
                 </div>
             </div>
         </div>

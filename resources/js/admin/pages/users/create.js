@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
-//import Select from '../../../components/Select';
+import CustomSelect from '../../../components/CustomSelect';
 import Button from '../../../components/Button';
 import Location from '../../../components/Location';
 import { Link } from 'react-router-dom';
@@ -14,8 +14,12 @@ const CreateUser = () => {
 
     useEffect(() => {
         async function fetchData() {
+            let results = [];
             let { data } = await axios.get('/api/roles');
-            setRoles(data);
+            data.map((record) => {
+                results.push({ value: record.id, label: record.name })
+            })
+            setRoles(results);
         }
 
         fetchData();
@@ -51,6 +55,24 @@ const CreateUser = () => {
         inputs['location'] = input.formatted_address;
         inputs['lat'] = input.geometry.location.lat();
         inputs['lng'] = input.geometry.location.lng();
+        setForm(inputs);
+    }
+
+    const handleSelect = (values, key) => {
+        let inputs = { ...form };
+
+        if (typeof (values) === 'object' && values) {
+            if (values.hasOwnProperty('value')) {
+                inputs[key] = values.value;
+            } else {
+                inputs[key] = values.map(data => {
+                    return data.value
+                });
+            }
+        } else {
+            inputs[key] = null;
+        }
+
         setForm(inputs);
     }
 
@@ -142,14 +164,14 @@ const CreateUser = () => {
                             errors={errors}
                         />
 
-                        {/* <Select
+                        <CustomSelect
                             label="Role"
                             name="role"
-                            value={form.role || ``}
-                            data={roles}
-                            onChange={handleChange}
+                            options={roles}
+                            onChange={handleSelect}
+                            className="border-0 w-64"
                             errors={errors}
-                        /> */}
+                        />
                     </div>
                 </div>
 

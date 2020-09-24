@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\User;
 use App\Organization;
@@ -24,6 +25,31 @@ class OrganizationMemberController extends Controller
         }
 
         return response()->json($members);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getUninvitedUsers(Request $request)
+    {
+        $users = User::with('profile')
+            ->whereDoesntHave('organizationMembers', function($query) use ($request) {
+                $query->where([
+                        ['organization_id', $request->organization_id]
+                    ]);
+            })
+            ->role('organization admin');
+
+            if ($request->name) {
+                $users->where('name', 'like', '%'.$request->name.'%');
+            }
+
+        $results = $users->get();
+
+        return response()->json($results);
     }
 
     /**
@@ -63,9 +89,9 @@ class OrganizationMemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, OrganizationMember $organizationMember)
     {
-        //
+        
     }
 
     /**

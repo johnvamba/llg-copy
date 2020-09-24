@@ -79,6 +79,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     
     /** Orgnization Members resource module */
     Route::post('organization/{organization}/members', 'OrganizationMemberController@index');
+    Route::post('organization-members/uninvited', 'OrganizationMemberController@getUninvitedUsers');
     Route::resource('organization-members', 'OrganizationMemberController');
 
     /** Orgnization resource module */

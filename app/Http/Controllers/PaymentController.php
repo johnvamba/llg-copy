@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ActivityController;
 use App\User;
 use App\Need;
+use App\Organization;
 use App\CustomerCredential;
 use App\OrganizationCredential;
 use App\Invoice;
@@ -80,12 +81,18 @@ class PaymentController extends Controller
         ActivityController $activity, 
         Need $need
     ){
-        $org = $need->model;
+        $org = Organization::find($need->organization_id);
 
         $key = OrganizationCredential::where(
                     'organization_id', $org->id
                 )
                 ->first();
+
+        if (!$key) {
+            return response()->json([
+                'message' => "Key not found.",
+            ], 422);
+        }
 
         \Stripe\Stripe::setApiKey($key->secret_key);
         
@@ -104,7 +111,7 @@ class PaymentController extends Controller
                             'name' => auth()->user()->name,
                             'email' => auth()->user()->email
                         ]);
-        
+
                     $credential->customer_id = $createdCustomer->id;
                 }
         
@@ -113,7 +120,7 @@ class PaymentController extends Controller
                             $credential->customer_id,
                             ['source' => $request->token]
                         );
-    
+
                     $credential->card_id = $card->id;
                 }
     

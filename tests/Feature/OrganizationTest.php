@@ -66,6 +66,7 @@ class OrganizationTest extends TestCase
         $response = $this->post('api/organizations', [
                 'category' => $categories,
                 'name' => $this->faker->text,
+                'email' => $this->faker->email,
                 'description' => $this->faker->text,
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
@@ -94,6 +95,7 @@ class OrganizationTest extends TestCase
         $response = $this->post('api/organizations', [
                 'category' => $categories,
                 'name' => $this->faker->text,
+                'email' => $this->faker->email,
                 'description' => $this->faker->text,
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
@@ -124,6 +126,7 @@ class OrganizationTest extends TestCase
         $response = $this->post('api/organizations', [
                 'category' => $categories,
                 'name' => $this->faker->text,
+                'email' => $this->faker->email,
                 'description' => $this->faker->text,
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
@@ -183,7 +186,9 @@ class OrganizationTest extends TestCase
 
         $response = $this->patch("api/organizations/{$selectedOrg->id}", [
                 'category' => $categories,
+                'id' => $selectedOrg->id,
                 'name' => $this->faker->text,
+                'email' => $selectedOrg->email,
                 'description' => $this->faker->text
             ]);
 
@@ -207,8 +212,10 @@ class OrganizationTest extends TestCase
 
         $response = $this->patch("api/organizations/{$selectedOrg->id}", [
                 'categories' => [],
+                'id' => $selectedOrg->id,
                 'category' => $categories,
                 'name' => $this->faker->text,
+                'email' => $selectedOrg->email,
                 'description' => $this->faker->text,
                 'secretKey' => $this->faker->text,
                 'publishableKey' => $this->faker->text
@@ -297,6 +304,27 @@ class OrganizationTest extends TestCase
     }
 
     /** @test */
+    public function a_admin_can_update_members_in_organization()
+    {
+        $this->actingAs($this->superadmin, 'api');
+
+        $this->withoutExceptionHandling();
+        
+        $org = factory(Organization::class)->create();
+        $member = factory(OrganizationMember::class)->create([
+            'organization_id' => $org->id,
+            'model_type' => 'App\User',
+            'model_id' => $this->admin->id,
+        ]);
+
+        $response = $this->patch("api/organization-members/{$member->id}", [
+                'status' => 'approved'
+            ]);
+
+        $response->assertStatus(202);
+    }
+
+    /** @test */
     public function a_admin_can_delete_member_in_organization()
     {
         $this->actingAs($this->superadmin, 'api');
@@ -313,6 +341,21 @@ class OrganizationTest extends TestCase
         $response = $this->delete("api/organization-members/{$member->id}");
 
         $response->assertStatus(204);
+    }
+
+    /** @test */
+    public function a_admin_can_fetch_all_users_can_be_invited()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $org = factory(Organization::class)->create();
+
+        $response = $this->post("api/organization-members/uninvited", [
+                'organization_id' => $org->id
+            ]);
+        $response->assertStatus(200);
     }
 }
 

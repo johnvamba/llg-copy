@@ -12,7 +12,7 @@ import TopDonors from './top-donors';
 import RecentNeeds from './recent-needs';
 import NearbyOrganizations from './nearby-organizations';
 
-const Dashboard = ({...props}) => {
+const Dashboard = ({ ...props }) => {
 
     return (
         <>
@@ -31,9 +31,9 @@ const Dashboard = ({...props}) => {
             <div className="w-full flex flex-col bg-gray-100 px-12 pt-8 pb-8">
                 <div className="flex flex-row space-x-3">
                     <NeedsOpen />
-                    
+
                     <NeedsMet />
-                    
+
                     <OffersHelp />
 
                     <Donations />

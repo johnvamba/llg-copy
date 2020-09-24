@@ -19,10 +19,17 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        return response()->json(User::with('profile')->get());
+        $users = User::with('profile');
+
+        if ($request->role) {
+            $users->role($request->role);
+        }
+        
+        $results = $users->get();
+
+        return response()->json($results);
     }
 
     /**

@@ -138,9 +138,9 @@ const Sidebar = () => {
 
                 <div
                     className={`mt-6 
-                    ${location.pathname == "/users" ? "text-blue-400" : "text-gray-400"}`}
+                    ${location.pathname == "/groups" ? "text-blue-400" : "text-gray-400"}`}
                 >
-                    <Link to="/users" className="flex items-center">
+                    <Link to="/groups" className="flex items-center">
                         <i className="text-xl fas fa-user-friends"></i>
                         <span className="px-4">Groups</span>
                     </Link>
@@ -163,6 +163,16 @@ const Sidebar = () => {
                     <Link to="/organizations" className="flex items-center">
                         <i className="text-xl far fa-bell"></i>
                         <span className="px-4">Push Notifications</span>
+                    </Link>
+                </div>
+
+                <div
+                    className={`mt-6 
+                    ${location.pathname == "/transactions" ? "text-blue-400" : "text-gray-400"}`}
+                >
+                    <Link to="/transactions" className="flex items-center">
+                        <i className="text-xl fas fa-retweet"></i>
+                        <span className="px-4">Transactions</span>
                     </Link>
                 </div>
             </nav>

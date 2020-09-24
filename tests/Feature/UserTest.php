@@ -11,6 +11,7 @@ use Tests\TestCase;
 use App\User;
 use App\UserProfile;
 use App\NeedsCategory;
+use App\Organization;
 
 class UserTest extends TestCase
 {

@@ -39,11 +39,11 @@ class OrganizationController extends Controller
      */
     public function getOrganizations(Request $request)
     {
-        $results['columns'] = ['id', 'name', 'description', 'location'];
+        $results['columns'] = ['id', 'name', 'email', 'site', 'description', 'location'];
 
         $orgs = Organization::orderBy('created_at', 'desc')
             ->get()
-            ->map->only('id', 'name', 'description', 'location')
+            ->map->only('id', 'name', 'email', 'site', 'description', 'location')
             ->chunk($request->limit);
 
         $results['data'] = $orgs;
@@ -113,6 +113,9 @@ class OrganizationController extends Controller
 
                 $org = Organization::create(request()->only([
                         'name',
+                        'email',
+                        'phone_number',
+                        'site',
                         'description',
                         'location',
                         'lat',
@@ -216,36 +219,34 @@ class OrganizationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(OrganizationUpdateRequest $request, $id)
+    public function update(OrganizationUpdateRequest $request, Organization $organization)
     {
-        $org = Organization::findOrFail($id);
-
-        $org->update(request()->except([
-                'category',
-                'categories',
-                'needs',
-                'secretKey', 
-                'publishableKey',
-                'created_at',
-                'updated_at',
-                'deleted_at'
+        $organization->update(request()->except([
+            'category',
+            'categories',
+            'needs',
+            'secretKey', 
+            'publishableKey',
+            'created_at',
+            'updated_at',
+            'deleted_at'
             ]));
-        
+            
         if (gettype($request->category) === 'array') {
-            $org->categories()->delete();
+            $organization->categories()->delete();
 
             foreach($request->category as $value) {
                 $hasCategory = OrganizationHasCategory::make([
                         'organization_category_id' => $value
                     ]);
 
-                $org->categories()->save($hasCategory);
+                $organization->categories()->save($hasCategory);
             }
         }
 
         if ($request->secretKey && $request->publishableKey) {
             $credential = OrganizationCredential::where(
-                    'organization_id', $org->id
+                    'organization_id', $organization->id
                 )
                 ->first();
     
@@ -253,13 +254,13 @@ class OrganizationController extends Controller
                 $credential = new OrganizationCredential;
             }
             
-            $credential->organization_id = $org->id;
+            $credential->organization_id = $organization->id;
             $credential->secret_key = $request->secretKey;
             $credential->publishable_key = $request->publishableKey;
             $credential->save();
         }
-        
-        return response()->json($org, 202);
+
+        return response()->json($organization, 202);
     }
 
     /**

@@ -13,9 +13,12 @@ import Offers from '../pages/offers';
 import EditOffer from '../pages/offers/edit';
 import Stories from '../pages/stories';
 import EditStory from '../pages/stories/edit';
+import Groups from '../pages/groups';
 import Organizations from '../pages/organizations';
 import CreateOrganization from '../pages/organizations/create';
 import EditOrganization from '../pages/organizations/edit';
+import Transactions from '../pages/transactions';
+import InviteMember from '../pages/invite-member';
 import NotFound from '../../components/NotFound';
 
 const routes = [
@@ -95,6 +98,11 @@ const routes = [
         component: () => <EditUser />
     },
     {
+        path: '/groups',
+        exact: true,
+        component: () => <Groups />
+    },
+    {
         path: '/organizations',
         exact: true,
         component: () => <Organizations />
@@ -108,6 +116,16 @@ const routes = [
         path: '/organizations/edit/:id',
         exact: true,
         component: () => <EditOrganization />
+    },
+    {
+        path: '/transactions',
+        exact: true,
+        component: () => <Transactions />
+    },
+    {
+        path: '/organizations/:id/invite',
+        exact: true,
+        component: () => <InviteMember />
     },
     {
         path: '*',

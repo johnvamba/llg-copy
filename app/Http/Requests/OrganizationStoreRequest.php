@@ -26,6 +26,7 @@ class OrganizationStoreRequest extends FormRequest
         return [
             'category' => 'required',
             'name' => 'required',
+            'email' => 'required|unique:organizations|email',
             'description' => 'required',
             'location' => 'required',
             'lat' => 'required',
