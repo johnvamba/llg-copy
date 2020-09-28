@@ -83,7 +83,7 @@ const NearbyOrganizations = ({...props}) => {
                 >
                     <p className="text-xs py-2 text-gray-500 font-thin">
                         Show
-                        </p>
+                    </p>
 
                     <Checkbox
                         className="text-sm px-2 focus:outline-none"

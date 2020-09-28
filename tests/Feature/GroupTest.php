@@ -144,6 +144,24 @@ class GroupTest extends TestCase
     }
 
     /** @test */
+    public function a_admin_can_get_groups_list()
+    {
+        $this->actingAs($this->admin, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $group = factory(Group::class, 5)->create([
+            'user_id' => $this->user->id,
+        ]);
+
+        $response = $this->post("api/group/lists", [
+            'limit' => 5
+        ]);
+
+        $response->assertStatus(200);
+    }
+
+    /** @test */
     public function a_user_can_view_group()
     {
         $this->actingAs($this->admin, 'api');

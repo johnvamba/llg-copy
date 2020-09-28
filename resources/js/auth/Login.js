@@ -33,7 +33,7 @@ const Login = () => {
         try {
             let {data} = await axios.post('api/login', form);
 
-            if (data.user.roles[0].name == 'admin') {
+            if (data.user.roles[0].name != 'user') {
                 Cookie.set("oToken_admin", data.token);
 
                 window.location.href = '/admin';

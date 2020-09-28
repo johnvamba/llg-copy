@@ -32,6 +32,7 @@ const DonationGraph = () => {
             title: {
                 text: 'Needs',
                 align: 'left',
+                offsetY: 20,
                 style: {
                     fontWeight: 'thin'
                 }
@@ -47,12 +48,15 @@ const DonationGraph = () => {
             },
             chart: {
                 type: 'bar',
-                height: '500px'
+                height: '500px',
+                toolbar: {
+                    show: false
+                }
             },
             legend: {
                 position: 'top',
-                offsetX: 100,
-                offsetY: -28
+                horizontalAlign: 'right',
+                offsetY: -10,
             },  
             plotOptions: {
                 bar: {
@@ -90,7 +94,7 @@ const DonationGraph = () => {
     };
 
     return (
-        <div className="w-full border bg-white pt-4 px-2 rounded-lg h-full">
+        <div className="w-full border bg-white px-2 rounded-lg h-full">
             <div className="flex flex-col justify-center w-full">
                 <Chart
                     options={option.options}

@@ -33,6 +33,44 @@ class GroupController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getGroups(Request $request)
+    {
+        $results['columns'] = [
+            'id',
+            'name',
+            'description',
+            'privacy',
+            'location'
+        ];
+
+        $groups = Group::where('status', true)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map->only(
+                'id',
+                'name',
+                'description',
+                'privacy',
+                'location'
+            )
+            ->chunk($request->limit);
+
+        $results['data'] = $groups;
+        $results['module'] = [
+                'path' => '/groups',
+                'endpoint' => 'groups',
+                'singular' => 'group',
+                'plural' => 'groups',
+            ];
+
+        return response()->json($results);
+    }
+
+    /**
      * Display join request of a group.
      *
      * @return \Illuminate\Http\Response
@@ -82,13 +120,17 @@ class GroupController extends Controller
                         ]), ["user_id" => auth()->user()->id]
                     )
                 );
-
-            $goal = Goal::make(request()->only([
-                    'need',
-                    'term'
-                ]));
-
-            $createdGoal = $group->goals()->save($goal);
+            
+            if ($request->term && $request->need) {
+                $goal = Goal::make(request()->only([
+                        'need',
+                        'term'
+                    ]));
+    
+                $createdGoal = $group->goals()->save($goal);
+    
+                $group['goal'] = $createdGoal;
+            }
 
             if ($request->tags) {
                 $tags = Tag::createTag($group, $request->tags);
@@ -103,7 +145,6 @@ class GroupController extends Controller
                 $group->getMedia('photo');
             }
 
-            $group['goal'] = $createdGoal;
 
             return $group;
         });

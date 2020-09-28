@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Sidebar from '../components/Sidebar';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import Cookie from 'js-cookie';

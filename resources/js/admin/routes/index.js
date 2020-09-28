@@ -14,6 +14,8 @@ import EditOffer from '../pages/offers/edit';
 import Stories from '../pages/stories';
 import EditStory from '../pages/stories/edit';
 import Groups from '../pages/groups';
+import CreateGroup from '../pages/groups/create';
+import EditGroup from '../pages/groups/edit';
 import Organizations from '../pages/organizations';
 import CreateOrganization from '../pages/organizations/create';
 import EditOrganization from '../pages/organizations/edit';
@@ -101,6 +103,16 @@ const routes = [
         path: '/groups',
         exact: true,
         component: () => <Groups />
+    },
+    {
+        path: '/groups/create',
+        exact: true,
+        component: () => <CreateGroup />
+    },
+    {
+        path: '/groups/edit/:id',
+        exact: true,
+        component: () => <EditGroup />
     },
     {
         path: '/organizations',

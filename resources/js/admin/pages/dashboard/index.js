@@ -13,6 +13,11 @@ import RecentNeeds from './recent-needs';
 import NearbyOrganizations from './nearby-organizations';
 
 const Dashboard = ({ ...props }) => {
+    const roles = useSelector(state => state.AuthUserReducer.roles);
+
+    if (roles.name !== 'admin') {
+        window.location = '/admin';
+    }
 
     return (
         <>
@@ -29,7 +34,7 @@ const Dashboard = ({ ...props }) => {
             </div>
 
             <div className="w-full flex flex-col bg-gray-100 px-12 pt-8 pb-8">
-                <div className="flex flex-row space-x-3">
+                <div className="flex flex-row space-x-6">
                     <NeedsOpen />
 
                     <NeedsMet />
@@ -40,12 +45,12 @@ const Dashboard = ({ ...props }) => {
                 </div>
 
                 <div className="mt-8 w-full">
-                    <div className="flex flex-row space-x-4">
+                    <div className="flex flex-row space-x-8">
                         <div className="flex-1">
                             <DonationGraph />
                         </div>
 
-                        <div className="flex flex-initial flex-col w-64">
+                        <div className="flex flex-initial flex-shrink-0 flex-col w-64">
                             <UserMonitoring />
                             <RecentNeeds />
                         </div>

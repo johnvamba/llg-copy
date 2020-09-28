@@ -9,13 +9,14 @@ const Users = () => {
     const users = useSelector(
         state => state.UsersReducer.users
     );
+    const roles = useSelector(state => state.AuthUserReducer.roles);
 
     const disptach = useDispatch();
 
     useEffect(() => {
         async function fetchData() {
             let { data } = await axios.post('/api/users/lists', {
-                limit: 5
+                limit: limit
             });
 
             disptach(UsersActions.setUsers(data));
@@ -30,6 +31,10 @@ const Users = () => {
 
     const handleChangePage = (page) => {
         setPage(parseInt(page));
+    }
+
+    if (roles.name !== 'admin') {
+        window.location = '/admin';
     }
 
     return (

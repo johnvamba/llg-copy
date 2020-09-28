@@ -22,6 +22,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('roles', 'RoleController');
 
     /** User resource module */
+    Route::get('user/me', 'UserController@getProfile');
     Route::get('user/stats', 'UserController@getUsersStatistics');
     Route::post('users/lists', 'UserController@getUsers');
     Route::resource('users', 'UserController');
@@ -67,6 +68,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('stories', 'StoryController');
 
     /** Group resource module */
+    Route::post('group/lists', 'GroupController@getGroups');
     Route::post('groups/{group}/participate', 'GroupController@addParticipant');
     Route::post('groups/join-request/{participantId}', 'GroupController@joinRequest');
     Route::get('groups/{group}/join-request', 'GroupController@getJoinRequest');

@@ -30,8 +30,8 @@ class GroupStoreRequest extends FormRequest
             'lat' => 'required',
             'lng' => 'required',
             'privacy' => 'required',
-            'term' => 'required',
-            'need' => 'required',
+            'term' => 'sometimes|required',
+            'need' => 'sometimes|required',
         ];
     }
 }

@@ -1,8 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import * as AuthUserActions from '../redux/auth-user/actions';
 import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
     const location = useLocation();
+    const profile = useSelector(
+        state => state.AuthUserReducer.profile
+    );
+    const roles = useSelector(
+        state => state.AuthUserReducer.roles
+    );
+
+    const disptach = useDispatch();
+
+    useEffect(() => {
+        async function fetchData() {
+            let { data } = await axios.get('/api/user/me');
+
+            disptach(AuthUserActions.setProfile(data));
+            disptach(AuthUserActions.setRoles(data.roles[0]));
+        }
+
+        fetchData();
+    }, []);
 
     const [show, setShow] = useState({
         need: false,
@@ -22,22 +43,26 @@ const Sidebar = () => {
                     <img className="rounded-full h-12 w-12" src="http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp" />
 
                     <div className="mx-4">
-                        <p className="text-black mr-2">John Doe</p>
-                        <span className="text-gray-500 mr-2 text-xs">johndoe@gmail.com</span>
+                        <p className="text-black text-sm mr-2 capitalize">{profile.name}</p>
+                        <span className="text-gray-500 mr-2 text-xs">{profile.email}</span>
                     </div>
                 </div>
             </div>
 
             <nav className="mx-6 text-sm">
-                <div
-                    className={`mt-6 
-                    ${location.pathname == "/dashboard" ? "text-blue-400" : "text-gray-400"}`}
-                >
-                    <Link to="/dashboard" className="flex items-center">
-                        <i className="text-xl fa fa-th-large" aria-hidden="true"></i>
-                        <span className="px-4">Dashboard</span>
-                    </Link>
-                </div>
+                {roles.name === 'admin' &&
+                    (
+                        <div
+                            className={`mt-6 
+                            ${location.pathname == "/dashboard" ? "text-blue-400" : "text-gray-400"}`}
+                        >
+                            <Link to="/dashboard" className="flex items-center">
+                                <i className="text-xl fa fa-th-large" aria-hidden="true"></i>
+                                <span className="px-4">Dashboard</span>
+                            </Link>
+                        </div>
+                    )
+                }
 
                 <div className="mt-6 text-gray-400">
                     <button
@@ -93,8 +118,8 @@ const Sidebar = () => {
                 </div>
 
                 <div className="mt-6 text-gray-400">
-                    <button 
-                        onClick={() => handleOpen('story')} 
+                    <button
+                        onClick={() => handleOpen('story')}
                         className={`relative flex items-center focus:outline-none w-full
                         ${(location.pathname == "/stories") ? "text-blue-400" : "text-gray-400"}`}
                     >
@@ -114,7 +139,7 @@ const Sidebar = () => {
 
                     {show.story &&
                         <div className={`ml-8`}>
-                            <div 
+                            <div
                                 className={`mt-4
                                 ${(location.pathname == "/stories") ? "text-blue-400" : "text-gray-400"}`}
                             >
@@ -126,32 +151,40 @@ const Sidebar = () => {
                     }
                 </div>
 
-                <div
-                    className={`mt-6 
-                    ${location.pathname == "/users" ? "text-blue-400" : "text-gray-400"}`}
-                >
-                    <Link to="/users" className="flex items-center">
-                        <i className="text-xl far fa-user"></i>
-                        <span className="px-4">Users</span>
-                    </Link>
-                </div>
+                {roles.name === 'admin' &&
+                    (
+                        <div
+                            className={`mt-6 
+                            ${location.pathname == "/users" ? "text-blue-400" : "text-gray-400"}`}
+                        >
+                            <Link to="/users" className="flex items-center">
+                                <i className="text-xl far fa-user"></i>
+                                <span className="px-4">Users</span>
+                            </Link>
+                        </div>
+                    )
+                }
 
-                <div
-                    className={`mt-6 
+                {roles.name === 'admin' &&
+                    (
+                        <div
+                            className={`mt-6 
                     ${location.pathname == "/groups" ? "text-blue-400" : "text-gray-400"}`}
-                >
-                    <Link to="/groups" className="flex items-center">
-                        <i className="text-xl fas fa-user-friends"></i>
-                        <span className="px-4">Groups</span>
-                    </Link>
-                </div>
+                        >
+                            <Link to="/groups" className="flex items-center">
+                                <i className="text-xl fas fa-user-friends"></i>
+                                <span className="px-4">Groups</span>
+                            </Link>
+                        </div>
+                    )
+                }
 
                 <div
                     className={`mt-6 
                     ${location.pathname == "/organizations" ? "text-blue-400" : "text-gray-400"}`}
                 >
                     <Link to="/organizations" className="flex items-center">
-                        <i className="text-xl fa fa-th-large" aria-hidden="true"></i>
+                        <i className="text-xl fas fa-border-none"></i>
                         <span className="px-4">Organisations</span>
                     </Link>
                 </div>

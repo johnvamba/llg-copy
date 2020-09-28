@@ -5,6 +5,7 @@ import NeedsCategoryActions from '../../admin/pages/needs-category/actions';
 import NeedsActions from '../../admin/pages/needs/actions';
 import OffersActions from '../../admin/pages/offers/actions';
 import StoriesActions from '../../admin/pages/stories/actions';
+import GroupsActions from '../../admin/pages/groups/actions';
 
 const Content = ({
     module = {},
@@ -45,6 +46,9 @@ const Content = ({
                 break;
             case 'story':
                 return <StoriesActions module={module} row={row} />
+                break;
+            case 'group':
+                return <GroupsActions module={module} row={row} />
                 break;
             default:
                 break;

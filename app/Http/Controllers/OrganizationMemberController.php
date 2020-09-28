@@ -91,7 +91,9 @@ class OrganizationMemberController extends Controller
      */
     public function update(Request $request, OrganizationMember $organizationMember)
     {
-        
+        $organizationMember->update(request()->only(['status']));
+
+        return response()->json($organizationMember, 202);
     }
 
     /**

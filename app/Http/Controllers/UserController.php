@@ -122,6 +122,21 @@ class UserController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getProfile(Request $request)
+    {
+        $user = User::with('profile')
+            ->find(auth()->user()->id);
+
+        $user->getRoleNames();
+
+        return response()->json($user);
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id
