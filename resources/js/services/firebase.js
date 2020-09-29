@@ -14,6 +14,8 @@ const config = {
 
 const initFirebase = firebase.initializeApp(config);
 
-const messaging = initFirebase.messaging();
+const messaging = firebase.messaging.isSupported() ? 
+    initFirebase.messaging()
+    : null;
 
 export {messaging};

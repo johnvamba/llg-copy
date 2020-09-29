@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import Cookie from 'js-cookie';
@@ -7,7 +7,19 @@ import Content from './content';
 import OrganizationView from './pages/organizations/view';
 
 const Home = () => {
+    const [notifications, setNotifications] = useState([]);
     const [organization, setOrganization] = useState(null);
+
+    useEffect(() => {
+        if("serviceWorker" in navigator){
+            navigator.serviceWorker.addEventListener("message",
+                ({ data }) => {
+                    let {notification} = data;
+                    setNotifications([...notifications, notification]);
+                }
+            );
+        }
+    }, [])
 
     const logout = async () => {
         if (Cookie.get("oToken_admin")) {
@@ -47,9 +59,16 @@ const Home = () => {
                             >
                                 Admin
                             </button>
-                            <Link className="mr-6 text-lg" to="/">
-                                <i className="far fa-bell"></i>
-                            </Link>
+                            <div className="relative">
+                                <Link className="mr-6 text-lg" to="/">
+                                    <i className="far fa-bell"></i>
+                                </Link>
+                                {notifications.length > 0 && 
+                                    (
+                                        <div className="absolute top-0 right-0 mt-1 mr-6 p-1 rounded-full bg-blue-400"></div>
+                                    )
+                                }
+                            </div>
                             <button className="mr-8 text-xl focus:outline-none" onClick={logout}>
                                 <i className="fa fa-sign-out-alt" aria-hidden="true"></i>
                             </button>
@@ -58,13 +77,13 @@ const Home = () => {
 
                     <div className="relative flex flex-row h-full">
                         <section className="flex w-full">
-                            <Content onViewOrganization={handleViewOrganization}/>
+                            <Content onViewOrganization={handleViewOrganization} />
                         </section>
 
                         <RecentActivities />
 
                         {organization && <div className="absolute z-40 right-0 top-0 md:w-2/5 h-full flex bg-white border-l">
-                            <OrganizationView 
+                            <OrganizationView
                                 data={organization}
                                 onHandleView={handleViewOrganization}
                             />
