@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\GoalStoreRequest;
 use App\Goal;
+use App\User;
 
 class GoalController extends Controller
 {
@@ -72,16 +73,15 @@ class GoalController extends Controller
      */
     public function setUserGoal(GoalStoreRequest $request)
     {
+        $user = User::find($request->id);
+
         $goal = Goal::make([
             'term' => $request->term,
             'need' => $request->need
         ]);
 
-        $result = auth()->user()->goals()->save($goal);
+        $result = $user->goals()->save($goal);
 
-        return response()->json([
-                'message' => 'Sucessfully saved.',
-                'data' => $result
-            ], 202);
+        return response()->json($goal, 202);
     }
 }

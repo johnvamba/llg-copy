@@ -11,15 +11,15 @@ class NeedsCategorySeeder extends Seeder
      */
     public function run()
     {
-        \App\NeedsCategory::create(['name' => 'Housing']);
-        \App\NeedsCategory::create(['name' => 'Food']);
-        \App\NeedsCategory::create(['name' => 'Everyday Things']);
-        \App\NeedsCategory::create(['name' => 'Domestic & Family Violence']);
-        \App\NeedsCategory::create(['name' => 'Health']);
-        \App\NeedsCategory::create(['name' => 'Mental Health']);
-        \App\NeedsCategory::create(['name' => 'Education']);
-        \App\NeedsCategory::create(['name' => 'Advocacy']);
-        \App\NeedsCategory::create(['name' => 'Children']);
-        \App\NeedsCategory::create(['name' => 'Youth']);
+        \App\NeedsCategory::create(['name' => 'Housing', 'icon' => 'Housing.png']);
+        \App\NeedsCategory::create(['name' => 'Food', 'icon' => 'Food.png']);
+        \App\NeedsCategory::create(['name' => 'Everyday Things', 'icon' => 'Everyday.png']);
+        \App\NeedsCategory::create(['name' => 'Domestic & Family Violence', 'icon' => 'Violence.png']);
+        \App\NeedsCategory::create(['name' => 'Health', 'icon' => 'Health.png']);
+        \App\NeedsCategory::create(['name' => 'Mental Health', 'icon' => 'MentalHealth.png']);
+        \App\NeedsCategory::create(['name' => 'Education', 'icon' => 'Education.png']);
+        \App\NeedsCategory::create(['name' => 'Advocacy', 'icon' => 'Advocacy.png']);
+        \App\NeedsCategory::create(['name' => 'Children', 'icon' => 'Children.png']);
+        \App\NeedsCategory::create(['name' => 'Youth', 'icon' => 'Youth.png']);
     }
 }

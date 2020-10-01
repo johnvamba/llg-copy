@@ -30,7 +30,6 @@ class UserSeeder extends Seeder
             'lat' => $faker->latitude,
             'lng' => $faker->longitude,
             'bio' => $faker->text,
-            'preference' => json_encode([])
         ]);
     }
 }

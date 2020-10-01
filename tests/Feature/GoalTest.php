@@ -43,16 +43,13 @@ class GoalTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $response = $this->post("api/user-goal/", [
+        $response = $this->post("api/register/goal", [
+                'id' => $this->user->id,
                 'term' => $this->goalTerm[random_int(0, 1)],
                 'need' => random_int(1, 20)
             ]);
         
         $response->assertStatus(202);
-        $response->assertJsonStructure([
-                'message',
-                'data'
-            ]);
     }
 
     /** @test */

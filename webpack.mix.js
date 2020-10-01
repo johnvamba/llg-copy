@@ -12,4 +12,4 @@ mix.react('resources/js/app.js', 'public/js')
 
 mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/webfonts');
 
-mix.browserSync('420b7b04cca3.ngrok.io');
+mix.browserSync('lovelivesgenerously.test');

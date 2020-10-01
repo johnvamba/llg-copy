@@ -17,12 +17,11 @@ class CreateUserProfilesTable extends Migration
             $table->id();
             $table->bigInteger('user_id')->unsigned();
             $table->integer('age');
-            $table->text('location');
-            $table->string('lat');
-            $table->string('lng');
+            $table->text('location')->nullable();
+            $table->string('lat')->nullable();
+            $table->string('lng')->nullable();
             $table->text('bio')->nullable();
             $table->text('photo')->nullable();
-            $table->text('preference');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

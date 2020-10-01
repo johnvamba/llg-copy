@@ -39,7 +39,8 @@ class NeedCategoryTest extends TestCase
         $this->withoutExceptionHandling();
 
         $response = $this->post('api/needs-categories', [
-                'name' => $this->faker->text
+                'name' => $this->faker->text,
+                'icon' => 'Housing.png',
             ]);
 
         $response->assertStatus(202);

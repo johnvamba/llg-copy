@@ -36,7 +36,6 @@ class UserTest extends TestCase
         $this->user = factory(User::class)->create();
         $this->profile = factory(UserProfile::class)->create([
                 'user_id' => $this->user->id,
-                'preference' => json_encode(['Health', 'Food'])
             ]);
         $this->user->assignRole('user');
 
@@ -57,11 +56,6 @@ class UserTest extends TestCase
                 'lat' => $this->faker->latitude,
                 'lng' => $this->faker->longitude,
                 'bio' => $this->faker->text,
-                'preference' => [
-                    'Housing',
-                    'Food',
-                    'Health'
-                ]
             ]);
 
         $response->assertStatus(202);
@@ -119,8 +113,59 @@ class UserTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_register_with_info()
+    {
+        $this->withoutExceptionHandling();
+
+        $response = $this->post('api/register/info', [
+                'email' => $this->faker->unique()->safeEmail,
+                'firstName' => $this->faker->firstName,
+                'lastName' => $this->faker->firstName,
+                'age' => 20,
+            ]);
+
+        $response->assertStatus(202);
+    }
+
+    /** @test */
+    public function a_user_can_register_with_location()
+    {
+        $this->withoutExceptionHandling();
+
+        $response = $this->post('api/register/location', [
+                'id' => $this->profile->id,
+                'location' => $this->faker->address,
+                'lat' => $this->faker->latitude,
+                'lng' => $this->faker->longitude,
+            ]);
+
+        $response->assertStatus(202);
+    }
+
+    /** @test */
+    public function a_user_can_upload_photo()
+    {
+        Storage::fake('public');
+
+        $this->actingAs($this->user, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $file = UploadedFile::fake()->image('avatar.jpg');
+
+        $response = $this->post('api/register/upload-photo', [
+                'id' => $this->profile->id,
+                'photo' => $file,
+            ]);
+
+        $response->assertStatus(202);
+    }
+
+    /** @test */
     public function a_user_can_update_its_profile_without_photo()
     {
+        Storage::fake('public');
+
         $this->actingAs($this->user, 'api');
 
         $this->withoutExceptionHandling();
@@ -253,7 +298,7 @@ class UserTest extends TestCase
     }
 
     /** @test */
-    public function a_admin_can_its_info()
+    public function a_admin_can_get_its_info()
     {
         $this->actingAs($this->admin, 'api');
 

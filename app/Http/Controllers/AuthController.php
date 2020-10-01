@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
+use App\Http\Requests\RegisterInfoStoreRequest;
+use App\Http\Requests\LocationStoreRequest;
+use App\Http\Requests\UploadPhotoStoreRequest;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use App\Http\Requests\RegisterStoreRequest;
@@ -79,5 +83,76 @@ class AuthController extends Controller
                 'message' => "Successfully registered.",
                 'data' => $result
             ], 202);
+    }
+
+    /**
+     * Register user info
+     * 
+     * @return json
+     */
+    public function registerInfo(RegisterInfoStoreRequest $request)
+    {
+        $result = DB::transaction(function () use ($request) {
+                $user = User::create([
+                        'name' => $request->firstName.' '.$request->lastName,
+                        'email' => $request->email,
+                    ]);
+                $user->assignRole('user');
+
+                $profile = UserProfile::create([
+                        'user_id' => $user->id,
+                        'age' => $request->age
+                    ]);
+
+                $user['profile'] = $profile;
+
+                return $user;
+            });
+
+        return response()->json($result, 202);
+    }
+
+    /**
+     * Register user's location
+     * 
+     * @return json
+     */
+    public function registerLocation(LocationStoreRequest $request)
+    {
+        $profile = UserProfile::find($request->id);
+        $profile->update($request->validated());
+
+        return response()->json($profile, 202);
+    }
+    
+    /**
+     * Register user's location
+     * 
+     * @return json
+     */
+    public function registerUploadPhoto(UploadPhotoStoreRequest $request)
+    {
+        $profile = UserProfile::find($request->id);
+
+        if ($request->get('photo')) {
+            $photo = $request->get('photo');
+            $name = time().'-'.Str::random(20);
+            $extension = explode('/', explode(':', substr($photo, 0, strpos($photo, ';')))[1])[1];
+
+            if (preg_match('/^data:image\/(\w+);base64,/', $photo)) {
+                $data = substr($photo, strpos($photo, ',') + 1);
+                $data = base64_decode($data);
+
+                Storage::disk(env('FILESYSTEM_DRIVER'))
+                    ->put($name.'.'.$extension, $data);
+
+                Storage::disk(env('FILESYSTEM_DRIVER'))
+                    ->url($data);
+
+                $profile = UserProfile::uploadPhoto($name.'.'.$extension, $profile->user_id);
+            }
+        }
+
+        return response()->json($profile, 202);
     }
 }

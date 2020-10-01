@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
+Route::post('register/info', 'AuthController@registerInfo');
+Route::post('register/location', 'AuthController@registerLocation');
+Route::post('register/upload-photo', 'AuthController@registerUploadPhoto');
+Route::post('register/goal', 'GoalController@setUserGoal');
 
 Route::group(['middleware' => ['auth:api']], function () {
     /** Role resource module */
@@ -28,7 +32,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('users', 'UserController');
 
     /** Goal resource module */
-    Route::post('user-goal', 'GoalController@setUserGoal');
     Route::resource('goals', 'GoalController');
 
     /** Need resource module */

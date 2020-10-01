@@ -8,6 +8,7 @@ use Faker\Generator as Faker;
 $factory->define(NeedsCategory::class, function (Faker $faker) {
     return [
         'name' => 'Health',
+        'icon' => 'Housing.png',
         'status' => true
     ];
 });

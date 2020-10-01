@@ -31,7 +31,6 @@ class UserProfile extends Model
                         'photo'
                     ), [
                         'user_id' => $id,
-                        'preference' => json_encode($preference)
                     ]
                 )
             );
