@@ -126,7 +126,7 @@ class AuthController extends Controller
     }
     
     /**
-     * Register user's location
+     * Upload user's photo
      * 
      * @return json
      */
@@ -154,5 +154,24 @@ class AuthController extends Controller
         }
 
         return response()->json($profile, 202);
+    }
+
+    /**
+     * Auth user
+     * 
+     * @return json
+     */
+    public function authUser(Request $request, User $user)
+    {
+        $user['profile'] = UserProfile::where('user_id', $user->id)->first();
+        $token = $user->createToken('api')->accessToken;
+        $user->getRoleNames();
+
+        $data = [
+            'data' => $user,
+            'token' => $token
+        ];
+
+        return response()->json($data, 202);
     }
 }
