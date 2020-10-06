@@ -90,10 +90,12 @@ class UserController extends Controller
             $user = User::create(
                 array_merge(
                     request()->only([
-                        'name',
                         'email'
                     ]),
-                    ['password' => bcrypt($request->password)]
+                    [
+                        'password' => bcrypt($request->password),
+                        'name' => $request->firstName.' '.$request->lastName
+                    ]
                 )
             );
 
@@ -165,18 +167,26 @@ class UserController extends Controller
     {
         $result = DB::transaction(function () use ($request, $user) {
             User::find($user->id)
-                ->update(request()->only(
-                        'name',
-                    ));
+                ->update([
+                    'name' => $request->firstName.' '.$request->lastName
+                ]);
 
             UserProfile::where('user_id', $user->id)
-                ->update(request()->only(
-                    'age',
-                    'location',
-                    'lat',
-                    'lng',
-                    'bio',
-                ));
+                ->update(
+                    array_merge(
+                        request()->only(
+                            'age',
+                            'location',
+                            'lat',
+                            'lng',
+                            'bio',
+                        ),
+                        [
+                            'first_name' => $request->firstName,
+                            'last_name' => $request->lastName,
+                        ]
+                    )
+                );
 
             if ($request->hasFile('photo')) {
                 $path = Storage::disk(env('FILESYSTEM_DRIVER'))

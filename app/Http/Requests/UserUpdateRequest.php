@@ -26,7 +26,8 @@ class UserUpdateRequest extends FormRequest
     public function rules(Request $request)
     {
         return [
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'email' => 'required|unique:users,email,'.$request->id,
             'age' => 'required',
             'location' => 'required',

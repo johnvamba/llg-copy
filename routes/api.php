@@ -21,6 +21,7 @@ Route::post('register/location', 'AuthController@registerLocation');
 Route::post('register/upload-photo', 'AuthController@registerUploadPhoto');
 Route::post('register/goal', 'GoalController@setUserGoal');
 Route::post('auth/{user}', 'AuthController@authUser');
+Route::get('need/categories', 'NeedsCategoryController@index');
 
 Route::group(['middleware' => ['auth:api']], function () {
     /** Role resource module */

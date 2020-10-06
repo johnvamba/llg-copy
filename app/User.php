@@ -69,10 +69,14 @@ class User extends Authenticatable
     public static function register($request)
     {
         $createdUser = User::create(
-                array_merge($request->only([
-                    'name',
-                    'email',
-                ]), ['password' => bcrypt($request->password)])
+                array_merge(
+                    $request->only([
+                        'email',
+                    ]), [
+                        'password' => bcrypt($request->password),
+                        'name' => $request->firstName.' '.$request->lastName
+                    ]
+                )
             );
 
         return $createdUser;

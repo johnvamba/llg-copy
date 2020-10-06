@@ -26,7 +26,8 @@ class RegisterStoreRequest extends FormRequest
         return [
             'email' => 'required|email|unique:users',
             'password' => 'required',
-            'name' => 'required',
+            'firstName' => 'required',
+            'lastName' => 'required',
             'age' => 'required',
             'location' => 'required',
             'lat' => 'required',

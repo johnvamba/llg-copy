@@ -25,6 +25,8 @@ class UserSeeder extends Seeder
         
         UserProfile::create([
             'user_id' => $admin->id,
+            'first_name' => $faker->firstName,
+            'last_name' => $faker->lastName,
             'age' => 20,
             'location' => $faker->address,
             'lat' => $faker->latitude,

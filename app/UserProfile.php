@@ -31,6 +31,8 @@ class UserProfile extends Model
                         'photo'
                     ), [
                         'user_id' => $id,
+                        'first_name' => $request->firstName,
+                        'last_name' => $request->lastName
                     ]
                 )
             );

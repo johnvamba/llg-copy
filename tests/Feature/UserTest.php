@@ -50,7 +50,8 @@ class UserTest extends TestCase
         $response = $this->post('api/register', [
                 'email' => $this->faker->unique()->safeEmail,
                 'password' => $this->faker->password,
-                'name' => $this->faker->name,
+                'firstName' => $this->faker->firstName,
+                'lastName' => $this->faker->lastName,
                 'age' => 18,
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
@@ -71,7 +72,8 @@ class UserTest extends TestCase
         $response = $this->json('POST', 'api/register', [
                 'email' => $this->user->email,
                 'password' => $this->faker->password,
-                'name' => $this->faker->name,
+                'firstName' => $this->faker->firstName,
+                'lastName' => $this->faker->lastName,
                 'age' => 18,
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
@@ -94,7 +96,8 @@ class UserTest extends TestCase
         $response = $this->json('POST', 'api/register', [
                 'email' => $this->faker->unique()->safeEmail,
                 'password' => $this->faker->password,
-                'name' => $this->faker->name,
+                'firstName' => $this->faker->firstName,
+                'lastName' => $this->faker->lastName,
                 'age' => 18,
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
@@ -177,6 +180,8 @@ class UserTest extends TestCase
                 $this->profile->toArray()
             );
         $params['id'] = $this->user->id;
+        $params['firstName'] = $this->profile->first_name;
+        $params['lastName'] = $this->profile->last_name;
 
         $response = $this->json('PATCH', "api/users/{$this->user->id}", $params);
 
@@ -201,6 +206,8 @@ class UserTest extends TestCase
                 ['photo' => $file]
             );
         $params['id'] = $this->user->id;
+        $params['firstName'] = $this->profile->first_name;
+        $params['lastName'] = $this->profile->last_name;
 
         $response = $this->json('PATCH', "api/users/{$this->user->id}", $params);
 
@@ -271,7 +278,8 @@ class UserTest extends TestCase
         $file = UploadedFile::fake()->image('avatar.jpg');
 
         $response = $this->post("api/users/", [
-                'name' => $this->faker->name,
+                'firstName' => $this->faker->firstName,
+                'lastName' => $this->faker->lastName,
                 'email' => $this->faker->email,
                 'age' => 18,
                 'location' => $this->faker->address,

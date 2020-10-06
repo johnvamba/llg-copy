@@ -100,6 +100,8 @@ class AuthController extends Controller
                 $user->assignRole('user');
 
                 $profile = UserProfile::create([
+                        'first_name' => $request->firstName,
+                        'last_name' => $request->lastName,
                         'user_id' => $user->id,
                         'age' => $request->age
                     ]);

@@ -81,14 +81,14 @@ class StoryController extends Controller
                 'appreciates',
                 'appreciates.user',
             )
-            ->where([
-                ['featured_start_date', '>=', $date],
-                ['featured_end_date', '>=', $date]
-            ])
+            ->where('featured_start_date', '<=', $date)
+            ->where('featured_end_date', '>=', $date)
             ->inRandomOrder()
             ->first();
 
-        $story->getMedia('photo');
+        if ($story) {
+            $story->getMedia('photo');
+        }
 
         return response()->json($story);
     }
@@ -114,6 +114,9 @@ class StoryController extends Controller
                             ["user_id" => auth()->user()->id]
                         )
                     );
+
+                $story->short_description = $request->description;
+                $story->save();
 
                 if ($request->get('media')) {
                     $image = $request->get('media');

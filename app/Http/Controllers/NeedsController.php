@@ -151,7 +151,7 @@ class NeedsController extends Controller
         }
 
         $needs = Need::select('needs.*')
-            ->with(['category', 'type'])
+            ->with(['organization', 'categories', 'categories.model', 'type'])
             ->selectRaw('( 6367 * acos( cos( radians(?) ) 
                 * cos( radians( lat ) ) * cos( radians( lng ) 
                 - radians(?) ) + sin( radians(?) ) 
