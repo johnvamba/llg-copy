@@ -36,6 +36,9 @@ class Story extends Model implements HasMedia
         return $this->hasMany('App\StoryAppreciate');
     }
 
+    /**
+     * Set short description column value
+     */
     public function setShortDescriptionAttribute($value)
     {
         $this->attributes['short_description'] = substr($value, 0, 40).'...';

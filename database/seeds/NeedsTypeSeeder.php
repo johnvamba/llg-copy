@@ -13,8 +13,8 @@ class NeedsTypeSeeder extends Seeder
     public function run()
     {
         //
-        NeedsType::create(['name' => 'Financial Donation', 'icon' => 'Donate.png']);
+        NeedsType::create(['name' => 'Donation', 'icon' => 'Donate.png']);
         NeedsType::create(['name' => 'Fundraise', 'icon' => 'Fundraise.png']);
-        NeedsType::create(['name' => 'Volunteer Opportunities', 'icon' => 'Cleaning.png']);
+        NeedsType::create(['name' => 'Volunteer', 'icon' => 'Cleaning.png']);
     }
 }

@@ -35,4 +35,12 @@ class ServiceOffer extends Model implements HasMedia
     {
         return $this->belongsTo('App\Organization');
     }
+
+    /**
+     * Set short description column value
+     */
+    public function setShortDescriptionAttribute($value)
+    {
+        $this->attributes['short_description'] = substr($value, 0, 40).'...';
+    }
 }

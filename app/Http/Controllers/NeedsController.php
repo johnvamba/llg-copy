@@ -21,16 +21,35 @@ class NeedsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $page = 1)
     {
         //
-        $needs = Need::with('type')
+        $needs = Need::with([
+                'organization',
+                'type', 
+                'categories', 
+                'categories.model'
+            ])
             ->orderBy('created_at', 'desc')
-            ->paginate();
+            ->paginate(10, ['*'], 'needs', $page);
 
         foreach ($needs as $need) {
             $need->model;
             $need->getMedia('photo');
+            $need['photo'] = $need->organization->getMedia('photo');
+            $need['cover_photo'] = $need->organization->getMedia('cover_photo');
+
+            $need['totalActiveNeeds'] = Need::where(
+                    'organization_id', $need->organization_id
+                )
+                ->whereRaw('raised < goal')
+                ->count();
+            
+            $need['totalPastNeeds'] = Need::where(
+                    'organization_id', $need->organization_id
+                )
+                ->whereRaw('raised >= goal')
+                ->count();
         }
 
         return response()->json($needs);
@@ -152,7 +171,7 @@ class NeedsController extends Controller
 
         $needs = Need::select('needs.*')
             ->with(['organization', 'categories', 'categories.model', 'type'])
-            ->selectRaw('( 6367 * acos( cos( radians(?) ) 
+            ->selectRaw('( 6371 * acos( cos( radians(?) ) 
                 * cos( radians( lat ) ) * cos( radians( lng ) 
                 - radians(?) ) + sin( radians(?) ) 
                 * sin( radians( lat ) ) ) ) AS distance', 
@@ -194,7 +213,6 @@ class NeedsController extends Controller
                 $need = Need::create(
                     array_merge(
                         request()->only([
-                            'needs_category_id',
                             'needs_type_id',
                             'title',
                             'description',
@@ -208,13 +226,18 @@ class NeedsController extends Controller
                     )
                 );
 
+                $need->short_description = $request->description;
+                $need->save();
+
                 if ($request->category) {
                     foreach($request->category as $value) {
+                        $fetchCategory = NeedsCategory::find($value);
+
                         $hasCategory = NeedHasCategory::make([
-                                'needs_category_id' => $value
+                                'need_id' => $need->id
                             ]);
                             
-                        $need->categories()->save($hasCategory);
+                        $fetchCategory->category()->save($hasCategory);
                     }
                 }
 

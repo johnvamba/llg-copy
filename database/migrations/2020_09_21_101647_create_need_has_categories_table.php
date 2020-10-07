@@ -15,11 +15,11 @@ class CreateNeedHasCategoriesTable extends Migration
     {
         Schema::create('need_has_categories', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('needs_category_id')->unsigned();
+            $table->bigInteger('need_id')->unsigned();
             $table->morphs('model');
             $table->timestamps();
 
-            $table->foreign('needs_category_id')->references('id')->on('needs_categories');
+            $table->foreign('need_id')->references('id')->on('needs');
         });
     }
 

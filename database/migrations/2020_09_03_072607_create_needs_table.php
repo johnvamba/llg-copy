@@ -19,6 +19,7 @@ class CreateNeedsTable extends Migration
             $table->bigInteger('organization_id')->unsigned();
             $table->string('title');
             $table->text('description');
+            $table->string('short_description')->nullable();
             $table->text('location');
             $table->string('lat');
             $table->string('lng');

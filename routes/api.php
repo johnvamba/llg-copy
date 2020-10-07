@@ -42,6 +42,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsController@nearby');
     Route::get('needs/open/total', 'NeedsController@getTotalNeedsOpen');
     Route::post('needs/organization/{organization}', 'NeedsController@getOrganizationNeeds');
+    Route::get('needs/page/{page}', 'NeedsController@index');
     Route::resource('needs', 'NeedsController');
 
     /** Needs Categories resource module */
@@ -102,6 +103,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('payments', 'PaymentController');
 
     /** Invoice resource module */
+    Route::post('invoice/recent/donors', 'InvoiceController@getRecentDonors');
     Route::get('invoice/donations', 'InvoiceController@getDonations');
     Route::get('invoice/needs/donations', 'InvoiceController@getNeedsDonations');
     Route::get('invoice/top-donors', 'InvoiceController@getTopDonors');

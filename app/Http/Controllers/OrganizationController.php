@@ -78,7 +78,7 @@ class OrganizationController extends Controller
     public function nearby(Request $request, $lat, $lng)
     {
         $orgs = Organization::select('organizations.*')
-            ->selectRaw('( 6367 * acos( cos( radians(?) ) 
+            ->selectRaw('( 6371 * acos( cos( radians(?) ) 
                 * cos( radians( lat ) ) * cos( radians( lng ) 
                 - radians(?) ) + sin( radians(?) ) 
                 * sin( radians( lat ) ) ) ) AS distance', 
@@ -121,6 +121,9 @@ class OrganizationController extends Controller
                         'lat',
                         'lng'
                     ]));
+
+                $org->short_description = $request->description;
+                $org->save();
 
                 if ($request->category) {
                     foreach($request->category as $value) {
