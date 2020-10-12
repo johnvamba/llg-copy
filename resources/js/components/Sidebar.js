@@ -85,25 +85,45 @@ const Sidebar = () => {
                     </button>
 
                     {show.need &&
+                        //
                         <div className={`ml-8`}>
                             <div
                                 className={`mt-4 
                                 ${location.pathname == "/needs" ? "text-blue-400" : "text-gray-400"}`}
                             >
                                 <Link to="/needs">
-                                    Contents
+                                    Approved
                                 </Link>
                             </div>
 
                             <div
                                 className={`mt-4 
-                                ${location.pathname == "/needs/category" ? "text-blue-400" : "text-gray-400"}`}
+                                ${location.pathname == "/requests" ? "text-blue-400" : "text-gray-400"}`}
                             >
-                                <Link to="/needs/category">
-                                    Categories
+                                <Link to="/needs/requests">
+                                    Requests
                                 </Link>
                             </div>
                         </div>
+                        // <div className={`ml-8`}>
+                        //     <div
+                        //         className={`mt-4 
+                        //         ${location.pathname == "/needs" ? "text-blue-400" : "text-gray-400"}`}
+                        //     >
+                        //         <Link to="/needs">
+                        //             Contents
+                        //         </Link>
+                        //     </div>
+
+                        //     <div
+                        //         className={`mt-4 
+                        //         ${location.pathname == "/needs/category" ? "text-blue-400" : "text-gray-400"}`}
+                        //     >
+                        //         <Link to="/needs/category">
+                        //             Categories
+                        //         </Link>
+                        //     </div>
+                        // </div>
                     }
                 </div>
 

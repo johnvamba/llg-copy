@@ -11,6 +11,7 @@ import DonationGraph from './donation-graph';
 import TopDonors from './top-donors';
 import RecentNeeds from './recent-needs';
 import NearbyOrganizations from './nearby-organizations';
+import RecentActivities from '../recent-activities';
 
 const Dashboard = ({ ...props }) => {
     const roles = useSelector(state => state.AuthUserReducer.roles);
@@ -69,6 +70,8 @@ const Dashboard = ({ ...props }) => {
                     </div>
                 </div>
             </div>
+            // Originally from app.js
+            <RecentActivities />
         </>
     )
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import Dashboard from '../pages/dashboard';
 import Needs from '../pages/needs';
+import Requests from '../pages/needs-request';
 import CreateNeeds from '../pages/needs/create';
 import EidtNeeds from '../pages/needs/edit';
 import NeedsCategory from '../pages/needs-category';
@@ -38,6 +39,11 @@ const routes = [
         path: '/needs',
         exact: true,
         component: () => <Needs />
+    },
+    {
+        path: '/needs/requests',
+        exact: true,
+        component: () => <Requests />
     },
     {
         path: '/needs/create',

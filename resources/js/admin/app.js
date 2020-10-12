@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import Cookie from 'js-cookie';
-import RecentActivities from './pages/recent-activities';
 import Content from './content';
 import OrganizationView from './pages/organizations/view';
+import '../../assets/css/general.css';
+import Filter from '../svg/filter';
+
+import MainFilter from './filter'
 
 const Home = () => {
+    const [filterElement, setFilterElement] = useState(null);
+    const [toggleFilter, showFilter] = useState(false);
     const [notifications, setNotifications] = useState([]);
     const [organization, setOrganization] = useState(null);
 
@@ -31,7 +36,6 @@ const Home = () => {
     }
 
     const handleViewOrganization = value => {
-        console.log(value);
         setOrganization(value)
     }
 
@@ -42,7 +46,20 @@ const Home = () => {
 
                 <div className="flex flex-1 flex-col">
                     <header className="flex flex-rowl h-16 border-b">
-                        <div className="flex flex-1 items-center pl-12">
+                        <div className="flex items-center pl-12 filter-header">
+                            <button className="text-black-500 flex items-center mr-4 focus:outline-none" 
+                                onClick={e=>showFilter(!toggleFilter)}>
+                                <i className="mr-4" ref={setFilterElement}>
+                                    <Filter/>
+                                </i>
+                                Filter
+                            </button>
+                            {
+                                toggleFilter &&
+                                <MainFilter referElement={filterElement}/>
+                            }
+                        </div>
+                        <div className="flex flex-1 items-center pl-2">
                             <button className="text-gray-500 mr-4 focus:outline-none">
                                 <i className="fa fa-search" aria-hidden="true"></i>
                             </button>
@@ -80,7 +97,7 @@ const Home = () => {
                             <Content onViewOrganization={handleViewOrganization} />
                         </section>
 
-                        <RecentActivities />
+                        
 
                         {organization && <div className="absolute z-40 right-0 top-0 md:w-2/5 h-full flex bg-white border-l">
                             <OrganizationView
