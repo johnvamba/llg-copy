@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ServiceOfferStoreRequest;
 use App\Http\Requests\ServiceOfferUpdateRequest;
 use Illuminate\Http\Request;
+use App\User;
+use App\Organization;
 use App\ServiceOffer;
 use App\Tag;
 use DB;
@@ -106,20 +108,23 @@ class ServiceOfferController extends Controller
     public function store(ServiceOfferStoreRequest $request)
     {
         $result = DB::transaction(function () use ($request) {
-                $serviceOffer = ServiceOffer::create(
-                        array_merge(
-                            request()->only([
-                                'service_type_id',
-                                'organization_id',
-                                'name',
-                                'title',
-                                'description',
-                                'location',
-                                'lat',
-                                'lng'
-                            ]), ['user_id' => auth()->user()->id]
-                        )
+                $model = $request->organization_id 
+                    ? Organization::find($request->organization_id)->first()
+                    : User::find(auth()->user()->id)->first();
+
+                $makeOffer = ServiceOffer::make(
+                        request()->only([
+                            'service_type_id',
+                            'name',
+                            'title',
+                            'description',
+                            'location',
+                            'lat',
+                            'lng'
+                        ])
                     );
+
+                $serviceOffer = $model->offers()->save($makeOffer);
 
                 if ($request->tags) {
                     $tags = Tag::createTag($serviceOffer, $request->tags);

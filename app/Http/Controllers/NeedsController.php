@@ -23,17 +23,33 @@ class NeedsController extends Controller
      */
     public function index(Request $request, $page = 1)
     {
-        //
+        $filters = $request->filters;
+
+        $needHasCategories = [];
+
         $needs = Need::with([
                 'organization',
                 'type', 
-                'categories', 
+                'categories',
                 'categories.model'
-            ])
-            ->orderBy('created_at', 'desc')
+            ]);
+
+        if (!empty($filters)){
+            $needs->where('needs_type_id', $filters['type']);
+            
+            if ($filters['filterAmount']) 
+                $needs->where('goal', '<=', floatval($filters['amount']));
+
+            if(count($filters['category']) > 0){
+                $needHasCategories = NeedHasCategory::whereIn('id', $filters['category'])->pluck('need_id');
+                $needs->whereIn('id', $needHasCategories);
+            }
+        }
+        
+        $results = $needs->orderBy('created_at', 'desc')
             ->paginate(10, ['*'], 'needs', $page);
 
-        foreach ($needs as $need) {
+        foreach ($results as $need) {
             $need->model;
             $need->getMedia('photo');
             $need['photo'] = $need->organization->getMedia('photo');
@@ -52,7 +68,7 @@ class NeedsController extends Controller
                 ->count();
         }
 
-        return response()->json($needs);
+        return response()->json($results);
     }
 
     /**

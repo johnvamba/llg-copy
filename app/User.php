@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->morphMany('App\OrganizationMember', 'model');
     }
 
+    public function offers()
+    {
+        return $this->morphMany('App\ServiceOffer', 'model');
+    }
+
     public function profile()
     {
         return $this->hasOne('App\UserProfile');

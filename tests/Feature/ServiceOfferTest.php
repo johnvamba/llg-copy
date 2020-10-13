@@ -54,7 +54,6 @@ class ServiceOfferTest extends TestCase
 
         $response = $this->post('api/service-offer', [
                 'service_type_id' => $this->service->id,
-                'organization_id' => $this->org->id,
                 'title' => $this->faker->text,
                 'description' => $this->faker->text,
                 'location' => $this->faker->address,
@@ -74,7 +73,6 @@ class ServiceOfferTest extends TestCase
 
         $response = $this->post('api/service-offer', [
                 'service_type_id' => $this->service->id,
-                'organization_id' => $this->org->id,
                 'title' => $this->faker->text,
                 'description' => $this->faker->text,
                 'location' => $this->faker->address,
@@ -99,7 +97,6 @@ class ServiceOfferTest extends TestCase
 
         $response = $this->post('api/service-offer', [
                 'service_type_id' => $this->service->id,
-                'organization_id' => $this->org->id,
                 'title' => $this->faker->text,
                 'description' => $this->faker->text,
                 'location' => $this->faker->address,
@@ -121,8 +118,8 @@ class ServiceOfferTest extends TestCase
 
         factory(ServiceOffer::class, 5)->create([
             'service_type_id' => $this->service->id,
-            'organization_id' => $this->org->id,
-            'user_id' => $this->user->id
+            'model_type' => 'App\Organization',
+            'model_id' => $this->org->id,
         ]);
 
         $response = $this->get('api/service-offer');
@@ -139,8 +136,8 @@ class ServiceOfferTest extends TestCase
 
         factory(ServiceOffer::class, 5)->create([
             'service_type_id' => $this->service->id,
-            'organization_id' => $this->org->id,
-            'user_id' => $this->user->id
+            'model_type' => 'App\Organization',
+            'model_id' => $this->org->id,
         ]);
 
         $response = $this->get('api/service-offer/help/total');
@@ -157,8 +154,8 @@ class ServiceOfferTest extends TestCase
 
         factory(ServiceOffer::class, 5)->create([
             'service_type_id' => $this->service->id,
-            'organization_id' => $this->org->id,
-            'user_id' => $this->user->id
+            'model_type' => 'App\Organization',
+            'model_id' => $this->org->id,
         ]);
 
         $response = $this->post('api/offer/lists', [
@@ -177,8 +174,8 @@ class ServiceOfferTest extends TestCase
 
         $services = factory(ServiceOffer::class, 5)->create([
             'service_type_id' => $this->service->id,
-            'organization_id' => $this->org->id,
-            'user_id' => $this->user->id
+            'model_type' => 'App\Organization',
+            'model_id' => $this->org->id,
         ]);
 
         $offer = $services[0];
@@ -197,8 +194,8 @@ class ServiceOfferTest extends TestCase
 
         $services = factory(ServiceOffer::class, 5)->create([
             'service_type_id' => $this->service->id,
-            'organization_id' => $this->org->id,
-            'user_id' => $this->user->id
+            'model_type' => 'App\Organization',
+            'model_id' => $this->org->id,
         ]);
 
         $offer = $services[0];
@@ -219,8 +216,8 @@ class ServiceOfferTest extends TestCase
 
         $services = factory(ServiceOffer::class, 5)->create([
             'service_type_id' => $this->service->id,
-            'organization_id' => $this->org->id,
-            'user_id' => $this->user->id
+            'model_type' => 'App\Organization',
+            'model_id' => $this->org->id,
         ]);
 
         $offer = $services[0];
@@ -239,8 +236,8 @@ class ServiceOfferTest extends TestCase
 
         $services = factory(ServiceOffer::class, 5)->create([
             'service_type_id' => $this->service->id,
-            'organization_id' => $this->org->id,
-            'user_id' => $this->user->id,
+            'model_type' => 'App\Organization',
+            'model_id' => $this->org->id,
         ]);
 
         $offer = $services[0];
@@ -261,8 +258,8 @@ class ServiceOfferTest extends TestCase
 
         $services = factory(ServiceOffer::class, 5)->create([
             'service_type_id' => $this->service->id,
-            'organization_id' => $this->org->id,
-            'user_id' => $this->user->id,
+            'model_type' => 'App\Organization',
+            'model_id' => $this->org->id,
         ]);
 
         $response = $this->get("api/service-offer/user/request");

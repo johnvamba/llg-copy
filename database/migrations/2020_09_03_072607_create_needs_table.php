@@ -20,9 +20,9 @@ class CreateNeedsTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('short_description')->nullable();
-            $table->text('location');
-            $table->string('lat');
-            $table->string('lng');
+            $table->text('location')->nullable();
+            $table->string('lat')->nullable();
+            $table->string('lng')->nullable();
             $table->double('raised', 15, 2);
             $table->double('goal', 15, 2);
             $table->timestamps();

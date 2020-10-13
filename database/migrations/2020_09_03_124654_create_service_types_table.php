@@ -17,6 +17,7 @@ class CreateServiceTypesTable extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('status')->default(true);
+            $table->text('icon')->nullable();
             $table->timestamps();
         });
     }

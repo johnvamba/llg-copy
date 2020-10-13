@@ -84,4 +84,21 @@ class GoalController extends Controller
 
         return response()->json($goal, 202);
     }
+
+    /**
+     * Get user goal
+     * @param request
+     * @return json
+     */
+    public function getUserGoal(Request $request)
+    {
+        $goal = Goal::where([
+                ['model_type', 'App\User'],
+                ['model_id', auth()->user()->id]
+            ])
+            ->orderBy('id', 'desc')
+            ->first();
+
+        return response()->json($goal, 200);
+    }
 }

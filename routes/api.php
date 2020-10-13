@@ -32,8 +32,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('user/stats', 'UserController@getUsersStatistics');
     Route::post('users/lists', 'UserController@getUsers');
     Route::resource('users', 'UserController');
-
+    
     /** Goal resource module */
+    Route::get('goal/user', 'GoalController@getUserGoal');
     Route::resource('goals', 'GoalController');
 
     /** Need resource module */
@@ -42,7 +43,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsController@nearby');
     Route::get('needs/open/total', 'NeedsController@getTotalNeedsOpen');
     Route::post('needs/organization/{organization}', 'NeedsController@getOrganizationNeeds');
-    Route::get('needs/page/{page}', 'NeedsController@index');
+    Route::post('needs/page/{page}', 'NeedsController@index');
     Route::resource('needs', 'NeedsController');
 
     /** Needs Categories resource module */
