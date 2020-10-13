@@ -23,26 +23,27 @@ const filters = [
 
 ]
 
-const MainFilter = ({referElement}) => {
+const MainFilter = ({referElement, onClose}) => {
     const loc = useLocation();
-    console.log("location",loc);
+    // console.log("location",loc);
     const [popperElement, setPopperElement] = useState(null);
     const [arrowElement, setArrowElement] = useState(null);
     const {styles, attributes} = usePopper(referElement, popperElement, {
-        placement: 'bottom-end',
+        placement: 'bottom-start',
+        className: 'arror',
         modifiers: [{name: 'arrow', options: {element: arrowElement } }],
     })
-    console.log('Sets', popperElement,arrowElement, referElement, styles, attributes)
+    // console.log('Sets', popperElement, arrowElement, referElement, styles, attributes)
     return (
-        <div ref={setPopperElement} style={styles.popper} {...attributes.popper}>
-            <div ref={setArrowElement} style={styles.arrow} />
+        <div ref={setPopperElement} className="filter-content" style={{...styles.popper, top:'20px', left: '-25px', zIndex: 1}} {...attributes.popper}>
+            <div ref={setArrowElement} className='filter-arrow' style={styles.arrow} />
             <Switch>
                 {filters.map((route, index) =>
                     (
                         <Route
                             key={index}
                             path={route.path}
-                            children={<route.component style={styles.popper} {...attributes.popper}/>}
+                            children={<route.component style={styles.popper} onClose={onClose} {...attributes.popper}/>}
                         />
                     )
                  )

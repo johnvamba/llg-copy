@@ -20,7 +20,7 @@ import DatePicker from 'react-datepicker';
 registerPlugin(FilePondPluginImagePreview)
 
 const NeedForm = ({handleForm}) => {
-    const [type, setType] = useState('volunteer'); //donation
+    const [type, setType] = useState('donation'); //donation
     const [people, setPeople] = useState(0); //donation
     const [files, setFiles] = useState([])
     const [goal, setGoal] = useState(0);
@@ -117,7 +117,6 @@ const NeedForm = ({handleForm}) => {
                                 <span className="currency">$</span>
                                 <input className="input-field space-l" type="number" placeholder="0.00" value={goal} name="goal" onChange={e=>updateGoal(e.target.value)}/>
                             </div>
-                            <span></span>
                         </div>
                         <div className="form-group">
                             <label>About</label>

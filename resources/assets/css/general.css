@@ -106,6 +106,44 @@ input[type="time"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-datetime-edit-ampm-field {
 	display: none;
 }
-header .filter-header svg{
-	margin-right: 1rem;
+
+header .filter-header .filter-content{
+	background: #FFFFFF;
+	border: 1px solid #E7EBF3;
+	box-sizing: border-box;
+	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+	border-radius: 4px;
+}
+
+header .filter-header .filter-need {
+	/*padding*/
+	width: 425px;
+	height: auto;
+}
+
+header .filter-content .form-body.filter-body{
+	height: auto !important;
+	padding-top: 20px;
+}
+
+header .filter-footer {
+	height: 60px;
+    align-items: center;
+    border-top: 1px solid #D7DEE3;
+    padding: 0px 20px;
+}
+
+.text-primary {
+	color: #2F80ED !important;
+}
+.text-clear {
+	color: #EB5757 !important;
+}
+.filter-need .filter-footer a{
+	/*font-family: Lato;*/
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	line-height: 14px;
+	color: rgba(112,118,131,1);
 }

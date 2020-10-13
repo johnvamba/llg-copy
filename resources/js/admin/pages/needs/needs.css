@@ -51,10 +51,10 @@
 	color: #4F6880;
 	opacity: 0.3;
 }
-.input-container > input.input-field.space-l {
+.input-container input.input-field.space-l {
 	padding-left: 20px !important; 
 }
-.input-container > input.input-field.space-r {
+.input-container input.input-field.space-r {
 	padding-right: 20px !important; 
 }
 

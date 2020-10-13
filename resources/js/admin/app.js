@@ -56,7 +56,7 @@ const Home = () => {
                             </button>
                             {
                                 toggleFilter &&
-                                <MainFilter referElement={filterElement}/>
+                                <MainFilter referElement={filterElement} onClose={()=>showFilter(false)}/>
                             }
                         </div>
                         <div className="flex flex-1 items-center pl-2">
