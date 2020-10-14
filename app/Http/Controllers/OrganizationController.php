@@ -94,6 +94,8 @@ class OrganizationController extends Controller
 
         foreach($results as $result) {
             $result->getMedia();
+            $result['photo'] = $result->getMedia('photo');
+            $result['cover_photo'] = $result->getMedia('cover_photo');
         } 
             
         return response()->json($results, 200);
