@@ -143,15 +143,6 @@ const NeedForm = ({handleForm}) => {
                         <div className="form-group short-width">
                             <label>Time</label>
                             <div className="input-container">
-                                {
-                                // <DatePicker
-                                //     dateFormat="MMM dd, yyyy"
-                                //     showTimeSelect
-                                //     onChange={date=>setTime(date)}
-                                //     customeTimeInput
-                                // />
-                                //
-                                }
                                 <input className="input-field time-field" type="time" pattern="[0-9]{2}:[0-9]{2}" placeholder="00:00" name="time"/>
                                 <span className={`time-toggle time-am ${meridiem =='am' ? 'active':''}`} onClick={()=>setMeridiem('am')}>AM</span>
                                 <span className={`time-toggle time-pm ${meridiem =='pm' ? 'active':''}`} onClick={()=>setMeridiem('pm')}>PM</span>

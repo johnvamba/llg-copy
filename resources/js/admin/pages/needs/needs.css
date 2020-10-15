@@ -245,3 +245,15 @@ input[type=time]::-webkit-calendar-picker-indicator {
     background-color: transparent;
     border: 1px dashed #D7DEE3;
 }
+
+/*Need info*/
+.need-info {
+	margin-right: auto;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    border: 1px solid rgba(231,234,239,1);
+    background-color: #FFF;
+    width: 430px;
+    height: 100%;
+}

@@ -1,27 +1,65 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as NeedsActions from '../../../redux/needs/actions';
-import DataTable from '../../../components/layout/DataTable';
+// import DataTable from '../../../components/layout/DataTable';
 import Button from '../../../components/Button';
 import Check from '../../../svg/check'
 import Cross from '../../../svg/cross'
-import CrossPlain from '../../../svg/cross-plain'
+// import CrossPlain from '../../../svg/cross-plain'
 import Quill from '../../../svg/quill'
 //As test icon only
-import IconTest from '../../../svg/icon-test'
+// import IconTest from '../../../svg/icon-test'
 
 import './needs.css';
 
 import NeedForm from './form'
+import NeedTable from './table'
+import NeedInfo from './info'
 
 const Needs = () => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
     const [tab, setTab] = useState('all'); //current or past
     const [form, showForm] = useState(false); //false
+    const [info, showInfo] = useState(null);
     const needs = useSelector(
         state => state.NeedsReducer.needs
     )
+
+    const data = [
+        {
+            id: 1,
+            title: 'Title',
+            type: 'Donation',
+            goal: 2400.00,
+            status: 'on-going',
+            date: '08/27/2020'
+        },
+        {
+            id: 2,
+            title: 'Title',
+            type: 'Fundraise',
+            goal: 2400.00,
+            status: 'on-going',
+            date: '08/27/2020'
+        },
+        {
+            id: 3,
+            title: 'Title',
+            type: 'Donation',
+            goal: 2400.00,
+            status: 'achieved',
+            date: '08/27/2020'
+        },
+        {
+            id: 4,
+            title: 'Title',
+            type: 'Volunteer',
+            goal: "N/A",
+            status: 'pending',
+            date: '08/27/2020'
+        }
+    ];
 
     const dispatch = useDispatch();
 
@@ -59,6 +97,10 @@ const Needs = () => {
         }
         showForm(form)
     }
+    const handleInfo = (item) => {
+        showForm(false);
+        showInfo(item);
+    }
 
     return (
         <>
@@ -75,124 +117,15 @@ const Needs = () => {
             </div>
 
             <div className="flex flex-col p-8">
-                <table className="table">
-                    <thead className="bg-white tb-head">
-                        <tr>
-                            <th className="w-1/14">
-                                <input type='checkbox'/>
-                            </th>
-                            <th className="w-3/14">Title</th>
-                            <th className="w-1/7">Type of Need</th>
-                            <th className="w-1/7">Goal</th>
-                            <th className="w-1/7">Status</th>
-                            <th className="w-1/7">Date Added</th>
-                            <th className="w-1/7">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <input type='checkbox'/>
-                            </td>
-                            <td className="title">
-                                <div className="title-img"></div>
-                                <p>
-                                    title
-                                </p>
-                            </td>
-                            <td>
-                                Donation
-                            </td>
-                            <td className="col-currency">
-                                {
-                                    (true) ? ( <p><span className="currency">$</span>25.00</p>) : <p>N/A</p>
-                                }
-                            </td>
-                            <td>
-                                <span className="label label-active">On-Going</span>
-                            </td>
-                            <td>
-                                08/27/2020
-                            </td>
-                            <td className="row-actions">
-                            <Button>
-                                
-                                <Check/>
-                            </Button>
-                            <Button>
-                                
-                                <Cross/>
-                            </Button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type='checkbox'/>
-                            </td>
-                            <td className="title">
-                                <div className="title-img"></div>
-                                <p>
-                                    title
-                                </p>
-                            </td>
-                            <td>
-                                Donation
-                            </td>
-                            <td className="col-currency">
-                                {
-                                    (true) ? ( <p><span className="currency">$</span>25.00</p>) : <p>N/A</p>
-                                }
-                            </td>
-                            <td>
-                                <span className="label label-pending">Pending</span>
-                            </td>
-                            <td>
-                                08/27/2020
-                            </td>
-                            <td className="row-actions">
-                                <Button className="flex text-white bg-blue-500 hover:bg-blue-600">
-                                <Quill/>
-                                Write a Story
-                                </Button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <input type='checkbox'/>
-                            </td>
-                            <td className="title">
-                                <div className="title-img"></div>
-                                <p>
-                                    title
-                                </p>
-                            </td>
-                            <td>
-                                Donation
-                            </td>
-                            <td className="col-currency">
-                                {
-                                    (true) ? ( <p><span className="currency">$</span>25.00</p>) : <p>N/A</p>
-                                }
-                            </td>
-                            <td>
-                                <span className="label label-success">Achieved</span>
-                            </td>
-                            <td>
-                                08/27/2020
-                            </td>
-                            <td className="row-actions">
-                                <Button className="flex text-white bg-blue-500 hover:bg-blue-600">
-                                <Quill/>
-                                Write a Story
-                                </Button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <NeedTable tab={tab} data={data} showInfo={handleInfo}/> 
             </div>
             {
                 form && 
                 <NeedForm handleForm={handleForm}/>
+            }
+            {
+                info && 
+                <NeedInfo toClose={e=>setInfo(null)} data={info}/>
             }
         </>
     )

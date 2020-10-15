@@ -47,7 +47,7 @@ table.table tr > th:first-child, table.table tr > td:first-child {
 table.table > tbody > tr > td.title {
 	color: rgba(50,60,71,1) !important;
 	font-weight: 500;
-	display: flex;
+	display: inline-flex;
 }
 
 table.table > tbody > tr > td.title div.title-img{
@@ -72,7 +72,7 @@ table.table td.row-actions{
 	letter-spacing: 0.01em;
 }
 table.table td.col-currency {
-	display: flex;
+	/*display: flex;*/
 }
 span.currency {
 	margin-right: 13px;
@@ -146,4 +146,9 @@ header .filter-footer {
 	font-size: 12px;
 	line-height: 14px;
 	color: rgba(112,118,131,1);
+}
+button.button[disabled],
+button.button.disabled{
+	opacity: 0.4;
+	cursor: not-allowed;
 }
