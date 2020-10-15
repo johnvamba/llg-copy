@@ -13,6 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/{path1?}/{path2?}/{path3?}/{path4?}/{path5?}', 'app');

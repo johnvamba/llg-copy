@@ -1,0 +1,251 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\GroupUpdateRequest;
+use App\Http\Requests\GroupStoreRequest;
+use Illuminate\Http\Request;
+use App\GroupParticipant;
+use App\Group;
+use App\Goal;
+use App\Tag;
+use App\GroupChat;
+use DB;
+
+class GroupController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $groups = Group::with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate();
+
+        foreach ($groups as $group) {
+            $group->getMedia();
+        }
+
+        return response()->json($groups);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getGroups(Request $request)
+    {
+        $results['columns'] = [
+            'id',
+            'name',
+            'description',
+            'privacy',
+            'location'
+        ];
+
+        $groups = Group::where('status', true)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map->only(
+                'id',
+                'name',
+                'description',
+                'privacy',
+                'location'
+            )
+            ->chunk($request->limit);
+
+        $results['data'] = $groups;
+        $results['module'] = [
+                'path' => '/groups',
+                'endpoint' => 'groups',
+                'singular' => 'group',
+                'plural' => 'groups',
+            ];
+
+        return response()->json($results);
+    }
+
+    /**
+     * Display join request of a group.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getJoinRequest(Request $request, Group $group)
+    {
+        $participants = GroupParticipant::with('user')
+            ->where('status', 'pending')
+            ->get();
+
+        return response()->json($participants, 200);
+    }
+
+    /**
+     * Display the messages of a group.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function messages(Request $request, Group $group)
+    {
+        $chats = GroupChat::with('user')
+            ->where('group_id', $group->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($chats, 200);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(GroupStoreRequest $request)
+    {
+        $result = DB::transaction(function () use ($request) {
+            $group = Group::create(
+                    array_merge(
+                        request()->only([
+                            'name',
+                            'description',
+                            'privacy',
+                            'location',
+                            'lat',
+                            'lng'
+                        ]), ["user_id" => auth()->user()->id]
+                    )
+                );
+            
+            if ($request->term && $request->need) {
+                $goal = Goal::make(request()->only([
+                        'need',
+                        'term'
+                    ]));
+    
+                $createdGoal = $group->goals()->save($goal);
+    
+                $group['goal'] = $createdGoal;
+            }
+
+            if ($request->tags) {
+                $tags = Tag::createTag($group, $request->tags);
+                $group['tags'] = $tags;
+            }
+
+            if ($request->hasFile('media')) {
+                $group
+                    ->addMedia($request->file('media'))
+                    ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
+
+                $group->getMedia('photo');
+            }
+
+
+            return $group;
+        });
+
+        return response()->json($result, 202);
+    }
+
+    /**
+     * User participating in group
+     *
+     * @param  json
+     * @return \Illuminate\Http\Response
+     */
+    public function addParticipant(Request $request, Group $group)
+    {
+        $participant = GroupParticipant::create([
+                'group_id' => $group->id,
+                'user_id' => auth()->user()->id
+            ]);
+
+        return response()->json($participant, 202);
+    }
+    
+    /**
+     * Add a new message in group
+     *
+     * @param  json
+     * @return \Illuminate\Http\Response
+     */
+    public function addMessage(Request $request, Group $group)
+    {
+        $chat = GroupChat::create([
+                'group_id' => $group->id,
+                'sender' => auth()->user()->id,
+                'message' => $request->message
+            ]);
+
+        return response()->json($chat, 202);
+    }
+    
+    /**
+     * Join Request action [approve, deny]
+     *
+     * @param json
+     * @return \Illuminate\Http\Response
+     */
+    public function joinRequest(Request $request, $id)
+    {
+        $participant = GroupParticipant::find($id);
+        $participant->update(request()->only(['status']));
+
+        return response()->json($participant, 202);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $group = Group::with('user', 'participants', 'participants.user')
+            ->where('id', $id)->first();
+        $group->getMedia('photo');
+
+        return response()->json($group);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(GroupUpdateRequest $request, Group $group)
+    {
+        $group->update($request->validated());
+
+        return response()->json($group, 202);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Group $group)
+    {
+        try {
+            $group->delete();
+            
+            return response()->json([
+                    'message' => 'Group successfully deleted.'
+                ], 204);
+        } catch (\Exception $e) {
+            return response()->json([
+                    'message' => 'An error occurred. Please try again.'
+                ], 500);
+        }
+    }
+}
