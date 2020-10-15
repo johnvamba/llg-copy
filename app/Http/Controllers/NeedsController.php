@@ -41,7 +41,9 @@ class NeedsController extends Controller
                 $needs->where('goal', '<=', floatval($filters['amount']));
 
             if(count($filters['category']) > 0){
-                $needHasCategories = NeedHasCategory::whereIn('id', $filters['category'])->pluck('need_id');
+                $needHasCategories = NeedHasCategory::where('model_type', 'App\NeedsCategory')
+                    ->whereIn('model_id', $filters['category'])
+                    ->pluck('need_id');
                 $needs->whereIn('id', $needHasCategories);
             }
         }
