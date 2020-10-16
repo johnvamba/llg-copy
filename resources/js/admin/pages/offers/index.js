@@ -9,7 +9,6 @@ import OffersCleaning from '../../../svg/offers-cleaning';
 import OffersPlus from '../../../svg/offers-plus';
 
 //As test icon only
-import './offers.css';
 import OffersCreateForm from './form';
 import SingleViewOffer from './single-offer-view';
 

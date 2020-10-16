@@ -2529,7 +2529,7 @@ var CanvasJSReact = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/logicbaseinteractive/Documents/Norman/Sites/LoveLivesGenerously/resources/assets/canvasjs.react.js */"./resources/assets/canvasjs.react.js");
+module.exports = __webpack_require__(/*! C:\wamp64\www\neuma\resources\assets\canvasjs.react.js */"./resources/assets/canvasjs.react.js");
 
 
 /***/ })
