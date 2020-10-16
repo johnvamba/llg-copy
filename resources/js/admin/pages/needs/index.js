@@ -50,14 +50,6 @@ const Needs = () => {
             goal: 2400.00,
             status: 'achieved',
             date: '08/27/2020'
-        },
-        {
-            id: 4,
-            title: 'Title',
-            type: 'Volunteer',
-            goal: "N/A",
-            status: 'pending',
-            date: '08/27/2020'
         }
     ];
 

@@ -7,6 +7,8 @@ import Check from '../../../svg/check'
 import Cross from '../../../svg/cross'
 // import CrossPlain from '../../../svg/cross-plain'
 import Quill from '../../../svg/quill'
+import Circlet from '../../../svg/circlet'
+
 //As test icon only
 // import IconTest from '../../../svg/icon-test'
 
@@ -19,28 +21,37 @@ const NeedInfo = ({data}) => {
     return (
         <div className="need-info">
             <div className="need-header">
-            	<i className="circlet"></i>
+            	<i className="circlet"><Circlet /></i>
             	<h4 className="need-status">On-Going</h4>
-            	<Button><i className="fas fa-pencil"/>Edit</Button>
+            	<button><i className="fas fa-pencil"/>Edit</button>
             </div>
             <div className="need-content">
             	<div className="need-title">
-	            	<h3>Title</h3>
-	            	<span>08/27/20</span>
+	            	<img className="need-img" />
+                    <h3>Title <span>08/27/20</span> </h3>
 	            	<h5>Volunteer</h5>
             	</div>
             	<div className="group-content">
             		<label>Categories</label>
             	</div>
-            	<div className="group-content w-1\/2">
-            		<label>Date Needed</label>
-            	</div>
-            	<div className="group-content w-1\/2">
-            		<label>Time</label>
-            	</div>
+                <div className="group-content">
+                    <div className="progress-bar">
+                        <div className="progress" style={{width: "85%"}}></div>
+                    </div>
+                </div>
+                <div className="flex">
+                	<div className="group-content flex-1">
+                		<label>Date Needed</label>
+                        <p>Sept 01, 2020</p>
+                	</div>
+                	<div className="group-content flex-1">
+                		<label>Time</label>
+                        <p>9:00 AM</p>
+                	</div>
+                </div>
             	<div className="group-content">
             		<label>Location</label>
-            		<p></p>
+            		<div className="need-map"></div>
             	</div>
             	<div className="group-content">
             		<label>Number of People Needed</label>

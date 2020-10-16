@@ -27,15 +27,15 @@ const NeedTable = ({tab = null, data = [], showInfo})=> {
     return <table className="table">
         <thead className="bg-white tb-head">
             <tr>
-                <th className="pl-2">
+                <th className="checkbox">
                     <input type='checkbox' checked={checkAll} onChange={e=>setCheckAll(e.target.checked)}/>
                 </th>
-                <th className="w-2/7">Title</th>
-                <th className="w-1/7">Type of Need</th>
-                <th className="w-1/7">Goal</th>
-                <th className="w-1/7">Status</th>
-                <th className="w-1/7">Date Added</th>
-                <th className="w-1/7">Actions</th>
+                <th className="title">Title</th>
+                <th className="">Type of Need</th>
+                <th className="">Goal</th>
+                <th className="">Status</th>
+                <th className="">Date Added</th>
+                <th className="actions">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -67,14 +67,16 @@ const RowTable = ({checkValue = false, checkChange, title ="Untitled", type = "D
         }
     }
     return <tr>
-        <td>
+        <td className="checkbox">
             <input type='checkbox' checked={checkValue} onChange={checkChange}/>
         </td>
         <td className="title">
-            <div className="title-img"></div>
-            <p onClick={onShowInfo}>
-                { title }
-            </p>
+            <div className="flex"> 
+                <img className="title-img" />
+                <p onClick={onShowInfo}>
+                    { title }
+                </p>
+            </div>
         </td>
         <td>
             {
@@ -96,16 +98,18 @@ const RowTable = ({checkValue = false, checkChange, title ="Untitled", type = "D
         </td>
         {
             status == 'pending' ?
-            <td className="row-actions">
-                <Button>
+            <td className="actions row-actions">
+                <button>
                     <Check/>
-                </Button>
-                <Button>
+                </button>
+                <button>
                     <Cross/>
-                </Button>
+                </button>
             </td> :
-            <td className="row-actions">
-                <Button className="flex text-white bg-blue-500 hover:bg-blue-600" disabled={status !== 'achieved'}>
+            <td className="actions row-actions">
+                <Button className="flex text-white bg-blue-500 hover:bg-blue-600" 
+                    disabled={status !== 'achieved'}
+                    onClick={()=>alert('something')}>
                     <Quill/>
                     Write a Story
                 </Button>
