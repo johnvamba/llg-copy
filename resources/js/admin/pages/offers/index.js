@@ -105,6 +105,7 @@ const Offers = () => {
                     </button>
                 </div>
             </div>
+            
             <div className="offers-table flex flex-col p-8">
                 <table className="table">
                     <thead className="">
@@ -155,63 +156,6 @@ const Offers = () => {
                                 )
                             )
                         }
-                        
-                        {/* <tr onClick={handleSingleOffer}>
-                            <td className="checkbox">
-                                <input type='checkbox'/>
-                            </td>
-                            <td className="title">
-                                <div className="title-img"></div>
-                                <p>
-                                    Sample Title Here
-                                </p>
-                            </td>
-                            <td>
-                                <div className="tos">
-                                    <OffersMechanic />
-                                    <p>Mechanic</p>
-                                </div>
-                            </td>
-                            <td>
-                                <p>Melbourne City</p>
-                            </td>
-                            <td>
-                                <div className="status status--achieved">
-                                    <span>Achieved</span>
-                                </div>
-                            </td>
-                            <td>
-                                <p>08/27/2020</p>
-                            </td>
-                        </tr>
-                        <tr onClick={handleSingleOffer}>
-                            <td className="checkbox">
-                                <input type='checkbox'/>
-                            </td>
-                            <td className="title">
-                                <div className="title-img"></div>
-                                <p>
-                                    Sample Title Here
-                                </p>
-                            </td>
-                            <td>
-                                <div className="tos">
-                                    <OffersCleaning />
-                                    <p>Cleaning</p>
-                                </div>
-                            </td>
-                            <td>
-                                <p>Melbourne City</p>
-                            </td>
-                            <td>
-                                <div className="status status--achieved">
-                                    <span>Achieved</span>
-                                </div>
-                            </td>
-                            <td>
-                                <p>08/27/2020</p>
-                            </td>
-                        </tr> */}
                     </tbody>
                 </table>
             </div>
