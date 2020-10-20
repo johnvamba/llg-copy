@@ -23,7 +23,7 @@ const Stories = () => {
     const [showEditStory, setShowEditStory] = useState(false);
 
     const location = useLocation();
-    console.log(location.pathname);
+    const windowWidth = window.innerWidth;
 
     const stories = useSelector(
             state => state.StoriesReducer.stories
@@ -39,9 +39,18 @@ const Stories = () => {
 
             dispatch(StoriesActions.setStories(data));
         }
-
         fetchData();
     }, [limit])
+
+    //disable scrolling if there is any modal/popup
+    if (windowWidth < 1024) {
+        useEffect(() => {
+            ((showCreateStory || showViewStory || showEditStory) && windowWidth < 1024)
+            ? document.body.style.overflow = 'hidden'
+            : document.body.style.overflow = 'auto'; 
+        }, [showCreateStory, showViewStory, showEditStory])
+    }
+    
 
     const handleLimitChange = (limit) => {
         setLimit(parseInt(limit));
@@ -58,7 +67,7 @@ const Stories = () => {
                 {
                     (location.pathname == "/stories")
                     ? <List setShowViewStory={setShowViewStory} />
-                    : <StoriesDrafts />
+                    : <StoriesDrafts setShowCreateStory={setShowCreateStory} />
                 }
             </section>
             

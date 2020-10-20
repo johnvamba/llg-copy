@@ -11,7 +11,7 @@ const Drafts = ({ setShowCreateStory }) => {
                         <StoriesEmptyDraftsIcon />
                         <div>
                             <span>No data to slhow</span>
-                            <span>Would you like to <span>Add New Story?</span></span>
+                            <span>Would you like to <span onClick={() => setShowCreateStory(true)}>Add New Story?</span></span>
                         </div>
                     </div>
                 </section>
