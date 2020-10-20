@@ -83,7 +83,7 @@ const routes = [
     {
         path: '/stories/drafts',
         exact: true,
-        component: () => <StoriesDrafts />
+        component: () => <Stories />
     },
     {
         path: '/stories/edit/:id',

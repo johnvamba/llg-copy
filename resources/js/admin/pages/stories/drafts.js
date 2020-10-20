@@ -1,22 +1,11 @@
 import React from 'react';
-import OffersPlus from '../../../svg/offers-plus';
 import StoriesEmptyDraftsIcon from '../../../svg/stories-empty-drafts';
+import StoriesHeader from './header';
 
-const Drafts = () => {
+const Drafts = ({ setShowCreateStory }) => {
     return (
         <>
             <section className="stories-drafts">
-                <header className="offers-create h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
-                    <div className="flex flex-1">
-                        <h1>drafts (0)</h1>
-                    </div>
-                    <div className="flex flex-1 justify-end">
-                        <button className="flex rounded-sm">
-                            <OffersPlus />
-                            <span>Create Story</span>
-                        </button>
-                    </div>
-                </header>
                 <section className="stories-drafts__body">
                     <div>
                         <StoriesEmptyDraftsIcon />

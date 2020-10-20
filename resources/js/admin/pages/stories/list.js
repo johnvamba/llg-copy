@@ -4,7 +4,9 @@ import ListSingleStory from './list-single-story';
 const List = ({ setShowViewStory }) => {
     return (
         <>
-            <ListSingleStory setShowViewStory={setShowViewStory} />
+            <section className="stories__list">
+                <ListSingleStory setShowViewStory={setShowViewStory} />
+            </section>
         </>
     )
 }

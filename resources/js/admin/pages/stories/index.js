@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import { useLocation } from 'react-router-dom'
 import * as StoriesActions from '../../../redux/stories/actions';
 import List from './list';
 import OffersPlus from '../../../svg/offers-plus';
@@ -7,16 +8,22 @@ import CreateStory from './create';
 import StoriesForm from './form';
 import EditStory from './edit';
 import View from './view';
+import StoriesHeader from './header';
+import StoriesDrafts from './drafts';
 
 import './story.css';
 
 const Stories = () => {
+
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
 
     const [showCreateStory, setShowCreateStory] = useState(false);
     const [showViewStory, setShowViewStory] = useState(false);
     const [showEditStory, setShowEditStory] = useState(false);
+
+    const location = useLocation();
+    console.log(location.pathname);
 
     const stories = useSelector(
             state => state.StoriesReducer.stories
@@ -47,20 +54,12 @@ const Stories = () => {
     return (
         <>
             <section className="stories">
-                <section className="offers-create h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
-                    <div className="flex flex-1">
-                        <h1>Published (8)</h1>
-                    </div>
-                    <div className="flex flex-1 justify-end">
-                        <button className="flex rounded-sm" onClick={() => setShowCreateStory(true)}>
-                            <OffersPlus />
-                            <span>Create Story</span>
-                        </button>
-                    </div>
-                </section>
-                <section className="stories__list">
-                    <List setShowViewStory={setShowViewStory} />
-                </section>
+                <StoriesHeader title={(location.pathname == "/stories") ? 'Published (9)' : 'Drafts (0)'} setState={setShowCreateStory} />
+                {
+                    (location.pathname == "/stories")
+                    ? <List setShowViewStory={setShowViewStory} />
+                    : <StoriesDrafts />
+                }
             </section>
             
             { showCreateStory && <StoriesForm state='create' setState={setShowCreateStory} setShowViewStory={setShowViewStory} /> }
