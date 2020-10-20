@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../components/Sidebar'; 
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import Cookie from 'js-cookie';
-import RecentActivities from './pages/recent-activities';
+// import RecentActivities from './pages/recent-activities';
 import Content from './content';
 import OrganizationView from './pages/organizations/view';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const Home = () => {
     const [notifications, setNotifications] = useState([]);
     const [organization, setOrganization] = useState(null);
+    const [showSidebarMobile, setShowSidebarMobile] = useState(false);
+
+    const windowWidth = window.innerWidth;
 
     useEffect(() => {
         if("serviceWorker" in navigator){
@@ -35,13 +40,25 @@ const Home = () => {
         setOrganization(value)
     }
 
+    const handleHamburgerMenu = () => {
+        setShowSidebarMobile(true);
+    }
+
     return (
         <Router basename="/admin">
             <div className="flex min-h-screen">
-                <Sidebar />
-
-                <div className="flex flex-1 flex-col">
-                    <header className="flex flex-rowl h-16 border-b">
+                {
+                    (windowWidth > 1024 || showSidebarMobile ) && <Sidebar showSidebarMobile={showSidebarMobile} setShowSidebarMobile={setShowSidebarMobile} />
+                }
+                <div className="flex flex-1 flex-col w-full">
+                    <header className="dashboard-header flex flex-rowl h-16 border-b">
+                        {
+                            !showSidebarMobile && 
+                                <div className="dashboard-header__bars" onClick={handleHamburgerMenu}>
+                                    <i className="fas fa-bars"></i>
+                                </div>
+                        }
+                        
                         <div className="flex flex-1 items-center pl-12">
                             <button className="text-gray-500 mr-4 focus:outline-none">
                                 <i className="fa fa-search" aria-hidden="true"></i>
@@ -54,12 +71,15 @@ const Home = () => {
                         </div>
 
                         <div className="flex flex-1 justify-end items-center">
+                            <Link className="admin-mobile" to="/">
+                                <i className="fas fa-user-cog"></i>
+                            </Link>
                             <button
-                                className="bg-blue-100 rounded-full text-blue-400 focus:outline-none py-2 px-6 mr-6"
+                                className="admin-desktop bg-blue-100 rounded-full text-blue-400 focus:outline-none py-2 px-6 mr-6"
                             >
                                 Admin
                             </button>
-                            <div className="relative">
+                            <div className="admin-notif relative">
                                 <Link className="mr-6 text-lg" to="/">
                                     <i className="far fa-bell"></i>
                                 </Link>
@@ -69,7 +89,7 @@ const Home = () => {
                                     )
                                 }
                             </div>
-                            <button className="mr-8 text-xl focus:outline-none" onClick={logout}>
+                            <button className="admin-exit mr-8 text-xl focus:outline-none" onClick={logout}>
                                 <i className="fa fa-sign-out-alt" aria-hidden="true"></i>
                             </button>
                         </div>
@@ -80,7 +100,7 @@ const Home = () => {
                             <Content onViewOrganization={handleViewOrganization} />
                         </section>
 
-                        <RecentActivities />
+                        {/* <RecentActivities /> */}
 
                         {organization && <div className="absolute z-40 right-0 top-0 md:w-2/5 h-full flex bg-white border-l">
                             <OrganizationView

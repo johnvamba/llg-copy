@@ -12,6 +12,7 @@ import EditUser from '../pages/users/edit';
 import Offers from '../pages/offers';
 import EditOffer from '../pages/offers/edit';
 import Stories from '../pages/stories';
+import StoriesDrafts from '../pages/stories/drafts';
 import EditStory from '../pages/stories/edit';
 import Groups from '../pages/groups';
 import CreateGroup from '../pages/groups/create';
@@ -78,6 +79,11 @@ const routes = [
         path: '/stories',
         exact: true,
         component: () => <Stories />
+    },
+    {
+        path: '/stories/drafts',
+        exact: true,
+        component: () => <StoriesDrafts />
     },
     {
         path: '/stories/edit/:id',
