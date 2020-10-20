@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, connect } from 'react-redux';
 import * as NeedsActions from '../../../redux/needs/actions';
 // import DataTable from '../../../components/layout/DataTable';
 import Button from '../../../components/Button';
@@ -16,16 +16,19 @@ import NeedForm from './form'
 import NeedTable from './table'
 import NeedInfo from './info'
 
-const Needs = () => {
+const Needs = ({NeedsReducer}) => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
     const [tab, setTab] = useState('all'); //current or past
     const [form, showForm] = useState(false); //false
-    const [info, showInfo] = useState(null);
-    const needs = useSelector(
-        state => state.NeedsReducer.needs
-    )
+    const [story, showStoryForm] = useState(false); //false
 
+    const [bolInfo, showInfo] = useState(false);
+    const [info, setInfo] = useState(null);
+    // const needs = useSelector(
+    //     state => state.NeedsReducer.needs
+    // )
+    const { needs } = NeedsReducer
     const data = [
         {
             id: 1,
@@ -89,9 +92,17 @@ const Needs = () => {
         }
         showForm(form)
     }
+
     const handleInfo = (item) => {
+        // console.log('haaa?', item)
         showForm(false);
-        showInfo(item);
+        showInfo(true);
+        setInfo(item);
+    }
+
+    const openForm = (e) => {
+        showForm(true)
+        showInfo(false)
     }
 
     return (
@@ -113,14 +124,26 @@ const Needs = () => {
             </div>
             {
                 form && 
-                <NeedForm handleForm={handleForm}/>
+                <NeedForm handleForm={handleForm} data={info || {}}/>
             }
             {
-                info && 
-                <NeedInfo toClose={e=>setInfo(null)} data={info}/>
+                (info && bolInfo) && 
+                <NeedInfo toClose={e=>setInfo(null)} clickEdit={openForm} data={info}/>
+            }
+            {
+                //story && //Open story here
+
             }
         </>
     )
 }
 
-export default Needs;
+export default connect(({NeedsReducer})=>{
+    return {
+        NeedsReducer
+    }
+},(dispatch)=>{
+    return {
+
+    }
+})(Needs);

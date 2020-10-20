@@ -8,7 +8,13 @@ const NeedFilter = ({onClose}) => {
     const [min, setMin] = useState(0.00);
     const [max, setMax] = useState(0.00);
     const [dateType, selectDateType] = useState('custom');
-    console.log(onClose,"onclose from switch");
+    const reset=() => {
+        setType(null)
+        setDate(new Date)
+        setMin(0.00)
+        setMax(0.00)
+        selectDateType('custom')
+    }
     return (
         <div className="filter-need form">
             <div className="form-body filter-body">
@@ -69,7 +75,7 @@ const NeedFilter = ({onClose}) => {
                 </div>
             </div>
             <div className="filter-footer flex">
-                <a href='#' className="text-clear flex-grow">Clear Filters</a>
+                <a href='#' className="text-clear flex-grow" onClick={reset}>Clear Filters</a>
                 <a href='#' className="flex-none pr-5" onClick={onClose}>Cancel</a>
                 <a href='#' className="text-primary flex-none">Apply</a>
             </div>

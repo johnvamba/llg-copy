@@ -21,7 +21,9 @@ const Needs = () => {
     const [limit, setLimit] = useState(5);
     const [tab, setTab] = useState('request'); //current or past
     const [form, showForm] = useState(false); //false
-    const [info, showInfo] = useState(null);
+    const [bolInfo, showInfo] = useState(false);
+    const [info, setInfo] = useState(null);
+
     const needs = useSelector(
         state => state.NeedsReducer.needs
     )
@@ -89,7 +91,12 @@ const Needs = () => {
     }
     const handleInfo = (item) => {
         showForm(false);
-        showInfo(item);
+        showInfo(true);
+        setInfo(item)
+    }
+    const openForm = (e) => {
+        showForm(true)
+        showInfo(false)
     }
 
     return (
@@ -112,8 +119,8 @@ const Needs = () => {
                 <NeedForm handleForm={handleForm}/>
             }
             {
-                info && 
-                <NeedInfo toClose={e=>setInfo(null)} data={info}/>
+                (info && bolInfo) && 
+                <NeedInfo toClose={e=>setInfo(null)} clickEdit={openForm} data={info}/>
             }
         </>
     )

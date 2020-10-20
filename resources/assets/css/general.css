@@ -169,3 +169,43 @@ td.checkbox, th.checkbox{
 td.actions, th.actions{
 	flex:0.8 !important;
 }
+.filter-arrow, .filter-arrow::before{
+	width: 15px;
+    height: 15px;
+    position: absolute;
+    z-index: -1;
+    top: -4px; 
+    left: 25px;
+}
+.filter-arrow::before{
+	content: '';
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    background: #fff;
+    border-top: 1px solid #E7EBF3;
+    border-left: 1px solid #E7EBF3;
+/*    top: 0;
+    left: 0;*/
+}
+
+
+/*Action buttons*/
+.action-content {
+	width: 171px;
+	height: 100px;
+
+	background: #FFFFFF;
+	border: 1px solid #E7EBF3;
+	box-sizing: border-box;
+	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+	border-radius: 4px;
+}
+.action-content .button-container {
+	padding:12px 14px;
+	font-size: 12px;
+	color: #334D6E;
+}
+.button-container .flex.justify-between button{
+	min-width: 65px;
+}

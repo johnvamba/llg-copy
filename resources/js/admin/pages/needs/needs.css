@@ -25,7 +25,7 @@
 	padding: 0px 30px;
 	overflow-y: scroll;
     overflow: auto;
-    height: 725px;
+    height: 675px;
 }
 
 .form .form-body .form-group {
@@ -68,14 +68,38 @@
 	margin-right: 16px;
 	padding-top: 20px;
 	font-size: 9px;
+	
 }
 .icon-categories .icon-category:last-child{
 	margin-right: 0px;
+}
+.icon-categories .icon-category svg.svg-check {
+	width: 16px;
+	height: 'auto';
+	position: absolute;
+	right: -6px;
+	top: -6px;
 }
 .icon-categories .icon-category .icon-circle {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #9AADBF;
+    border-radius: 50px;
+    position: relative;
+}
+.icon-categories .icon-category .icon-circle svg.svg-icon {
+	height: 20px;
+    width: auto;
+}
+.icon-categories .icon-category.active{
+	color: #109CF1;
+}
+
+.icon-categories .icon-category.active .icon-circle {
+    border: 1px solid #109CF1;
 }
 
 .form .form-body .form-group .button-group button {
@@ -133,6 +157,9 @@
 }
 .input-container .numberValue{
 	margin: 0 10px;
+}
+.input-container input.numberValue[type=number]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
 }
 .time-toggle.time-am{
 	right: 35px;
@@ -289,12 +316,22 @@ input[type=time]::-webkit-calendar-picker-indicator {
 .need-info .need-header .circlet{
 	margin-right:20px;
 }
+.need-info .need-header button{
+	color: #2DA9F3;
+}
 .need-info .need-header h4.need-status{
 	flex:2 ;
+	color:#7690A8;
 }
-.need-info .need-content {
+.need-info .need-content, .need-info .need-footer {
 	/*height: calc(100% - 60px);*/
 	padding: 0 20px;
+}
+.need-info .need-footer {
+    bottom: 0px;
+    position: absolute;
+    width: auto;
+    padding: 20px;
 }
 .need-content .group-content {
 	margin-bottom: 16px;
@@ -314,5 +351,16 @@ input[type=time]::-webkit-calendar-picker-indicator {
 	height: 90px;
 	background: rgba(255, 255, 255, 0.5);
 	mix-blend-mode: normal;
+	border-radius: 4px;
+}
+.action-content{
+	width: 171px;
+	height: 100px;
+	right: 0px;
+
+	background: #FFFFFF;
+	border: 1px solid #E7EBF3;
+	box-sizing: border-box;
+	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
 	border-radius: 4px;
 }

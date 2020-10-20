@@ -19,9 +19,25 @@ import IconTest from '../../../svg/icon-test'
 import DatePicker from 'react-datepicker';
 registerPlugin(FilePondPluginImagePreview)
 
-const NeedForm = ({handleForm}) => {
+import categories from './categorylist'
+
+const CatComponent = ({cat, onSelect, truth = false}) => {
+    return <div className={`icon-category ${truth ? 'active':''}`} onClick={()=>onSelect(cat, truth)}>
+        <i className={`icon-circle`}>
+            { truth &&
+                <Check className="svg-check" fill='#109CF1'/>
+            }
+            <cat.svg_class className="svg-icon" active={truth} />
+        </i>
+        {cat.title || 'unknown'}
+    </div>
+}
+
+const NeedForm = ({handleForm, data = {}}) => {
+
     const [type, setType] = useState('donation'); //donation
     const [people, setPeople] = useState(0); //donation
+    const [category, setCategory] = useState([]);
     const [files, setFiles] = useState([])
     const [goal, setGoal] = useState(0);
     const [date, setDate] = useState(new Date());
@@ -40,6 +56,18 @@ const NeedForm = ({handleForm}) => {
             setPeople(0)
         else
             setPeople(value);
+    }
+
+    const handleCategories = (item, truth = false) => {
+        console.log('selected',category)
+        if(truth)
+            setCategory(category.filter(i=>item.slug != i.slug))
+        else 
+            setCategory([item, ...category])
+    }
+
+    const submit = () => {
+
     }
 
     return (
@@ -62,46 +90,14 @@ const NeedForm = ({handleForm}) => {
                 <div className="form-group">
                     <label>Select Category</label>
                     <div className="icon-categories">
-                        <div className="icon-category">
-                            <i className="icon-circle"><IconTest/></i>
-                            Employment
-                        </div>
-                        <div className="icon-category">
-                            <i className="icon-circle"><IconTest/></i>
-                            Mechanic
-                        </div>
-                        <div className="icon-category">
-                            <i className="icon-circle"><IconTest/></i>
-                            Cleaning
-                        </div>
-                        <div className="icon-category">
-                            <i className="icon-circle"><IconTest/></i>
-                            Removalist
-                        </div>
-                        <div className="icon-category">
-                            <i className="icon-circle"><IconTest/></i>
-                            Tutor
-                        </div>
-                        <div className="icon-category">
-                            <i className="icon-circle"><IconTest/></i>
-                            Domestic & Family Violence
-                        </div>
-                        <div className="icon-category">
-                            <i className="icon-circle"><IconTest/></i>
-                            Education
-                        </div>
-                        <div className="icon-category">
-                            <i className="icon-circle"><IconTest/></i>
-                            Advocacy
-                        </div>
-                        <div className="icon-category">
-                            <i className="icon-circle"><IconTest/></i>
-                            Children
-                        </div>
-                        <div className="icon-category">
-                            <i className="icon-circle"><IconTest/></i>
-                            Youth
-                        </div>
+                        {
+                            categories.length > 0 &&
+                            categories.map((cat, ind)=><CatComponent key={cat.slug} 
+                                cat={cat}
+                                truth={category.findIndex(i=> cat.slug == i.slug) >= 0}
+                                onSelect={handleCategories}
+                                />)
+                        }
                     </div>
                 </div>
                 <div className="form-group">
@@ -159,7 +155,10 @@ const NeedForm = ({handleForm}) => {
                             <label>Number of People Needed</label>
                             <div className="input-container">
                                 <button className="numberButton" onClick={e=>updatePeople(people-1)}><i className="fas fa-minus"/></button>
-                                <p className="numberValue">{people || 0}</p>
+                                <input className="numberValue" type="number" value={people || 0} onChange={e=>updatePeople(parseInt(e.target.value))} style={{width: people.toString().length + 'ch'}}/>
+                                {
+                                    //<p className="numberValue">{people || 0}</p>
+                                }
                                 <button className="numberButton plus" onClick={e=>updatePeople(people+1)}><i className="fas fa-plus"/></button>
                             </div>
                         </div>

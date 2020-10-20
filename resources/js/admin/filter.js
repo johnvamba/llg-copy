@@ -8,16 +8,16 @@ import OrganizationFilter from './pages/organizations/filter';
 const filters = [
     {
         path: '/needs',
-        component: ()=><NeedFilter/>
+        component: (props)=><NeedFilter {...props}/>
     },
     {
         path: '/organizations',
-        component: ()=><OrganizationFilter/>
+        component: (props)=><OrganizationFilter {...props}/>
     },
     {
         path: '*',
         component: () => (
-            <div>Content not found</div>
+            <div classname="px-3 py-2">No filter for this page</div>
         )
     }
 
@@ -33,16 +33,16 @@ const MainFilter = ({referElement, onClose}) => {
         className: 'arror',
         modifiers: [{name: 'arrow', options: {element: arrowElement } }],
     })
-    // console.log('Sets', popperElement, arrowElement, referElement, styles, attributes)
     return (
         <div ref={setPopperElement} className="filter-content" style={{...styles.popper, top:'20px', left: '-25px', zIndex: 1}} {...attributes.popper}>
-            <div ref={setArrowElement} className='filter-arrow' style={styles.arrow} />
+            <div ref={setArrowElement} className='filter-arrow' style={{...styles.arrow}} />
             <Switch>
                 {filters.map((route, index) =>
                     (
                         <Route
                             key={index}
                             path={route.path}
+                            onClose={onClose}
                             children={<route.component style={styles.popper} onClose={onClose} {...attributes.popper}/>}
                         />
                     )
