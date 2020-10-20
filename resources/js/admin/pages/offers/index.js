@@ -46,6 +46,38 @@ const Offers = () => {
                         location: "Melbourne City",
                         status: "Achieved", 
                         date: "08/27/2020"
+                    },
+                    {
+                        id: 1,
+                        title: "Sample Title",
+                        typee: "Employment",
+                        location: "Melbourne City",
+                        status: "On going", 
+                        date: "08/27/2020"
+                    },
+                    {
+                        id: 2,
+                        title: "Sample Title 2",
+                        typee: "Employment",
+                        location: "Melbourne City",
+                        status: "Achieved", 
+                        date: "08/27/2020"
+                    },
+                    {
+                        id: 1,
+                        title: "Sample Title",
+                        typee: "Employment",
+                        location: "Melbourne City",
+                        status: "On going", 
+                        date: "08/27/2020"
+                    },
+                    {
+                        id: 2,
+                        title: "Sample Title 2",
+                        typee: "Employment",
+                        location: "Melbourne City",
+                        status: "Achieved", 
+                        date: "08/27/2020"
                     }
                 ]
             ]

@@ -28732,18 +28732,22 @@ video {
 .view-offer {
   width: 100%;
   max-width: 544px;
-  height: calc(100vh - 64px);
+  height: auto;
   position: absolute;
   right: 0;
   top: 0;
   background: #FFFFFF;
-  border: 1px solid #E7EAEF;
+  border-left: 1px solid #E7EAEF;
+  border-right: 1px solid #E7EAEF;
+  border-bottom: 1px solid #E7EAEF;
+  overflow: auto;
 }
 
 .view-offer__header {
   justify-content: space-between;
-  padding: 22px;
-  border: 1px solid #E6E7EF;
+  padding: 19px;
+  padding-top: 20px;
+  border-bottom: 1px solid #E6E7EF;
 }
 
 .view-offer__header-left label {
@@ -29049,7 +29053,8 @@ video {
 }
 
 .offers-edit-opt {
-  position: absolute;
+  position: relative;
+  margin-top: 90px;
   width: 100%;
   bottom: 0;
   box-sizing: border-box;
