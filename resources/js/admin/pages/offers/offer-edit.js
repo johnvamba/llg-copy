@@ -11,7 +11,6 @@ const OfferEdit = ({ setShowOfferView, setShowOfferEdit }) => {
     const [showTabBusiness, setShowTabBusiness] = useState(false);
 
     const handleTab = (tab) => {
-        console.log(tab);
         switch(tab) {
             case 'category':
                 setShowTabCategory(true);

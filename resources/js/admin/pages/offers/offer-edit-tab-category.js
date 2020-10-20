@@ -61,9 +61,6 @@ const OfferEditTabCategory = ({ setShowOfferEdit }) => {
                     <OffersFormEmployment />
                     <span>Employment</span>
                 </div>
-                <div className="offers-edit__category__item offers-edit__category__item--hidden">
-                    
-                </div>
             </section>
         </>
     )

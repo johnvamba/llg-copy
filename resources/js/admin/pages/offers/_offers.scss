@@ -34,6 +34,11 @@
 .offers-table{
 	table{
 		background: #fff;
+		thead{
+			tr th{
+				border-bottom: 1px solid #EBEFF2;
+			}
+		}
 	}
 	th{
 		font-style: normal;
@@ -223,7 +228,6 @@
 	&__body{
 		.offers-category{
 			display: flex;
-		    justify-content: space-between;
     		flex-flow: row wrap;
     		margin-top: 20px;
 			&__item{
@@ -237,7 +241,7 @@
 			    position: relative;
 		        height: 80px;
 	            flex: 0 1 calc(20% - 16px);
-				margin-bottom: 16px;
+				margin: 8px;
 				&--hidden{
 					border: none;
 					background: transparent;
@@ -625,7 +629,6 @@
 
 .offers-edit__category{
 	display: flex;
-	justify-content: space-between;
 	flex-flow: row wrap;
 	padding: 30px;
 	&__item{
@@ -638,7 +641,7 @@
 		position: relative;
 		height: 80px;
 		flex: 0 1 calc(20% - 16px);
-		margin-bottom: 16px;
+		margin: 8px;
 		&--hidden{
 			border: none;
 			background: transparent;
@@ -848,4 +851,12 @@
 			line-height: 24px;
 		}
 	}
+}
+
+// sidebar temporary css
+.admin-mobile{
+	display: none;
+}
+.dashboard-header__bars{
+	display: none;
 }

@@ -20,7 +20,7 @@ const OfferView = ({ setShowOfferEdit }) => {
                 </div>
             </div>
             <div className="view-offer__body">
-                <div className="bg-cover bg-center h-100" style={{backgroundImage: "url(https://www.ratemds.com/blog/wp-content/uploads/2015/09/handshake-shaking-hands-shake-hands-trust.jpg)"}}></div>
+                <div className="bg-cover bg-center" style={{backgroundImage: "url(https://www.ratemds.com/blog/wp-content/uploads/2015/09/handshake-shaking-hands-shake-hands-trust.jpg)"}}></div>
                 <div className="view-offer__body-title flex">
                     <h2>Sample Title Here</h2>
                     <label>08/27/20</label>

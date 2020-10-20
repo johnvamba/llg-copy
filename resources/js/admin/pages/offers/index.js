@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as OffersAction from '../../../redux/offers/actions';
-import DataTable from '../../../components/layout/DataTable';
-import Button from '../../../components/Button';
 import OffersEmployment from '../../../svg/offers-employment';
-import OffersMechanic from '../../../svg/offers-mechanic';
-import OffersCleaning from '../../../svg/offers-cleaning';
 import OffersPlus from '../../../svg/offers-plus';
 
 //As test icon only

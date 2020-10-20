@@ -6,7 +6,7 @@ const OfferEditTabService = () => {
     return(
         <>
             <section className="offers-edit__service">
-                <form class="w-full">
+                <form className="w-full">
                     <div className="form-group">
                         <label>Title</label>
                         <input className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 leading-tight focus:outline-none" type="text" placeholder="Enter Title" />

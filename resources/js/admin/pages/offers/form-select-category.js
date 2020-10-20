@@ -62,9 +62,6 @@ const FormSelectCategory = () => {
                     <OffersFormEmployment />
                     <span>Employment</span>
                 </div>
-                <div className="offers-category__item offers-category__item--hidden">
-                    
-                </div>
             </section>
 		</>
 	)
