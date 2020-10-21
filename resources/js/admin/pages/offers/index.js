@@ -135,7 +135,7 @@ const Offers = () => {
             </div>
             
             <div className="offers-table flex flex-col p-8">
-                <table className="table">
+                <table>
                     <thead className="">
                         <tr>
                             <th className="checkbox">
