@@ -51,7 +51,9 @@ const Home = () => {
     return (
         <Router basename="/admin">
             <div className="flex min-h-screen">
-                <Sidebar />
+                {
+                    (windowWidth > 1024 || showSidebarMobile ) && <Sidebar showSidebarMobile={showSidebarMobile} setShowSidebarMobile={setShowSidebarMobile} />
+                }
 
                 <div className="flex flex-1 flex-col w-full">
                     <header className="dashboard-header flex flex-rowl h-16 border-b">
