@@ -115,12 +115,16 @@ const ButtonPopper = ({buttonElement, actionClosure, btnAction}) => {
 
 // Proper content
 //click on row shows popper
-const NeedTable = ({tab = null, data = [], showInfo})=> {
+const NeedTable = ({tab = null, data = [], showInfo, loading = false})=> {
     const [checkAll, setCheckAll] = useState(false)
-    const [needs, setNeeds] = useState(data)
+    const [needs, setNeeds] = useState([])
     const [popped, setPopItem] = useState(null)
     const [buttonElement, setButton] = useState(null)
     const [action, setAction] = useState('approve')
+
+    useEffect(() => {
+        setNeeds(data)    
+    }, [ data ])
 
     const handleRowCheckbox = (item, input)=>{
         setCheckAll(false)
@@ -168,8 +172,13 @@ const NeedTable = ({tab = null, data = [], showInfo})=> {
             </tr>
         </thead>
         <tbody>
+            { loading && 
+                <tr>
+                    <td colSpan={7}>Loading data</td>
+                </tr>
+            }
             {
-                needs.length > 0 && 
+                ( !loading && needs.length > 0 ) ? 
                 needs.map((i, ind) => <RowTable key={ind} 
                     tab={tab} 
                     item={i} 
@@ -177,7 +186,10 @@ const NeedTable = ({tab = null, data = [], showInfo})=> {
                     checkChange={e=>handleRowCheckbox(i,e.target.checked)}
                     onShowInfo={()=>showInfo(i)}
                     popAction={(button, type)=>togglePopItem(i, button, type)}/>
-                )
+                ) :
+                <tr>
+                    <td colSpan={7}>No data found</td>
+                </tr>
             }
         </tbody>
     </table>

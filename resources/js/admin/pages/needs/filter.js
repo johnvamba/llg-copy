@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import Button from '../../../components/Button'
 import DatePicker from 'react-datepicker';
+import { useSelector, useDispatch, connect } from 'react-redux';
+import { setFilters } from '../../../redux/needs/actions';
 
 const NeedFilter = ({onClose}) => {
     const [type, setType] = useState(null); //donation
@@ -8,6 +10,13 @@ const NeedFilter = ({onClose}) => {
     const [min, setMin] = useState(0.00);
     const [max, setMax] = useState(0.00);
     const [dateType, selectDateType] = useState('custom');
+
+    const dispatch = useDispatch();
+
+    const clickDispatch = ()=>{
+        setFilters({ type, date, min, max, dateType })
+    }
+
     const reset=() => {
         setType(null)
         setDate(new Date)
@@ -15,6 +24,7 @@ const NeedFilter = ({onClose}) => {
         setMax(0.00)
         selectDateType('custom')
     }
+    
     return (
         <div className="filter-need form">
             <div className="form-body filter-body">
@@ -77,7 +87,7 @@ const NeedFilter = ({onClose}) => {
             <div className="filter-footer flex">
                 <a href='#' className="text-clear flex-grow" onClick={reset}>Clear Filters</a>
                 <a href='#' className="flex-none pr-5" onClick={onClose}>Cancel</a>
-                <a href='#' className="text-primary flex-none">Apply</a>
+                <a href='#' className="text-primary flex-none" onClick={clickDispatch}>Apply</a>
             </div>
         </div>
     )
