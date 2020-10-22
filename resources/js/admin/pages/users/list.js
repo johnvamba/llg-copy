@@ -111,7 +111,7 @@ const UsersList = ({ setShowEditUser }) => {
                                 user.map((obj, key) =>
                                     <tr key={key} >
                                         <td className="checkbox">
-                                            <input type='checkbox' onChange={(e) => handleChange(obj,e.target.checked)} checked={obj.checked} />
+                                            <input type='checkbox' onChange={(e) => handleChange(obj,e.target.checked)} checked={obj.checked ? obj.checked : false} />
                                             <label></label>
                                         </td>
                                         <td className="title">
