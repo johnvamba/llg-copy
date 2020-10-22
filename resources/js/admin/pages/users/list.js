@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UsersActionsEdit from '../../../svg/users-actions-edit';
 import UsersActionsDelete from '../../../svg/users-actions-delete';
 
@@ -76,7 +76,7 @@ const UsersList = ({ setShowEditUser }) => {
                 return obj;
             }
         ))
-        setUsers({data : data});
+        setUsers({...users},{data : data});
     }
 
     const handleChange = (row,input) => {
@@ -85,7 +85,23 @@ const UsersList = ({ setShowEditUser }) => {
         const data = users.data.map((user, index) => 
             user.map(obj => obj.id == row.id ? row : obj)
         );
-        setUsers({data : data});
+        setUsers({...users},{data : data});
+    }
+
+    const handleRowActive = (row) => {
+        setShowEditUser(true);
+        row.active = 'active';
+        const data = users.data.map((user, index) => 
+            user.map(obj => {
+                if(obj.id == row.id) return row;
+                else{
+                    obj.active = 'non-active'
+                    return obj;
+                }
+                
+            })
+        );
+        setUsers({...users},{data : data});
     }
 
     return (
@@ -109,7 +125,7 @@ const UsersList = ({ setShowEditUser }) => {
                         {
                             users.data.map((user, index) => 
                                 user.map((obj, key) =>
-                                    <tr key={key} >
+                                    <tr key={key} className={obj.active} >
                                         <td className="checkbox">
                                             <input type='checkbox' onChange={(e) => handleChange(obj,e.target.checked)} checked={obj.checked ? obj.checked : false} />
                                             <label></label>
@@ -133,7 +149,7 @@ const UsersList = ({ setShowEditUser }) => {
                                             <p>{obj.dateAdded}</p>
                                         </td>
                                         <td className="actions">
-                                            <span onClick={() => setShowEditUser(true)}>
+                                            <span onClick={() => handleRowActive(obj)}>
                                                 <UsersActionsEdit />
                                             </span>
                                             <span>

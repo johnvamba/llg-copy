@@ -172,3 +172,28 @@
 .users-form__body form .dropdown.show .dropdown-menu button:hover{
     background: rgba(16, 156, 241, 0.08);
 }
+.users-table.offers-table tbody .active{
+    background: #109CF1;
+}
+.users-table.offers-table tbody .active td p{
+    color: #fff;
+}
+.users-table.offers-table tbody .active .actions path{ 
+    fill: #fff;
+}
+.users-table.offers-table tbody tr{
+    cursor: initial;
+}
+.users-table .actions span{
+    cursor: pointer;
+}
+.users-form__body form .form-group.active{
+    border-bottom: 1px solid #109CF1;
+}
+
+
+@media (max-width: 768px) {
+    .users-form{
+        width: 100%;
+    }
+}

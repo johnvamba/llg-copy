@@ -28,7 +28,7 @@ const UsersForm = ({ setState, state, label }) => {
                         </div>
                         <form>
                             <div className="flex flex-wrap -mx-2">
-                                <div className="w-1/2 sm:w-full md:w-full xl:w-1/2 px-2">
+                                <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
                                     <div className="form-group">
                                         <label>First Name</label>
                                         <input
@@ -46,12 +46,13 @@ const UsersForm = ({ setState, state, label }) => {
                                         />
                                     </div>
                                 </div>
-                                <div className="w-1/2 sm:w-full md:w-full xl:w-1/2 px-2">
+                                <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
                                     <div className="form-group">
                                         <label>Last Name</label>
                                         <input
                                             className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
                                             type="text"
+                                            
                                             placeholder="Enter Last Name"
                                         />
                                     </div>
@@ -74,8 +75,8 @@ const UsersForm = ({ setState, state, label }) => {
                                         />
                                     </div>
                                 </div>
-                                <div className="w-1/2 sm:w-full md:w-full xl:w-1/2 px-2">
-                                    <div className="form-group">
+                                <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
+                                    <div className={`form-group ${userTypeOpen ? 'active' : ''}`}>
                                         <label>User Type</label>
                                         <Dropdown isOpen={userTypeOpen} toggle={() => setUserTypeOpen(prevState => !prevState)}>
                                             <DropdownToggle>
@@ -91,8 +92,8 @@ const UsersForm = ({ setState, state, label }) => {
                                         </Dropdown>
                                     </div>
                                 </div>
-                                <div className="w-1/2 sm:w-full md:w-full xl:w-1/2 px-2">
-                                    <div className="form-group">
+                                <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
+                                    <div className={`form-group ${organisationOpen ? 'active' : ''}`}>
                                         <label>Organisation</label>
                                         <Dropdown isOpen={organisationOpen} toggle={() => setOrganisationOpen(prevState => !prevState)}>
                                             <DropdownToggle>
@@ -116,7 +117,7 @@ const UsersForm = ({ setState, state, label }) => {
                     <div className="offers-edit-opt__container flex">
                         <button className="discard" onClick={() => setState(false)}>Discard</button>
                         <div>
-                            <button className="next">Create</button>
+                            <button className="next">{label == 'Add User' ? 'Add' : 'Update' }</button>
                         </div>
                     </div>
                 </footer>
