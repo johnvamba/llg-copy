@@ -4,7 +4,7 @@ import UsersActionsDelete from '../../../svg/users-actions-delete';
 
 const UsersList = ({ setShowEditUser }) => {
     const [isChecked, setIsChecked] = useState(false);
-    const [offers, setOffers] = useState(
+    const [users, setUsers] = useState(
         {
             columns : [
                 "id",
@@ -22,8 +22,7 @@ const UsersList = ({ setShowEditUser }) => {
                         email: "janedoe@gmail.com",
                         age: "24",
                         bio: "test.", 
-                        dateAdded: "08/27/2020",
-                        checked: false
+                        dateAdded: "08/27/2020"
                     },
                     {
                         id: 2,
@@ -31,8 +30,7 @@ const UsersList = ({ setShowEditUser }) => {
                         email: "janedoe@gmail.com",
                         age: "24",
                         bio: "test.", 
-                        dateAdded: "08/27/2020",
-                        checked: false
+                        dateAdded: "08/27/2020"
                     },
                     {
                         id: 3,
@@ -40,8 +38,7 @@ const UsersList = ({ setShowEditUser }) => {
                         email: "janedoe@gmail.com",
                         age: "24",
                         bio: "test.", 
-                        dateAdded: "08/27/2020",
-                        checked: false
+                        dateAdded: "08/27/2020"
                     },
                     {
                         id: 4,
@@ -49,8 +46,7 @@ const UsersList = ({ setShowEditUser }) => {
                         email: "janedoe@gmail.com",
                         age: "24",
                         bio: "test.", 
-                        dateAdded: "08/27/2020",
-                        checked: false
+                        dateAdded: "08/27/2020"
                     },
                     {
                         id: 5,
@@ -58,8 +54,7 @@ const UsersList = ({ setShowEditUser }) => {
                         email: "janedoe@gmail.com",
                         age: "24",
                         bio: "test.", 
-                        dateAdded: "08/27/2020",
-                        checked: false
+                        dateAdded: "08/27/2020"
                     },
                     {
                         id: 6,
@@ -67,8 +62,7 @@ const UsersList = ({ setShowEditUser }) => {
                         email: "janedoe@gmail.com",
                         age: "24",
                         bio: "test.", 
-                        dateAdded: "08/27/2020",
-                        checked: false
+                        dateAdded: "08/27/2020"
                     }
                 ]
             ]
@@ -76,21 +70,22 @@ const UsersList = ({ setShowEditUser }) => {
     )
     const checkedAll = (e) => {
         setIsChecked(!isChecked);
-        const data = offers.data.map((offer, index) => 
-            offer.map(obj => ({ ...obj, checked: !isChecked })
+        const data = users.data.map((user, index) => 
+            user.map(obj => {
+                obj.checked = !isChecked;
+                return obj;
+            }
         ))
-        setOffers({data : data});
+        setUsers({data : data});
     }
 
-    const handleChange = (id) => {
+    const handleChange = (row,input) => {
         setIsChecked(false);
-        const data = offers.data.map((offer, index) => 
-            offer.map(obj => {
-                if (obj.id == id) return { ...obj, checked: !obj.checked }
-                else return { ...obj }
-            }
-        ));
-        setOffers({data : data});
+        row.checked = input;
+        const data = users.data.map((user, index) => 
+            user.map(obj => obj.id == row.id ? row : obj)
+        );
+        setUsers({data : data});
     }
 
     return (
@@ -112,11 +107,11 @@ const UsersList = ({ setShowEditUser }) => {
                     </thead>
                     <tbody>
                         {
-                            offers.data.map((offer, index) => 
-                                offer.map((obj, key) =>
+                            users.data.map((user, index) => 
+                                user.map((obj, key) =>
                                     <tr key={key} >
                                         <td className="checkbox">
-                                            <input type='checkbox' onChange={() => handleChange(obj.id)} checked={obj.checked} />
+                                            <input type='checkbox' onChange={(e) => handleChange(obj,e.target.checked)} checked={obj.checked} />
                                             <label></label>
                                         </td>
                                         <td className="title">
