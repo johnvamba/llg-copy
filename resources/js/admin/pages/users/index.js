@@ -3,9 +3,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as UsersActions from '../../../redux/users/actions';
 import DataTable from '../../../components/layout/DataTable';
 
+import UsersHeader from './header';
+import UsersList from './list';
+import UsersForm from './form';
+import './users.css';
+
 const Users = () => {
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(1); 
     const [limit, setLimit] = useState(5);
+
+    const [showAddUser, setShowAddUser] = useState(false);
+    const [showEditUser, setShowEditUser] = useState(false);
+    const [userData, setUserData] = useState({
+        title: '',
+        email: '',
+        age: 0,
+        bio: '',
+        dateAdded: '',
+    });
+
+
     const users = useSelector(
         state => state.UsersReducer.users
     );
@@ -32,27 +49,17 @@ const Users = () => {
     const handleChangePage = (page) => {
         setPage(parseInt(page));
     }
-
-    if (roles.name !== 'admin') {
-        window.location = '/admin';
-    }
+    // if (roles.name !== 'admin') {
+    //     window.location = '/admin';
+    // }
 
     return (
         <>
-            <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
-                <div className="flex flex-1">
-                    <h1>Users</h1>
-                </div>
-            </div>
-            <div className="flex flex-col p-12">
-                <DataTable
-                    module={users.module}
-                    records={users}
-                    changeLimit={handleLimitChange}
-                    currentPage={page}
-                    changePage={handleChangePage}
-                />
-            </div>
+            <UsersHeader setShowAddUser={setShowAddUser} />
+            <UsersList setShowEditUser={setShowEditUser} />
+            {
+                (showAddUser || showEditUser) && <UsersForm setState={(showAddUser) ? setShowAddUser : setShowEditUser} state={userData} label={(showAddUser) ? 'Add User' : 'Edit User'} />
+            }
         </>
     )
 }
