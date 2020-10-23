@@ -43,6 +43,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function needsMet()
+    {
+        return $this->morphMany('App\NeedMet', 'model');
+    }
+    
     public function goals()
     {
         return $this->morphMany('App\Goal', 'model');

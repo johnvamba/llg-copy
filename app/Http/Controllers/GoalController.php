@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\GoalStoreRequest;
 use App\Goal;
 use App\User;
+use App\NeedMet;
+use Carbon\Carbon;
 
 class GoalController extends Controller
 {
@@ -98,6 +100,18 @@ class GoalController extends Controller
             ])
             ->orderBy('id', 'desc')
             ->first();
+
+        $date = Carbon::parse($goal->created_at);
+        
+        if ($goal->term == 'year') {
+            $goal['needs_met'] = NeedMet::where('created_at', '>=', $date->toDateTimeString())
+                ->where('created_at', '<=', $date->copy()->endOfYear())
+                ->get();
+        } else {
+            $goal['needs_met'] = NeedMet::where('created_at', '>=', $date->toDateTimeString())
+            ->where('created_at', '<=', $date->copy()->endOfMonth())
+            ->get();
+        }
 
         return response()->json($goal, 200);
     }

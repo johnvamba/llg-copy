@@ -38,6 +38,11 @@ class Need extends Model implements HasMedia
     {
         return $this->hasMany('App\NeedHasCategory', 'need_id');
     }
+
+    public function contribution()
+    {
+        return $this->hasOne('App\NeedMet', 'need_id');
+    }
     
     public function organization()
     {

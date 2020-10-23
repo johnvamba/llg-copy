@@ -103,7 +103,8 @@ class AuthController extends Controller
                         'first_name' => $request->firstName,
                         'last_name' => $request->lastName,
                         'user_id' => $user->id,
-                        'age' => $request->age
+                        'age' => $request->age,
+                        'bio' => $request->bio
                     ]);
 
                 $user['profile'] = $profile;

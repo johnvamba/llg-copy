@@ -31,6 +31,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('user/me', 'UserController@getProfile');
     Route::get('user/stats', 'UserController@getUsersStatistics');
     Route::post('users/lists', 'UserController@getUsers');
+    Route::post('user/add-card/{organization}', 'UserController@addCard');
+    Route::post('user/cards', 'UserController@getCards');
     Route::resource('users', 'UserController');
     
     /** Goal resource module */
@@ -54,11 +56,13 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('needs-types', 'NeedsTypeController');
     
     /** Needs Met resource module */
+    Route::get('needs-mets/user', 'NeedsMetController@getUserNeedsMet');
     Route::get('needs-mets/total', 'NeedsMetController@getTotalNeedsMet');
     Route::resource('needs-met', 'NeedsMetController');
 
     /** Service Offered resource module */
     Route::post('offer/lists', 'ServiceOfferController@getOffers');
+    Route::get('service-offer/user', 'ServiceOfferController@getServiceOffered');
     Route::get('service-offer/help/total', 'ServiceOfferController@getTotalOffers');
     Route::get('service-offer/user/request', 'ServiceOfferController@getServicesRequest');
     Route::post('service-offer/{serviceOffer}/request', 'ServiceOfferController@requestAction');

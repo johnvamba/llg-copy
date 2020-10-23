@@ -9,6 +9,9 @@ use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Support\Facades\Storage;
 use App\User;
 use App\UserProfile;
+use App\CustomerCredential;
+use App\Organization;
+use App\OrganizationCredential;
 use Carbon\Carbon;
 use DB;
 
@@ -229,5 +232,72 @@ class UserController extends Controller
                     'message' => 'An error occurred. Please try again.'
                 ], 500);
         }
+    }
+
+    /**
+     * Add user card
+     *
+     * @param int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getCards(Request $request)
+    {
+        $cards = CustomerCredential::where([
+                ['user_id', auth()->user()->id], 
+                ['model_id', $request->organization_id], 
+                ['model_type', 'App\Organization']
+            ])->get(); 
+
+        return response()->json($cards);
+    }
+
+    /**
+     * Add user card
+     *
+     * @param int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function addCard(Request $request, Organization $organization)
+    {
+        $key = OrganizationCredential::where(
+                'organization_id', $organization->id
+            )
+            ->first();
+
+        if (!$key) {
+            return response()->json([
+                'message' => "Please check your API keys.",
+            ], 422);
+        }
+
+        \Stripe\Stripe::setApiKey($key->secret_key);
+
+        $credential = new CustomerCredential;
+    
+        if (!$credential->customer_id) {
+            $createdCustomer = \Stripe\Customer::create([
+                    'name' => $request->name,
+                ]);
+
+            $credential->customer_id = $createdCustomer->id;
+        }
+
+        if (!$credential->card_id) {
+            $card = \Stripe\Customer::createSource(
+                    $credential->customer_id,
+                    ['source' => $request->token]
+                );
+
+            $credential->card_id = $card->id;
+        }
+
+        $credential->user_id = auth()->user()->id;
+        $credential->name = $request->name;
+        $credential->card_brand = $request->brand;
+        $credential->last_four_number = $request->last4;
+
+        $cardCredential = $organization->customerCredential()->save($credential); 
+
+        return response()->json($cardCredential, 202);
     }
 }

@@ -16,11 +16,11 @@ class CreateNeedMetsTable extends Migration
         Schema::create('need_mets', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('need_id')->unsigned();
-            $table->bigInteger('user_id')->unsigned();
+            $table->morphs('model');
+            $table->double('amount', 15, 2);
             $table->timestamps();
 
             $table->foreign('need_id')->references('id')->on('needs');
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
