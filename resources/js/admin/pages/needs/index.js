@@ -25,50 +25,54 @@ const Needs = ({NeedsReducer}) => {
 
     const [bolInfo, showInfo] = useState(false);
     const [info, setInfo] = useState(null);
-    // const needs = useSelector(
-    //     state => state.NeedsReducer.needs
-    // )
+
+    const [arrayNeeds, setNeeds] = useState([{ // set to []
+        id: 1,
+        title: 'Title',
+        type: 'Donation',
+        goal: 2400.00,
+        status: 'on-going',
+        date: '08/27/2020'
+    },
+    {
+        id: 2,
+        title: 'Title',
+        type: 'Fundraise',
+        goal: 2400.00,
+        status: 'on-going',
+        date: '08/27/2020'
+    },
+    {
+        id: 3,
+        title: 'Title',
+        type: 'Donation',
+        goal: 2400.00,
+        status: 'achieved',
+        date: '08/27/2020'
+    }]);
+
     const { needs } = NeedsReducer
-    const data = [
-        {
-            id: 1,
-            title: 'Title',
-            type: 'Donation',
-            goal: 2400.00,
-            status: 'on-going',
-            date: '08/27/2020'
-        },
-        {
-            id: 2,
-            title: 'Title',
-            type: 'Fundraise',
-            goal: 2400.00,
-            status: 'on-going',
-            date: '08/27/2020'
-        },
-        {
-            id: 3,
-            title: 'Title',
-            type: 'Donation',
-            goal: 2400.00,
-            status: 'achieved',
-            date: '08/27/2020'
-        }
-    ];
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        async function fetchData() {
-            let { data } = await axios.post('/api/need/lists', {
-                'limit': limit
-            });
-
-            dispatch(NeedsActions.setNeeds(data));
+        api.get(`/api/admin/needs`, {
+            params: {
+                tab, page
+            },
+            cache: {
+                exclude: { query: false },
+                debug: true,
+            }
+        }).then(({data})=>{
+            // console.log('response',res, cache.store)
+            setNeeds(data.data)
+        })
+        console.log('whaatt??')
+        return ()=>{
+            //cancel api here
         }
-
-        fetchData();
-    }, [limit])
+    }, [ tab, page ]);
 
     const handleLimitChange = (limit) => {
         setLimit(parseInt(limit));
@@ -120,7 +124,7 @@ const Needs = ({NeedsReducer}) => {
             </div>
 
             <div className="flex flex-col p-8">
-                <NeedTable tab={tab} data={data} showInfo={handleInfo}/> 
+                <NeedTable tab={tab} data={arrayNeeds} showInfo={handleInfo}/> 
             </div>
             {
                 form && 

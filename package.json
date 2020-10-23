@@ -36,6 +36,7 @@
         "@stripe/react-stripe-js": "^1.1.2",
         "@stripe/stripe-js": "^1.9.0",
         "apexcharts": "^3.20.2",
+        "axios-cache-adapter": "^2.5.0",
         "dotenv": "^8.2.0",
         "filepond": "^4.21.1",
         "filepond-plugin-image-preview": "^4.6.4",

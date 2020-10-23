@@ -24,6 +24,12 @@ Route::post('auth/{user}', 'AuthController@authUser');
 Route::get('need/categories', 'NeedsCategoryController@index');
 
 Route::group(['middleware' => ['auth:api']], function () {
+
+    Route::group(['prefix'=>'admin', 'namespace'=>'Admin'], function() {
+        Route::get('needs/types', 'NeedsController@types');
+
+        Route::resource('needs', 'NeedsController');
+    });
     /** Role resource module */
     Route::resource('roles', 'RoleController');
 
