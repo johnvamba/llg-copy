@@ -1,6 +1,7 @@
 import React from 'react';
 import Dashboard from '../pages/dashboard';
 import Needs from '../pages/needs';
+import Requests from '../pages/needs/request';
 import CreateNeeds from '../pages/needs/create';
 import EidtNeeds from '../pages/needs/edit';
 import NeedsCategory from '../pages/needs-category';
@@ -12,6 +13,7 @@ import EditUser from '../pages/users/edit';
 import Offers from '../pages/offers';
 import EditOffer from '../pages/offers/edit';
 import Stories from '../pages/stories';
+import StoriesDrafts from '../pages/stories/drafts';
 import EditStory from '../pages/stories/edit';
 import Groups from '../pages/groups';
 import CreateGroup from '../pages/groups/create';
@@ -38,6 +40,11 @@ const routes = [
         path: '/needs',
         exact: true,
         component: () => <Needs />
+    },
+    {
+        path: '/needs/requests',
+        exact: true,
+        component: () => <Requests />
     },
     {
         path: '/needs/create',
@@ -76,6 +83,11 @@ const routes = [
     },
     {
         path: '/stories',
+        exact: true,
+        component: () => <Stories />
+    },
+    {
+        path: '/stories/drafts',
         exact: true,
         component: () => <Stories />
     },

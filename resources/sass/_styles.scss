@@ -1,0 +1,15 @@
+a{
+    color: inherit;
+    &:hover {
+        text-decoration: none;
+        color: inherit;
+    }
+}
+.table td, .table th{
+    vertical-align: middle;
+    border-top: none;
+}
+label {
+    display: block;
+    margin: 0;
+}

@@ -1,0 +1,366 @@
+.form.need-form {
+	margin-right: auto;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	border: 1px solid rgba(231,234,239,1);
+	background-color: #FFF;
+	width: 600px; /* change this accordingly */
+	height: 100%;
+}
+
+.form .form-title, .form .form-footer{
+	padding: 30px;
+	justify-content: space-between;
+	display: flex;
+}
+
+.form .form-title h3{
+	font-weight: 500;
+	color: rgba(60,90,119,1);
+	font-size: 18px; 
+}
+
+.form .form-body {
+	padding: 0px 30px;
+	overflow-y: scroll;
+    overflow: auto;
+    height: 675px;
+}
+
+.form .form-body .form-group {
+	display: grid;
+	margin-bottom: 20px;
+}
+.form .form-body .form-group label {
+	font-size: 12px;
+	line-height: 24px;
+	color:rgba(74, 108, 140, 0.56);
+	margin-bottom: 10px;
+}
+.form .form-body .form-group input.input-field {
+	border-bottom: 1px solid #D7DEE3;
+	font-size: 14px;
+	line-height: 24px;
+	padding: 10px 0px;
+	width: 100%;
+	display: block;
+	outline: none;
+}
+.form .form-body .form-group input:placeholder {
+	color: #4F6880;
+	opacity: 0.3;
+}
+.input-container input.input-field.space-l {
+	padding-left: 20px !important; 
+}
+.input-container input.input-field.space-r {
+	padding-right: 20px !important; 
+}
+
+.form .form-body .form-group .icon-categories {
+	display: flex;
+	color: rgba(99,129,157,1);
+	text-align: center;
+}
+.icon-categories .icon-category{
+	max-width: 40px;
+	margin-right: 16px;
+	padding-top: 20px;
+	font-size: 9px;
+	
+}
+.icon-categories .icon-category:last-child{
+	margin-right: 0px;
+}
+.icon-categories .icon-category svg.svg-check {
+	width: 16px;
+	height: 'auto';
+	position: absolute;
+	right: -6px;
+	top: -6px;
+}
+.icon-categories .icon-category .icon-circle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #9AADBF;
+    border-radius: 50px;
+    position: relative;
+}
+.icon-categories .icon-category .icon-circle svg.svg-icon {
+	height: 20px;
+    width: auto;
+}
+.icon-categories .icon-category.active{
+	color: #109CF1;
+}
+
+.icon-categories .icon-category.active .icon-circle {
+    border: 1px solid #109CF1;
+}
+
+.form .form-body .form-group .button-group button {
+	border:1px solid rgba(156,174,185,0.4);
+	margin-right: 16px; 
+	color: rgba(99,129,157,1);
+}
+.form .form-footer {
+	position: absolute;
+	padding: 15px 30px;
+	bottom: 0px;
+	border-top: 1.5px solid rgba(156,174,185,.2);
+	height: 90px;
+    width: 100%;
+}
+
+.form .form-footer button {
+	background: rgba(181, 193, 204, 0.12);
+	border-radius: 4px;
+	width: 120px;
+	height: 50px;
+	padding: 15px;
+	color: rgba(181,193,204,1);
+}
+.form .form-footer button.btn-primary {
+	background:#109CF1;
+	color: #fff;
+}
+
+.form .form-group {
+	/*display: block;*/
+}
+
+.input-container {
+  display: flex;
+  position: relative;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 15px;
+}
+.input-container .currency, .input-container .time-toggle{
+	margin: 0px;
+	position: absolute;
+}
+.input-container button.numberButton{
+	width: 22px;
+	height: 22px;
+	background: #F6F8F9;
+	border-radius: 4px;
+	color: #91A5B7;
+}
+.input-container button.numberButton.plus{
+	background: #109CF1;
+	color: #fff;
+}
+.input-container .numberValue{
+	margin: 0 10px;
+}
+.input-container input.numberValue[type=number]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+}
+.time-toggle.time-am{
+	right: 35px;
+}
+.time-toggle.time-pm{
+	right: 7px;
+}
+.time-toggle.active{
+	color: rgba(16,156,241,1);
+}
+
+.flex-content {
+	display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.flex-content .short-width{
+	width: 250px;
+	/*padding-right: 20px;*/
+}
+
+/*Datepickers */ 
+.react-datepicker-wrapper{
+	width: 100%;
+}
+input[type=time]::-webkit-calendar-picker-indicator {
+	display: none;
+}
+/*Filepond settings*/
+
+.filepond--root {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol';
+}
+
+/* use a hand cursor intead of arrow for the action buttons */
+.filepond--file-action-button {
+    cursor: pointer;
+}
+
+/* the text color of the drop label*/
+.filepond--drop-label {
+    color: #4F6880;
+}
+
+/* underline color for "Browse" button */
+.filepond--label-action {
+    /*text-decoration-color: #aaa;*/
+    text-decoration-color: none;
+}
+
+/* the background color of the filepond drop area */
+.filepond--panel-root {
+    background-color: none;
+/* the border radius of the drop area */
+    border-radius: 0.5em;
+    /*border: 1px dashed #D7DEE3;*/
+}
+
+/* the border radius of the file item */
+.filepond--item-panel {
+    border-radius: 0.5em;
+}
+
+/* the background color of the file and file panel (used when dropping an image) */
+.filepond--item-panel {
+    background-color: #555;
+}
+
+/* the background color of the drop circle */
+.filepond--drip-blob {
+    background-color: #999;
+}
+
+/* the background color of the black action buttons */
+.filepond--file-action-button {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* the icon color of the black action buttons */
+.filepond--file-action-button {
+    color: white;
+}
+
+/* the color of the focus ring */
+.filepond--file-action-button:hover,
+.filepond--file-action-button:focus {
+    box-shadow: 0 0 0 0.125em rgba(255, 255, 255, 0.9);
+}
+
+/* the text color of the file status and info labels */
+.filepond--file {
+    color: white;
+}
+
+/* error state color */
+[data-filepond-item-state*='error'] .filepond--item-panel,
+[data-filepond-item-state*='invalid'] .filepond--item-panel {
+    background-color: red;
+}
+
+[data-filepond-item-state='processing-complete'] .filepond--item-panel {
+    background-color: green;
+}
+
+/* bordered drop area */
+.filepond--panel-root {
+    background-color: transparent;
+    border: 1px dashed #D7DEE3;
+}
+
+/*Need info*/
+.need-info {
+	margin-right: auto;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    border: 1px solid rgba(231,234,239,1);
+    background-color: #FFF;
+    width: 430px;
+    height: 100%;
+}
+.need-info .need-header {
+    height: 60px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    display: inline-flex;
+    padding: 0 20px;
+    border-bottom: 1px solid #E6E7EF;
+}
+.need-info .need-title .need-img {
+	margin: 20px 0px;
+	height: 150px; 
+}
+.need-info .need-title h3{
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 24px;
+	color: #4F6880;
+}
+.need-info .need-title h3 span{
+	float: right;
+	color: rgba(74, 108, 140, 0.56);
+	font-size: 12px;
+}
+.need-info .need-title h5{
+	font-size: 14px;
+	line-height: 24px;
+	color: #109CF1;
+}
+.need-info .need-header .circlet{
+	margin-right:20px;
+}
+.need-info .need-header button{
+	color: #2DA9F3;
+}
+.need-info .need-header h4.need-status{
+	flex:2 ;
+	color:#7690A8;
+}
+.need-info .need-content, .need-info .need-footer {
+	/*height: calc(100% - 60px);*/
+	padding: 0 20px;
+}
+.need-info .need-footer {
+    bottom: 0px;
+    position: absolute;
+    width: auto;
+    padding: 20px;
+}
+.need-content .group-content {
+	margin-bottom: 16px;
+}
+.need-content .group-content label{
+	font-size: 12px;
+	line-height: 24px;
+	color: rgba(74, 108, 140, 0.56);
+}
+.need-content .group-content p{
+	font-size: 13px;
+	line-height: 24px;
+	color: #4F6880;
+}
+.need-content .group-content .need-map{
+	width: 100%;
+	height: 90px;
+	background: rgba(255, 255, 255, 0.5);
+	mix-blend-mode: normal;
+	border-radius: 4px;
+}
+.action-content{
+	width: 171px;
+	height: 100px;
+	right: 0px;
+
+	background: #FFFFFF;
+	border: 1px solid #E7EBF3;
+	box-sizing: border-box;
+	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+	border-radius: 4px;
+}

@@ -1,15 +1,60 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, connect } from 'react-redux';
 import * as NeedsActions from '../../../redux/needs/actions';
-import DataTable from '../../../components/layout/DataTable';
+// import DataTable from '../../../components/layout/DataTable';
+import Button from '../../../components/Button';
+import Check from '../../../svg/check'
+import Cross from '../../../svg/cross'
+// import CrossPlain from '../../../svg/cross-plain'
+import Quill from '../../../svg/quill'
+//As test icon only
+// import IconTest from '../../../svg/icon-test'
 
-const Needs = () => {
+import './needs.css';
+
+import NeedForm from './form'
+import NeedTable from './table'
+import NeedInfo from './info'
+
+const Needs = ({NeedsReducer}) => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
+    const [tab, setTab] = useState('all'); //current or past
+    const [form, showForm] = useState(false); //false
+    const [story, showStoryForm] = useState(false); //false
 
-    const needs = useSelector(
-        state => state.NeedsReducer.needs
-    )
+    const [bolInfo, showInfo] = useState(false);
+    const [info, setInfo] = useState(null);
+    // const needs = useSelector(
+    //     state => state.NeedsReducer.needs
+    // )
+    const { needs } = NeedsReducer
+    const data = [
+        {
+            id: 1,
+            title: 'Title',
+            type: 'Donation',
+            goal: 2400.00,
+            status: 'on-going',
+            date: '08/27/2020'
+        },
+        {
+            id: 2,
+            title: 'Title',
+            type: 'Fundraise',
+            goal: 2400.00,
+            status: 'on-going',
+            date: '08/27/2020'
+        },
+        {
+            id: 3,
+            title: 'Title',
+            type: 'Donation',
+            goal: 2400.00,
+            status: 'achieved',
+            date: '08/27/2020'
+        }
+    ];
 
     const dispatch = useDispatch();
 
@@ -32,30 +77,73 @@ const Needs = () => {
     const handleChangePage = (page) => {
         setPage(parseInt(page));
     }
+    const handleTab = (tab = 'all')=>{
+        //change content of table here
+        setTab(tab)
+    }
+
+    const handleForm = (form = false, setting = null)=>{
+        //change content of table here
+        if(setting == 'discard'){
+            //discard Changes here
+        }
+        if(setting == 'submit'){
+            //discard Changes here
+        }
+        showForm(form)
+    }
+
+    const handleInfo = (item) => {
+        // console.log('haaa?', item)
+        showForm(false);
+        showInfo(true);
+        setInfo(item);
+    }
+
+    const openForm = (e) => {
+        showForm(true)
+        showInfo(false)
+    }
 
     return (
         <>
             <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
-                <ol className="list-reset flex text-grey-dark text-base">
-                    <li className="font-thin">Needs</li>
-                    <li><span className="mx-2">/</span></li>
-                    <li><a href="#" className="text-blue-400 font-semibold">Contents</a></li>
-                    <li><span className="mx-2">/</span></li>
-                    <li className="font-thin">Categories</li>
-                </ol>
+                <ul className="nav-tab">
+                    <li className={`nav-tab-item ${tab=='all' ? 'active' : ''}`} onClick={()=>handleTab('all')}>All ({ needs.all || 0 })</li>
+                    <li className={`nav-tab-item ${tab=='current' ? 'active' : ''}`} onClick={()=>handleTab('current')}>Current ({ needs.current || 0 })</li>
+                    <li className={`nav-tab-item ${tab=='past' ? 'active' : ''}`} onClick={()=>handleTab('past')}>Past ({ needs.past || 0 })</li>
+                </ul>
+                <Button className="ml-auto text-white bg-blue-500 hover:bg-blue-600" onClick={()=>showForm(true)}>
+                    <i className="fas fa-plus pr-2"></i>
+                    <span>Create Need</span>
+                </Button>
             </div>
 
-            <div className="flex flex-col p-12">
-                <DataTable
-                    module={needs.module}
-                    records={needs}
-                    changeLimit={handleLimitChange}
-                    currentPage={page}
-                    changePage={handleChangePage}
-                />
+            <div className="flex flex-col p-8">
+                <NeedTable tab={tab} data={data} showInfo={handleInfo}/> 
             </div>
+            {
+                form && 
+                <NeedForm handleForm={handleForm} data={info || {}}/>
+            }
+            {
+                (info && bolInfo) && 
+                <NeedInfo toClose={e=>setInfo(null)} clickEdit={openForm} data={info}/>
+            }
+            {
+                //story && //Open story here
+
+            }
         </>
     )
 }
 
-export default Needs;
+export default connect(({NeedsReducer})=>{
+    return {
+        NeedsReducer
+    }
+},(dispatch)=>{
+    return {
+
+    }
+})(Needs);
