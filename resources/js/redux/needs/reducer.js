@@ -4,11 +4,14 @@ import {
 } from './types';
 
 let initialState = {
+    filter: false,
     type: null,
-    date: new Date(),
+    startdate: new Date,
+    enddate: new Date,
     min: 0.00,
     max: 0.00,
     dateType: 'type1',
+    //not needed
     needs: []
 }
 

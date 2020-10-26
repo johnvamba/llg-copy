@@ -122,12 +122,6 @@ header .filter-header .filter-content{
 	border-radius: 4px;
 }
 
-header .filter-header .filter-need {
-	/*padding*/
-	width: 425px;
-	height: auto;
-}
-
 header .filter-content .form-body.filter-body{
 	height: auto !important;
 	padding-top: 20px;

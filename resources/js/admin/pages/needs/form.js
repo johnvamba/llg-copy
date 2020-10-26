@@ -15,11 +15,13 @@ import CrossPlain from '../../../svg/cross-plain'
 import Quill from '../../../svg/quill'
 //As test icon only
 import IconTest from '../../../svg/icon-test'
+import Calendar from '../../../svg/calendar'
+import Location from '../../../components/Location'
 
 import DatePicker from 'react-datepicker';
 registerPlugin(FilePondPluginImagePreview)
 
-import categories from './categorylist'
+import { monetary, volunteer } from './categorylist'
 
 const CatComponent = ({cat, onSelect, truth = false}) => {
     return <div className={`icon-category ${truth ? 'active':''}`} onClick={()=>onSelect(cat, truth)}>
@@ -34,15 +36,51 @@ const CatComponent = ({cat, onSelect, truth = false}) => {
 }
 
 const NeedForm = ({handleForm, data = {}}) => {
-
+    const [title, setTitle] = useState('');
+    const [about, setAbout] = useState('');
+    const [bring, setBring] = useState('');
     const [type, setType] = useState('donation'); //donation
     const [people, setPeople] = useState(0); //donation
     const [category, setCategory] = useState([]);
+    const [photo, setPhoto] = useState(null);
     const [files, setFiles] = useState([])
     const [goal, setGoal] = useState(0);
     const [date, setDate] = useState(new Date());
-    const [time, setTime] = useState(new Date());
+    const [openDate, setOpenDate] = useState(false);
+    const [time, setTime] = useState('');
+    const [errors, setErrors] = useState({});
+    const [location, setLocation] = useState({
+        formatted_address: '',
+        lat: null,
+        lng: null,
+    })
     const [meridiem, setMeridiem] = useState('am');
+
+    const collectData = (id) => {
+
+    }
+    //Collect data from db if has new data.id
+    useEffect(()=>{
+        if(data.id) {
+            api.get('')
+            .then(()=>{
+                setTitle();
+                setAbout();
+                setType();
+                setPeople();
+                setCategory();
+                setFiles();
+                setGoal();
+                setDate();
+                setOpenDate();
+                setTime();
+                setLocation();
+            })
+            .catch(err => {
+                setErrors(err)
+            })
+        }
+    }, [data])
 
     const updateGoal = (value)=>{
         if(value < 0)
@@ -66,8 +104,61 @@ const NeedForm = ({handleForm, data = {}}) => {
             setCategory([item, ...category])
     }
 
-    const submit = () => {
+    const handleType = (newType = 'donation') => {
+        if(type != newType){
+            setCategory([]);
+        }
+        setType(newType)
+    }
 
+    const handleLocation = ({formatted_address, geometry}) => {
+        setLocation({
+            location: formatted_address, 
+            lat: geometry.location.lat(), 
+            lng: geometry.location.lng()
+        })
+    }
+    const handleImage = (files)=>{
+        console.log('handle incoming files', files);
+        setFiles([...files]);
+        let reader = new FileReader();
+        reader.onload = (e) => {
+            console.log('reading');
+            // let inputs = { ...form };
+            setPhoto(e.target.result);
+        };
+        reader.readAsDataURL(files[0]);
+    }
+
+    const categoryWheel = event => {
+        const { target } = event
+        // target.scrollLeft += (event.deltaY / 10)
+        console.log('onWheel', event.deltaY, target.scrollLeft)
+        // target.scrollX += event.deltaY
+    }
+
+    const categoryScroll = event => {
+        console.log('onScroll', event.target.scrollTop, event.target.scrollLeft)
+    }
+
+    //Axios
+    const submit = () => {
+        //Do quick validations here
+
+
+        const submitPromise = !data.id ? 
+            api.post(`/api/admin/needs`, {
+                title, about, bring, type, people, category, photo, goal, date, openDate, time, errors, location
+            }) : 
+            api.update(`/api/admin/needs/${data.id}`, {
+                params: {title, about, bring, type, people, category, photo, goal, date, openDate, time, errors, location}
+            })
+
+        submitPromise.then(res=>{
+            handleForm(false, submit);
+        }).catch(err=>{
+
+        })
     }
 
     return (
@@ -82,17 +173,25 @@ const NeedForm = ({handleForm, data = {}}) => {
                 <div className="form-group">
                     <label>Select Type of Need</label>
                     <div className="button-group">
-                    <Button className={type=='donation' ? 'active': ''} onClick={()=>setType('donation')}>Donation</Button>
-                    <Button className={type=='fundraise' ? 'active': ''} onClick={()=>setType('fundraise')}>Fundraise</Button>
-                    <Button className={type=='volunteer' ? 'active': ''} onClick={()=>setType('volunteer')}>Volunteer</Button>
+                    <Button className={type=='donation' ? 'active': ''} onClick={()=>handleType('donation')}>Donation</Button>
+                    <Button className={type=='fundraise' ? 'active': ''} onClick={()=>handleType('fundraise')}>Fundraise</Button>
+                    <Button className={type=='volunteer' ? 'active': ''} onClick={()=>handleType('volunteer')}>Volunteer</Button>
                     </div>
                 </div>
                 <div className="form-group">
                     <label>Select Category</label>
-                    <div className="icon-categories">
+                    <div className="icon-categories"
+                        onWheel={categoryWheel}
+                        onScroll={categoryScroll}>
                         {
-                            categories.length > 0 &&
-                            categories.map((cat, ind)=><CatComponent key={cat.slug} 
+                            (type == 'donation' || type == 'fundraise') ?
+                            monetary.map((cat, ind)=><CatComponent key={cat.slug} 
+                                cat={cat}
+                                truth={category.findIndex(i=> cat.slug == i.slug) >= 0}
+                                onSelect={handleCategories}
+                                />) 
+                            :   
+                            volunteer.map((cat, ind)=><CatComponent key={cat.slug} 
                                 cat={cat}
                                 truth={category.findIndex(i=> cat.slug == i.slug) >= 0}
                                 onSelect={handleCategories}
@@ -102,7 +201,7 @@ const NeedForm = ({handleForm, data = {}}) => {
                 </div>
                 <div className="form-group">
                     <label>Title</label>
-                    <input type='text' className="input-field" placeholder="Enter Title"/>
+                    <input type='text' className="input-field" placeholder="Enter Title" value={title} onChange={e=>setTitle(e.target.value)}/>
                 </div>
                 {
                     (type == 'donation' || type == 'fundraise') && 
@@ -116,7 +215,7 @@ const NeedForm = ({handleForm, data = {}}) => {
                         </div>
                         <div className="form-group">
                             <label>About</label>
-                            <input type='text' className="input-field" placeholder="Enter Title"/>
+                            <input type='text' className="input-field" placeholder="Say something about this need" value={about} onChange={e=>setAbout(e.target.value)}/>
                         </div>
                     </div>
                 }
@@ -133,24 +232,29 @@ const NeedForm = ({handleForm, data = {}}) => {
                                     showPopperArrow={false} 
                                     className="input-field"
                                     onChange={(date)=>setDate(date)}
+                                    onClickOutside={()=>setOpenDate(false)}
+                                    open={openDate}
                                 />
+                                <i className="icon right-0 absolute" onClick={e=>setOpenDate(!openDate)}>
+                                    <Calendar/>
+                                </i>
                             </div>
                         </div>
                         <div className="form-group short-width">
                             <label>Time</label>
                             <div className="input-container">
-                                <input className="input-field time-field" type="time" pattern="[0-9]{2}:[0-9]{2}" placeholder="00:00" name="time"/>
+                                <input className="input-field time-field" type="text" pattern="[0-9]{2}:[0-9]{2}" placeholder="00:00" name="time" value={time} 
+                                onChange={(e)=>setTime(e.target.value)} />
                                 <span className={`time-toggle time-am ${meridiem =='am' ? 'active':''}`} onClick={()=>setMeridiem('am')}>AM</span>
                                 <span className={`time-toggle time-pm ${meridiem =='pm' ? 'active':''}`} onClick={()=>setMeridiem('pm')}>PM</span>
                             </div>
                         </div>
-                        <div className="form-group short-width">
-                            <label>Location</label>
-                            <div className="input-container">
-                                <span className="currency">$</span>
-                                <input className="input-field space-l" type="text" placeholder="Enter Location" name="usrnm"/>
-                            </div>
-                        </div>
+                        <Location 
+                            className={'short-width'}
+                            name={'location'}
+                            placesSelected={handleLocation}
+                            errors={errors.location || []}
+                        />
                         <div className="form-group short-width">
                             <label>Number of People Needed</label>
                             <div className="input-container">
@@ -162,17 +266,17 @@ const NeedForm = ({handleForm, data = {}}) => {
                                 <button className="numberButton plus" onClick={e=>updatePeople(people+1)}><i className="fas fa-plus"/></button>
                             </div>
                         </div>
-                    <div className="form-group w-full">
-                        <label>What to bring</label>
-                        <input type='text' className="input-field" placeholder="Enter Title"/>
-                    </div>
+                        <div className="form-group w-full">
+                            <label>What to bring</label>
+                            <input type='text' className="input-field" placeholder="Enter things to bring" value={bring} onChange={e=>setBring(e.target.value)}/>
+                        </div>
                     </div>
                 }
                 <div className="form-group">
                     <label>Featured Image</label>
                     <FilePond
                         files={files}
-                        onupdatefiles={setFiles}
+                        onupdatefiles={handleImage}
                         allowMultiple={false}
                         name="files"
                         labelIdle='Drag & Drop or <span class="filepond--label-action">Browse</span>'
@@ -181,7 +285,7 @@ const NeedForm = ({handleForm, data = {}}) => {
             </div>
             <div className="form-footer">
                 <Button className="btn btn-secondary" onClick={()=>handleForm(false, 'discard')}>Discard</Button>
-                <Button className="btn btn-primary" onClick={()=>handleForm(false, 'submit')}>Create</Button>
+                <Button className="btn btn-primary" onClick={submit}>Create</Button>
             </div>
         </div>
     )
@@ -189,6 +293,6 @@ const NeedForm = ({handleForm, data = {}}) => {
 NeedForm.defaultProps = {
     handleForm: (toggle = false, type = null)=>{
 
-    },
+    }
 }
 export default NeedForm;

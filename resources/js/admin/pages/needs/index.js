@@ -26,6 +26,8 @@ const Needs = ({NeedsReducer}) => {
     const [bolInfo, showInfo] = useState(false);
     const [info, setInfo] = useState(null);
 
+    const [loading, setLoading] = useState(false);
+
     const [arrayNeeds, setNeeds] = useState([{ // set to []
         id: 1,
         title: 'Title',
@@ -51,14 +53,16 @@ const Needs = ({NeedsReducer}) => {
         date: '08/27/2020'
     }]);
 
-    const { needs } = NeedsReducer
+    const { needs, type, startdate, enddate, min, max, dateType, filter } = NeedsReducer
 
     const dispatch = useDispatch();
 
     useEffect(() => {
+        setLoading(true)
+        const addFilter = filter ? {type, startdate, enddate, min, max } : {};
         api.get(`/api/admin/needs`, {
             params: {
-                tab, page
+                tab, page, ...addFilter
             },
             cache: {
                 exclude: { query: false },
@@ -67,12 +71,14 @@ const Needs = ({NeedsReducer}) => {
         }).then(({data})=>{
             // console.log('response',res, cache.store)
             setNeeds(data.data)
+            setLoading(false)
         })
-        console.log('whaatt??')
+        console.log('running')
+
         return ()=>{
             //cancel api here
         }
-    }, [ tab, page ]);
+    }, [ tab, page, needs, type, startdate, enddate, min, max, dateType ]);
 
     const handleLimitChange = (limit) => {
         setLimit(parseInt(limit));
@@ -124,7 +130,7 @@ const Needs = ({NeedsReducer}) => {
             </div>
 
             <div className="flex flex-col p-8">
-                <NeedTable tab={tab} data={arrayNeeds} showInfo={handleInfo}/> 
+                <NeedTable tab={tab} data={arrayNeeds} showInfo={handleInfo} loading={loading}/> 
             </div>
             {
                 form && 
