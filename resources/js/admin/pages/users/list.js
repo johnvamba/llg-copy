@@ -130,7 +130,7 @@ const UsersList = ({ setShowEditUser }) => {
                                             <input type='checkbox' onChange={(e) => handleChange(obj,e.target.checked)} checked={obj.checked ? obj.checked : false} />
                                             <label></label>
                                         </td>
-                                        <td className="title">
+                                        <td className="title" onClick={() => handleRowActive(obj)}>
                                             <div className="title-img"></div>
                                             <p>
                                                 {obj.title}

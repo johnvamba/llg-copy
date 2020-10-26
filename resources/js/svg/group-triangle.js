@@ -11,8 +11,8 @@ const GroupsTriangle = (props)=>{
                 <path d="M95.7136 7L96.4976 6.37922L95.7136 5.38912L94.9296 6.37922L95.7136 7ZM90.1709 14V15H90.6546L90.9549 14.6208L90.1709 14ZM101.256 14L100.472 14.6208L100.773 15H101.256V14ZM94.9296 6.37922L89.3869 13.3792L90.9549 14.6208L96.4976 7.62078L94.9296 6.37922ZM102.04 13.3792L96.4976 6.37922L94.9296 7.62078L100.472 14.6208L102.04 13.3792ZM101.256 15H113V13H101.256V15ZM113 15C114.657 15 116 16.3431 116 18H118C118 15.2386 115.761 13 113 13V15ZM116 18V83H118V18H116ZM116 83C116 84.6569 114.657 86 113 86V88C115.761 88 118 85.7614 118 83H116ZM113 86H15V88H113V86ZM15 86C13.3431 86 12 84.6569 12 83H10C10 85.7614 12.2386 88 15 88V86ZM12 83V18H10V83H12ZM12 18C12 16.3431 13.3431 15 15 15V13C12.2386 13 10 15.2386 10 18H12ZM15 15H90.1709V13H15V15Z" fill="#E7EAEF" mask="url(#path-1-outside-1)"/>
                 </g>
                 <defs>
-                <filter id="filter0_d" x="0" y="0.38913" width="128" height="102.611" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                <filter id="filter0_d" x="0" y="0.38913" width="128" height="102.611" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                <feFlood floodOpacity="0" result="BackgroundImageFix"/>
                 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
                 <feOffset dy="5"/>
                 <feGaussianBlur stdDeviation="5"/>

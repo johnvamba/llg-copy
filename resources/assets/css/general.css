@@ -209,3 +209,139 @@ td.actions, th.actions{
 .button-container .flex.justify-between button{
 	min-width: 65px;
 }
+
+/* Form */
+.form-input-text{
+	border-bottom: 1px solid #D7DEE3;
+    padding: 9px 0;
+}
+.form-input-text label{
+	font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 24px;
+    color: rgba(74, 108, 140, 0.56);
+}
+.form-input-text input {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    color: #4F6880;
+}
+.form-input-text--location > div{
+	position: relative;
+    display: flex;
+    align-items: center;
+}
+.form-input-text--location > div input{
+	padding-left: 13px;	
+}
+.form-input-text input::-webkit-input-placeholder,
+.form-input-text input::-moz-placeholder,
+.form-input-text input:-ms-input-placeholder,
+.form-input-text input:-moz-placeholder{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    color: #4F6880;
+    opacity: 0.3;
+}
+.form-select{
+	border-bottom: 1px solid #D7DEE3;
+    padding: 9px 0;
+}
+.form-select label{
+	font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 24px;
+    color: rgba(74, 108, 140, 0.56);
+}
+.form-select label{
+	font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 24px;
+    color: rgba(74, 108, 140, 0.56);
+}
+.form-select .dropdown button{
+	width: 100%;
+    background: transparent;
+    color: #4F6880;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    border: none;
+    padding: 0;
+    text-align: left;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 5px;
+    cursor: pointer;
+}
+.form-select .dropdown button .default{
+	font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    color: rgba(74, 108, 140, 0.56);
+}
+.form-select .dropdown button .selected{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    color: #4F6880;
+}
+.form-select .dropdown button:focus{
+    box-shadow: none !important;
+    background: transparent;
+    color: #4F6880;
+    outline: none;
+}
+.form-select .dropdown button:focus{
+    box-shadow: none !important;
+    background: transparent;
+    color: #4F6880;
+    outline: none;
+}
+.form-select .dropdown.show > .btn-secondary.dropdown-toggle{
+    color: #4F6880;
+    background-color: transparent;
+    border-color: #fff;
+}
+.form-select .dropdown .btn-secondary:not(:disabled):not(.disabled):active{
+    color: #4F6880;
+    background-color: transparent;
+    border-color: #fff;
+}
+.form-select .dropdown.show .dropdown-menu{
+    margin-top: 20px;
+}
+.form-select .dropdown.show .dropdown-menu button{
+    padding: 6px 20px;
+}
+.form-select .dropdown.show .dropdown-menu button:hover{
+    background: rgba(16, 156, 241, 0.08);
+}
+.form-search input{
+	padding: 14px 0;
+    background: #F5F6F8;
+    border-radius: 5px;
+    text-indent: 44px;
+}
+.form-search > div{
+	position: relative;
+}
+.form-search svg{
+	position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    left: 14px;
+}

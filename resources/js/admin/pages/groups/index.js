@@ -3,59 +3,98 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as GroupsActions from '../../../redux/groups/actions';
 import DataTable from '../../../components/layout/DataTable';
 
-const Groups = () => {
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(5);
-    const groups = useSelector(
-        state => state.GroupsReducer.groups
-    );
-    const roles = useSelector(state => state.AuthUserReducer.roles);
+import GroupsHeader from './header';
+import List from './list';
+import Form from './form';
 
-    const disptach = useDispatch();
+const Groupss = () => {
 
-    useEffect(() => {
-        async function fetchData() {
-            let { data } = await axios.post('/api/group/lists', {
-                limit: limit
-            });
+    const [showAdd, setShowAdd] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
 
-            disptach(GroupsActions.setGroups(data));
-        }
+    const [data, setData] = useState([
+        {
+            id: 1,
+            title: 'Group Name 01',
+            members: 32,
+            privacy: 'Public',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
+        },
+        {
+            id: 2,
+            title: 'Group Name 01',
+            members: 32,
+            privacy: 'Public',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
+        },
+        {
+            id: 3,
+            title: 'Group Name 01',
+            members: 32,
+            privacy: 'Public',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
+        },
+        {
+            id: 4,
+            title: 'Group Name 01',
+            members: 32,
+            privacy: 'Public',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
+        },
+        {
+            id: 5,
+            title: 'Group Name 01',
+            members: 32,
+            privacy: 'Public',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
+        },
+        {
+            id: 6,
+            title: 'Group Name 01',
+            members: 32,
+            privacy: 'Public',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
+        },
+        {
+            id: 7,
+            title: 'Group Name 01',
+            members: 32,
+            privacy: 'Public',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
+        },
+    ]);
 
-        fetchData();
-    }, [limit]);
-
-    const handleLimitChange = (limit) => {
-        setLimit(parseInt(limit));
-    }
-
-    const handleChangePage = (page) => {
-        setPage(parseInt(page));
-    }
-
-    if (roles.name !== 'admin') {
-        window.location = '/admin';
+    const handleActions = (row) => {
+        row.actions = row.actions ? false : true;
+        setData(data.map((obj) => {
+            if(obj.id == row.id) return row;
+            else{
+                obj.actions = false;
+                return obj;
+            }
+        }));
     }
 
     return (
         <>
-            <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
-                <div className="flex flex-1">
-                    <h1>Groups</h1>
-                </div>
-            </div>
-            <div className="flex flex-col p-12">
-                <DataTable
-                    module={groups.module}
-                    records={groups}
-                    changeLimit={handleLimitChange}
-                    currentPage={page}
-                    changePage={handleChangePage}
-                    canAdd={false}
-                />
-            </div>
+            <GroupsHeader
+                setShowAdd={setShowAdd}
+            />
+            <List
+                data={data}
+                setShowEdit={setShowEdit}
+                handleActions={handleActions}
+            />
+
+            {   
+                (showAdd || showEdit) && 
+                    <Form
+                        showAdd={showAdd}
+                        setState={showAdd ? setShowAdd : setShowEdit }
+                    />
+            }
         </>
     )
 }
 
-export default Groups;
+export default Groupss;
