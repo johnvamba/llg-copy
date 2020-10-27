@@ -3,7 +3,7 @@ import Needs from './needs';
 import OrganizationMembers from './members';
 import MemberThumbnails from './member-thumbnails';
 
-const ViewOrganisation = ({ data, ...props }) => {
+const OrgView = ({ data, ...props }) => {
     const [activeNeeds, setActiveNeeds] = useState([]);
     const [pastNeeds, setPastNeeds] = useState([]);
     const [members, setMembers] = useState([]);
@@ -184,4 +184,4 @@ const ViewOrganisation = ({ data, ...props }) => {
     )
 }
 
-export default ViewOrganisation
+export default OrgView

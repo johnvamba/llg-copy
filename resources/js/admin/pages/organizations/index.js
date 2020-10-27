@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as OrganizationsActions from '../../../redux/organizations/actions';
+import Header from './header';
+import List from './list';
+import Form from './form';
+import OrgView from './info';
+import OrgInvite from './invite';
+import OrgInvite2 from './invite2';
 
-import DataTable from '../../../components/layout/DataTable';
+import './organizations.css';
+
 
 const Organizations = () => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
+
+    const [showAddOrg, setShowAddOrg] = useState(false);
+    const [showEditOrg, setShowEditOrg] = useState(false);
+    const [showViewOrg, setShowViewOrg] = useState(false);
+    const [showInvite, setShowInvite] = useState(false);
+
+
     const organizations = useSelector(
         state => state.OrganizationsReducer.organizations
     );
@@ -33,22 +47,61 @@ const Organizations = () => {
         setPage(parseInt(page));
     }
 
+    const [data, setData] = useState({
+        id: 1,
+        name: 'test',
+        site: 'test.com',
+        phone_number: '9820931',
+        email: 'test@gmail.com',
+        description: 'dasdsadasda'
+    });
+
+    const handleInvite = () => {
+        setShowViewOrg(false);
+        setShowInvite(true);
+    }
+
+    const handleBackInvite = () => {
+        setShowViewOrg(true);
+        setShowInvite(false);
+    }
+
+    const handleEdit = () => {
+        setShowEditOrg(true);
+        setShowViewOrg(false);
+    }
+
+    const handleClose = () => {
+        setShowEditOrg(false);
+        setShowAddOrg(false);
+    }
+
     return (
         <>
-            <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
-                <div className="flex flex-1">
-                    <h1>Organisations</h1>
-                </div>
-            </div>
-            <div className="flex flex-col flex-wrapp p-12">
-                <DataTable
-                    module={organizations.module}
-                    records={organizations}
-                    changeLimit={handleLimitChange}
-                    currentPage={page}
-                    changePage={handleChangePage}
+            <Header
+                setState = {setShowAddOrg}
+            />
+            <List
+                setState = {setShowViewOrg}
+            />
+            {
+                (showAddOrg || showEditOrg) && 
+                    <Form
+                        page={showAddOrg ? 'Add' : 'Edit'}
+                        handleClose={handleClose}
+                    />
+            }
+            {showViewOrg && 
+                <OrgView
+                    setShowViewOrg={setShowViewOrg}
+                    handleEdit={handleEdit}
+                    handleInvite={handleInvite}
                 />
-            </div>
+            }
+            {showInvite && 
+                // <OrgInvite handleBackInvite={handleBackInvite} />
+                <OrgInvite2 handleBackInvite={handleBackInvite} />
+            }
         </>
     )
 }

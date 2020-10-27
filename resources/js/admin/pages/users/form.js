@@ -20,7 +20,10 @@ const UsersForm = ({ setState, state, label }) => {
                     </header>
                     <div className="content">
                         <div>
-                            <div className="image"></div>
+                            <img
+                                className="rounded-full image"
+                                src={`http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp`}
+                            />
                             <div>
                                 <button>Upload Photo</button>
                                 <p>Images should be atleast 300 x 300 px in pngo or jpeg file</p>

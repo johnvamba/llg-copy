@@ -251,7 +251,7 @@
     line-height: 24px;
     color: rgba(74, 108, 140, 0.56);
 }
-.tab__content footer .share__container{
+.share__container{
     background: #F5F6F8;
     border-radius: 4px;
     display: flex;
@@ -259,11 +259,11 @@
     justify-content: space-between;
     padding: 7px 7px 7px 18px;
 }
-.tab__content footer .share__container > div{
+.share__container > div{
     display: flex;
     align-items: center;
 }
-.tab__content footer .share__container > div span{
+.share__container > div span{
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
@@ -272,7 +272,7 @@
     color: #738293;
     margin-left: 15px;
 }
-.tab__content footer .share__container button{
+.share__container button{
     background: #109CF1;
     border-radius: 4px;
     font-style: normal;
@@ -332,13 +332,13 @@
     }
 }
 @media (max-width: 425px) {
-    .tab__content footer .share__container > div span{
+    .share__container > div span{
         overflow: hidden;
         width: 75%;
     }
 }
 @media (max-width: 375px) {
-    .tab__content footer .share__container > div span{
+    .share__container > div span{
         width: 50%;
     }
 }
