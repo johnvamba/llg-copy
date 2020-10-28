@@ -19,6 +19,7 @@ import Groups from '../pages/groups';
 import CreateGroup from '../pages/groups/create';
 import EditGroup from '../pages/groups/edit';
 import Organizations from '../pages/organizations';
+import Campus from '../pages/campus';
 import CreateOrganization from '../pages/organizations/create';
 import EditOrganization from '../pages/organizations/edit';
 import Transactions from '../pages/transactions';
@@ -150,6 +151,11 @@ const routes = [
         path: '/organizations/:id/invite',
         exact: true,
         component: () => <InviteMember />
+    },
+    {
+        path: '/campus',
+        exact: true,
+        component: () => <Campus />
     },
     {
         path: '*',

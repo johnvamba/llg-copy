@@ -208,6 +208,16 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
 
                     <div
                         className={`mt-6 
+                        ${location.pathname == "/campus" ? "text-blue-400" : "text-gray-400"}`}
+                    >
+                        <Link to="/campus" className="flex items-center">
+                            <i className="text-xl fas fa-border-none"></i>
+                            <span className="px-4">Campus</span>
+                        </Link>
+                    </div>
+
+                    <div
+                        className={`mt-6 
                         ${location.pathname == "/push-notifications" ? "text-blue-400" : "text-gray-400"}`}
                     >
                         <Link to="/organizations" className="flex items-center">
