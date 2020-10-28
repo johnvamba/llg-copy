@@ -51,4 +51,17 @@ class UserProfile extends Model
 
         return $profile;
     }
+    
+    /**
+     * Upload user cover photo
+     * @return object
+     */
+    public static function uploadCoverPhoto($url, $id)
+    {
+        $profile = UserProfile::where('user_id', $id)->first();
+        $profile->cover_photo = $url;
+        $profile->save();
+
+        return $profile;
+    }
 }

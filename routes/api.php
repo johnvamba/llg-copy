@@ -30,11 +30,13 @@ Route::group(['middleware' => ['auth:api']], function () {
 
         Route::resource('needs', 'NeedsController');
     });
+
     /** Role resource module */
     Route::resource('roles', 'RoleController');
 
     /** User resource module */
     Route::get('user/me', 'UserController@getProfile');
+    Route::get('user/me/update-profile', 'UserController@updateProfile');
     Route::get('user/stats', 'UserController@getUsersStatistics');
     Route::post('users/lists', 'UserController@getUsers');
     Route::post('user/add-card/{organization}', 'UserController@addCard');
@@ -43,6 +45,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     
     /** Goal resource module */
     Route::get('goal/user', 'GoalController@getUserGoal');
+    Route::get('goal/group/{groupId}', 'GoalController@getGroupGoal');
     Route::resource('goals', 'GoalController');
 
     /** Need resource module */
@@ -86,11 +89,15 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Group resource module */
     Route::post('group/lists', 'GroupController@getGroups');
-    Route::post('groups/{group}/participate', 'GroupController@addParticipant');
+    Route::post('group/search/people', 'GroupController@searchPeople');
+    Route::post('group/{group}/update-goal', 'GoalController@updateGroupGoal');
+    Route::post('group/{group}/add-photo', 'GroupController@addPhoto');
     Route::post('groups/join-request/{participantId}', 'GroupController@joinRequest');
+    Route::post('groups/{group}/participate', 'GroupController@addParticipant');
     Route::get('groups/{group}/join-request', 'GroupController@getJoinRequest');
     Route::get('groups/messages/{group}', 'GroupController@messages');
     Route::post('groups/message/{group}', 'GroupController@addMessage');
+    Route::post('groups/discover', 'GroupController@getDiscoverGroups');
     Route::resource('groups', 'GroupController');
 
     /** Orgnization Categories resource module */

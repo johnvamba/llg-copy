@@ -152,7 +152,9 @@ class AuthController extends Controller
                 Storage::disk(env('FILESYSTEM_DRIVER'))
                     ->url($data);
 
-                $profile = UserProfile::uploadPhoto($name.'.'.$extension, $profile->user_id);
+                $url = Storage::url($name.'.'.$extension);
+
+                $profile = UserProfile::uploadPhoto($url, $profile->user_id);
             }
         }
 

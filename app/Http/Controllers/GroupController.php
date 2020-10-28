@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Http\Requests\GroupUpdateRequest;
 use App\Http\Requests\GroupStoreRequest;
 use Illuminate\Http\Request;
+use App\User;
 use App\GroupParticipant;
 use App\Group;
 use App\Goal;
@@ -71,6 +73,19 @@ class GroupController extends Controller
     }
 
     /**
+     * Display discover groups
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getDiscoverGroups(Request $request)
+    {
+        $groups = Group::where('user_id', '!=', auth()->user()->id)
+            ->inRandomOrder()->get();
+
+        return response()->json($groups, 200);
+    }
+
+    /**
      * Display join request of a group.
      *
      * @return \Illuminate\Http\Response
@@ -121,16 +136,14 @@ class GroupController extends Controller
                     )
                 );
             
-            if ($request->term && $request->need) {
-                $goal = Goal::make(request()->only([
-                        'need',
-                        'term'
-                    ]));
-    
-                $createdGoal = $group->goals()->save($goal);
-    
-                $group['goal'] = $createdGoal;
-            }
+            $goal = Goal::make([
+                    'need' => 8,
+                    'term' => 'year'
+                ]);
+
+            $createdGoal = $group->goals()->save($goal);
+
+            $group['goal'] = $createdGoal;
 
             if ($request->tags) {
                 $tags = Tag::createTag($group, $request->tags);
@@ -145,11 +158,39 @@ class GroupController extends Controller
                 $group->getMedia('photo');
             }
 
-
             return $group;
         });
 
         return response()->json($result, 202);
+    }
+
+    /**
+     * Add group photo
+     *
+     * @param  json
+     * @return \Illuminate\Http\Response
+     */
+    public function addPhoto(Request $request, Group $group)
+    {
+        $group->clearMediaCollection('photo');
+
+        if ($request->get('photo')) {
+            $image = $request->get('photo');
+            $name = time().'-'.Str::random(20);
+            $extension = explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            
+            $group 
+                ->addMediaFromBase64($image)
+                ->usingName($name)
+                ->usingFileName($name.'.'.$extension)
+                ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
+
+            $group->getMedia('photo');
+            
+            return response()->json($group, 202);
+        }
+
+        return response()->json(['message' => 'Please select a photo.'], 422);
     }
 
     /**
@@ -162,7 +203,7 @@ class GroupController extends Controller
     {
         $participant = GroupParticipant::create([
                 'group_id' => $group->id,
-                'user_id' => auth()->user()->id
+                'user_id' => $request->user_id
             ]);
 
         return response()->json($participant, 202);
@@ -247,5 +288,20 @@ class GroupController extends Controller
                     'message' => 'An error occurred. Please try again.'
                 ], 500);
         }
+    }
+
+    /**
+     * Search user's to invite
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function searchPeople(Request $request)
+    {
+        $users = User::where('name', 'like', '%'.$request->searchName.'%')
+            ->with('profile')
+            ->get();
+
+        return response()->json($users);
     }
 }

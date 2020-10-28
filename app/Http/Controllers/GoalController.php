@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\GoalStoreRequest;
 use App\Goal;
 use App\User;
+use App\Group;
 use App\NeedMet;
 use Carbon\Carbon;
 
@@ -114,5 +115,51 @@ class GoalController extends Controller
         }
 
         return response()->json($goal, 200);
+    }
+
+    /**
+     * Update group goal
+     * @param request
+     * @return json
+     */
+    public function updateGroupGoal(Request $request, Group $group)
+    {
+        $goal = Goal::make([
+            'term' => $request->term,
+            'need' => $request->need
+        ]);
+
+        $result = $group->goals()->save($goal);
+
+        return response()->json($goal, 202);
+    }
+    
+    /**
+     * Get group goal
+     * @param request
+     * @return json
+     */
+    public function getGroupGoal(Request $request, Group $group)
+    {
+        $fetchGroup = Group::with(['goals' => function($query) {
+                $query->where('status', 'in progress')
+                    ->orderBy('created_at')
+                    ->first();
+            }])
+            ->find($group->id);
+
+        // $date = Carbon::parse($goal->created_at);
+        
+        // if ($goal->term == 'year') {
+        //     $goal['needs_met'] = NeedMet::where('created_at', '>=', $date->toDateTimeString())
+        //         ->where('created_at', '<=', $date->copy()->endOfYear())
+        //         ->get();
+        // } else {
+        //     $goal['needs_met'] = NeedMet::where('created_at', '>=', $date->toDateTimeString())
+        //     ->where('created_at', '<=', $date->copy()->endOfMonth())
+        //     ->get();
+        // }
+
+        return response()->json($fetchGroup, 200);
     }
 }

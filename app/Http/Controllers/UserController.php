@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\UserStoreRequest;
 use Illuminate\Http\Request;
@@ -191,18 +192,47 @@ class UserController extends Controller
                     )
                 );
 
-            if ($request->hasFile('photo')) {
-                $path = Storage::disk(env('FILESYSTEM_DRIVER'))
-                    ->putFile(
-                        'img', 
-                        $request->file('photo')
-                    );
+                if ($request->get('photo')) {
+                    $photo = $request->get('photo');
+                    $name = time().'-'.Str::random(20);
+                    $extension = explode('/', explode(':', substr($photo, 0, strpos($photo, ';')))[1])[1];
+        
+                    if (preg_match('/^data:image\/(\w+);base64,/', $photo)) {
+                        $data = substr($photo, strpos($photo, ',') + 1);
+                        $data = base64_decode($data);
+        
+                        Storage::disk(env('FILESYSTEM_DRIVER'))
+                            ->put($name.'.'.$extension, $data);
+        
+                        Storage::disk(env('FILESYSTEM_DRIVER'))
+                            ->url($data);
 
-                $url = Storage::disk(env('FILESYSTEM_DRIVER'))
-                    ->url($path);
+                        $url = Storage::url($name.'.'.$extension);
 
-                UserProfile::uploadPhoto($url, $user->id);
-            }
+                        UserProfile::uploadPhoto($url, $user->id);
+                    }
+                }
+
+                if ($request->get('coverPhoto')) {
+                    $photo = $request->get('coverPhoto');
+                    $name = time().'-'.Str::random(20);
+                    $extension = explode('/', explode(':', substr($photo, 0, strpos($photo, ';')))[1])[1];
+        
+                    if (preg_match('/^data:image\/(\w+);base64,/', $photo)) {
+                        $data = substr($photo, strpos($photo, ',') + 1);
+                        $data = base64_decode($data);
+        
+                        Storage::disk(env('FILESYSTEM_DRIVER'))
+                            ->put($name.'.'.$extension, $data);
+        
+                        Storage::disk(env('FILESYSTEM_DRIVER'))
+                            ->url($data);
+
+                        $url = Storage::url($name.'.'.$extension);
+
+                        UserProfile::uploadCoverPhoto($url, $user->id);
+                    }
+                }
 
             return User::with('profile')->find($user->id);
         });

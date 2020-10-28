@@ -24,6 +24,7 @@ class CreateUserProfilesTable extends Migration
             $table->string('lng')->nullable();
             $table->text('bio')->nullable();
             $table->text('avatar')->nullable();
+            $table->text('cover_photo')->nullable();
             $table->double('amount_given', 15, 2)->default(0);
             $table->timestamps();
 

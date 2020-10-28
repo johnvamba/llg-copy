@@ -55,8 +55,9 @@ class NeedsController extends Controller
         foreach ($results as $need) {
             $need->model;
             $need->getMedia('photo');
-            $need['photo'] = $need->organization->getMedia('photo');
-            $need['cover_photo'] = $need->organization->getMedia('cover_photo');
+
+            $need['photo'] = $need->organization->getFirstMediaUrl('photo');
+            $need['cover_photo'] = $need->organization->getFirstMediaUrl('cover_photo');
 
             $need['totalActiveNeeds'] = Need::where(
                     'organization_id', $need->organization_id
@@ -109,6 +110,10 @@ class NeedsController extends Controller
         }
     
         $results = $needs->get();
+
+        foreach($results as $result) {
+           $result['photo'] = $result->getFirstMediaUrl('photo');
+        }
     
         return response()->json($results);
     }
