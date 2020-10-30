@@ -18,3 +18,12 @@
 .transaction-list.offers-table .active td p span{
     color: #fff;
 }
+
+
+@media (max-width: 767px){
+    .transactions-form.create-form{
+        width: 100%;
+        height: auto;
+        padding: 10px;
+    }
+}

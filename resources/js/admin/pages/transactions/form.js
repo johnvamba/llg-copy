@@ -86,14 +86,14 @@ const TransactionsForm = ({ closeForm, activeForm }) => {
                                 </div>
                             </div>
                         </div>
-                        <footer className="org-form__footer">
-                            <div className="flex">
-                                <button className="discard" onClick={() => closeForm(false)}>Discard</button>
-                                <button className="next">Create</button>
-                            </div>
-                        </footer>
                     </form>
                 </section>
+                <footer className="org-form__footer">
+                    <div className="flex">
+                        <button className="discard" onClick={() => closeForm(false)}>Discard</button>
+                        <button className="next">Create</button>
+                    </div>
+                </footer>
             </section>
             
         </>
