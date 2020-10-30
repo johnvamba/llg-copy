@@ -24,6 +24,7 @@ class GroupController extends Controller
     public function index()
     {
         $groups = Group::with('user')
+            ->where('privacy', 'public')
             ->orderBy('created_at', 'desc')
             ->paginate();
 
@@ -79,7 +80,10 @@ class GroupController extends Controller
      */
     public function getDiscoverGroups(Request $request)
     {
-        $groups = Group::where('user_id', '!=', auth()->user()->id)
+        $groups = Group::where([
+                ['user_id', '!=', auth()->user()->id],
+                ['privacy', 'public']
+            ])
             ->inRandomOrder()->get();
 
         return response()->json($groups, 200);

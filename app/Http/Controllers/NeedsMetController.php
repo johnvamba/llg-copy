@@ -57,6 +57,7 @@ class NeedsMetController extends Controller
 
         foreach($needs as $need) {
             $need->getMedia();
+            $need['photo'] = $need->getFirstMediaUrl('photo');
         }
 
         return response()->json($needs);

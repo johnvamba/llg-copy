@@ -89,7 +89,7 @@ class StoryController extends Controller
             ->first();
 
         if ($story) {
-            $story->getMedia('photo');
+            $story['photo'] = $story->getFirstMediaUrl('photo');
         }
 
         return response()->json($story);
