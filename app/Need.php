@@ -54,6 +54,11 @@ class Need extends Model implements HasMedia
         return $this->belongsTo('App\NeedsType', 'needs_type_id');
     }
 
+    public function categoriesList()
+    {
+        return $this->morphedByMany("App\NeedsCategory", "model", 'need_has_categories');
+    }
+
     /**
      * @return string
      */

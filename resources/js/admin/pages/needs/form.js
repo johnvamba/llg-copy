@@ -2,12 +2,19 @@ import React, { useEffect, useState } from 'react';
 import Button from '../../../components/Button'
 import { NavLink } from 'react-router-dom';
 import { swalDelete } from '../../../components/helpers/alerts';
+import { selectStyle, loadOrganization } from '../../../components/helpers/async_options';
+
 //images
 import { FilePond, File, registerPlugin } from 'react-filepond'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
+import DatePicker from 'react-datepicker';
+import AsyncSelect from 'react-select/async';
+
 import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
 import "react-datepicker/dist/react-datepicker.css";
+
+registerPlugin(FilePondPluginImagePreview)
 
 import Check from '../../../svg/check'
 import Cross from '../../../svg/cross'
@@ -17,33 +24,17 @@ import Quill from '../../../svg/quill'
 import IconTest from '../../../svg/icon-test'
 import Calendar from '../../../svg/calendar'
 import Location from '../../../components/Location'
-
-import DatePicker from 'react-datepicker';
-registerPlugin(FilePondPluginImagePreview)
-
-import { monetary, volunteer } from './categorylist'
-
-const CatComponent = ({cat, onSelect, truth = false}) => {
-    return <div className={`icon-category ${truth ? 'active':''}`} onClick={()=>onSelect(cat, truth)}>
-        <i className={`icon-circle`}>
-            { truth &&
-                <Check className="svg-check" fill='#109CF1'/>
-            }
-            <cat.svg_class className="svg-icon" active={truth} />
-        </i>
-        {cat.title || 'unknown'}
-    </div>
-}
+import CategoryScroll from '../../../components/CategoryScroll'
 
 const NeedForm = ({handleForm, data = {}}) => {
+    const [files, setFiles] = useState([]); //for filepond
+
     const [title, setTitle] = useState('');
     const [about, setAbout] = useState('');
     const [bring, setBring] = useState('');
     const [type, setType] = useState('donation'); //donation
-    const [people, setPeople] = useState(0); //donation
     const [category, setCategory] = useState([]);
     const [photo, setPhoto] = useState(null);
-    const [files, setFiles] = useState([])
     const [goal, setGoal] = useState(0);
     const [date, setDate] = useState(new Date());
     const [openDate, setOpenDate] = useState(false);
@@ -55,30 +46,64 @@ const NeedForm = ({handleForm, data = {}}) => {
         lng: null,
     })
     const [meridiem, setMeridiem] = useState('am');
+    const [organization, setOrganization] = useState({});
+
+    const [submitting, setSubmitting] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const collectData = (id) => {
+        setLoading(true)
+        api.get(`/api/web/needs/${id}`)
+        .then(({data})=>{
+            const { 
+                title,
+                about,
+                bring,
+                type,
+                category,
+                photo,
+                goal,
+                date,
+                time,
+                location,
+            } = data.data
+            setTitle(title || '');
+            setAbout(about || description);
+            setBring(bring || description);
+            setType(type || 'donation');
+            setCategory(category || []);
+            setPhoto(photo || null);
+            setGoal(goal || 0);
+            setDate(date || new Date);
+            setTime(time || '');
+            setLocation(location || {});
+        })
+        .catch(err => {
+            // if(err.response){
+            //     const { errors } = err.response
+            //     setErrors(errors)
+            // }
+        }).then(()=>{
+            setLoading(false)
+        })
 
     }
     //Collect data from db if has new data.id
     useEffect(()=>{
         if(data.id) {
-            api.get('')
-            .then(()=>{
-                setTitle();
-                setAbout();
-                setType();
-                setPeople();
-                setCategory();
-                setFiles();
-                setGoal();
-                setDate();
-                setOpenDate();
-                setTime();
-                setLocation();
-            })
-            .catch(err => {
-                setErrors(err)
-            })
+            collectData(data.id)
+        } else {
+            const { title, about, description, bring, type, category, photo, goal, date, time } = data || {}
+            setTitle(title || '');
+            setAbout(about || description || '');
+            setBring(bring || description || '');
+            setType(type || 'donation');
+            setCategory(category || []);
+            setPhoto(photo || null);
+            setGoal(goal || 0);
+            setDate(date || new Date);
+            setTime(time || '');
+            setLocation(location || {});
         }
     }, [data])
 
@@ -89,15 +114,7 @@ const NeedForm = ({handleForm, data = {}}) => {
             setGoal(value);
     }
 
-    const updatePeople = (value)=>{
-        if(value < 0)
-            setPeople(0)
-        else
-            setPeople(value);
-    }
-
     const handleCategories = (item, truth = false) => {
-        console.log('selected',category)
         if(truth)
             setCategory(category.filter(i=>item.slug != i.slug))
         else 
@@ -119,15 +136,14 @@ const NeedForm = ({handleForm, data = {}}) => {
         })
     }
     const handleImage = (files)=>{
-        console.log('handle incoming files', files);
-        setFiles([...files]);
-        let reader = new FileReader();
-        reader.onload = (e) => {
-            console.log('reading');
-            // let inputs = { ...form };
-            setPhoto(e.target.result);
-        };
-        reader.readAsDataURL(files[0]);
+        if(files.length > 0){
+            setFiles([...files]);
+            let reader = new FileReader();
+            reader.onload = (e) => {
+                setPhoto(e.target.result);
+            };
+            reader.readAsDataURL(files[0].file);
+        }
     }
 
     const categoryWheel = event => {
@@ -141,25 +157,51 @@ const NeedForm = ({handleForm, data = {}}) => {
         console.log('onScroll', event.target.scrollTop, event.target.scrollLeft)
     }
 
+    const removePhoto = () => {
+
+    }
+
     //Axios
     const submit = () => {
-        //Do quick validations here
-
-
+        setSubmitting(true)
         const submitPromise = !data.id ? 
-            api.post(`/api/admin/needs`, {
-                title, about, bring, type, people, category, photo, goal, date, openDate, time, errors, location
+            api.post(`/api/web/needs`, {
+                title, type, category, goal, date, openDate, time, location, organization,
+                photo: files.length > 0 ? photo : null,
+                description: about || bring || ''
             }) : 
-            api.update(`/api/admin/needs/${data.id}`, {
-                params: {title, about, bring, type, people, category, photo, goal, date, openDate, time, errors, location}
+            api.update(`/api/web/needs/${data.id}`, {
+                params: { title, type, category, goal, date, openDate, time, location, organization,
+                    photo: files.length > 0 ? photo : null,
+                    description: about || bring || ''
+                }
             })
 
-        submitPromise.then(res=>{
-            handleForm(false, submit);
+        submitPromise.then(({data})=>{
+            setSubmitting(false)
+            handleForm(false, 'submit', data.data);
         }).catch(err=>{
-
+            // console.log('error', err, err.response)
+            if(err.response){
+                const { data } = err.response
+                setErrors(data.errors || [])
+            }
+            setSubmitting(false)
         })
     }
+
+    if(loading)
+        return (<div className="form need-form">
+        <div className="form-title">
+            <h3>Loading information of Need</h3>
+            <button type="button" onClick={()=>handleForm(false, 'close')}>
+                <CrossPlain />
+            </button>
+        </div>
+        <div className="form-body">
+            <p className="p-5">Please wait while we load your Need</p>
+        </div>
+    </div>)
 
     return (
        <div className="form need-form">
@@ -178,51 +220,62 @@ const NeedForm = ({handleForm, data = {}}) => {
                     <Button className={type=='volunteer' ? 'active': ''} onClick={()=>handleType('volunteer')}>Volunteer</Button>
                     </div>
                 </div>
-                <div className="form-group">
-                    <label>Select Category</label>
-                    <div className="icon-categories"
-                        onWheel={categoryWheel}
-                        onScroll={categoryScroll}>
+                {
+                    //Set user priveledges here.. campus users will need to know what organization is asking for need.
+                    (true) && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
+                        <label>Organization</label>
+                        <AsyncSelect
+                            styles={selectStyle}
+                            loadOptions={loadOrganization}
+                            defaultOptions
+                            value={organization}
+                            placeholder="Organization"
+                            onChange={setOrganization}
+                            />
                         {
-                            (type == 'donation' || type == 'fundraise') ?
-                            monetary.map((cat, ind)=><CatComponent key={cat.slug} 
-                                cat={cat}
-                                truth={category.findIndex(i=> cat.slug == i.slug) >= 0}
-                                onSelect={handleCategories}
-                                />) 
-                            :   
-                            volunteer.map((cat, ind)=><CatComponent key={cat.slug} 
-                                cat={cat}
-                                truth={category.findIndex(i=> cat.slug == i.slug) >= 0}
-                                onSelect={handleCategories}
-                                />)
+                            (errors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
                         }
                     </div>
-                </div>
-                <div className="form-group">
+                }
+                <CategoryScroll 
+                    type={['donation', 'fundraise'].includes(type) ? 'monetary' : type}
+                    selectedCategories={category} 
+                    handleCategories={handleCategories}
+                    errors={errors.category}
+                />
+                <div className={`form-group ${errors.title && 'form-error'}`}>
                     <label>Title</label>
                     <input type='text' className="input-field" placeholder="Enter Title" value={title} onChange={e=>setTitle(e.target.value)}/>
+                    {
+                        (errors.title || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Title</span>
+                    }
                 </div>
                 {
                     (type == 'donation' || type == 'fundraise') && 
                     <div>
-                        <div className="form-group">
+                        <div className={`form-group ${errors.goal && 'form-error'}`}>
                             <label>Goal</label>
                             <div className="input-container">
                                 <span className="currency">$</span>
                                 <input className="input-field space-l" type="number" placeholder="0.00" value={goal} name="goal" onChange={e=>updateGoal(e.target.value)}/>
                             </div>
+                            {
+                                (errors.goal || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Goal</span>
+                            }
                         </div>
-                        <div className="form-group">
+                        <div className={`form-group ${errors.description && 'form-error'}`}>
                             <label>About</label>
                             <input type='text' className="input-field" placeholder="Say something about this need" value={about} onChange={e=>setAbout(e.target.value)}/>
+                            {
+                                (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing About content</span>
+                            }
                         </div>
                     </div>
                 }
                 {
                     type == 'volunteer' && 
                     <div className="flex-content">
-                        <div className="form-group short-width">
+                        <div className={`form-group short-width ${errors.date && 'form-error'}`}>
                             <label>Date Needed</label>
                             <div className="input-container">
                                 <DatePicker 
@@ -239,8 +292,11 @@ const NeedForm = ({handleForm, data = {}}) => {
                                     <Calendar/>
                                 </i>
                             </div>
+                            {
+                                (errors.date || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Date of Need</span>
+                            }
                         </div>
-                        <div className="form-group short-width">
+                        <div className={`form-group short-width ${errors.time && 'form-error'}`}>
                             <label>Time</label>
                             <div className="input-container">
                                 <input className="input-field time-field" type="text" pattern="[0-9]{2}:[0-9]{2}" placeholder="00:00" name="time" value={time} 
@@ -248,44 +304,58 @@ const NeedForm = ({handleForm, data = {}}) => {
                                 <span className={`time-toggle time-am ${meridiem =='am' ? 'active':''}`} onClick={()=>setMeridiem('am')}>AM</span>
                                 <span className={`time-toggle time-pm ${meridiem =='pm' ? 'active':''}`} onClick={()=>setMeridiem('pm')}>PM</span>
                             </div>
+                            {
+                                (errors.time || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Time of Need</span>
+                            }
                         </div>
                         <Location 
-                            className={'short-width'}
+                            className={`short-width ${errors.location && 'form-error'}`}
                             name={'location'}
                             placesSelected={handleLocation}
                             errors={errors.location || []}
                         />
-                        <div className="form-group short-width">
+                        <div className={`form-group short-width ${errors.goal && 'form-error'}`}>
                             <label>Number of People Needed</label>
                             <div className="input-container">
-                                <button className="numberButton" onClick={e=>updatePeople(people-1)}><i className="fas fa-minus"/></button>
-                                <input className="numberValue" type="number" value={people || 0} onChange={e=>updatePeople(parseInt(e.target.value))} style={{width: people.toString().length + 'ch'}}/>
-                                {
-                                    //<p className="numberValue">{people || 0}</p>
-                                }
-                                <button className="numberButton plus" onClick={e=>updatePeople(people+1)}><i className="fas fa-plus"/></button>
+                                <button className="numberButton" onClick={e=>updateGoal(goal-1)}><i className="fas fa-minus"/></button>
+                                <input className="numberValue" type="number" value={goal || 0} onChange={e=>updateGoal(parseInt(e.target.value))} style={{width: goal.toString().length + 'ch'}}/>
+                                <button className="numberButton plus" onClick={e=>updateGoal(goal+1)}><i className="fas fa-plus"/></button>
                             </div>
+                            {
+                                (errors.goal || false) && <span className="text-xs pt-1 text-red-500 italic">Missing number of people</span>
+                            }
                         </div>
-                        <div className="form-group w-full">
+                        <div className={`form-group w-full ${errors.description && 'form-error'}`}>
                             <label>What to bring</label>
                             <input type='text' className="input-field" placeholder="Enter things to bring" value={bring} onChange={e=>setBring(e.target.value)}/>
+                            {
+                                (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing what to bring</span>
+                            }
                         </div>
                     </div>
                 }
-                <div className="form-group">
+
+                <div className={`form-group ${errors.photo && 'form-error'}`}>
                     <label>Featured Image</label>
-                    <FilePond
-                        files={files}
-                        onupdatefiles={handleImage}
-                        allowMultiple={false}
-                        name="files"
-                        labelIdle='Drag & Drop or <span class="filepond--label-action">Browse</span>'
-                      />
+                    {
+                        (files.length <= 0 && photo) ? 
+                        <p>Show photo</p> : 
+                        <FilePond
+                            files={files}
+                            onupdatefiles={handleImage}
+                            allowMultiple={false}
+                            name="files"
+                            labelIdle='Drag & Drop or <span class="filepond--label-action">Browse</span>'
+                        />
+                    }
+                    {
+                        (errors.photo || false) && <span className="text-xs pt-1 text-red-500 italic">Missing photo</span>
+                    }
                 </div>
             </div>
             <div className="form-footer">
-                <Button className="btn btn-secondary" onClick={()=>handleForm(false, 'discard')}>Discard</Button>
-                <Button className="btn btn-primary" onClick={submit}>Create</Button>
+                <Button className="btn btn-secondary" onClick={()=>handleForm(false, 'discard')} disabled={submitting}>Discard</Button>
+                <Button className="btn btn-primary" onClick={submit} disabled={submitting}>Create</Button>
             </div>
         </div>
     )

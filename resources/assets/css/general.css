@@ -203,3 +203,6 @@ td.actions, th.actions{
 .button-container .flex.justify-between button{
 	min-width: 65px;
 }
+.group-content .progress {
+	height: 5px !important;
+}

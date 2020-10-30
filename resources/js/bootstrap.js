@@ -31,6 +31,11 @@ let token = Cookie.get('oToken_admin') || Cookie.get('oToken_org_admin');
 //Cache machine for data. 
 window.cache = setupCache({
     maxAge: 15 * 60 * 1000, //15 minutes
+    invalidate: async (config, request) => {
+      if (request.clearCacheEntry) {
+        await config.store.removeItem(config.uuid)
+      }
+    }
     // readHeaders: true
 })
 window.api = axios.create({

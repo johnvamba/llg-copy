@@ -25,10 +25,15 @@ Route::get('need/categories', 'NeedsCategoryController@index');
 
 Route::group(['middleware' => ['auth:api']], function () {
 
-    Route::group(['prefix'=>'admin', 'namespace'=>'Admin'], function() {
+    Route::group(['prefix'=>'web', 'namespace'=>'Admin'], function() {
         Route::get('needs/types', 'NeedsController@types');
 
         Route::resource('needs', 'NeedsController');
+        Route::post('needs/{need}/approve', 'NeedsController@approve');
+        Route::post('needs/{need}/disapprove', 'NeedsController@disapprove');
+
+        Route::get('organizations/async', 'OrganizationController@async');
+        Route::resource('organizations', 'OrganizationController');
     });
 
     /** Role resource module */

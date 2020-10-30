@@ -17,10 +17,10 @@ const NeedFilter = ({onClose}) => {
 
     const clickDispatch = ()=>{
         if(min > max){
-            console.log('warning here');
+            // console.log('warning here');
             return;
         }
-        console.log('clicked?')
+        // console.log('clicked?')
         dispatch( setFilters({ type, startdate, enddate, min, max, dateType }) );
     }
 
@@ -31,7 +31,6 @@ const NeedFilter = ({onClose}) => {
         setMax(0.00)
         selectDateType('custom')
         dispatch( setFilters({ type, startdate, enddate, min, max, dateType, filter: false }) );
-
     }
     
     return (

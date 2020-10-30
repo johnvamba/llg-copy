@@ -1,3 +1,4 @@
+//Depreciate me
 import {	
 	Advocacy,
 	Children,
@@ -8,57 +9,72 @@ import {
 	Food,
 	EverydayThings,
 	Education,
-	Domestic
+	Domestic,
+	//volunteer
+	Employment,
+	Mechanic,
+	Cleaning,
+	Removalist,
+	Tutor,
+	Counselling,
+	LegalAssistance,
+	Translation,
+	Handyman,
+	Gardener,
+	Driver,
+	Cook,
+	Hairdresser,
+	Other
 } from './categories'
 
 export const monetary = [
 	{
-		title: 'Housing',
+		name: 'Housing',
 		slug: 'housing',
 		svg_class: Housing
 	},
 	{
-		title: 'Food',
+		name: 'Food',
 		slug: 'food',
 		svg_class: Food
 	},
 	{
-		title: 'Everyday Things',
+		name: 'Everyday Things',
 		slug: 'everyday_things',
 		svg_class: EverydayThings
 	},
 	{
-		title: 'Health',
+		name: 'Health',
 		slug: 'health',
 		svg_class: Health
 	},
 	{
-		title: 'Mental Health',
+		name: 'Mental Health',
 		slug: 'mental_Health',
 		svg_class: MentalHealth
 	},
 	{
-		title: 'Domestic & Family Violence',
+		name: 'Domestic & Family Violence',
 		slug: 'domestic',
 		svg_class: Domestic
 	},
 	{
-		title: 'Education',
+		name: 'Education',
 		slug: 'education',
 		svg_class: Education
 	},
 	{
-		title: 'Advocacy',
+		name: 'Advocacy',
 		slug: 'advocacy',
 		svg_class: Advocacy
 	},
 	{
-		title: 'Children',
+		name: 'Children',
 		slug: 'children',
 		svg_class: Children
 	},
 	{
-		title: 'Youth',
+		name: 'Youth',
 		slug: 'youth',
 		svg_class: Youth
 	}
@@ -66,74 +82,74 @@ export const monetary = [
 
 export const volunteer = [
 	{
-		title: 'Employment',
-		slug: 'housing',
-		svg_class: Housing
+		name: 'Employment',
+		slug: 'employment',
+		svg_class: Employment
 	},
 	{
-		title: 'Mechanic',
-		slug: 'food',
-		svg_class: Food
+		name: 'Mechanic',
+		slug: 'mechanic',
+		svg_class: Mechanic
 	},
 	{
-		title: 'Cleaning',
-		slug: 'everyday_things',
-		svg_class: EverydayThings
+		name: 'Cleaning',
+		slug: 'cleaning',
+		svg_class: Cleaning
 	},
 	{
-		title: 'Removalist',
-		slug: 'health',
-		svg_class: Health
+		name: 'Removalist',
+		slug: 'removalist',
+		svg_class: Removalist
 	},
 	{
-		title: 'Tutor',
-		slug: 'mental_Health',
-		svg_class: MentalHealth
+		name: 'Tutor',
+		slug: 'tutor',
+		svg_class: Tutor
 	},
 	{
-		title: 'Counselling',
-		slug: 'domestic',
-		svg_class: Domestic
+		name: 'Counselling',
+		slug: 'counselling',
+		svg_class: Counselling
 	},
 	{
-		title: 'Legal Assistance',
-		slug: 'education',
-		svg_class: Education
+		name: 'Legal Assistance',
+		slug: 'legalassistance',
+		svg_class: LegalAssistance
 	},
 	{
-		title: 'Translation',
-		slug: 'advocacy',
-		svg_class: Advocacy
+		name: 'Translation',
+		slug: 'translation',
+		svg_class: Translation
 	},
 	{
-		title: 'Handyman',
-		slug: 'children',
-		svg_class: Children
+		name: 'Handyman',
+		slug: 'handyman',
+		svg_class: Handyman
 	},
 	{
-		title: 'Gardener',
-		slug: 'youth',
-		svg_class: Youth
+		name: 'Gardener',
+		slug: 'gardener',
+		svg_class: Gardener
 	},
 	{
-		title: 'Driver',
-		slug: 'youth5',
-		svg_class: Youth
+		name: 'Driver',
+		slug: 'driver',
+		svg_class: Driver
 	},
 	{
-		title: 'Cook',
-		slug: 'youth4',
-		svg_class: Youth
+		name: 'Cook',
+		slug: 'cook',
+		svg_class: Cook
 	},
 	{
-		title: 'Hairdresser',
-		slug: 'youth3',
-		svg_class: Youth
+		name: 'Hairdresser',
+		slug: 'hairdresser',
+		svg_class: Hairdresser
 	},
 	{
-		title: 'Gardener',
-		slug: 'youth2',
-		svg_class: Youth
+		name: 'Other',
+		slug: 'other',
+		svg_class: Other
 	}
 ]
 

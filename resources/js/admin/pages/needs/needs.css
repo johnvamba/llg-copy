@@ -71,14 +71,14 @@
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .form-body .icon-categories::-webkit-scrollbar {
-  /*display: none;*/
+  display: none;
 }
 /* Hide scrollbar for IE, Edge and Firefox */
 .form-body .icon-categories {
   /* IE and Edge */
-  /*-ms-overflow-style: none;  */
+  -ms-overflow-style: none;  
   /* Firefox */
-  /*scrollbar-width: none;  */
+  scrollbar-width: none;  
 }
 
 .icon-categories .icon-category{
@@ -110,7 +110,7 @@
 }
 .icon-categories .icon-category .icon-circle svg.svg-icon {
 	height: 20px;
-    width: auto;
+    width: 20px;
 }
 .icon-categories .icon-category.active{
 	color: #109CF1;
@@ -150,6 +150,12 @@
 .form .form-group {
 	/*display: block;*/
 }
+/*text-red-500*/
+.form .form-group.form-error label{
+	color: #f56565 !important; 
+	font-weight: 600;
+}
+
 
 .input-container {
   display: flex;
@@ -397,3 +403,10 @@ header .filter-header .filter-need {
 .filter-need .input-container .react-datepicker-wrapper:first-child {
 	margin-right: 8px;
 }
+/*
+.icon-circle .icon-png {
+	height: 20px;
+	width: 20px;
+	background-size: contain;
+	background-position: center; 
+}*/

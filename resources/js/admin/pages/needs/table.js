@@ -41,7 +41,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         </td>
         <td className="col-currency">
             {
-                (goal !== "N/A") ? ( <p><span className="currency">$</span>{parseFloat(goal).toFixed(2)}</p>) : <p>N/A</p>
+                (type != 'Volunteer') ? ( <p><span className="currency">$</span>{parseFloat(goal).toFixed(2)}</p>) : <p>N/A</p>
             }
         </td>
         <td>
@@ -58,7 +58,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
                     <Check />
                     </i>
                 </button>
-                <button onClick={()=>popAction(rejectElement, 'reject')}>
+                <button onClick={()=>popAction(rejectElement, 'disapprove')}>
                     <i ref={setRejectElement}>
                     <Cross/>
                     </i>
@@ -115,7 +115,7 @@ const ButtonPopper = ({buttonElement, actionClosure, btnAction}) => {
 
 // Proper content
 //click on row shows popper
-const NeedTable = ({tab = null, data = [], showInfo, loading = false})=> {
+const NeedTable = ({tab = null, data = [], showInfo, loading = false, loadTable})=> {
     const [checkAll, setCheckAll] = useState(false)
     const [needs, setNeeds] = useState([])
     const [popped, setPopItem] = useState(null)
@@ -150,8 +150,16 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false})=> {
     //Execute button activity here
     const executeButton = (execute)=>{
         //do axios here based on settings
-        if(execute)
-            alert("Do actions here "+ popped.id + " with settings "+ action)
+        if(execute){
+            api.post(`/api/web/needs/${popped.id}/${action}`)
+                .then(()=>{
+                    loadTable(true);
+                    alert('This is temp: Item has been '+action+'d');
+                }).catch(()=>{
+
+                })
+            // alert("Do actions here "+ popped.id + " with settings "+ action)
+        }
         //
         setPopItem(null)//close box
     }
@@ -172,24 +180,24 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false})=> {
             </tr>
         </thead>
         <tbody>
-            { loading && 
+            { loading ?
                 <tr>
                     <td colSpan={7}>Loading data</td>
-                </tr>
-            }
-            {
-                ( !loading && needs.length > 0 ) ? 
-                needs.map((i, ind) => <RowTable key={ind} 
-                    tab={tab} 
-                    item={i} 
-                    checkValue={i.checked}
-                    checkChange={e=>handleRowCheckbox(i,e.target.checked)}
-                    onShowInfo={()=>showInfo(i)}
-                    popAction={(button, type)=>togglePopItem(i, button, type)}/>
-                ) :
-                <tr>
-                    <td colSpan={7}>No data found</td>
-                </tr>
+                </tr> :
+                (
+                    ( needs.length > 0 ) ? 
+                    needs.map((i, ind) => <RowTable key={ind} 
+                        tab={tab} 
+                        item={i} 
+                        checkValue={i.checked}
+                        checkChange={e=>handleRowCheckbox(i,e.target.checked)}
+                        onShowInfo={()=>showInfo(i)}
+                        popAction={(button, type)=>togglePopItem(i, button, type)}/>
+                    ) :
+                    <tr>
+                        <td colSpan={7}>No data found</td>
+                    </tr>
+                )
             }
         </tbody>
     </table>
@@ -201,7 +209,10 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false})=> {
 }
 NeedTable.defaultProps = {
     type: 'approved',
-    data: [] // rows
+    data: [], // rows
+    loadTable: ()=>{
+
+    }
 }
 
 export default NeedTable;
