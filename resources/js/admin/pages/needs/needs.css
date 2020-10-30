@@ -7,6 +7,8 @@
 	background-color: #FFF;
 	width: 600px; /* change this accordingly */
 	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
 .form .form-title, .form .form-footer{
@@ -25,7 +27,8 @@
 	padding: 0px 30px;
 	overflow-y: scroll;
     overflow: auto;
-    height: 675px;
+    height: 100%;
+    flex-grow: 1;
 }
 
 .form .form-body .form-group {
@@ -62,7 +65,22 @@
 	display: flex;
 	color: rgba(99,129,157,1);
 	text-align: center;
+	max-width: 600px;
+	overflow-x: scroll;
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.form-body .icon-categories::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.form-body .icon-categories {
+  /* IE and Edge */
+  -ms-overflow-style: none;  
+  /* Firefox */
+  scrollbar-width: none;  
+}
+
 .icon-categories .icon-category{
 	max-width: 40px;
 	margin-right: 16px;
@@ -92,7 +110,7 @@
 }
 .icon-categories .icon-category .icon-circle svg.svg-icon {
 	height: 20px;
-    width: auto;
+    width: 20px;
 }
 .icon-categories .icon-category.active{
 	color: #109CF1;
@@ -108,9 +126,9 @@
 	color: rgba(99,129,157,1);
 }
 .form .form-footer {
-	position: absolute;
+	/*position: absolute;*/
 	padding: 15px 30px;
-	bottom: 0px;
+	/*bottom: 0px;*/
 	border-top: 1.5px solid rgba(156,174,185,.2);
 	height: 90px;
     width: 100%;
@@ -132,6 +150,12 @@
 .form .form-group {
 	/*display: block;*/
 }
+/*text-red-500*/
+.form .form-group.form-error label{
+	color: #f56565 !important; 
+	font-weight: 600;
+}
+
 
 .input-container {
   display: flex;
@@ -364,3 +388,25 @@ input[type=time]::-webkit-calendar-picker-indicator {
 	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
 	border-radius: 4px;
 }
+
+header .filter-header .filter-need {
+	/*padding*/
+	width: 470px;
+	height: auto;
+}
+.filter-need .filter-body {
+	overflow-y: unset;
+	overflow: unset;
+	height: unset;
+}
+
+.filter-need .input-container .react-datepicker-wrapper:first-child {
+	margin-right: 8px;
+}
+/*
+.icon-circle .icon-png {
+	height: 20px;
+	width: 20px;
+	background-size: contain;
+	background-position: center; 
+}*/

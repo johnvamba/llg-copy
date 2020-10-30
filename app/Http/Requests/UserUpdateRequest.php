@@ -26,15 +26,16 @@ class UserUpdateRequest extends FormRequest
     public function rules(Request $request)
     {
         return [
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'firstName' => 'required',
+            'lastName' => 'required',
             'email' => 'required|unique:users,email,'.$request->id,
             'age' => 'required',
             'location' => 'required',
             'lat' => 'sometimes|required',
             'lng' => 'sometimes|required',
             'bio' => 'sometimes|required',
-            'photo' => 'sometimes|required'
+            'photo' => 'sometimes|required',
+            'coverPhoto' => 'sometimes|required'
         ];
     }
 }

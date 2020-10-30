@@ -26,7 +26,16 @@ class OrganizationController extends Controller
         $orgs = Organization::orderBy('created_at', 'desc')->get();
 
         foreach ($orgs as $org) {
-            $org->getMedia('photo');
+            $org['photo'] = $org->getFirstMediaUrl('photo');
+            $org['cover_photo'] = $org->getFirstMediaUrl('cover_photo');
+                
+            $org['activeNeeds'] = Need::where('organization_id', $org->id)
+                ->whereRaw('raised < goal')
+                ->count();
+
+            $org['pastNeeds'] = Need::where('organization_id', $org->id)
+                ->whereRaw('raised >= goal')
+                ->count();
         }
 
         return response()->json($orgs);
@@ -78,7 +87,7 @@ class OrganizationController extends Controller
     public function nearby(Request $request, $lat, $lng)
     {
         $orgs = Organization::select('organizations.*')
-            ->selectRaw('( 6367 * acos( cos( radians(?) ) 
+            ->selectRaw('( 6371 * acos( cos( radians(?) ) 
                 * cos( radians( lat ) ) * cos( radians( lng ) 
                 - radians(?) ) + sin( radians(?) ) 
                 * sin( radians( lat ) ) ) ) AS distance', 
@@ -93,7 +102,8 @@ class OrganizationController extends Controller
         $results = $orgs->orderBy('distance')->get();
 
         foreach($results as $result) {
-            $result->getMedia();
+            $result['photo'] = $result->getFirstMediaUrl('photo');
+            $result['cover_photo'] = $result->getFirstMediaUrl('cover_photo');
         } 
             
         return response()->json($results, 200);
@@ -121,6 +131,9 @@ class OrganizationController extends Controller
                         'lat',
                         'lng'
                     ]));
+
+                $org->short_description = $request->description;
+                $org->save();
 
                 if ($request->category) {
                     foreach($request->category as $value) {

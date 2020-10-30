@@ -7,6 +7,6 @@ use Faker\Generator as Faker;
 
 $factory->define(NeedMet::class, function (Faker $faker) {
     return [
-
+        'amount' => $faker->randomFloat
     ];
 });

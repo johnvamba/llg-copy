@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, connect } from 'react-redux';
 import * as NeedsActions from '../../../redux/needs/actions';
 // import DataTable from '../../../components/layout/DataTable';
 import Button from '../../../components/Button';
@@ -16,56 +16,72 @@ import NeedForm from './form'
 import NeedTable from './table'
 import NeedInfo from './info'
 
-const Needs = () => {
+import { CancelToken } from 'axios'
+
+const Needs = ({NeedsReducer}) => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
     const [tab, setTab] = useState('request'); //current or past
+    const [tabCount, setTabCount] = useState(0);
     const [form, showForm] = useState(false); //false
+    const [story, showStoryForm] = useState(false); //false
+
     const [bolInfo, showInfo] = useState(false);
     const [info, setInfo] = useState(null);
 
-    const needs = useSelector(
-        state => state.NeedsReducer.needs
-    )
+    const [loading, setLoading] = useState(false);
 
-    const data = [
-        {
-            id: 4,
-            title: 'Title',
-            type: 'Volunteer',
-            goal: "N/A",
-            status: 'pending',
-            date: '08/27/2020'
-        }, {
-            id: 5,
-            title: 'Title',
-            type: 'Volunteer',
-            goal: "N/A",
-            status: 'pending',
-            date: '08/27/2020'
-        },{
-            id: 6,
-            title: 'Title',
-            type: 'Volunteer',
-            goal: "N/A",
-            status: 'pending',
-            date: '08/27/2020'
-        }
-    ];
+    const [arrayNeeds, setNeeds] = useState([]);
+
+    const { needs, type, startdate, enddate, min, max, dateType, filter } = NeedsReducer
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        async function fetchData() {
-            let { data } = await axios.post('/api/need/lists', {
-                'limit': limit
-            });
-
-            dispatch(NeedsActions.setNeeds(data));
+        setLoading(true)
+        const ct = loadTable();
+        return ()=>{
+            //cancel api here
+            ct.cancel('Resetting');
         }
+    }, [ tab, page, needs, type, startdate, enddate, min, max, dateType ]);
 
-        fetchData();
-    }, [limit])
+    const loadTable = (clearCache = false) => {
+        const addFilter = filter ? { type, startdate, enddate, min, max } : {};
+        const token = axios.CancelToken.source();
+        api.get(`/api/web/needs`, {
+            params: {
+                tab, page, ...addFilter
+            },
+            cache: {
+                exclude: { query: false },
+            }, 
+            clearCacheEntry: clearCache,
+            cancelToken: token.token
+        }).then((res)=>{
+            const { data } = res
+            setNeeds(data.data)
+            if(clearCache){
+                console.log('clearCache true')
+            }
+            setTabCount(data.requests || 0);
+        }).finally(()=>{
+            setLoading(false)
+        })
+        if(clearCache){
+            api.get(`/api/web/needs`, {
+                params: {
+                    tab:'all', page, ...addFilter
+                },
+                cache: {
+                    exclude: { query: false },
+                }, 
+                clearCacheEntry: clearCache,
+                cancelToken: token.token
+            })
+        }
+        return token; //for useEffect
+    }
 
     const handleLimitChange = (limit) => {
         setLimit(parseInt(limit));
@@ -79,23 +95,30 @@ const Needs = () => {
         setTab(tab)
     }
 
-    const handleForm = (form = false, setting = null)=>{
+    const handleForm = (form = false, setting = null, data = null)=>{
         //change content of table here
         if(setting == 'discard'){
             //discard Changes here
         }
         if(setting == 'submit'){
-            //discard Changes here
+            //reload table
+            loadTable(true)
+            //or insert data here
         }
         showForm(form)
     }
+
     const handleInfo = (item) => {
+        // console.log('haaa?', item)
         showForm(false);
         showInfo(true);
-        setInfo(item)
+        setInfo(item);
     }
-    const openForm = (e) => {
+
+    const openForm = (e, removeInfo = false) => {
         showForm(true)
+        if(removeInfo) 
+            setInfo(null)
         showInfo(false)
     }
 
@@ -103,27 +126,39 @@ const Needs = () => {
         <>
             <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
                 <ul className="nav-tab">
-                    <li className={`nav-tab-item ${tab=='request' ? 'active' : ''}`} onClick={()=>handleTab('request')}>Request ({ needs.requests || 0 })</li>
+                    <li className={`nav-tab-item ${tab=='request' ? 'active' : ''}`} onClick={()=>handleTab('request')}>Request ({ tabCount || 0 })</li>
                 </ul>
-                <Button className="ml-auto text-white bg-blue-500 hover:bg-blue-600" onClick={()=>showForm(true)}>
+                <Button className="ml-auto text-white bg-blue-500 hover:bg-blue-600" onClick={(e)=>openForm(e, true)}>
                     <i className="fas fa-plus pr-2"></i>
                     <span>Create Need</span>
                 </Button>
             </div>
 
             <div className="flex flex-col p-8">
-                <NeedTable tab={tab} data={data} showInfo={handleInfo}/> 
+                <NeedTable tab={tab} data={arrayNeeds} showInfo={handleInfo} loading={loading} loadTable={loadTable}/> 
             </div>
             {
                 form && 
-                <NeedForm handleForm={handleForm}/>
+                <NeedForm handleForm={handleForm} data={info || {}}/>
             }
             {
                 (info && bolInfo) && 
                 <NeedInfo toClose={e=>setInfo(null)} clickEdit={openForm} data={info}/>
             }
+            {
+                //story && //Open story here
+
+            }
         </>
     )
 }
 
-export default Needs;
+export default connect(({NeedsReducer})=>{
+    return {
+        NeedsReducer
+    }
+},(dispatch)=>{
+    return {
+
+    }
+})(Needs);

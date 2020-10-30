@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Carbon\Carbon;
 
 class Need extends Model implements HasMedia
 {
@@ -13,6 +14,8 @@ class Need extends Model implements HasMedia
     use SoftDeletes;
 
     protected $guarded = [];
+
+    protected $appends = ['created'];
 
     protected $with = ['tags'];
 
@@ -33,9 +36,14 @@ class Need extends Model implements HasMedia
 
     public function categories()
     {
-        return $this->morphMany('App\NeedHasCategory', 'model');
+        return $this->hasMany('App\NeedHasCategory', 'need_id');
     }
 
+    public function contribution()
+    {
+        return $this->hasOne('App\NeedMet', 'need_id');
+    }
+    
     public function organization()
     {
         return $this->belongsTo('App\Organization', 'organization_id');
@@ -44,5 +52,26 @@ class Need extends Model implements HasMedia
     public function type()
     {
         return $this->belongsTo('App\NeedsType', 'needs_type_id');
+    }
+
+    public function categoriesList()
+    {
+        return $this->morphedByMany("App\NeedsCategory", "model", 'need_has_categories');
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedAttribute()
+    {
+        return Carbon::parse($this->attributes['created_at'])->diffForHumans();
+    }
+
+    /**
+     * Set short description column value
+     */
+    public function setShortDescriptionAttribute($value)
+    {
+        $this->attributes['short_description'] = substr($value, 0, 40).'...';
     }
 }

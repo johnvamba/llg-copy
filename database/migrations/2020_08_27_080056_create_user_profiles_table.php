@@ -23,7 +23,9 @@ class CreateUserProfilesTable extends Migration
             $table->string('lat')->nullable();
             $table->string('lng')->nullable();
             $table->text('bio')->nullable();
-            $table->text('photo')->nullable();
+            $table->text('avatar')->nullable();
+            $table->text('cover_photo')->nullable();
+            $table->double('amount_given', 15, 2)->default(0);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

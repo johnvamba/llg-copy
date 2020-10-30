@@ -122,12 +122,6 @@ header .filter-header .filter-content{
 	border-radius: 4px;
 }
 
-header .filter-header .filter-need {
-	/*padding*/
-	width: 425px;
-	height: auto;
-}
-
 header .filter-content .form-body.filter-body{
 	height: auto !important;
 	padding-top: 20px;
@@ -209,7 +203,6 @@ td.actions, th.actions{
 .button-container .flex.justify-between button{
 	min-width: 65px;
 }
-
 /* Form */
 .form-input-text{
 	border-bottom: 1px solid #D7DEE3;
@@ -379,4 +372,8 @@ input, button{
 }
 button:focus{
 	outline: none !important;
+}
+
+.group-content .progress {
+	height: 5px !important;
 }

@@ -19,11 +19,16 @@ class CreateNeedsTable extends Migration
             $table->bigInteger('organization_id')->unsigned();
             $table->string('title');
             $table->text('description');
-            $table->text('location');
-            $table->string('lat');
-            $table->string('lng');
+            $table->string('short_description')->nullable();
+            $table->text('location')->nullable();
+            $table->string('lat')->nullable();
+            $table->string('lng')->nullable();
             $table->double('raised', 15, 2);
             $table->double('goal', 15, 2);
+            $table->unsignedBigInteger('request_by')->nullable();
+            $table->unsignedBigInteger('approved_by')->nullable();
+            $table->dateTime('approved_at')->nullable();
+            $table->dateTime('scheduled_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

@@ -15,12 +15,12 @@ class CreateServiceOffersTable extends Migration
     {
         Schema::create('service_offers', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('organization_id')->nullable()->unsigned();
+            $table->morphs('model');
             $table->bigInteger('service_type_id')->unsigned();
-            $table->bigInteger('user_id')->unsigned();
             $table->string('name')->nullable();
             $table->string('title');
             $table->text('description');
+            $table->string('short_description')->nullable();
             $table->text('location');
             $table->string('lat');
             $table->string('lng');
@@ -28,9 +28,7 @@ class CreateServiceOffersTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('organization_id')->references('id')->on('organizations');
             $table->foreign('service_type_id')->references('id')->on('service_types');
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

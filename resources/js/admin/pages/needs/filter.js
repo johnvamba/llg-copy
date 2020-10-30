@@ -1,20 +1,38 @@
 import React, {useState} from 'react';
 import Button from '../../../components/Button'
 import DatePicker from 'react-datepicker';
+import { useSelector, useDispatch, connect } from 'react-redux';
+import { setFilters } from '../../../redux/needs/actions';
+import Calendar from '../../../svg/calendar'
 
 const NeedFilter = ({onClose}) => {
     const [type, setType] = useState(null); //donation
-    const [date, setDate] = useState(new Date());
+    const [startdate, setStartDate] = useState(new Date());
+    const [enddate, setEndDate] = useState(new Date());
     const [min, setMin] = useState(0.00);
     const [max, setMax] = useState(0.00);
     const [dateType, selectDateType] = useState('custom');
+
+    const dispatch = useDispatch();
+
+    const clickDispatch = ()=>{
+        if(min > max){
+            // console.log('warning here');
+            return;
+        }
+        // console.log('clicked?')
+        dispatch( setFilters({ type, startdate, enddate, min, max, dateType }) );
+    }
+
     const reset=() => {
         setType(null)
         setDate(new Date)
         setMin(0.00)
         setMax(0.00)
         selectDateType('custom')
+        dispatch( setFilters({ type, startdate, enddate, min, max, dateType, filter: false }) );
     }
+    
     return (
         <div className="filter-need form">
             <div className="form-body filter-body">
@@ -54,22 +72,50 @@ const NeedFilter = ({onClose}) => {
                         <div className="input-container">
                             <DatePicker 
                                 dateFormat="MMM dd, yyyy"
-                                selected={date} 
+                                selected={startdate} 
                                 name="date" 
-                                showPopperArrow={false} 
                                 className="input-field space-r"
-                                onChange={(date)=>setDate(date)}
+                                onChange={setStartDate}
+                                popperPlacement="bottom-end"
+                                popperModifiers={{
+                                  offset: {
+                                    enabled: true,
+                                    offset: '0px, 5px'
+                                  },
+                                  preventOverflow: {
+                                    enabled: true,
+                                    escapeWithReference: false, // force popper to stay in viewport (even when input is scrolled out of view)
+                                    boundariesElement: 'viewport'
+                                  }
+                                }}
                             />
+                            <i className="icon right-0 absolute mr-2">
+                                <Calendar/>
+                            </i>
                         </div>
                         <div className="input-container">
                             <DatePicker 
                                 dateFormat="MMM dd, yyyy"
-                                selected={date} 
+                                selected={enddate} 
                                 name="date" 
-                                showPopperArrow={false} 
                                 className="input-field space-r"
-                                onChange={(date)=>setDate(date)}
+                                onChange={setEndDate}
+                                popperPlacement="bottom-end"
+                                popperModifiers={{
+                                  offset: {
+                                    enabled: true,
+                                    offset: '0px, 5px'
+                                  },
+                                  preventOverflow: {
+                                    enabled: true,
+                                    escapeWithReference: false, // force popper to stay in viewport (even when input is scrolled out of view)
+                                    boundariesElement: 'viewport'
+                                  }
+                                }}
                             />
+                            <i className="icon right-0 absolute mr-2">
+                                <Calendar/>
+                            </i>
                         </div>
                     </div>
                 </div>
@@ -77,7 +123,7 @@ const NeedFilter = ({onClose}) => {
             <div className="filter-footer flex">
                 <a href='#' className="text-clear flex-grow" onClick={reset}>Clear Filters</a>
                 <a href='#' className="flex-none pr-5" onClick={onClose}>Cancel</a>
-                <a href='#' className="text-primary flex-none">Apply</a>
+                <a href='#' className="text-primary flex-none" onClick={clickDispatch}>Apply</a>
             </div>
         </div>
     )
