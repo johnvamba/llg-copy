@@ -99,8 +99,7 @@ const Organizations = () => {
                 />
             }
             {showInvite && 
-                // <OrgInvite handleBackInvite={handleBackInvite} />
-                <OrgInvite2 handleBackInvite={handleBackInvite} />
+                <OrgInvite handleBackInvite={handleBackInvite} />
             }
         </>
     )

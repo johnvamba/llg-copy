@@ -380,3 +380,6 @@ input, button{
 button:focus{
 	outline: none !important;
 }
+input[type=checkbox]{
+	cursor: pointer;
+}

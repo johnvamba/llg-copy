@@ -1,0 +1,20 @@
+.transaction-list.offers-table td p span{
+    color: #109CF1;
+}
+.offers-table .title p{
+    cursor: pointer;
+}
+.transaction-form__body{
+    margin-top: 23px;
+}
+.transactions-form__amount span{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 24px;
+    color: #109CF1;
+    margin-right: 11px;
+}
+.transaction-list.offers-table .active td p span{
+    color: #fff;
+}

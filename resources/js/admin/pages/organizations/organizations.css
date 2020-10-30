@@ -417,7 +417,7 @@
 }
 .tab-active-needs article{
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     padding: 32px;
     border-bottom: 1.5px solid #F5F8FA;
 }
@@ -425,7 +425,7 @@
     width: 100%;
     max-width: 72px;
     height: 72px;
-    background: gray;
+    background: #D3E9F6;
     border-radius: 5px;
 }
 .tab-active-needs__details{
