@@ -374,3 +374,9 @@ p{
     padding-bottom: 0;
     overflow: auto;
 }
+input, button{
+	outline: none;
+}
+button:focus{
+	outline: none !important;
+}

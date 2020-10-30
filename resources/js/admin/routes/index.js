@@ -22,6 +22,7 @@ import Organizations from '../pages/organizations';
 import Campus from '../pages/campus';
 import CreateOrganization from '../pages/organizations/create';
 import EditOrganization from '../pages/organizations/edit';
+import PushNotification from '../pages/push-notification';
 import Transactions from '../pages/transactions';
 import InviteMember from '../pages/invite-member';
 import NotFound from '../../components/NotFound';
@@ -156,6 +157,11 @@ const routes = [
         path: '/campus',
         exact: true,
         component: () => <Campus />
+    },
+    {
+        path: '/push-notifications',
+        exact: true,
+        component: () => <PushNotification />
     },
     {
         path: '*',

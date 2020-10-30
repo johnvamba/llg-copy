@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as AuthUserActions from '../redux/auth-user/actions';
 import { Link, useLocation } from 'react-router-dom';
 import OffersFormCross from '../svg/offers-form-cross';
+import Organisation from '../svg/organisation';
+import SidebarCampus from '../svg/sidebar-campus';
 import './css/sidebar.css';
 
 const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
@@ -201,7 +203,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         ${location.pathname == "/organizations" ? "text-blue-400" : "text-gray-400"}`}
                     >
                         <Link to="/organizations" className="flex items-center">
-                            <i className="text-xl fas fa-border-none"></i>
+                            <Organisation />
                             <span className="px-4">Organisations</span>
                         </Link>
                     </div>
@@ -211,7 +213,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         ${location.pathname == "/campus" ? "text-blue-400" : "text-gray-400"}`}
                     >
                         <Link to="/campus" className="flex items-center">
-                            <i className="text-xl fas fa-border-none"></i>
+                            <SidebarCampus />
                             <span className="px-4">Campus</span>
                         </Link>
                     </div>
@@ -220,7 +222,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         className={`mt-6 
                         ${location.pathname == "/push-notifications" ? "text-blue-400" : "text-gray-400"}`}
                     >
-                        <Link to="/organizations" className="flex items-center">
+                        <Link to="/push-notifications" className="flex items-center">
                             <i className="text-xl far fa-bell"></i>
                             <span className="px-4">Push Notifications</span>
                         </Link>

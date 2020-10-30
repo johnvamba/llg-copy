@@ -9,8 +9,3 @@ const Browse = (props)=>{
 	)
 }
 export default Browse;
-
-
-
-
-
