@@ -61,19 +61,15 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                 </div>
 
                 <nav className="mx-6 text-sm">
-                    {roles.name === 'admin' &&
-                        (
-                            <div
-                                className={`mt-6 
-                                ${location.pathname == "/dashboard" ? "text-blue-400" : "text-gray-400"}`}
-                            >
-                                <Link to="/dashboard" className="flex items-center">
-                                    <i className="text-xl fa fa-th-large" aria-hidden="true"></i>
-                                    <span className="px-4">Dashboard</span>
-                                </Link>
-                            </div>
-                        )
-                    }
+                    <div
+                        className={`mt-6 
+                        ${location.pathname == "/dashboard" ? "text-blue-400" : "text-gray-400"}`}
+                    >
+                        <Link to="/dashboard" className="flex items-center">
+                            <i className="text-xl fa fa-th-large" aria-hidden="true"></i>
+                            <span className="px-4">Dashboard</span>
+                        </Link>
+                    </div>
 
                     <div className="mt-6 text-gray-400">
                         <button
@@ -118,15 +114,19 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         }
                     </div>
 
-                    <div
-                        className={`mt-6 
-                        ${location.pathname == "/offers" ? "text-blue-400" : "text-gray-400"}`}
-                    >
-                        <Link to="/offers" className="flex items-center">
-                            <i className="text-xl fas fa-hand-holding-heart"></i>
-                            <span className="px-4">Offers</span>
-                        </Link>
-                    </div>
+                    {roles.name === 'admin' &&
+                        (
+                            <div
+                                className={`mt-6 
+                                ${location.pathname == "/offers" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/offers" className="flex items-center">
+                                    <i className="text-xl fas fa-hand-holding-heart"></i>
+                                    <span className="px-4">Offers</span>
+                                </Link>
+                            </div>
+                        )
+                    }
 
                     <div className="mt-6 text-gray-400">
                         <button
@@ -198,45 +198,76 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         )
                     }
 
-                    <div
-                        className={`mt-6 
-                        ${location.pathname == "/organizations" ? "text-blue-400" : "text-gray-400"}`}
-                    >
-                        <Link to="/organizations" className="flex items-center">
-                            <Organisation />
-                            <span className="px-4">Organisations</span>
-                        </Link>
-                    </div>
+                    {roles.name === 'admin' &&
+                        (
+                            <div
+                                className={`mt-6 
+                                ${location.pathname == "/organizations" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/organizations" className="flex items-center">
+                                    <Organisation />
+                                    <span className="px-4">Organisations</span>
+                                </Link>
+                            </div>
+                        )
+                    }
 
-                    <div
-                        className={`mt-6 
-                        ${location.pathname == "/campus" ? "text-blue-400" : "text-gray-400"}`}
-                    >
-                        <Link to="/campus" className="flex items-center">
-                            <SidebarCampus />
-                            <span className="px-4">Campus</span>
-                        </Link>
-                    </div>
+                    {roles.name === 'admin' &&
+                        (
+                            <div
+                                className={`mt-6 
+                                ${location.pathname == "/campus" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/campus" className="flex items-center">
+                                    <SidebarCampus />
+                                    <span className="px-4">Campus</span>
+                                </Link>
+                            </div>
+                        )
+                    }
 
-                    <div
-                        className={`mt-6 
-                        ${location.pathname == "/push-notifications" ? "text-blue-400" : "text-gray-400"}`}
-                    >
-                        <Link to="/push-notifications" className="flex items-center">
-                            <i className="text-xl far fa-bell"></i>
-                            <span className="px-4">Push Notifications</span>
-                        </Link>
-                    </div>
+                    {roles.name === 'admin' &&
+                        (
+                            <div
+                                className={`mt-6 
+                                ${location.pathname == "/push-notifications" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/push-notifications" className="flex items-center">
+                                    <i className="text-xl far fa-bell"></i>
+                                    <span className="px-4">Push Notifications</span>
+                                </Link>
+                            </div>
+                        )
+                    }
 
-                    <div
-                        className={`mt-6 
-                        ${location.pathname == "/transactions" ? "text-blue-400" : "text-gray-400"}`}
-                    >
-                        <Link to="/transactions" className="flex items-center">
-                            <i className="text-xl fas fa-retweet"></i>
-                            <span className="px-4">Transactions</span>
-                        </Link>
-                    </div>
+                    {roles.name === 'admin' &&
+                        (
+                            <div
+                                className={`mt-6 
+                                ${location.pathname == "/transactions" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/transactions" className="flex items-center">
+                                    <i className="text-xl fas fa-retweet"></i>
+                                    <span className="px-4">Transactions</span>
+                                </Link>
+                            </div>
+                        )
+                    }
+                    {roles.name === 'organization admin' &&
+                        (
+                            <div
+                                className={`mt-6 
+                                ${location.pathname == "/users" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/users" className="flex items-center">
+                                    <i className="text-xl far fa-key"></i>
+                                    <span className="px-4">API</span>
+                                </Link>
+                            </div>
+                        )
+                    }
+
+
                 </nav>
             </div>
         </>
