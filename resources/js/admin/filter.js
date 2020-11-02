@@ -17,7 +17,7 @@ const filters = [
     {
         path: '*',
         component: () => (
-            <div classname="px-3 py-2">No filter for this page</div>
+            <div className="px-3 py-2">No filter for this page</div>
         )
     }
 

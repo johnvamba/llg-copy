@@ -18,7 +18,7 @@ use App\NeedMet;
 use App\Tag;
 
 use App\Http\Resources\NeedResource;
-
+use Carbon\Carbon;
 class NeedsController extends Controller
 {
     /**
@@ -50,9 +50,12 @@ class NeedsController extends Controller
         }
 
         if($request->has('startdate') || $request->has('enddate')){
-            $need->when($request->has('startdate', 'enddate'), fn($need) => $need->whereBetween('created_at', $request->only('startdate', 'enddate')))
-                ->when($request->has('startdate'), fn($need) => $need->where('created_at', '>=', $request->get('startdate')))
-                ->when($request->has('enddate'), fn($need) => $need->where('created_at', '<=', $request->get('enddate')));
+            $startdate = $request->get('startdate') ? Carbon::parse($request->get('startdate'))->startOfDay() : null;
+            $enddate = $request->get('enddate') ? Carbon::parse($request->get('enddate'))->startOfDay() : null;
+
+            $need->when($startdate || $enddate, fn($need) => $need->whereBetween('created_at', [$startdate, $enddate]))
+                ->when($startdate, fn($need) => $need->where('created_at', '>=', $startdate))
+                ->when($enddate, fn($need) => $need->where('created_at', '<=', $enddate));
         }
 
         if($request->get('debug')){

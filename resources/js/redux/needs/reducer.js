@@ -8,9 +8,12 @@ let initialState = {
     type: null,
     startdate: new Date,
     enddate: new Date,
-    min: 0.00,
-    max: 0.00,
+    min: null,
+    max: null,
     dateType: 'type1',
+    minSwitch:false,
+    maxSwitch:false,
+    string: null,
     //not needed
     needs: []
 }
@@ -25,7 +28,9 @@ export const reducer = (state = initialState, {type, payload}) => {
         case SET_FILTERS:
             return {
                 ...state,
-                ...payload
+                ...payload, 
+                min: payload.minSwitch ? (payload.min || 0) : null,
+                max: payload.maxSwitch ? (payload.max || 0) : null
             }
         default :
             return state;

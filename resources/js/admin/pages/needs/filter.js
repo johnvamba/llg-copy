@@ -4,24 +4,25 @@ import DatePicker from 'react-datepicker';
 import { useSelector, useDispatch, connect } from 'react-redux';
 import { setFilters } from '../../../redux/needs/actions';
 import Calendar from '../../../svg/calendar'
+import SwitchCheckbox from '../../../components/SwitchCheckbox'
 
-const NeedFilter = ({onClose}) => {
-    const [type, setType] = useState(null); //donation
-    const [startdate, setStartDate] = useState(new Date());
-    const [enddate, setEndDate] = useState(new Date());
-    const [min, setMin] = useState(0.00);
-    const [max, setMax] = useState(0.00);
+const NeedFilter = ({onClose, NeedsReducer}) => {
+    const [type, setType] = useState(NeedsReducer.type|| null); //donation
+    const [startdate, setStartDate] = useState(NeedsReducer.startdate|| new Date());
+    const [enddate, setEndDate] = useState(NeedsReducer.enddate|| new Date());
+    const [min, setMin] = useState(NeedsReducer.min || 0);
+    const [max, setMax] = useState(NeedsReducer.max || 0);
     const [dateType, selectDateType] = useState('custom');
+    const [minSwitch, setMinSwitch] = useState(NeedsReducer.minSwitch|| false);
+    const [maxSwitch, setMaxSwitch] = useState(NeedsReducer.maxSwitch|| false);
 
     const dispatch = useDispatch();
 
     const clickDispatch = ()=>{
-        if(min > max){
-            // console.log('warning here');
+        if(minSwitch && maxSwitch && min > max){
             return;
         }
-        // console.log('clicked?')
-        dispatch( setFilters({ type, startdate, enddate, min, max, dateType }) );
+        dispatch( setFilters({ type, startdate, enddate, min, max, dateType, minSwitch, maxSwitch }) );
     }
 
     const reset=() => {
@@ -37,15 +38,17 @@ const NeedFilter = ({onClose}) => {
         <div className="filter-need form">
             <div className="form-body filter-body">
                 <div className="flex justify-between">
-                    <div className="form-group">
-                        <label>Minimum Amount</label>
+                    <div className="form-group checkbox">
+                        <label>Minimum Amount </label>
+                        <SwitchCheckbox name={'minAmount'} checked={minSwitch} onChange={setMinSwitch}/>
                         <div className="input-container">
                             <span className="currency">$</span>
                             <input className="input-field space-l" type="number" placeholder="0.00" value={min} name="goal" onChange={e=>setMin(e.target.value)}/>
                         </div>
                     </div>
-                    <div className="form-group">
-                        <label>Maximum Amount</label>
+                    <div className="form-group checkbox">
+                        <label>Maximum Amount  </label>
+                        <SwitchCheckbox name={'maxAmount'} checked={maxSwitch} onChange={setMaxSwitch}/>
                         <div className="input-container">
                             <span className="currency">$</span>
                             <input className="input-field space-l" type="number" placeholder="0.00" value={max} name="goal" onChange={e=>setMax(e.target.value)}/>
@@ -128,4 +131,12 @@ const NeedFilter = ({onClose}) => {
         </div>
     )
 }
-export default NeedFilter;
+export default connect(({NeedsReducer})=>{
+    return {
+        NeedsReducer
+    }
+},(dispatch)=>{
+    return {
+
+    }
+})(NeedFilter);

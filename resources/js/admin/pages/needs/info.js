@@ -49,7 +49,7 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
             // setDate(date || new Date);
             // setTime(time || '');
             setLocation(location || {});
-            // console.log('Something here', data);
+            console.log('response here', data);
         })
         .catch(err => {
             // if(err.response){
@@ -66,8 +66,8 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
             // console.log('called?', data);
             collectData(data.id)
         } else {
-            // console.log('called here?', data);
             const { ratio, description, bring, type, category, photo } = data || {}
+            console.log('raw here?', data);
             // setTitle(title || '');
             setDescription(description || '');
             setCategory(category || []);

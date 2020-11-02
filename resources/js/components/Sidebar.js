@@ -79,7 +79,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         <button
                             onClick={() => handleOpen('need')}
                             className={`relative w-full flex items-center focus:outline-none
-                            ${(location.pathname == "/needs") || (location.pathname == "/needs/category") ? "text-blue-400" : "text-gray-400"}`}
+                            ${(location.pathname == "/needs") || (location.pathname == "/needs/requests") ? "text-blue-400" : "text-gray-400"}`}
                         >
                             <i className="text-xl fab fa-gratipay"></i>
                             <span className="px-4">Needs</span>
