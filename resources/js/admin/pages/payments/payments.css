@@ -1,0 +1,9 @@
+.table-column-amount span{
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 24px;
+    color: #109CF1;
+    margin-right: 10px;
+}

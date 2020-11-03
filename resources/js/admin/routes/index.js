@@ -24,6 +24,7 @@ import CreateOrganization from '../pages/organizations/create';
 import EditOrganization from '../pages/organizations/edit';
 import PushNotification from '../pages/push-notification';
 import Transactions from '../pages/transactions';
+import Payments from '../pages/payments';
 import InviteMember from '../pages/invite-member';
 import NotFound from '../../components/NotFound';
 
@@ -147,6 +148,11 @@ const routes = [
         path: '/transactions',
         exact: true,
         component: () => <Transactions />
+    },
+    {
+        path: '/payments',
+        exact: true,
+        component: () => <Payments />
     },
     {
         path: '/organizations/:id/invite',

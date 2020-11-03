@@ -32,6 +32,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
     const [show, setShow] = useState({
         need: false,
         story: false,
+        payment: false,
     });
 
     const handleOpen = (key) => {
@@ -236,6 +237,48 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                             <i className="text-xl fas fa-retweet"></i>
                             <span className="px-4">Transactions</span>
                         </Link>
+                    </div>
+
+                    <div className="mt-6 text-gray-400">
+                        <button
+                            onClick={() => handleOpen('payment')}
+                            className={`relative flex items-center focus:outline-none w-full
+                            ${(location.pathname == "/payments") ? "text-blue-400" : "text-gray-400"}`}
+                        >
+                            <i className="text-xl fas fa-leaf"></i>
+                            <span className="px-4">Payments</span>
+
+                            <div className="absolute inset-y-0 right-0 text-gray-400">
+                                <svg
+                                    className="fill-current h-6 w-6"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20"
+                                >
+                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </div>
+                        </button>
+
+                        {show.payment &&
+                            <div className={`ml-8`}>
+                                <div
+                                    className={`mt-4
+                                    ${(location.pathname == "/payments") ? "text-blue-400" : "text-gray-400"}`}
+                                >
+                                    <Link to="/payments">
+                                        Payment List (7)
+                                    </Link>
+                                </div>
+                                <div
+                                    className={`mt-4
+                                    ${(location.pathname == "/payments/receipt-templates") ? "text-blue-400" : "text-gray-400"}`}
+                                >
+                                    <Link to="/payments/receipt-templates">
+                                        Receipt Template
+                                    </Link>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </nav>
             </div>
