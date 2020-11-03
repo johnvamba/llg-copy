@@ -7,3 +7,31 @@
     color: #109CF1;
     margin-right: 10px;
 }
+.payment-form.create-form{
+    width: 100%;
+    max-width: 422px;
+}
+.payment-form__body{
+    margin-top: 23px;
+}
+table .active .table-column-amount span{
+    color: #fff;
+}
+
+.payment-r-template__left{
+    padding: 28px;
+    background-color: #fff;
+}
+.payment-r-template__left header{
+    margin-top: 0;
+}
+.r-template__body > div{
+    height: calc(100vh - 152px);
+}
+
+@media (max-width: 767px) {
+    .payment-form.create-form{
+        width: 100%;
+        max-width: none;
+    }
+}

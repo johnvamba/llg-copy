@@ -1,14 +1,13 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import PaymentHeader from './header';
 import PaymentList from './list';
 import PaymentForm from './form';
 
 import './payments.css';
 
-
 const Payment = () => {
 
-    const [showAdd, setShowAdd] = useState(true);
+    const [showAdd, setShowAdd] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
     const [paymentList, setPaymentList] = useState(
