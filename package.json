@@ -38,6 +38,7 @@
         "apexcharts": "^3.20.2",
         "dotenv": "^8.2.0",
         "draft-js": "^0.11.7",
+        "draftjs-to-html": "^0.9.1",
         "filepond": "^4.21.1",
         "filepond-plugin-image-preview": "^4.6.4",
         "firebase": "^7.21.1",

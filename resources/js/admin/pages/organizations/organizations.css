@@ -225,6 +225,7 @@
     right: 0;
     padding: 15px 29px;
     border-top: 1.5px solid rgba(156, 174, 185, 0.2);
+    background-color: #fff;
 }
 .org-form__footer > div{
     justify-content: space-between;
