@@ -260,7 +260,7 @@ table .active .table-column-amount span{
     justify-content: flex-end;
     margin-bottom: 17px;
 }
-.template-list__actions svg:first-child{
+.template-list__actions button:first-child svg{
     margin-right: 11px;
 }
 .template-list__status > div{
@@ -291,6 +291,9 @@ table .active .table-column-amount span{
     .payment-form.create-form{
         width: 100%;
         max-width: none;
+    }
+    .receipt-template.create-form{
+        width: 100%;
     }
     .template-list{
         padding: 10px;

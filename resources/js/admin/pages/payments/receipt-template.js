@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TemplateForm from './template-form';
 import ReceiptList from './receipt-list';
+import ReceiptTemplateV2 from './receipt-template-v2';
 import OffersPlus from '../../../svg/offers-plus';
 
 
 const ReceiptTemplate = () => {
+
+    const [addTemplate, setAddTemplate] = useState(true);
+
     return(
         <>
             <section className="r-template">
@@ -13,7 +17,7 @@ const ReceiptTemplate = () => {
                         <h1>Receipt Template</h1>
                     </div>
                     <div className="flex flex-1 justify-end">
-                        <button className="flex rounded-sm">
+                        <button className="flex rounded-sm" onClick={() => setAddTemplate(true)}>
                             <OffersPlus />
                             <span>Add Template</span>
                         </button>
@@ -21,11 +25,15 @@ const ReceiptTemplate = () => {
                 </header>
                 <section className="r-template__body">
                     {/* <TemplateForm /> */}
-                    <ReceiptList />
+                    {/* <ReceiptList /> */}
+                    {
+                        addTemplate && <ReceiptTemplateV2 />
+                    }
+                    
                 </section>
             </section>
         </>
     )
 }
 
-export default ReceiptTemplate;
+export default ReceiptTemplate; 
