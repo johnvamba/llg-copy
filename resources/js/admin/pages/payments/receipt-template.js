@@ -1,5 +1,6 @@
 import React from 'react';
 import TemplateForm from './template-form';
+import ReceiptList from './receipt-list';
 import OffersPlus from '../../../svg/offers-plus';
 
 
@@ -19,7 +20,8 @@ const ReceiptTemplate = () => {
                     </div>
                 </header>
                 <section className="r-template__body">
-                    <TemplateForm />
+                    {/* <TemplateForm /> */}
+                    <ReceiptList />
                 </section>
             </section>
         </>

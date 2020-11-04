@@ -225,11 +225,84 @@ table .active .table-column-amount span{
     max-width: 280px;
     margin: 0 auto;
 }
+.template-list{
+    padding: 40px;
+}
+.template-list ul li{
+    background: #fff;
+    flex: 0 1 calc(50% - 13px);
+    padding: 30px;
+    border: 1px solid #EBEFF2;
+    margin-bottom: 26px;
+}
+.template-list__details label{
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    color: #323C47;
+}
+.template-list__details span{
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0.01em;
+    color: #A5B0BF;
+}
+.template-list__details{
+    margin-left: 20px;
+}
+.template-list__actions{
+    justify-content: flex-end;
+    margin-bottom: 17px;
+}
+.template-list__actions svg:first-child{
+    margin-right: 11px;
+}
+.template-list__status > div{
+    background: #41DB82;
+    width: 5px;
+    height: 5px;
+    border-radius: 50px;
+    margin-right: 11px;
+}
+.template-list__status > span{
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0.01em;
+    color: #41DB82;
+}
 
+
+@media (max-width: 1023px) {
+    .template-list ul li{
+        flex: 0 1 100%;
+    }
+}
 
 @media (max-width: 767px) {
     .payment-form.create-form{
         width: 100%;
         max-width: none;
+    }
+    .template-list{
+        padding: 10px;
+    }
+    .template-list ul li{
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    .template-list__details{
+        margin-left: 8px;
+    }
+    .template-list__details span{
+        font-size: 11px;
     }
 }
