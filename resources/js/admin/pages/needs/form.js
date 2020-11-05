@@ -3,18 +3,10 @@ import Button from '../../../components/Button'
 import { NavLink } from 'react-router-dom';
 import { swalDelete } from '../../../components/helpers/alerts';
 import { selectStyle, loadOrganization } from '../../../components/helpers/async_options';
-
-//images
-import { FilePond, File, registerPlugin } from 'react-filepond'
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import DatePicker from 'react-datepicker';
 import AsyncSelect from 'react-select/async';
 
-import 'filepond/dist/filepond.min.css'
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
 import "react-datepicker/dist/react-datepicker.css";
-
-registerPlugin(FilePondPluginImagePreview)
 
 import Check from '../../../svg/check'
 import Cross from '../../../svg/cross'
@@ -25,9 +17,9 @@ import IconTest from '../../../svg/icon-test'
 import Calendar from '../../../svg/calendar'
 import Location from '../../../components/Location'
 import CategoryScroll from '../../../components/CategoryScroll'
+import Imagepond from '../../../components/Imagepond'
 
 const NeedForm = ({handleForm, data = {}}) => {
-    const [files, setFiles] = useState([]); //for filepond
 
     const [title, setTitle] = useState('');
     const [about, setAbout] = useState('');
@@ -134,16 +126,6 @@ const NeedForm = ({handleForm, data = {}}) => {
             lat: geometry.location.lat(), 
             lng: geometry.location.lng()
         })
-    }
-    const handleImage = (files)=>{
-        if(files.length > 0){
-            setFiles([...files]);
-            let reader = new FileReader();
-            reader.onload = (e) => {
-                setPhoto(e.target.result);
-            };
-            reader.readAsDataURL(files[0].file);
-        }
     }
 
     const categoryWheel = event => {
@@ -265,7 +247,11 @@ const NeedForm = ({handleForm, data = {}}) => {
                         </div>
                         <div className={`form-group ${errors.description && 'form-error'}`}>
                             <label>About</label>
-                            <input type='text' className="input-field" placeholder="Say something about this need" value={about} onChange={e=>setAbout(e.target.value)}/>
+                            <textarea className="input-field" placeholder="Say something about this need" value={about} onChange={e=>setAbout(e.target.value)}/>
+                            {
+                                //
+                            //<input type='text' className="input-field" placeholder="Say something about this need" value={about} onChange={e=>setAbout(e.target.value)}/>
+                            }
                             {
                                 (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing About content</span>
                             }
@@ -327,31 +313,14 @@ const NeedForm = ({handleForm, data = {}}) => {
                         </div>
                         <div className={`form-group w-full ${errors.description && 'form-error'}`}>
                             <label>What to bring</label>
-                            <input type='text' className="input-field" placeholder="Enter things to bring" value={bring} onChange={e=>setBring(e.target.value)}/>
+                            <textarea className="input-field" placeholder="Enter things to bring" value={bring} onChange={e=>setBring(e.target.value)}/>
                             {
                                 (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing what to bring</span>
                             }
                         </div>
                     </div>
                 }
-
-                <div className={`form-group ${errors.photo && 'form-error'}`}>
-                    <label>Featured Image</label>
-                    {
-                        (files.length <= 0 && photo) ? 
-                        <p>Show photo</p> : 
-                        <FilePond
-                            files={files}
-                            onupdatefiles={handleImage}
-                            allowMultiple={false}
-                            name="files"
-                            labelIdle='Drag & Drop or <span class="filepond--label-action">Browse</span>'
-                        />
-                    }
-                    {
-                        (errors.photo || false) && <span className="text-xs pt-1 text-red-500 italic">Missing photo</span>
-                    }
-                </div>
+                <Imagepond photo={photo} imageSelected={setPhoto} errors={errors.photo}/>
             </div>
             <div className="form-footer">
                 <Button className="btn btn-secondary" onClick={()=>handleForm(false, 'discard')} disabled={submitting}>Discard</Button>

@@ -134,7 +134,7 @@ const Needs = ({NeedsReducer}) => {
                 </Button>
             </div>
 
-            <div className="flex flex-col p-8">
+            <div className="component-body flex p-8">
                 <NeedTable tab={tab} data={arrayNeeds} showInfo={handleInfo} loading={loading} loadTable={loadTable}/> 
             </div>
             {

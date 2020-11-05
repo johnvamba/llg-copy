@@ -102,7 +102,7 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
             <div className="need-header">
             	<i className="circlet"><Circlet /></i>
             	<h4 className="need-status">{switchStatus()}</h4>
-            	<button onClick={clickEdit}>
+            	<button className="contents" onClick={clickEdit}>
                     <i className="ml-1"><Pencil/></i>
                     Edit</button>
             </div>
@@ -114,13 +114,9 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                         <h3>{data.title} <span>{data.date}</span> </h3>
     	            	<h5>{data.type || 'Donation'}</h5>
                 	</div>
-                    {
-                        /*
-                    	<div className="group-content">
-                    		<label>Categories</label>
-                    	</div>
-                        */
-                    }
+                	<div className="group-content">
+                		<label>Categories</label>
+                	</div>
                     <div className="group-content">
                         <div className="progress">
                             <div className="progress-bar" style={{width: `${ratio}%`}}></div>
@@ -136,20 +132,21 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                             <p>{data.time || 'N/A'}</p>
                     	</div>
                     </div>
+                	<div className="group-content">
+                		<label>Location</label>
+                		<div className="need-map"></div>
+                	</div>
                     {
-                        /*
-                    	<div className="group-content">
-                    		<label>Location</label>
-                    		<div className="need-map"></div>
-                    	</div>
-                        */
+                        data.type == 'Volunteer' ? 
+                        <div className="group-content">
+                            <label>Number of People Needed</label> 
+                            <p>{data.goal}</p>
+                        </div> : 
+                        <div className="group-content">
+                            <label>Goal</label>
+                            <p>$ {data.goal}</p>
+                        </div>
                     }
-                    	<div className="group-content">
-                        {
-                            data.type == 'Volunteer' ? <label>Number of People Needed</label> : <label>Goal</label>
-                        }
-                    		<p>$ {data.goal}</p>
-                    	</div>
                 	<div className="group-content">
                         {
                             data.type == 'Volunteer' ? <label>What to bring</label> : <label>About</label>
@@ -167,13 +164,16 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                     </div>
                 </div>
             }
-            <div className="need-footer">
-                <Button className="flex text-white bg-blue-500 hover:bg-blue-600" 
-                    onClick={()=>alert('something')}>
-                    <Quill/>
-                    Write a Story
-                </Button>
-            </div>
+            {
+                ratio >= 100 &&
+                <div className="need-footer">
+                    <Button className="flex text-white bg-blue-500 hover:bg-blue-600" 
+                        onClick={()=>alert('something')}>
+                        <Quill/>
+                        Write a Story
+                    </Button>
+                </div>
+            }
         </div>
     )
 }

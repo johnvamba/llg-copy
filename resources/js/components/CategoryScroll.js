@@ -29,7 +29,7 @@ const CategoryScroll = ({
     const [scrollLeft, setScrollLeft] = useState(0);
 
     useEffect(()=>{
-
+        //load categories here.
     }, [type])
 
     const categoryWheel = event => {

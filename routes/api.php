@@ -34,6 +34,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 
         Route::get('organizations/async', 'OrganizationController@async');
         Route::resource('organizations', 'OrganizationController');
+
+        Route::resource('offers', 'OffersController');
     });
 
     /** Role resource module */

@@ -19,7 +19,7 @@ class NeedSeeder extends Seeder
 
             $type = \App\NeedsType::get();
 
-            $needs = factory(\App\Need::class, 5)->create([
+            $needs = factory(\App\Need::class, 15)->create([
                 // 'model_id' => $org->id,
                 // 'model_type' => 'App\Organization',
                 'organization_id' => $org->id,

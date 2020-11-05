@@ -5,6 +5,7 @@ import Cross from '../../../svg/cross'
 // import CrossPlain from '../../../svg/cross-plain'
 import Quill from '../../../svg/quill'
 import { usePopper } from 'react-popper';
+import { swalSuccess, swalError } from '../../../components/helpers/alerts';
 
 const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction}) => {
     const { title ="Untitled", type = "Donation", goal = "N/A", status = "achieved", date = "Missing"} = item
@@ -31,9 +32,9 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         <td className="title">
             <div className="flex"> 
                 <img className="title-img" />
-                <p onClick={onShowInfo}>
+                <span onClick={onShowInfo}>
                     { title }
-                </p>
+                </span>
             </div>
         </td>
         <td>
@@ -76,7 +77,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
     </tr>
 }
 //Button Popper and action 
-const ButtonPopper = ({buttonElement, actionClosure, btnAction}) => {
+const ButtonPopper = ({buttonElement, actionClosure, btnAction, loading}) => {
     const [popperElement, setPopperElement] = useState(null);
     const [arrowElement, setArrowElement] = useState(null);
     const [togglePopper, setToggle] = useState(false);
@@ -95,21 +96,26 @@ const ButtonPopper = ({buttonElement, actionClosure, btnAction}) => {
         <div ref={setArrowElement} 
             className='action-arrow' 
             style={{...styles.arrow, left: '-8px'}} />
-        <div className="button-container">
-            {
-                btnAction == 'approve' ?
-                <p className="text-center mb-2">Are you sure you want to approve this request?</p>
-                : <p className="text-center mb-2 text-red-400">Are you sure you want to reject this request?</p>
-            }
-            <div className="flex justify-between">
-                <Button className="text-white bg-gray-300 hover:bg-gray-500" onClick={()=>actionClosure(false)}>
-                    Cancel
-                </Button>
-                <Button className="text-white bg-blue-500 hover:bg-blue-600" onClick={()=>actionClosure(true)}>
-                    Yes
-                </Button>
+        {
+            loading ? <div className="button-container">
+                <p className="text-center mb-2">Loading...</p>
+            </div> : 
+            <div className="button-container">
+                {
+                    btnAction == 'approve' ?
+                    <p className="text-center mb-2">Are you sure you want to approve this request?</p>
+                    : <p className="text-center mb-2 text-red-400">Are you sure you want to reject this request?</p>
+                }
+                <div className="flex justify-between">
+                    <Button className="text-white bg-gray-300 hover:bg-gray-500" onClick={()=>actionClosure(false)}>
+                        Cancel
+                    </Button>
+                    <Button className="text-white bg-blue-500 hover:bg-blue-600" onClick={()=>actionClosure(true)}>
+                        Yes
+                    </Button>
+                </div>
             </div>
-        </div>
+        }
     </div>
 }
 
@@ -119,6 +125,7 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false, loadTable}
     const [checkAll, setCheckAll] = useState(false)
     const [needs, setNeeds] = useState([])
     const [popped, setPopItem] = useState(null)
+    const [popLoading, setPopLoading] = useState(false)
     const [buttonElement, setButton] = useState(null)
     const [action, setAction] = useState('approve')
 
@@ -151,12 +158,17 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false, loadTable}
     const executeButton = (execute)=>{
         //do axios here based on settings
         if(execute){
+            const text = action == 'approve' ? "You successfully approved a need" : "Need has been rejected, archieving"
+            // return;
+            setPopLoading(true)
             api.post(`/api/web/needs/${popped.id}/${action}`)
                 .then(()=>{
                     loadTable(true);
-                    alert('This is temp: Item has been '+action+'d');
+                    swalSuccess(text);
                 }).catch(()=>{
-
+                    swalError()
+                }).finally(()=>{
+                    setPopLoading(false);
                 })
             // alert("Do actions here "+ popped.id + " with settings "+ action)
         }
@@ -203,7 +215,7 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false, loadTable}
     </table>
     {
         popped && 
-        <ButtonPopper popped={popped} buttonElement={buttonElement} btnAction={action} actionClosure={executeButton}/>
+        <ButtonPopper popped={popped} loading={popLoading} buttonElement={buttonElement} btnAction={action} actionClosure={executeButton}/>
     }
     </>
 }

@@ -5,10 +5,9 @@ import OffersViewEdit from '../../../svg/offers-view-edit';
 import OffersViewWeb from '../../../svg/offers-view-web';
 import OffersViewPhone from '../../../svg/offers-view-phone';
 
-
 const OfferView = ({ setShowOfferEdit }) => {
     return(
-        <>
+        <div className="view-offer">
             <div className="view-offer__header flex flex-wrap">
                 <div className="view-offer__header-left flex flex-wrap">
                     <OffersViewStatus />
@@ -55,7 +54,7 @@ const OfferView = ({ setShowOfferEdit }) => {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

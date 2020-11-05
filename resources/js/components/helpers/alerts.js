@@ -53,3 +53,31 @@ export const swalDelete = async (name) => {
         })
     });
 }
+
+export const swalSuccess = async (text = 'Updated', width= '20rem', timer = 2000) => {
+    Swal.fire({
+        text,
+        icon: 'success',
+        title: 'Success!',
+        showConfirmButton: false,
+        showCancelButton: false,
+        backdrop: false,
+        position: 'top-end',
+        width,
+        timer
+    })
+}
+
+export const swalError = async (text = 'Something came up', width= '20rem', timer = 2000) => {
+    Swal.fire({
+        text,
+        icon: 'error',
+        title: 'Error!',
+        showConfirmButton: false,
+        showCancelButton: false,
+        backdrop: false,
+        position: 'top-end',
+        width,
+        timer
+    })
+}
