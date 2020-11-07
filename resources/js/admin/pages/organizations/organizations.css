@@ -225,6 +225,7 @@
     right: 0;
     padding: 15px 29px;
     border-top: 1.5px solid rgba(156, 174, 185, 0.2);
+    background-color: #fff;
 }
 .org-form__footer > div{
     justify-content: space-between;
@@ -417,7 +418,7 @@
 }
 .tab-active-needs article{
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     padding: 32px;
     border-bottom: 1.5px solid #F5F8FA;
 }
@@ -425,7 +426,7 @@
     width: 100%;
     max-width: 72px;
     height: 72px;
-    background: gray;
+    background: #D3E9F6;
     border-radius: 5px;
 }
 .tab-active-needs__details{

@@ -662,7 +662,6 @@ input, button{
 button:focus{
 	outline: none !important;
 }
-
 .group-content .progress {
 	height: 5px !important;
 }
@@ -744,4 +743,7 @@ div.view-map div.google-map{
 	height: 11px;
 	width: 11px;
 	margin-right: 5px;
+}
+input[type=checkbox]{
+	cursor: pointer;
 }
