@@ -4,25 +4,25 @@ const FormBusinessInfo = ({service, updateBusiness, errors}) => {
 	return(
         <section className="offers-service">
             <form className="w-full">
-                <div className={`form-group ${errors.busName && 'form-error'}`}>
+                <div className={`form-group ${errors.business_name && 'form-error'}`}>
                     <label>Name of Business</label>
-                    <input className="input-field" type="text" value={service.busName} onChange={({target})=>updateBusiness({...service, busName: target.value})} placeholder="Enter Business Name" />
+                    <input className="input-field" type="text" value={service.business_name} onChange={({target})=>updateBusiness({...service, business_name: target.value})} placeholder="Enter Business Name" />
                     {
-                        (errors.busName || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Business Name</span>
+                        (errors.business_name || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Business Name</span>
                     }
                 </div>
-                <div className={`form-group ${errors.busSite && 'form-error'}`}>
+                <div className={`form-group ${errors.business_site && 'form-error'}`}>
                     <label>Business Website (optional)</label>
-                    <input className="input-field" type="text" value={service.busSite} onChange={({target})=>updateBusiness({...service, busSite: target.value})} placeholder="eg. sample@gmail.com" />
+                    <input className="input-field" type="text" value={service.business_site} onChange={({target})=>updateBusiness({...service, business_site: target.value})} placeholder="eg. sample@gmail.com" />
                     {
-                        (errors.busSite || false) && <span className="text-xs pt-1 text-red-500 italic">Missing business website</span>
+                        (errors.business_site || false) && <span className="text-xs pt-1 text-red-500 italic">Missing business website</span>
                     }
                 </div>
-                <div className={`form-group ${errors.busContact && 'form-error'}`}>
+                <div className={`form-group ${errors.business_contact && 'form-error'}`}>
                     <label>Contact Number</label>
-                    <input className="input-field" type="text" value={service.busContact} onChange={({target})=>updateBusiness({...service, busContact: target.value})} placeholder="eg. (02) 9876 5432" />
+                    <input className="input-field" type="text" value={service.business_contact} onChange={({target})=>updateBusiness({...service, business_contact: target.value})} placeholder="eg. (02) 9876 5432" />
                     {
-                        (errors.busContact || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Contact number</span>
+                        (errors.business_contact || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Contact number</span>
                     }
                 </div>
             </form>

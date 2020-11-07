@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import OffersFormCross from '../../../svg/offers-form-cross';
+import { swalError } from '../../../components/helpers/alerts';
+
 // import FormSelectCategory from './form-select-category';
 import FormServiceInfo from './form-service-info';
 import FormBusinessInfo from './form-business-info';
@@ -10,15 +12,16 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
     //form state
     const [countTab, setCountTab] = useState(1);
     //form fields
-    const [category, setCategory] = useState([]);
+    const [category, setCategory] = useState({});
     const [title, setTitle] = useState('');
     const [desc, setDesc] = useState('');
     const [location, setLocation] = useState({});
     const [photo, setImage] = useState(null);
-    const [busName, setBusName] = useState('');
-    const [busSite, setBusSite] = useState('');
-    const [busContact, setBusContact] = useState('');
+    const [business_name, setBusName] = useState('');
+    const [business_site, setBusSite] = useState('');
+    const [business_contact, setBusContact] = useState('');
     //validators
+    const [files, setFiles] = useState([])// for checking
     const [errors, setErrors] = useState({});
     //loaders and submit
     const [submitting, setSubmitting] = useState(false);
@@ -29,21 +32,20 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
     }, [data])
 
     const handleCategories = (item, truth = false) => {0
-        setCategory(truth ? [] : [item]);
+        setCategory(item);
     }
 
     const updateService = ({title, desc, location, photo}) => {
-        // console.log('added?', title, desc, location, photo);
         setTitle(title)
         setDesc(desc)
         setLocation(location)
         setImage(photo)
     }
 
-    const updateBusiness = ({busName, busSite, busContact}) => {
-        setBusName(busName)
-        setBusSite(busSite)
-        setBusContact(busContact)
+    const updateBusiness = ({business_name, business_site, business_contact}) => {
+        setBusName(business_name)
+        setBusSite(business_site)
+        setBusContact(business_contact)
     }
 
     const showTabTitle = () => {
@@ -65,11 +67,12 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
         if(newCount > countTab)
             switch(countTab){
                 case 1:
-                if(category.length <= 0){
+                if(_.isEmpty(category)){
                     setErrors({
                         ...errors,
                         category: 'Missing Category'
                     })
+                    setCountTab(1) //meaning show tab 1
                     return;
                 } else {
                     delete errors.category
@@ -88,6 +91,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
                         ...errors,
                         ...set
                     })
+                    setCountTab(2)
                     return;
                 } else {
                     delete errors.title;
@@ -99,8 +103,8 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
                 break;
                 case 3:
                 set = {
-                    busName: busName == '' ? 'Missing business name' : null,
-                    busContact: busContact == '' ? 'Missing business contract' : null
+                    business_name: business_name == '' ? 'Missing business name' : null,
+                    business_contact: business_contact == '' ? 'Missing business contract' : null
                 }
                 if(Object.values(set).filter(i=>i).length > 0){
                     setErrors({
@@ -109,8 +113,8 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
                     })
                     return;
                 } else {
-                    delete errors.busName;
-                    delete errors.busContact;
+                    delete errors.business_name;
+                    delete errors.business_contact;
                     setErrors({...errors});
                 }
                 break;
@@ -120,42 +124,36 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
     }
 
     const submit = () => {
-        setSubmitting(true)
-        const submitPromise = !data.id ? 
-            api.post(`/api/web/offers`, {
+        validateTab(3);
+        if(_.isEmpty(errors)){
+            setSubmitting(true)
+            const params = {
                 title,
                 category,
                 location,
-                busName,
-                busSite,
-                busContact,
-                photo: files.length > 0 ? photo : null,
+                business_name,
+                business_site,
+                business_contact,
+                photo,//: files.length > 0 ? photo : null,
                 description: desc || ''
-            }) : 
-            api.update(`/api/web/offers/${data.id}`, {
-                params: {
-                    title,
-                    category,
-                    location,
-                    busName,
-                    busSite,
-                    busContact,
-                    photo: files.length > 0 ? photo : null,
-                    description: about || bring || ''
-                }
-            })
-
-        submitPromise.then(({data})=>{
-            setSubmitting(false)
-            handleForm(false, 'submit', data.data);
-        }).catch(err=>{
-            // console.log('error', err, err.response)
-            if(err.response){
-                const { data } = err.response
-                setErrors(data.errors || [])
             }
-            setSubmitting(false)
-        })
+            const submitPromise = !data.id ? 
+                api.post(`/api/web/offers`, params) : 
+                api.update(`/api/web/offers/${data.id}`, { params })
+
+            submitPromise.then(({data})=>{
+                setSubmitting(false)
+                handleForm(false, 'submit', data.data);
+            }).catch(err=>{
+                if(err.response){
+                    const { data } = err.response
+                    setErrors(data.errors || [])
+                }
+                setSubmitting(false)
+            })
+        } else {
+            swalError();
+        }
     }
 
     return (
@@ -188,24 +186,24 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
             <div className="offers-create-form__body">
                 {showTabTitle()}
                 { countTab == 1 && <CategoryGrid selectedCategories={category} handleCategories={handleCategories} errors={errors.category}/>}
-                { countTab == 2 && <FormServiceInfo service={{title, desc, location, photo}} updateService={updateService} errors={errors}/>}
-                { countTab == 3 && <FormBusinessInfo service={{busName, busSite, busContact}} updateBusiness={updateBusiness} errors={errors}/>}
+                { countTab == 2 && <FormServiceInfo service={{title, desc, location, photo}} updateService={updateService} fileList={(e)=>console.log('filepond files', e)} errors={errors}/>}
+                { countTab == 3 && <FormBusinessInfo service={{business_name, business_site, business_contact}} updateBusiness={updateBusiness}  errors={errors}/>}
             </div>
 
              <section className="offers-category-opt">
                 <div className="offers-category-opt__container flex">
                     <button className="discard" onClick={()=>setShowForm(false)}>Discard</button>
                     {
-                        editing ? <button className="next" onClick={()=>setShowForm(false)}>Submit</button> 
+                        editing ? <button className="next" disabled={submitting} onClick={()=>setShowForm(false)}>{submitting? 'Submitting...' :'Submit'}</button> 
                         : <div>
                             {
                                 countTab > 1 &&
-                                <button className="back" onClick={() => validateTab(countTab-1)}>Back</button>
+                                <button className="back" disabled={submitting} onClick={() => validateTab(countTab-1)}>Back</button>
                             }
                             {
                                 (countTab < 3) 
-                                ? (<button className="next" onClick={() => validateTab(countTab+1)}>Next</button>)
-                                : (<button className="next">Create</button>)
+                                ? (<button className="next" disabled={submitting} onClick={() => validateTab(countTab+1)}>Next</button>)
+                                : (<button className="next" disabled={submitting} onClick={submit}>{submitting? 'Submitting...': 'Create'}</button>)
                             }
                         </div>
                     }

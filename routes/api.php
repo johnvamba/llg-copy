@@ -36,6 +36,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::resource('organizations', 'OrganizationController');
 
         Route::resource('offers', 'OffersController');
+
+        Route::resource('users', 'UsersController');
     });
 
     /** Role resource module */

@@ -19,7 +19,7 @@ const Offers = () => {
     const [isChecked, setIsChecked] = useState(false);
     const [loading, setLoading] = useState(false);
     const [offers, setOffers] = useState([])
-
+    const [count, setCount] = useState(0);
 
     const loadTable = (clearCache = false) => {
         const addFilter = {}; //for redux values
@@ -35,8 +35,9 @@ const Offers = () => {
             cancelToken: token.token
         }).then((res)=>{
             const { data } = res
-            // const { aggregate, current, past} = data
+            const { offers_count } = data
             setOffers(data.data || [])
+            setCount(offers_count || 0)
         }).finally(()=>{
             setLoading(false)
         })
@@ -63,21 +64,21 @@ const Offers = () => {
             loadTable(true)
             //or insert data here
         }
-        showForm(form)
+        setShowForm(form)
     }
 
     const showItem = (data, showView = true, showForm=false) => {
         setShowView(showView);
         setShowForm(showForm);
         setFocus(data);
-        console.log('show data?', showView, data)
+        // console.log('show data?', showView, data)
     }
 
     return (
         <>
             <div className="offers-create h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
                 <div className="flex flex-1">
-                    <h1>Offers</h1>
+                    <h1>Offers { count > 0 ? `(${count})` : ''}</h1>
                 </div>
                 <button className="flex justify-end rounded-sm" onClick={()=>showItem({}, false, true)}>
                     <OffersPlus />

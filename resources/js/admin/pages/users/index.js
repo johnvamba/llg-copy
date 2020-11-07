@@ -4,7 +4,8 @@ import * as UsersActions from '../../../redux/users/actions';
 import DataTable from '../../../components/layout/DataTable';
 
 import UsersHeader from './header';
-import UsersList from './list';
+import UserTable from './table';
+import OffersPlus from '../../../svg/offers-plus';
 import UsersForm from './form';
 import './users.css';
 
@@ -14,6 +15,9 @@ const Users = () => {
 
     const [showAddUser, setShowAddUser] = useState(false);
     const [showEditUser, setShowEditUser] = useState(false);
+    const [count, setCount] = useState(0);
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [userData, setUserData] = useState({
         title: '',
         email: '',
@@ -22,26 +26,41 @@ const Users = () => {
         dateAdded: '',
     });
 
-
-    const users = useSelector(
-        state => state.UsersReducer.users
-    );
     const roles = useSelector(state => state.AuthUserReducer.roles);
 
-    const disptach = useDispatch();
+    const dispatch = useDispatch();
+
+    const loadTable = (clearCache = false) => {
+        const addFilter = {}; //for redux values
+        const token = axios.CancelToken.source();
+        api.get(`/api/web/users`, {
+            params: {
+                page, ...addFilter
+            },
+            cache: {
+                exclude: { query: false },
+            }, 
+            clearCacheEntry: clearCache,
+            cancelToken: token.token
+        }).then((res)=>{
+            const { data } = res
+            const { users_count } = data
+            setUsers(data.data || [])
+            setCount(users_count || 0)
+        }).finally(()=>{
+            setLoading(false)
+        })
+        return token; //for useEffect
+    }
 
     useEffect(() => {
-        async function fetchData() {
-            let { data } = await axios.post('/api/users/lists', {
-                limit: limit
-            });
-
-            disptach(UsersActions.setUsers(data));
+        setLoading(true)
+        const ct = loadTable();
+        return ()=>{
+            //cancel api here
+            ct.cancel('Resetting');
         }
-
-        fetchData();
-    }, [limit]);
-
+    }, []);
     const handleLimitChange = (limit) => {
         setLimit(parseInt(limit));
     }
@@ -49,14 +68,29 @@ const Users = () => {
     const handleChangePage = (page) => {
         setPage(parseInt(page));
     }
-    // if (roles.name !== 'admin') {
-    //     window.location = '/admin';
-    // }
+
+    const showItem = (data, showView = true, showForm=false) => {
+        // setShowView(showView);
+        // setShowForm(showForm);
+        // setFocus(data);
+    }
 
     return (
         <>
-            <UsersHeader setShowAddUser={setShowAddUser} />
-            <UsersList setShowEditUser={setShowEditUser} />
+            <section className="offers-create h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
+                <div className="flex flex-1">
+                    <h1>Users { count > 0 ? `(${count})` : ''}</h1>
+                </div>
+                <div className="flex flex-1 justify-end">
+                    <button className="flex rounded-sm" onClick={() => setShowAddUser(true)}>
+                        <OffersPlus />
+                        <span>Add User</span>
+                    </button>
+                </div>
+            </section>
+            <div className="component-body flex p-8">
+                <UserTable data={users} showInfo={showItem} loading={loading}/>
+            </div>
             {
                 (showAddUser || showEditUser) && <UsersForm setState={(showAddUser) ? setShowAddUser : setShowEditUser} state={userData} label={(showAddUser) ? 'Add User' : 'Edit User'} />
             }

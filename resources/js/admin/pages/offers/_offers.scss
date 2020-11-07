@@ -514,7 +514,7 @@
 			}
 			div{
 				align-items: center;
-				label{
+				a.link{
 					font-family: "Lato", sans-serif;
 					font-style: normal;
 					font-weight: normal;
@@ -524,7 +524,7 @@
 					margin-left: 9px;
 				}
 			}
-			button{
+			a.button{
 				border: 1px solid #109CF1;
 				box-sizing: border-box;
 				border-radius: 4px;

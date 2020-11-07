@@ -32,6 +32,10 @@ class NeedsController extends Controller
         $need = Need::with(['type', 'media'])
             ->latest();
 
+        if($user = auth()->user()){
+            //filter by user here
+        }
+
         if($tab = $request->get('tab')){
             $need->when($tab == 'request', fn($need) => $need->whereNull('approved_at') )
                 ->when($tab == 'all', fn($need) => $need->whereNotNull('approved_at') )

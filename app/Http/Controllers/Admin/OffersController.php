@@ -4,8 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 use App\ServiceOffer;
+use App\ServiceType;
+use App\User;
+
 use App\Http\Resources\OfferResource;
+use DB;
+use Str;
 
 class OffersController extends Controller
 {
@@ -18,7 +24,14 @@ class OffersController extends Controller
     {
         $offers = ServiceOffer::latest()->with('serviceType');
 
-        return OfferResource::collection($offers->paginate());
+        if($user = auth()->user()){
+            //filter by user here
+        }
+
+        return OfferResource::collection($offers->paginate())
+            ->additional([
+                'offers_count' => ServiceOffer::count()
+            ]);
     }
 
     /**
@@ -39,7 +52,58 @@ class OffersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string',
+            'category' => 'required',
+            'description' => 'required',
+            'location' => 'required',
+            'description' => 'required',
+            'photo' => 'required',
+            'business_name' => 'required',
+            'business_contact' => 'required',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $category = $request->get('category')[0] ?? null;
+
+            $user = auth()->user();
+
+            $type = ServiceType::where('name', $category['name'] ?? '')->first();
+
+            $location = $request->get('location');
+
+            $offer = ServiceOffer::create(
+                $request->only('title', 'description', 'business_name', 'business_contact') 
+                + [
+                    'model_type' => User::class,
+                    'model_id' => optional($user)->id ?? 1,
+                    'service_type_id' => optional($type)->id ?? 1,
+                    'location' => $location['location'] ?? 'N/A',
+                    'lng' => $location['lng'] ?? 0.0,
+                    'lat' => $location['lat'] ?? 0.0,
+                ]
+            );
+
+            if ($image = $request->get('photo')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($image))[1];
+                
+                $offer 
+                    ->addMediaFromBase64($image)
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
+
+                $offer->getMedia();
+            }
+
+            DB::commit();
+            return new OfferResource($offer);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error'=>$e->getMessage()], 400);
+        }
     }
 
     /**
@@ -48,7 +112,7 @@ class OffersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(ServiceOffer $offers)
+    public function show(ServiceOffer $offer)
     {
         //
     }
@@ -59,7 +123,7 @@ class OffersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(ServiceOffer $offers)
+    public function edit(ServiceOffer $offer)
     {
         //
     }
@@ -71,9 +135,61 @@ class OffersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ServiceOffer $offers)
+    public function update(Request $request, ServiceOffer $offer)
     {
-        //
+         $request->validate([
+            'title' => 'required|string',
+            'category' => 'required',
+            'description' => 'required',
+            'location' => 'required',
+            'description' => 'required',
+            'photo' => 'required',
+            'busName' => 'required',
+            'busContact' => 'required',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $category = $request->get('category') ?? null;
+
+            $user = auth()->user();
+
+            $type = ServiceType::where('name', $category['name'] ?? '')->firstOrFail();
+
+            $location = $request->get('location');
+
+            $offer->fill(
+                $request->only('title', 'description') 
+                + [
+                    'model_type' => User::class,
+                    'model_id' => optional($user)->id ?? 1,
+                    'service_type_id' => optional($type)->id ?? 1,
+                    'location' => $location['location'] ?? 'N/A',
+                    'lng' => $location['lng'] ?? 0.0,
+                    'lat' => $location['lat'] ?? 0.0,
+                ]
+            );
+
+            if ($image = $request->get('photo')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($image))[1];
+                
+                $offer 
+                    ->addMediaFromBase64($image)
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
+
+                $offer->getMedia();
+            }
+
+            $offer->save();
+            DB::commit();
+            return new OfferResource($offer);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['error'=>$e->getMessage()], 400);
+        }
     }
 
     /**
@@ -82,7 +198,7 @@ class OffersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ServiceOffer $offers)
+    public function destroy(ServiceOffer $offer)
     {
         //
     }

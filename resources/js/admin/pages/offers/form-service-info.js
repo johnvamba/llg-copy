@@ -4,7 +4,7 @@ import Browse from '../../../svg/browse';
 import Imagepond from '../../../components/Imagepond';
 import Location from '../../../components/Location'
 
-const FormServiceInfo = ({service, updateService, errors}) => {
+const FormServiceInfo = ({service, updateService, errors, fileList}) => {
     const handleLocation = ({formatted_address, geometry}) => {
         updateService({
             ...service,
@@ -44,7 +44,7 @@ const FormServiceInfo = ({service, updateService, errors}) => {
                     placesSelected={handleLocation}
                     errors={errors.location || []}
                 />
-                <Imagepond photo={service.photo} imageSelected={updatePhoto} errors={errors.photo}/>
+                <Imagepond photo={service.photo} imageSelected={updatePhoto} updatedFiles={(e)=>console.log('service info files', e)} errors={errors.photo}/>
             </form>
         </section>
 	)

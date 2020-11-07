@@ -1,6 +1,6 @@
 import React from 'react';
 import OffersPlus from '../../../svg/offers-plus';
-
+//depreciate
 const UsersHeader = ({ setShowAddUser }) => {
     return (
         <>

@@ -28943,7 +28943,7 @@ video {
   align-items: center;
 }
 
-.view-offer__bottom > div div label {
+.view-offer__bottom > div div a.link {
   font-family: "Lato", sans-serif;
   font-style: normal;
   font-weight: normal;
@@ -28953,7 +28953,7 @@ video {
   margin-left: 9px;
 }
 
-.view-offer__bottom > div button {
+.view-offer__bottom > div a.button {
   border: 1px solid #109CF1;
   box-sizing: border-box;
   border-radius: 4px;

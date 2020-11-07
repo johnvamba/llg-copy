@@ -21,12 +21,12 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
             case 'achieved':
             case 'Achieved':
             return <span className="label label-success">Achieved</span>;
-            case 'on-going':
-            case 'On-Going':
-            return <span className="label label-active">On-Going</span>;
             case 'pending':
-            case 'Pending':
-            return <span className="label label-pending">Pending</span>;
+            case 'pending':
+            return <span className="label label-active">On-Going</span>;
+            case 'denied':
+            case 'Denied':
+            return <span className="label label-pending">Denied</span>;
             default:
             return <span className="label label-secondary">Unknown</span>;
         }

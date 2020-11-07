@@ -13,7 +13,6 @@ const Imagepond = ({
     name,
     photo,
     imageSelected,
-    onprocessfile,
     updateFiles,
     className = '',
     errors,
@@ -48,7 +47,7 @@ const Imagepond = ({
                 <FilePond
                     files={files}
                     onaddfile={handleImage}
-                    onprocessfile={onprocessfile}
+                    onupdatefiles={updateFiles}
                     allowMultiple={false}
                     name="files"
                     labelIdle='Drag & Drop or <span class="filepond--label-action">Browse</span>'

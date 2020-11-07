@@ -19,7 +19,10 @@ class OfferResource extends JsonResource
             'title' => $this->title,
             'type' => $this->when($this->relationLoaded('serviceType'), optional($this->serviceType)->name),
             'location' => $this->location,
-            'status' => ucfirst($this->status),
+            'status' => $this->status,
+            'ucstatus' => ucfirst($this->status),
+            'photo' => $this->getFirstMediaUrl('photo'),
+            'description' => $this->description,
             'date' => $this->created_at->format('m/d/Y')
         ];
         // return parent::toArray($request);

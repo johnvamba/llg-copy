@@ -16,7 +16,7 @@ const CatComponent = ({cat, onSelect, truth = false}) => {
 const CategoryGrid = ({
     className,
     // label = "Select Category",
-    selectedCategories = [],
+    selectedCategories = {},
     handleCategories,
     errors,
     ...props
@@ -25,23 +25,26 @@ const CategoryGrid = ({
     const [loading, setLoading] = useState(false);
     const [scrollLeft, setScrollLeft] = useState(0);
 
-    // useEffect(()=>{
-    //     //load categories here.
-    // }, [type])
+    const truth = (cat)=>{
+        if(Array.isArray(selectedCategories))
+            return selectedCategories.findIndex(i=> cat.slug == i.slug || cat.name == i.name) >= 0;
+        else 
+            return selectedCategories.slug == cat.slug;
+    }
 
     const categoryWheel = event => {
         const { target } = event
         // target.scrollLeft += (event.deltaY / 10)
-        console.log('onWheel', event.deltaY, target.scrollLeft)
+        // console.log('onWheel', event.deltaY, target.scrollLeft)
         // target.scrollX += event.deltaY
     }
 
     const categoryScroll = event => {
         const { target } = event
-        if(target.offsetWidth + target.scrollLeft >= target.scrollWidth)
-            console.log('final', target.offsetWidth, target.scrollLeft, target.scrollWidth);
-        else
-            console.log('scrolling',target.offsetWidth, target.scrollLeft, target.scrollWidth);
+        // if(target.offsetWidth + target.scrollLeft >= target.scrollWidth)
+        //     console.log('final', target.offsetWidth, target.scrollLeft, target.scrollWidth);
+        // else
+        //     console.log('scrolling',target.offsetWidth, target.scrollLeft, target.scrollWidth);
 
         setScrollLeft(event.target.scrollLeft)
     }
@@ -69,7 +72,7 @@ const CategoryGrid = ({
                     volunteer.length &&
                     volunteer.map((cat, ind)=><CatComponent key={cat.slug} 
                         cat={cat}
-                        truth={selectedCategories.findIndex(i=> cat.slug == i.slug || cat.name == i.name) >= 0}
+                        truth={truth(cat)}
                         onSelect={handleCategories}
                         />)
                 }
