@@ -22,7 +22,7 @@ class UserResource extends JsonResource
             'title' => $this->name,//$this->when($profile, optional($profile)->firstname . ' '. optional($profile)->lastname, $this->name),
             'email' => $this->email,
             'status' => ucfirst($this->status),
-            'photo' => $this->getFirstMediaUrl('photo'),
+            'photo' => $this->when($profile, optional($profile)->getFirstMediaUrl('photo')),
             'age' => $this->when($profile, optional($profile)->age, 18),
             'bio' => $this->when($profile, optional($profile)->bio),
             'date' => $this->created_at->format('m/d/Y')

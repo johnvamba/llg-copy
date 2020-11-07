@@ -5,16 +5,17 @@ import Circlet from '../../../svg/circlet';
 import OffersViewEdit from '../../../svg/offers-view-edit';
 import OffersViewWeb from '../../../svg/offers-view-web';
 import OffersViewPhone from '../../../svg/offers-view-phone';
+import MapMini from '../../../components/helpers/map/index-mini';
 
 import { volunteer } from '../needs/categorylist';
 import { Other } from '../needs/categories'
 
-const OfferView = ({ setShowOfferEdit, data }) => {
-    const { title, type, location, business_name, status, business_link, business_contact, photo, description, date } = data
+const OfferView = ({ setShowOfferEdit, data = {} }) => {
+    const { title, type, location, business_name, status, business_site, business_contact, photo, description, date, lng, lat } = data
     const catIcon = volunteer.find(i=>i.name == type);
 
     const addHttp = () => {
-        let newLink = encodeURI(business_link);
+        let newLink = encodeURI(business_site);
         return newLink.search(/^(http|https)/) >= 0 ? newLink : 'http://' + newLink; 
     }
 
@@ -69,10 +70,10 @@ const OfferView = ({ setShowOfferEdit, data }) => {
                     }
                         <label>{type}</label>
                     </div>
-                <div className="view-offer__map">
-                    <label>Location</label>
-                    <div>
-
+                <div className="view-map">
+                    <label>Location</label>                    
+                    <div className="google-map">
+                        <MapMini lat={lat} lng={lng}/>
                     </div>
                 </div>
                 <label className="view-offer__about">About</label>
@@ -82,19 +83,22 @@ const OfferView = ({ setShowOfferEdit, data }) => {
                         <label>Offer By</label>
                         <h3>{business_name}</h3>
                         {
-                            business_link &&
+                            business_site &&
                             <div className="flex">
                                 <OffersViewWeb />
-                                <a className="link" href={addHttp()} target="_blank">{business_link}</a>
+                                <a className="link" href={addHttp()} target="_blank">{business_site}</a>
                             </div>
                         }
-                        <div className="flex">
-                            <OffersViewPhone />
-                            <label>(02)9876 5432</label>
-                        </div>
+                        {
+                            business_contact && 
+                            <div className="flex">
+                                <OffersViewPhone />
+                                <a className="link" href="#">{ business_contact }</a>
+                            </div>
+                        }
                     </div>
                     {
-                        business_link &&
+                        business_site &&
                         <div>
                             <a className='button' href={addHttp()} target="_blank">View Website</a>
                         </div>

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as NeedsActions from '../../../redux/needs/actions';
 // import DataTable from '../../../components/layout/DataTable';
 import Button from '../../../components/Button';
+import MapMini from '../../../components/helpers/map/index-mini';
 import Check from '../../../svg/check'
 import Cross from '../../../svg/cross'
 // import CrossPlain from '../../../svg/cross-plain'
@@ -10,12 +11,14 @@ import Quill from '../../../svg/quill'
 import Circlet from '../../../svg/circlet'
 import Pencil from '../../../svg/pencil'
 
+import { all } from './categorylist'
 //As test icon only
 // import IconTest from '../../../svg/icon-test'
 
 import './needs.css';
 
 const NeedInfo = ({data, clickEdit, toClose}) => {
+    const sampleSvg = all[0];
     const [loading, setLoading] = useState(false);
     const [ratio, setRatio] = useState(0);
     const [category, setCategory] = useState([]);
@@ -38,11 +41,13 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                 date,
                 time,
                 location,
-                ratio
+                ratio,
+                category
             } = data.data
             // setTitle(title || '');
             setDescription(description || '');
-            setCategory(category || []);
+            console.log(all.filter(i => category.indexOf(i.name) >= 0), all,category)
+            setCategory(all.filter(i => category.indexOf(i.name) >= 0));
             setPhoto(photo || '');
             setRatio(ratio || 0);
             // setGoal(goal || 0);
@@ -114,9 +119,21 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                         <h3>{data.title} <span>{data.date}</span> </h3>
     	            	<h5>{data.type || 'Donation'}</h5>
                 	</div>
-                	<div className="group-content">
-                		<label>Categories</label>
-                	</div>
+                    {
+                        category.length > 0 &&
+                    	<div className="group-content">
+                    		<label>Categories</label>
+                            <div className="content-category">
+                            {
+                                category.map((i,ind)=> <span key={ind} className="category">
+                                        <i.svg_class active={true}/>
+                                        {i.name}
+                                    </span>
+                                )
+                            }
+                            </div>
+                    	</div>
+                    }
                     <div className="group-content">
                         <div className="progress">
                             <div className="progress-bar" style={{width: `${ratio}%`}}></div>
@@ -132,9 +149,11 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                             <p>{data.time || 'N/A'}</p>
                     	</div>
                     </div>
-                	<div className="group-content">
+                	<div className="group-content view-map">
                 		<label>Location</label>
-                		<div className="need-map"></div>
+                		<div className="google-map">
+                            <MapMini lat={data.lat} lng={data.lng}/>
+                        </div>
                 	</div>
                     {
                         data.type == 'Volunteer' ? 

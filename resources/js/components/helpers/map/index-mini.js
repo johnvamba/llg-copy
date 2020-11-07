@@ -13,10 +13,10 @@ const defaultMapOptions = {
 
 const defaultContainerStyle = {
     width: '100%',
-    height: '440px'
+    height: '100%'
 };
 
-const MapMini = ({id = "nearby-organization", mapOptions, containerStyle, markers, lat, lng, zoom=14, ...props}) => {
+const MapMini = ({id = "nearby-organization", mapOptions, containerStyle, markers = [], lat=-33.868782, lng=151.207583, zoom=14, ...props}) => {
 
     const handleClick = async(org) => {
         let {data} = await axios.get(`/api/organizations/${org}`);

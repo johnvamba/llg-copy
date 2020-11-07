@@ -29,6 +29,9 @@ class NeedResource extends JsonResource
             'date' => $this->created_at->format('m/d/Y'),//'08/27/2020'
             'time' => $this->created_at->format('h:i A'),
             'organization' => $this->whenLoaded('organization', $this->parseOrg()),
+            'lat' => (float) $this->lat,
+            'lng' => (float) $this->lng,
+            'category' => $this->whenLoaded('categoriesList', $this->categoriesList->pluck('name'))
         ] + ($this->complete ? [
             'photo' => $this->getFirstMediaUrl('photo'),
             'ratio' => $this->getRatio(),

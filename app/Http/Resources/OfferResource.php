@@ -23,7 +23,12 @@ class OfferResource extends JsonResource
             'ucstatus' => ucfirst($this->status),
             'photo' => $this->getFirstMediaUrl('photo'),
             'description' => $this->description,
-            'date' => $this->created_at->format('m/d/Y')
+            'date' => $this->created_at->format('m/d/Y'),
+            'lat' => (float) $this->lat,
+            'lng' => (float) $this->lng,
+            'business_name' => $this->business_name,
+            'business_site' => $this->business_site,
+            'business_contact' => $this->business_contact,
         ];
         // return parent::toArray($request);
     }

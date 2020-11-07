@@ -153,3 +153,4 @@ export const volunteer = [
 	}
 ]
 
+export const all = [...monetary, ...volunteer];
