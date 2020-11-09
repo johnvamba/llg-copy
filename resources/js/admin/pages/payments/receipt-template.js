@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import TemplateForm from './template-form';
 import ReceiptList from './receipt-list';
+import TemplateForm1 from './template-form-1';
 import ReceiptTemplateV2 from './receipt-template-v2';
 import OffersPlus from '../../../svg/offers-plus';
 
@@ -25,9 +26,10 @@ const ReceiptTemplate = () => {
                 </header>
                 <section className="r-template__body">
                     {/* <TemplateForm /> */}
-                    {/* <ReceiptList /> */}
+                    <ReceiptList />
                     {
-                        addTemplate && <ReceiptTemplateV2 />
+                        // addTemplate && <ReceiptTemplateV2 />
+                        // addTemplate && <TemplateForm1 />
                     }
                     
                 </section>

@@ -280,6 +280,15 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                             </div>
                         }
                     </div>
+                    <div
+                        className={`mt-6 
+                        ${location.pathname == "/api" ? "text-blue-400" : "text-gray-400"}`}
+                    >
+                        <Link to="/api" className="flex items-center">
+                            <i className="text-xl fas fa-hand-holding-heart"></i>
+                            <span className="px-4">API</span>
+                        </Link>
+                    </div>
                 </nav>
             </div>
         </>
