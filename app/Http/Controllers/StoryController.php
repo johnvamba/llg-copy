@@ -22,19 +22,24 @@ class StoryController extends Controller
      */
     public function index()
     {
-        $stories = Story::with(
+        $stories = Story::with([
                 'user', 
                 'user.profile', 
                 'organization', 
-                'appreciates',
-                'appreciates.user',
-                'appreciates.user.profile',
-            )
+            ])
+            ->withCount('appreciates')
             ->orderBy('created_at', 'desc')
             ->paginate();
 
         foreach ($stories as $story) {
             $story['photo'] = $story->getFirstMediaUrl('photo');
+
+            $appreciate = StoryAppreciate::where([
+                ['user_id', auth()->user()->id],
+                ['story_id', $story->id]
+            ])->count();
+
+            $story['appreciated'] = $appreciate ? true  : false;
         }
 
         return response()->json($stories);
@@ -149,14 +154,59 @@ class StoryController extends Controller
      * @param  json
      * @return \Illuminate\Http\Response
      */
-    public function addAppreciate(Story $story)
+    public function Appreciate(Story $story)
     {
+        $appreciated = StoryAppreciate::where([
+                ['story_id', $story->id],
+                ['user_id', auth()->user()->id]
+            ])->first();
+        
+        if ($appreciated) {
+            try {
+                $appreciated->delete();
+
+                return response()->json([
+                    'message' => 'Story successfully unappreciated'
+                ], 204);
+            } catch (\Exception $e) {
+                return response()->json([
+                        'message' => 'An error occurred. Please try again.'
+                    ], 500);
+            }
+        } 
+
         $appreciate = StoryAppreciate::create([
-                'story_id' => $story->id,
-                'user_id' => auth()->user()->id
-            ]);
+            'story_id' => $story->id,
+            'user_id' => auth()->user()->id
+        ]);
 
         return response()->json($appreciate, 202);
+    }
+
+    /**
+     * Display comments
+     *
+     * @param json
+     * @return \Illuminate\Http\Response
+     */
+    public function getComments(Request $request, Story $story)
+    {
+        $comments = CommentStory::with('user', 'user.profile')
+            ->where('story_id', $story->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        foreach ($comments as $comment) {
+            $comment->getMedia();
+        }
+
+        foreach($comments as $comment) {
+            foreach($comment['media'] as $media) {
+                $media['publicUrl'] = $media->getFullUrl();
+            }
+        }
+
+        return response()->json($comments);
     }
 
     /**
@@ -172,6 +222,26 @@ class StoryController extends Controller
                 'user_id' => auth()->user()->id,
                 'comment' => $request->comment
             ]);
+
+        if ($request->get('attachment')) {
+            $image = $request->get('attachment');
+            $name = time().'-'.Str::random(20);
+            $extension = explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            
+            $comment 
+                ->addMediaFromBase64($image)
+                ->usingName($name)
+                ->usingFileName($name.'.'.$extension)
+                ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
+        }
+
+        $comment->getMedia();
+
+        foreach($comment['media'] as $media) {
+            $media['publicUrl'] = $media->getFullUrl();
+        }
+
+        $comment->load('user', 'user.profile');
 
         return response()->json($comment, 202);
     }

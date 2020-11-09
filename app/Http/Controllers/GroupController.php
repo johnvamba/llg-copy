@@ -12,7 +12,9 @@ use App\Group;
 use App\Goal;
 use App\Tag;
 use App\GroupChat;
+use App\NeedMet;
 use DB;
+use Carbon\Carbon;
 
 class GroupController extends Controller
 {
@@ -80,13 +82,96 @@ class GroupController extends Controller
      */
     public function getDiscoverGroups(Request $request)
     {
-        $groups = Group::where([
+        $groups = Group::with(['goals' => function($query) {
+                $query->where('status', 'in progress')
+                    ->orderBy('id', 'desc')
+                    ->first();
+            }])
+            ->where([
                 ['user_id', '!=', auth()->user()->id],
                 ['privacy', 'public']
             ])
-            ->inRandomOrder()->get();
+            ->inRandomOrder()
+            ->get();
+
+        foreach ($groups as $group) {
+            $participants = GroupParticipant::where([
+                    ['group_id', $group->id],
+                    ['status', 'approved'],
+                ])
+                ->pluck('user_id');
+
+            $group['need_mets_count'] = count($participants) > 0 
+                ? NeedMet::whereHasMorph(
+                    'model',
+                        ['App\User'],
+                        function ($query) use ($participants) {
+                            $query->whereIn('model_id', $participants);
+                        }
+                    )->count()
+                : 0;
+
+            $group['members_count'] = GroupParticipant::where([
+                    ['group_id', $group->id],
+                    ['status', 'approved']
+                ])->count();
+        }
 
         return response()->json($groups, 200);
+    }
+
+    /**
+     * Display user joined/created group.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getMyGroup(Request $request)
+    {
+        $group = Group::with(['goals' => function($query) {
+                $query->where('status', 'in progress')
+                    ->orderBy('id', 'desc')
+                    ->first();
+            }])
+            ->where('user_id', auth()->user()->id)
+            ->first();
+
+        if (!$group) {
+            $participated = GroupParticipant::where([
+                    ['user_id', auth()->user()->id],
+                    ['status', 'approved']
+                ])
+                ->first();
+
+            if ($participated) {
+                $group = Group::where('group_id', $participated->group_id)
+                    ->first();
+            } else {
+                return response()->json($participated);
+            }
+        }
+
+        $participants = GroupParticipant::where([
+                ['group_id', $group->id],
+                ['status', 'approved'],
+            ])
+            ->pluck('user_id');
+
+        $group['need_mets_count'] = count($participants) > 0 
+            ? NeedMet::whereHasMorph(
+                'model',
+                    ['App\User'],
+                    function ($query) use ($participants) {
+                        $query->whereIn('model_id', $participants);
+                    }
+                )->count()
+            : 0;
+
+        $group['members_count'] = GroupParticipant::where([
+                ['group_id', $group->id],
+                ['status', 'approved']
+            ])->count();
+
+        return response()->json($group);
     }
 
     /**
@@ -96,7 +181,7 @@ class GroupController extends Controller
      */
     public function getJoinRequest(Request $request, Group $group)
     {
-        $participants = GroupParticipant::with('user')
+        $participants = GroupParticipant::with('user', 'user.profile')
             ->where('status', 'pending')
             ->get();
 
@@ -110,10 +195,27 @@ class GroupController extends Controller
      */
     public function messages(Request $request, Group $group)
     {
-        $chats = GroupChat::with('user')
+        $chats = GroupChat::with('user', 'user.profile')
             ->where('group_id', $group->id)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->get()
+            ->groupBy(function($q) {
+                return Carbon::parse($q->created_at)->calendar();
+            });
+        
+        foreach ($chats as $time) {
+            foreach($time as $chat) {
+                $chat->getMedia();
+            }
+        }
+
+        foreach($chats as $time) {
+            foreach($time as $chat) {
+                foreach($chat['media'] as $media) {
+                    $media['publicUrl'] = $media->getFullUrl();
+                }
+            }
+        }
 
         return response()->json($chats, 200);
     }
@@ -226,6 +328,26 @@ class GroupController extends Controller
                 'sender' => auth()->user()->id,
                 'message' => $request->message
             ]);
+
+        if ($request->get('attachment')) {
+            $image = $request->get('attachment');
+            $name = time().'-'.Str::random(20);
+            $extension = explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            
+            $chat 
+                ->addMediaFromBase64($image)
+                ->usingName($name)
+                ->usingFileName($name.'.'.$extension)
+                ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
+        }
+
+        $chat->getMedia();
+
+        foreach($chat['media'] as $media) {
+            $media['publicUrl'] = $media->getFullUrl();
+        }
+
+        $chat->load('user', 'user.profile');
 
         return response()->json($chat, 202);
     }

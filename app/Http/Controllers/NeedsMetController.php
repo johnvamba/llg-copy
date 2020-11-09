@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Group;
 use App\Need;
 use App\NeedMet;
+use App\GroupParticipant;
 use DB;
 
 class NeedsMetController extends Controller
@@ -52,6 +54,44 @@ class NeedsMetController extends Controller
             )->pluck('need_id');
 
         $needs = Need::with('type', 'categories', 'contribution')
+            ->whereIn('id', $needsMet)
+            ->get();
+
+        foreach($needs as $need) {
+            $need->getMedia();
+            $need['photo'] = $need->getFirstMediaUrl('photo');
+        }
+
+        return response()->json($needs);
+    }
+    
+    /**
+     * Display group user needs met.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getGroupNeedsMet(Request $request, Group $group)
+    {
+        $users = GroupParticipant::where('group_id', $group->id)->pluck('user_id');
+        
+        $needsMet = NeedMet::whereHasMorph(
+                'model',
+                ['App\User'],
+                function ($query) use ($users) {
+                    $query->whereIn('model_id', $users);
+                }
+            )->pluck('need_id');
+
+        $needs = Need::with(['type', 'categories', 
+            'contribution' => function ($query) {
+                $query->whereHasMorph(
+                    'model',
+                    ['App\User'],
+                    function ($q) {
+                        $q->where('model_id', auth()->user()->id);
+                    }
+                );
+            }])
             ->whereIn('id', $needsMet)
             ->get();
 
