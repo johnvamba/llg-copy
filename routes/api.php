@@ -38,6 +38,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::resource('offers', 'OffersController');
 
         Route::resource('users', 'UsersController');
+
+        Route::resource('campuses', 'CampusController');
     });
 
     /** Role resource module */

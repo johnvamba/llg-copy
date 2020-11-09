@@ -3,92 +3,27 @@ import CampusIcon from '../../../svg/campus';
 
 import './campus.css';
 
-const CampusList = ({ setShowView }) => {
+const CampusList = ({ campuses = [], setShowView }) => {
     return(
-        <>
-            <section className="campus-list">
-                <ul className="flex items-center flex-wrap">
-                    <li onClick={() => setShowView(true)}>
+        <section className="component-body campus-list">
+            <ul className="flex items-center flex-wrap">
+                {
+                    campuses.length > 0 && campuses.map((i, k)=> <li key={k} onClick={()=>setShowView(i, false, true)}>
                         <header>
                             <div className="flex bg-cover bg-center" style={{backgroundImage: "url()"}} />
                         </header>
                         <section className="campus-list__body">
-                            <h2>Melbourne City</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
+                            <h2>{i.name || 'Missing'}</h2>
+                            <p>{i.description}</p>
                             <div className="flex items-center">
                                 <CampusIcon />
-                                <label>14 Organisations</label>
+                                <label>{i.org_count || 0} Organisations</label>
                             </div>
                         </section>
-                    </li>
-                    <li onClick={() => setShowView(true)}>
-                        <header>
-                            <div className="flex bg-cover bg-center" style={{backgroundImage: "url()"}} />
-                        </header>
-                        <section className="campus-list__body">
-                            <h2>Melbourne City</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
-                            <div className="flex items-center">
-                                <CampusIcon />
-                                <label>14 Organisations</label>
-                            </div>
-                        </section>
-                    </li>
-                    <li onClick={() => setShowView(true)}>
-                        <header>
-                            <div className="flex bg-cover bg-center" style={{backgroundImage: "url()"}} />
-                        </header>
-                        <section className="campus-list__body">
-                            <h2>Melbourne City</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
-                            <div className="flex items-center">
-                                <CampusIcon />
-                                <label>14 Organisations</label>
-                            </div>
-                        </section>
-                    </li>
-                    <li onClick={() => setShowView(true)}>
-                        <header>
-                            <div className="flex bg-cover bg-center" style={{backgroundImage: "url()"}} />
-                        </header>
-                        <section className="campus-list__body">
-                            <h2>Melbourne City</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
-                            <div className="flex items-center">
-                                <CampusIcon />
-                                <label>14 Organisations</label>
-                            </div>
-                        </section>
-                    </li>
-                    <li onClick={() => setShowView(true)}>
-                        <header>
-                            <div className="flex bg-cover bg-center" style={{backgroundImage: "url()"}} />
-                        </header>
-                        <section className="campus-list__body">
-                            <h2>Melbourne City</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
-                            <div className="flex items-center">
-                                <CampusIcon />
-                                <label>14 Organisations</label>
-                            </div>
-                        </section>
-                    </li>
-                    <li onClick={() => setShowView(true)}>
-                        <header>
-                            <div className="flex bg-cover bg-center" style={{backgroundImage: "url()"}} />
-                        </header>
-                        <section className="campus-list__body">
-                            <h2>Melbourne City</h2>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...</p>
-                            <div className="flex items-center">
-                                <CampusIcon />
-                                <label>14 Organisations</label>
-                            </div>
-                        </section>
-                    </li>
-                </ul>
-            </section>
-        </>
+                    </li>)
+                }
+            </ul>
+        </section>
     )
 }
 

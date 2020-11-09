@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import PencilIcon from '../../../svg/pencil';
 import OffersFormCross from '../../../svg/offers-form-cross';
 import OffersLocation from '../../../svg/offers-location';
@@ -6,39 +6,91 @@ import TabOrgs from './tab-org';
 import TabTeams from './tab-team';
 
 
-const CampusView = ({ setShowView, handleEdit }) => {
-
+const CampusView = ({ data, handleForm }) => {
+    const { name, org_count, team_count, description, location } = data
+    const [counts, setCounts] = useState({
+        orgs: 0,
+        teams: 0
+    })
+    const [orgs, setOrgs] = useState([]);
+    const [teams, setTeams] = useState([]);
+    const [pages, setPages] = useState({
+        org: 1,
+        teams: 1
+    })
     const [tab, setTab] = useState('orgs');
+    
+    useEffect(()=>{
+
+    }, [data])
+
+    const loadTeams = (clearCache = false) => {
+        const token = axios.CancelToken.source();
+        api.get(`/api/web/campuses/${data.id}/orgs`, {
+            params: {
+                page: pages.orgs,
+            },
+            cache: {
+                exclude: { query: false },
+            }, 
+            clearCacheEntry: clearCache,
+            cancelToken: token.token
+        }).then((res)=>{
+            const { data } = res
+            setOrgs(data.data)
+        }).finally(()=>{
+            setLoading(false)
+        })
+        return token; //for useEffect
+    }
+
+    const loadOrgs = (clearCache = false) => {
+        const token = axios.CancelToken.source();
+        api.get(`/api/web/campuses/${data.id}/teams`, {
+            params: {
+                page: pages.teams,
+            },
+            cache: {
+                exclude: { query: false },
+            }, 
+            clearCacheEntry: clearCache,
+            cancelToken: token.token
+        }).then((res)=>{
+            const { data } = res
+            setTeams(data.data)
+        }).finally(()=>{
+            setLoading(false)
+        })
+        return token; //for useEffect
+    }
 
     return(
         <section className="campus-view create-form">
             <header className="campus-view__header">
                 <div className="flex bg-cover bg-center" style={{backgroundImage: "url()"}}>
-                    <button className="org-form__close" onClick={() => setShowView(false)}>
+                    <button className="org-form__close" onClick={()=> handleForm({}, false, false)}>
                         <OffersFormCross />
                     </button>
                 </div>
             </header>
             <section className="campus-view__body">
                 <div className="title flex items-center justify-between">
-                    <h2>Melbourne City</h2>
-                    <button className="flex items-center" onClick={handleEdit}>
+                    <h2>{name}</h2>
+                    <button className="flex items-center" onClick={()=>handleForm(data, true, false)}>
                         <PencilIcon />
                         Edit
                     </button>
                 </div>
                 <div className="address flex items-center">
                     <OffersLocation />
-                    <label>Location Address Here</label>
+                    <label>{location}</label>
                 </div>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                </p>
+                <p>{description}</p>
             </section>
             <section className="org-view__tabs offer-edit__opts">
                 <ul>
-                    <li className={"offer-edit__opts-item w-1/2 " + ((tab === 'orgs') ? 'offer-edit__opts-item--active' : '')} onClick={()=>setTab('orgs')}><h3>Organisations (24)</h3></li>
-                    <li className={"offer-edit__opts-item w-1/2 " + ((tab === 'teams') ? 'offer-edit__opts-item--active' : '')} onClick={()=>setTab('teams')}><h3>Teams (2)</h3></li>
+                    <li className={"offer-edit__opts-item w-1/2 " + ((tab === 'orgs') ? 'offer-edit__opts-item--active' : '')} onClick={()=>setTab('orgs')}><h3>Organisations{counts.orgs > 0? ` (${counts.orgs})` : ''}</h3></li>
+                    <li className={"offer-edit__opts-item w-1/2 " + ((tab === 'teams') ? 'offer-edit__opts-item--active' : '')} onClick={()=>setTab('teams')}><h3>Teams{counts.orgs > 0? ` (${counts.orgs})` : ''}</h3></li>
                 </ul>
             </section>
             <section className="offers-create-form__body">
