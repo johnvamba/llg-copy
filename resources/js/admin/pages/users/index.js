@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as UsersActions from '../../../redux/users/actions';
-import DataTable from '../../../components/layout/DataTable';
+
+import UsersActionsEdit from '../../../svg/users-actions-edit';
+import UsersActionsDelete from '../../../svg/users-actions-delete';
 
 import UsersHeader from './header';
 import UserTable from './table';
@@ -13,8 +15,8 @@ const Users = () => {
     const [page, setPage] = useState(1); 
     const [limit, setLimit] = useState(5);
 
-    const [showAddUser, setShowAddUser] = useState(false);
-    const [showEditUser, setShowEditUser] = useState(false);
+    const [showForm, setShowForm] = useState(false);
+    const [focus, setFocus] = useState({});
     const [count, setCount] = useState(0);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -69,10 +71,22 @@ const Users = () => {
         setPage(parseInt(page));
     }
 
-    const showItem = (data, showView = true, showForm=false) => {
-        // setShowView(showView);
-        // setShowForm(showForm);
-        // setFocus(data);
+    const showItem = (data={}, showForm=false) => {
+        setShowForm(showForm);
+        setFocus(data);
+    }
+
+    const handleForm = (form = false, setting = null, data = null)=>{
+        //change content of table here
+        if(setting == 'discard'){
+            //discard Changes here
+        }
+        if(setting == 'submit'){
+            //reload table
+            loadTable(true)
+            //or insert data here
+        }
+        showForm(form)
     }
 
     return (
@@ -82,7 +96,7 @@ const Users = () => {
                     <h1>Users { count > 0 ? `(${count})` : ''}</h1>
                 </div>
                 <div className="flex flex-1 justify-end">
-                    <button className="flex rounded-sm" onClick={() => setShowAddUser(true)}>
+                    <button className="flex rounded-sm" onClick={() => setShowForm(true)}>
                         <OffersPlus />
                         <span>Add User</span>
                     </button>
@@ -92,7 +106,8 @@ const Users = () => {
                 <UserTable data={users} showInfo={showItem} loading={loading}/>
             </div>
             {
-                (showAddUser || showEditUser) && <UsersForm setState={(showAddUser) ? setShowAddUser : setShowEditUser} state={userData} label={(showAddUser) ? 'Add User' : 'Edit User'} />
+                showForm && 
+                <UsersForm data={focus} handleForm={handleForm} showItem={showItem} />
             }
         </>
     )

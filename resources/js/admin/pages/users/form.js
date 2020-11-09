@@ -1,24 +1,166 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import OffersFormCross from '../../../svg/offers-form-cross';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
-const UsersForm = ({ setState, state, label }) => {
-    const [userTypeOpen, setUserTypeOpen] = useState(false);
-    const [userTypeLabel, setUserTypeLabel] = useState('Select User Type');
-    const [organisationOpen, setOrganisationOpen] = useState(false);
-    const [organisationLabel, setOrganisationLabel] = useState('Select Organisation');
+import { selectStylePaddingZero, loadOrganization } from '../../../components/helpers/async_options';
+import { validateEmail } from '../../../components/helpers/validator';
+import { swalError } from '../../../components/helpers/alerts';
+
+import AsyncSelect from 'react-select/async';
+import Select from 'react-select';
+
+const UsersForm = ({ data, showItem, handleForm }) => {
+    const label = data.id ? 'Edit User' : 'Add User';
+    const selectOptions = [
+        { value: 'app user', label: 'App User'},
+        { value: 'organization user', label: 'Organization User'},
+        { value: 'campus user', label: 'Campus User'},
+        { value: 'admin', label: 'Super User'},
+    ];
+    const [form, setForm] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        age: 0,
+        bio: '',
+    })
+
+    const [loading, setLoading] = useState(false)
+    const [photo, setPhoto] = useState('');
+    const [type, setType] = useState({ value: 'app user', label: 'App User'});
+    const [organization, setOrganization] = useState({});
+    const [errors, setErrors] = useState({});
+
+    const [submitting, setSubmitting] = useState(false);
+
+    useEffect(()=>{
+        if(data.id) {
+            loadData()
+        }
+    }, [data])
+
+    const loadData = () => {
+        const { firstName, lastName, email, age, bio } = data
+        setForm({
+            firstName:firstName || '', 
+            lastName:lastName || '', 
+            email:email || '', 
+            age:age || 0, 
+            bio:bio || ''
+        })
+        setLoading(true)
+        api.get(`/api/web/users/${data.id}`)
+            .then(({data}) => {
+                const {  photo, type, organization } = data.data
+                setPhoto(photo || '')
+                setType( selectOptions.find(i => i.value == type) )
+                setOrganization(organization || {})
+            }).catch(({response})=>{
+                setErrors({}) //set empty if success.
+            }).finally(()=>{
+                setLoading(false)
+            })
+    }
+
+    const removeError= (name = '') => {
+        delete errors[name]
+        setErrors(errors)
+    }
+
+    const handleInput = (e) => {
+        const { name, value } = e.target
+        setForm({ ...form,
+            [name]: value
+        })
+        removeError(name)
+    }
+
+    const handleType = (type) => {
+        setType(type)
+        removeError('type')
+    }
+
+    const handleOrganization = (organization) => {
+        setOrganization(organization)
+        removeError('organization')
+    }
+
+    const validateSubmit = (e) => {
+        const { firstName, lastName, email, age, bio } = form
+        const set = {
+            firstName: firstName == '' ? "Missing first name" : null,
+            lastName: lastName == '' ? "Missing last name" : null,
+            email: !validateEmail(email) ? "Proper email required" : null,
+            age: age <= 0 || !(typeof age == 'number') ? "Age not recognized" : null,
+            bio: bio == '' ? 'Missing bio content' : null,
+            photo: !photo ? 'Missing photo' : null,
+            type: _.isEmpty(type) ? "Missing type" : null,
+            organization: _.isEmpty(organization) ? "Missing organization" : null,
+        }
+        setErrors({...set})
+        return set;
+    }
+
+    const attemptSubmit = ()=>{
+        const set = validateSubmit()
+        const { firstName, lastName, email, age, bio } = form
+
+        if(_.isEmpty({...set})){
+            setSubmitting(true)
+            const params = {
+                firstName,
+                lastName,
+                email,
+                age,
+                bio,
+                type,
+                organization,
+            }
+            const submitPromise = !data.id ? 
+                api.post(`/api/web/users`, params) : 
+                api.update(`/api/web/users/${data.id}`, { params })
+
+            submitPromise.then(({data})=>{
+                setSubmitting(false)
+                handleForm(false, 'submit', data.data);
+            }).catch(err=>{
+                if(err.response){
+                    const { data } = err.response
+                    setErrors(data.errors || [])
+                }
+                setSubmitting(false)
+            })
+        } else {
+            swalError('Invalid field content')
+        }
+    }
+
+    const reset = () => {
+        showItem({}, true)
+        setForm({
+            firstName: '',
+            lastName: '',
+            email: '',
+            age: 0,
+            bio: '',
+        })
+        setErrors({})
+        setType({ value: 'app user', label: 'App User'})
+        setOrganization({})
+    }
 
     return (
-        <>
-            <section className="users-form">
-                <div className="users-form__body">
-                    <header>
-                        <h2>{label}</h2>
-                        <button type="button" onClick={() => setState(false)}>
-                            <OffersFormCross />
-                        </button>
-                    </header>
-                    <div className="content">
+        <section className="users-form">
+            <div className="users-form__body">
+                <header>
+                    <h2>{label}</h2>
+                    <button type="button" onClick={() => showItem() }>
+                        <OffersFormCross />
+                    </button>
+                </header>
+                <div className="content">
+                    {
+                        !loading && 
                         <div>
                             <img
                                 className="rounded-full image"
@@ -29,103 +171,140 @@ const UsersForm = ({ setState, state, label }) => {
                                 <p>Images should be atleast 300 x 300 px in pngo or jpeg file</p>
                             </div>
                         </div>
-                        <form>
-                            <div className="flex flex-wrap -mx-2">
-                                <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
-                                    <div className="form-group">
-                                        <label>First Name</label>
-                                        <input
-                                            className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
-                                            type="text"
-                                            placeholder="Enter First Name"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Email Address</label>
-                                        <input
-                                            className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
-                                            type="text"
-                                            placeholder="Enter Email Address"
-                                        />
-                                    </div>
+                    }
+                    <form className="form">
+                        <div className="flex flex-wrap -mx-2">
+                            <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
+                                <div className={`form-group ${errors.firstName && 'form-error'}`}>
+                                    <label>First Name</label>
+                                    <input
+                                        className="input-field"
+                                        type="text"
+                                        name="firstName"
+                                        placeholder="Enter First Name"
+                                        value={form.firstName}
+                                        onChange={handleInput}
+                                    />
+                                    {
+                                        (errors.firstName || false) && <span className="text-xs pt-1 text-red-500 italic">Missing first name</span>
+                                    }
                                 </div>
-                                <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
-                                    <div className="form-group">
-                                        <label>Last Name</label>
-                                        <input
-                                            className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
-                                            type="text"
-                                            
-                                            placeholder="Enter Last Name"
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Age</label>
-                                        <input
-                                            className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
-                                            type="text"
-                                            placeholder="Enter Age"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="w-full xl:w-full px-2">
-                                    <div className="form-group">
-                                        <label>Bio</label>
-                                        <input
-                                            className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
-                                            type="text"
-                                            placeholder="Enter something about yourself"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
-                                    <div className={`form-group ${userTypeOpen ? 'active' : ''}`}>
-                                        <label>User Type</label>
-                                        <Dropdown isOpen={userTypeOpen} toggle={() => setUserTypeOpen(prevState => !prevState)}>
-                                            <DropdownToggle>
-                                                <span className={(userTypeLabel == "Select User Type") ? 'default' : 'selected'}>{userTypeLabel}</span>
-                                                <i className="fa fa-angle-down" aria-hidden="true"></i>
-                                            </DropdownToggle>
-                                            <DropdownMenu>
-                                                <DropdownItem onClick={() => setUserTypeLabel('App User')}>App User</DropdownItem>
-                                                <DropdownItem onClick={() => setUserTypeLabel('Organisational User')}>Organisational User</DropdownItem>
-                                                <DropdownItem onClick={() => setUserTypeLabel('Campus User')}>Campus User</DropdownItem>
-                                                <DropdownItem onClick={() => setUserTypeLabel('Super User')}>Super User</DropdownItem>
-                                            </DropdownMenu>
-                                        </Dropdown>
-                                    </div>
-                                </div>
-                                <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
-                                    <div className={`form-group ${organisationOpen ? 'active' : ''}`}>
-                                        <label>Organisation</label>
-                                        <Dropdown isOpen={organisationOpen} toggle={() => setOrganisationOpen(prevState => !prevState)}>
-                                            <DropdownToggle>
-                                                <span className={(organisationLabel == "Select Organisation") ? 'default' : 'selected'}>{organisationLabel}</span>
-                                                <i className="fa fa-angle-down" aria-hidden="true"></i>
-                                            </DropdownToggle>
-                                            <DropdownMenu>
-                                                <DropdownItem onClick={() => setOrganisationLabel('App User')}>App User</DropdownItem>
-                                                <DropdownItem onClick={() => setOrganisationLabel('Organisational User')}>Organisational User</DropdownItem>
-                                                <DropdownItem onClick={() => setOrganisationLabel('Campus User')}>Campus User</DropdownItem>
-                                                <DropdownItem onClick={() => setOrganisationLabel('Super User')}>Super User</DropdownItem>
-                                            </DropdownMenu>
-                                        </Dropdown>
-                                    </div>
+                                <div className={`form-group ${errors.email && 'form-error'}`}>
+                                    <label>Email Address</label>
+                                    <input
+                                        className="input-field"
+                                        type="text"
+                                        name="email"
+                                        placeholder="Enter Email Address"
+                                        value={form.email}
+                                        onChange={handleInput}
+                                    />
+                                    {
+                                        (errors.email || false) && <span className="text-xs pt-1 text-red-500 italic">Missing email</span>
+                                    }
                                 </div>
                             </div>
-                        </form>
+                            <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
+                                <div className={`form-group ${errors.lastName && 'form-error'}`}>
+                                    <label>Last Name</label>
+                                    <input
+                                        className="input-field"
+                                        type="text"
+                                        name="lastName"
+                                        placeholder="Enter Last Name"
+                                        value={form.lastName}
+                                        onChange={handleInput}
+                                    />
+                                    {
+                                        (errors.lastName || false) && <span className="text-xs pt-1 text-red-500 italic">Missing last name</span>
+                                    }
+                                </div>
+                                <div className={`form-group ${errors.age && 'form-error'}`}>
+                                    <label>Age</label>
+                                    <input
+                                        className="input-field"
+                                        type="number"
+                                        name="age"
+                                        placeholder="Enter Age"
+                                        value={form.age}
+                                        onChange={handleInput}
+                                    />
+                                    {
+                                        (errors.age || false) && <span className="text-xs pt-1 text-red-500 italic">Missing age</span>
+                                    }
+                                </div>
+                            </div>
+                            <div className="w-full xl:w-full px-2">
+                                <div className={`form-group ${errors.bio && 'form-error'}`}>
+                                    <label>Bio</label>
+                                    <input
+                                        className="input-field"
+                                        type="text"
+                                        name="bio"
+                                        placeholder="Enter something about yourself"
+                                        value={form.bio}
+                                        onChange={handleInput}
+                                    />
+                                    {
+                                        (errors.bio || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Bio</span>
+                                    }
+                                </div>
+                            </div>
+                            {
+                                loading && <div className="w-full">
+                                    <h3>Loading extra content</h3>
+                                </div>
+                            }
+                            {
+                                !loading &&
+                                <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
+                                    <div className={`form-group ${errors.type && 'form-error'}`}>
+                                        <label>User Type</label>
+                                        <Select
+                                            value={type}
+                                            styles={selectStylePaddingZero}
+                                            onChange={handleType}
+                                            options={selectOptions}
+                                        />
+                                        {
+                                            (errors.type || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Type</span>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            {
+                                !loading && 
+                                <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
+                                    <div className={`form-group ${errors.organization && 'form-error'}`}>
+                                        <label>Organization</label>
+
+                                       <AsyncSelect
+                                            styles={selectStylePaddingZero}
+                                            loadOptions={loadOrganization}
+                                            defaultOptions
+                                            value={organization}
+                                            placeholder="Organization"
+                                            onChange={handleOrganization}
+                                            />
+                                        {
+                                            (errors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <footer className="offers-edit-opt">
+                <div className="offers-edit-opt__container flex">
+                    <button className="discard" onClick={reset}>Discard</button>
+                    <div>
+                        <button className="next" onClick={attemptSubmit}>{label == 'Add User' ? 'Add' : 'Update' }</button>
                     </div>
                 </div>
-                <footer className="offers-edit-opt">
-                    <div className="offers-edit-opt__container flex">
-                        <button className="discard" onClick={() => setState(false)}>Discard</button>
-                        <div>
-                            <button className="next">{label == 'Add User' ? 'Add' : 'Update' }</button>
-                        </div>
-                    </div>
-                </footer>
-            </section>
-        </>
+            </footer>
+        </section>
     )
 }
 export default UsersForm;

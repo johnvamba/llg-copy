@@ -6,6 +6,8 @@ import Cross from '../../../svg/cross'
 import Quill from '../../../svg/quill'
 import { usePopper } from 'react-popper';
 import { swalSuccess, swalError } from '../../../components/helpers/alerts';
+import UsersActionsEdit from '../../../svg/users-actions-edit';
+import UsersActionsDelete from '../../../svg/users-actions-delete';
 
 const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction}) => {
     const { title ="Untitled", email = 'N/A', age = 'N/A', bio = '', date = "Missing"} = item
@@ -16,10 +18,10 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         <td className="checkbox">
             <input type='checkbox' checked={checkValue} onChange={checkChange}/>
         </td>
-        <td className="title">
+        <td className="title" onClick={onShowInfo}>
             <div className="flex"> 
                 <img className="title-img circle" />
-                <span onClick={onShowInfo}>
+                <span>
                     { title }
                 </span>
             </div>
@@ -37,14 +39,14 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
             { date }
         </td>
         <td className="actions row-actions">
-            <button onClick={()=>alert('open window.')}>
+            <button onClick={onShowInfo}>
                 <i ref={setApproveElement}>
-                <Pencil />
+                <UsersActionsEdit />
                 </i>
             </button>
             <button onClick={()=>popAction(rejectElement, 'remove')}>
                 <i ref={setRejectElement}>
-                <Cross/>
+                <UsersActionsDelete />
                 </i>
             </button>
         </td>
@@ -55,7 +57,7 @@ const ButtonPopper = ({buttonElement, actionClosure, btnAction, loading}) => {
     const [popperElement, setPopperElement] = useState(null);
     const [arrowElement, setArrowElement] = useState(null);
     const [togglePopper, setToggle] = useState(false);
-    const [popContent, setContent] = useState('edit')
+    // const [popContent, setContent] = useState('edit')
 
     const {styles, attributes} = usePopper(buttonElement, popperElement, {
         placement: 'bottom-end',
@@ -127,10 +129,15 @@ const UserTable = ({tab = null, data = [], showInfo, loading = false, loadTable}
     //Execute button activity here
     const executeButton = (execute)=>{
         //do axios here based on settings
-        if(execute){
-            const text = action == 'edit' ? "You successfully added user" : "Need has been rejected, archieving"
-            // return;
+        if(execute && popped.id){
+            const text = action == 'edit' ? "You successfully edited user" : "User has been deleted"
             setPopLoading(true)
+            api.delete(`/api/web/users/${popped.id}`)
+                .then(()=>{
+                    loadTable(true)
+                    swalSuccess('User has been deleted!');
+                    setPopLoading(false)
+                });
         }
         //
         setPopItem(null)//close box
@@ -163,7 +170,7 @@ const UserTable = ({tab = null, data = [], showInfo, loading = false, loadTable}
                         item={i} 
                         checkValue={i.checked}
                         checkChange={e=>handleRowCheckbox(i,e.target.checked)}
-                        onShowInfo={()=>showInfo(i)}
+                        onShowInfo={()=>showInfo(i, true)}
                         popAction={(button, type)=>togglePopItem(i, button, type)}/>
                     ) :
                     <tr>
