@@ -65,7 +65,8 @@ class NeedMetTest extends TestCase
         $need = $needs[0];
 
         $response = $this->post("api/needs-met", [
-                'need_id' => $need->id
+                'need_id' => $need->id,
+                'amount' => $this->faker->randomFloat
             ]);
 
         $response->assertStatus(202);
@@ -84,7 +85,8 @@ class NeedMetTest extends TestCase
         ]);
 
         factory(NeedMet::class)->create([
-            'user_id' => $this->user->id,
+            'model_type' => 'App\User',
+            'model_id' => $this->user->id,
             'need_id' => $needs[0]->id
         ]);
 
@@ -106,7 +108,8 @@ class NeedMetTest extends TestCase
         ]);
 
         factory(NeedMet::class)->create([
-            'user_id' => $this->user->id,
+            'model_type' => 'App\User',
+            'model_id' => $this->user->id,
             'need_id' => $needs[0]->id
         ]);
 

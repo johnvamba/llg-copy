@@ -21,19 +21,58 @@ class NeedsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $page = 1)
     {
-        //
-        $needs = Need::with('type')
-            ->orderBy('created_at', 'desc')
-            ->paginate();
+        $filters = $request->filters;
 
-        foreach ($needs as $need) {
+        $needHasCategories = [];
+
+        $needs = Need::with([
+                'organization',
+                'type', 
+                'categories',
+                'categories.model'
+            ]);
+
+        if (!empty($filters)){
+            $needs->where('needs_type_id', $filters['type']);
+            
+            if ($filters['filterAmount']) 
+                $needs->where('goal', '<=', floatval($filters['amount']));
+
+            if(count($filters['category']) > 0){
+                $needHasCategories = NeedHasCategory::where('model_type', 'App\NeedsCategory')
+                    ->whereIn('model_id', $filters['category'])
+                    ->pluck('need_id');
+                $needs->whereIn('id', $needHasCategories);
+            }
+        }
+        
+        $results = $needs->whereRaw('raised < goal')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, ['*'], 'needs', $page);
+
+        foreach ($results as $need) {
             $need->model;
             $need->getMedia('photo');
+
+            $need['photo'] = $need->organization->getFirstMediaUrl('photo');
+            $need['cover_photo'] = $need->organization->getFirstMediaUrl('cover_photo');
+
+            $need['totalActiveNeeds'] = Need::where(
+                    'organization_id', $need->organization_id
+                )
+                ->whereRaw('raised < goal')
+                ->count();
+            
+            $need['totalPastNeeds'] = Need::where(
+                    'organization_id', $need->organization_id
+                )
+                ->whereRaw('raised >= goal')
+                ->count();
         }
 
-        return response()->json($needs);
+        return response()->json($results);
     }
 
     /**
@@ -71,6 +110,10 @@ class NeedsController extends Controller
         }
     
         $results = $needs->get();
+
+        foreach($results as $result) {
+           $result['photo'] = $result->getFirstMediaUrl('photo');
+        }
     
         return response()->json($results);
     }
@@ -152,7 +195,7 @@ class NeedsController extends Controller
 
         $needs = Need::select('needs.*')
             ->with(['organization', 'categories', 'categories.model', 'type'])
-            ->selectRaw('( 6367 * acos( cos( radians(?) ) 
+            ->selectRaw('( 6371 * acos( cos( radians(?) ) 
                 * cos( radians( lat ) ) * cos( radians( lng ) 
                 - radians(?) ) + sin( radians(?) ) 
                 * sin( radians( lat ) ) ) ) AS distance', 
@@ -194,7 +237,6 @@ class NeedsController extends Controller
                 $need = Need::create(
                     array_merge(
                         request()->only([
-                            'needs_category_id',
                             'needs_type_id',
                             'title',
                             'description',
@@ -208,13 +250,18 @@ class NeedsController extends Controller
                     )
                 );
 
+                $need->short_description = $request->description;
+                $need->save();
+
                 if ($request->category) {
                     foreach($request->category as $value) {
+                        $fetchCategory = NeedsCategory::find($value);
+
                         $hasCategory = NeedHasCategory::make([
-                                'needs_category_id' => $value
+                                'need_id' => $need->id
                             ]);
                             
-                        $need->categories()->save($hasCategory);
+                        $fetchCategory->category()->save($hasCategory);
                     }
                 }
 

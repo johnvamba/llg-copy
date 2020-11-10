@@ -1,4 +1,5 @@
 import Cookie from 'js-cookie';
+import { setupCache } from 'axios-cache-adapter'
 
 window._ = require('lodash');
 
@@ -27,30 +28,48 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 let token = Cookie.get('oToken_admin') || Cookie.get('oToken_org_admin');
 
-if (token) {
-    axios.interceptors.request.use(
-        config => {
-            config.headers.common['Authorization'] = `Bearer ${token}`
-            return config;
-        }, 
-        error => {
-            return Promise.reject(error);
-        }
-    );
+//Cache machine for data. 
+window.cache = setupCache({
+    maxAge: 15 * 60 * 1000, //15 minutes
+    invalidate: async (config, request) => {
+      if (request.clearCacheEntry) {
+        await config.store.removeItem(config.uuid)
+      }
+    }
+    // readHeaders: true
+})
+window.api = axios.create({
+    adapter: cache.adapter,
+})
 
-    axios.interceptors.response.use(
-        function(response) {
-            return response;
-        },
-        function(error) {
-            if(401 === error.response.status) {
-                logout();
-            } else {
+if (token) {
+    const arr = [axios, api].map(i=>{
+        i.interceptors.request.use(
+            config => {
+                config.headers.common['Authorization'] = `Bearer ${token}`
+
+                return config;
+            }, 
+            error => {
                 return Promise.reject(error);
             }
-        }
-    );
+        );
+
+        i.interceptors.response.use(
+            function(response) {
+                return response;
+            },
+            function(error) {
+                if(401 === error.response.status) {
+                    logout();
+                } else {
+                    return Promise.reject(error);
+                }
+            }
+        );
+    })
 }
+
 
 
 const logout = async() => {
@@ -62,6 +81,15 @@ const logout = async() => {
 
     window.location = '/login';
 }
+
+/*
+// To use
+  api({ ...options}).then().catch()
+  or
+  api.get() or post().then().catch()  
+
+*/
+
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

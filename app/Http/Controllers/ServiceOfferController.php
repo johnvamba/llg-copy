@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Http\Requests\ServiceOfferStoreRequest;
 use App\Http\Requests\ServiceOfferUpdateRequest;
 use Illuminate\Http\Request;
+use App\User;
+use App\Organization;
 use App\ServiceOffer;
 use App\Tag;
 use DB;
@@ -25,6 +28,31 @@ class ServiceOfferController extends Controller
 
         foreach ($serviceOffers as $serviceOffer) {
             $serviceOffer->getMedia('photo');
+        }
+
+        return response()->json($serviceOffers);
+    }
+
+    /**
+     * Display user service offered.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getServiceOffered(Request $request)
+    {
+        $serviceOffers = ServiceOffer::whereHasMorph(
+                'model',
+                ['App\User'],
+                function ($query) {
+                    $query->where('model_id', auth()->user()->id);
+                }
+            )
+            ->with('serviceType')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        foreach ($serviceOffers as $serviceOffer) {
+            $serviceOffer->getMedia();
         }
 
         return response()->json($serviceOffers);
@@ -106,32 +134,41 @@ class ServiceOfferController extends Controller
     public function store(ServiceOfferStoreRequest $request)
     {
         $result = DB::transaction(function () use ($request) {
-                $serviceOffer = ServiceOffer::create(
-                        array_merge(
-                            request()->only([
-                                'service_type_id',
-                                'organization_id',
-                                'name',
-                                'title',
-                                'description',
-                                'location',
-                                'lat',
-                                'lng'
-                            ]), ['user_id' => auth()->user()->id]
-                        )
+                $model = $request->organization_id 
+                    ? Organization::find($request->organization_id)->first()
+                    : User::find(auth()->user()->id);
+
+                $makeOffer = ServiceOffer::make(
+                        request()->only([
+                            'service_type_id',
+                            'name',
+                            'title',
+                            'description',
+                            'location',
+                            'lat',
+                            'lng'
+                        ])
                     );
+
+                $serviceOffer = $model->offers()->save($makeOffer);
 
                 if ($request->tags) {
                     $tags = Tag::createTag($serviceOffer, $request->tags);
                     $serviceOffer['tags'] = $tags;
                 }
-        
-                if ($request->hasFile('media')) {
-                    $serviceOffer
-                        ->addMedia($request->file('media'))
+
+                if ($request->get('media')) {
+                    $image = $request->get('media');
+                    $name = time().'-'.Str::random(20);
+                    $extension = explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+                    
+                    $serviceOffer 
+                        ->addMediaFromBase64($image)
+                        ->usingName($name)
+                        ->usingFileName($name.'.'.$extension)
                         ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
-        
-                    $serviceOffer->getMedia('photo');
+
+                    $serviceOffer->getMedia();
                 }
 
                 return $serviceOffer;

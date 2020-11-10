@@ -24,15 +24,17 @@ class StoryController extends Controller
     {
         $stories = Story::with(
                 'user', 
+                'user.profile', 
                 'organization', 
                 'appreciates',
                 'appreciates.user',
+                'appreciates.user.profile',
             )
             ->orderBy('created_at', 'desc')
             ->paginate();
 
         foreach ($stories as $story) {
-            $story->getMedia('photo');
+            $story['photo'] = $story->getFirstMediaUrl('photo');
         }
 
         return response()->json($stories);

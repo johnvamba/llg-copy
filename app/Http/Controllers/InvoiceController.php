@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\InvoiceUpdateRequest;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\User;
@@ -42,6 +43,22 @@ class InvoiceController extends Controller
         $donation['month'] = round($donationInMonth, 2);
 
         return response()->json($donation);
+    }
+    
+    /**
+     * Display recent donors.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getRecentDonors(Request $request)
+    {
+        $recentDonors = Invoice::with('user')
+            ->where('model_type', 'App\Need')
+            ->where('model_id', $request->need_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($recentDonors);
     }
 
     /**
@@ -162,9 +179,10 @@ class InvoiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(InvoiceUpdateRequest $request, Invoice $invoice)
     {
-        //
+        $invoice->update($request->validated());
+        return response()->json($invoice, 202);
     }
 
     /**

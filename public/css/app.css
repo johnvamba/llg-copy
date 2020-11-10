@@ -28768,7 +28768,7 @@ video {
 .offers-create-form {
   width: 100%;
   max-width: 544px;
-  height: calc(100vh - 64px);
+  height: 100%;
   position: absolute;
   right: 0;
   top: 0;
@@ -28811,16 +28811,20 @@ video {
   margin-top: 10px;
 }
 
-.offers-create-form__header .tab-category {
+.offers-create-form__header .tab-1 {
   width: 33.333%;
 }
 
-.offers-create-form__header .tab-service {
+.offers-create-form__header .tab-2 {
   width: 60%;
 }
 
-.offers-create-form__header .tab-business {
+.offers-create-form__header .tab-3 {
   width: 100%;
+}
+
+.offers-create-form__body {
+  margin-top: 15px;
 }
 
 .offers-create-form__body h3 {
@@ -28830,7 +28834,7 @@ video {
   font-size: 18px;
   line-height: 24px;
   color: rgba(74, 108, 140, 0.56);
-  margin-top: 10px;
+  margin: 10px 0;
 }
 
 .offers-create-form__body .offers-category {
@@ -28880,6 +28884,15 @@ video {
   top: 30%;
 }
 
+.offers-create-form__body .offers-category__item.active {
+  border: 1px solid #109CF1;
+  color: #109CF1;
+}
+
+.offers-create-form__body .offers-category__item.active span {
+  color: #109CF1;
+}
+
 .offers-create-form__body .offers-service__featured > div {
   border: 1px dashed #D7DEE3;
   width: 100%;
@@ -28894,10 +28907,6 @@ video {
   flex-direction: column;
   align-items: center;
   height: 168px;
-}
-
-.offers-create-form__body .offers-service__featured > div > div svg {
-  margin-bottom: 20px;
 }
 
 .offers-create-form__body .offers-service__featured > div > div span {
@@ -28916,17 +28925,6 @@ video {
   font-size: 12px;
   line-height: 24px;
   color: rgba(74, 108, 140, 0.56);
-}
-
-.offers-create-form__body .offers-service .form-group {
-  border-bottom: 1px solid #D7DEE3;
-  margin-bottom: 12px;
-  position: relative;
-}
-
-.offers-create-form__body .offers-service .form-group svg {
-  position: absolute;
-  top: 37px;
 }
 
 .offers-create-form__body .offers-service .form-group label {
@@ -29019,7 +29017,7 @@ video {
 .view-offer {
   width: 100%;
   max-width: 544px;
-  height: auto;
+  height: calc(100vh - 64px);
   position: absolute;
   right: 0;
   top: 0;
@@ -29192,7 +29190,7 @@ video {
   align-items: center;
 }
 
-.view-offer__bottom > div div label {
+.view-offer__bottom > div div a.link {
   font-family: "Lato", sans-serif;
   font-style: normal;
   font-weight: normal;
@@ -29202,7 +29200,7 @@ video {
   margin-left: 9px;
 }
 
-.view-offer__bottom > div button {
+.view-offer__bottom > div a.button {
   border: 1px solid #109CF1;
   box-sizing: border-box;
   border-radius: 4px;

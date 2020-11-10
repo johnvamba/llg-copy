@@ -43,6 +43,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function needsMet()
+    {
+        return $this->morphMany('App\NeedMet', 'model');
+    }
+    
     public function goals()
     {
         return $this->morphMany('App\Goal', 'model');
@@ -51,6 +56,11 @@ class User extends Authenticatable
     public function organizationMembers()
     {
         return $this->morphMany('App\OrganizationMember', 'model');
+    }
+
+    public function offers()
+    {
+        return $this->morphMany('App\ServiceOffer', 'model');
     }
 
     public function profile()

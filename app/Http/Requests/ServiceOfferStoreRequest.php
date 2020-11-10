@@ -25,14 +25,14 @@ class ServiceOfferStoreRequest extends FormRequest
     {
         return [
             'service_type_id' => 'required',
-            'organization_id' => 'required',
             'name' => 'sometimes|required',
             'title' => 'required',
             'description' => 'required',
             'location' => 'required',
             'lat' => 'required',
             'lng' => 'required',
-            'tags' => 'sometimes|required'
+            'tags' => 'sometimes|required',
+            'media' => 'sometimes|required'
         ];
     }
 }

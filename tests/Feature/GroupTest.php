@@ -238,7 +238,9 @@ class GroupTest extends TestCase
             'model_type' => 'App\Group'
         ]);
 
-        $response = $this->post("api/groups/{$group->id}/participate");
+        $response = $this->post("api/groups/{$group->id}/participate", [
+            'user_id' => $this->user->id
+        ]);
 
         $response->assertStatus(202);
     }

@@ -1,5 +1,6 @@
 import React from 'react';
 import Autocomplete from 'react-google-autocomplete';
+import MapPin from '../svg/map-pin'
 
 const Location = ({
     label,
@@ -11,22 +12,26 @@ const Location = ({
 }) => {
 
     return (
-        <div className="relative mb-4">
-            <label className={`font-thin block text-gray-500 text-sm mb-2`}>
-                {label}
-            </label>
-
-            <Autocomplete
-                className={`outline-none w-full ${className}`}
-                onPlaceSelected={placesSelected}
-                types={['(regions)']}
-                componentRestrictions={{ country: "au" }}
-                {...props}
-            />
-
-            {errors[name] &&
-                <p className="text-red-500 text-xs italic">{errors[name][0]}</p>
-            }
+        <div className={`form-group ${className}`} >
+            <label>{ label || 'Location'}</label>
+            <div className="input-container">
+                <i className="icon absolute">
+                    <MapPin/>
+                </i>
+                <Autocomplete
+                    className={`input-field space-l `}
+                    onPlaceSelected={placesSelected}
+                    types={['(regions)']}
+                    componentRestrictions={{ country: "au" }}
+                    {...props}
+                />
+                {
+                    //<input className="" type="text" placeholder="Enter Location" name="usrnm"/>
+                }
+                {errors &&
+                    <p className="text-red-500 text-xs italic">{errors[0]}</p>
+                }
+            </div>
         </div>
     )
 }

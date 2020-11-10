@@ -29,8 +29,21 @@ class Organization extends Model implements HasMedia
         return $this->morphMany('App\OrganizationHasCategory', 'model');
     }
 
+    public function offers()
+    {
+        return $this->morphMany('App\ServiceOffer', 'model');
+    }
+
     public function needs()
     {
         return $this->hasMany('App\Need');
+    }
+
+    /**
+     * Set short description column value
+     */
+    public function setShortDescriptionAttribute($value)
+    {
+        $this->attributes['short_description'] = substr($value, 0, 40).'...';
     }
 }

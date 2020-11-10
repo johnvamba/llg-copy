@@ -18,6 +18,7 @@ class CreateGroupsTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->string('name');
             $table->text('description');
+            $table->string('short_description')->nullable();
             $table->string('privacy');
             $table->text('location');
             $table->string('lat');

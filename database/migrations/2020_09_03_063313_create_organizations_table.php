@@ -20,6 +20,7 @@ class CreateOrganizationsTable extends Migration
             $table->string('phone_number')->nullable();
             $table->string('site')->nullable();
             $table->text('description');
+            $table->string('short_description')->nullable();
             $table->text('location');
             $table->string('lat');
             $table->string('lng');

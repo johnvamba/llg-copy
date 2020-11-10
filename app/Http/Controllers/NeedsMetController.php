@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 use App\Need;
 use App\NeedMet;
 use DB;
@@ -36,6 +37,32 @@ class NeedsMetController extends Controller
     }
 
     /**
+     * Display user needs met.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getUserNeedsMet(Request $request)
+    {
+        $needsMet = NeedMet::whereHasMorph(
+                'model',
+                ['App\User'],
+                function ($query) {
+                    $query->where('model_id', auth()->user()->id);
+                }
+            )->pluck('need_id');
+
+        $needs = Need::with('type', 'categories', 'contribution')
+            ->whereIn('id', $needsMet)
+            ->get();
+
+        foreach($needs as $need) {
+            $need->getMedia();
+        }
+
+        return response()->json($needs);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -43,10 +70,12 @@ class NeedsMetController extends Controller
      */
     public function store(Request $request)
     {
-        $needMet = NeedMet::create([
+        $makeNeedMet = NeedMet::make([
                 'need_id' => $request->need_id,
-                'user_id' => auth()->user()->id
+                'amount' => $request->amount,
             ]);
+
+        $needMet= auth()->user()->needsMet()->save($makeNeedMet);
 
         return response()->json($needMet, 202);
     }

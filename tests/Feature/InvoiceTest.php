@@ -119,6 +119,32 @@ class InvoiceTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    /** @test */
+    public function a_user_can_fetch_recent_donors()
+    {
+        $this->actingAs($this->user, 'api');
+
+        $this->withoutExceptionHandling();
+
+        $need = factory(Need::class)->create([
+                'organization_id' => $this->org->id,
+                'needs_type_id' => $this->type->id,
+            ]);
+
+        factory(Invoice::class, 5)->create([
+                'organization_id' => $this->org->id,
+                'user_id' => $this->user->id,
+                'model_id' => $need->id,
+                'model_type' => 'App\Need'
+            ]);
+
+        $response = $this->post('api/invoice/recent/donors', [
+                'need_id' => $need->id
+            ]);
+
+        $response->assertStatus(200);
+    }
 }
 
 

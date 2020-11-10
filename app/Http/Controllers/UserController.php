@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\UserStoreRequest;
 use Illuminate\Http\Request;
@@ -9,6 +10,9 @@ use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Support\Facades\Storage;
 use App\User;
 use App\UserProfile;
+use App\CustomerCredential;
+use App\Organization;
+use App\OrganizationCredential;
 use Carbon\Carbon;
 use DB;
 
@@ -188,18 +192,47 @@ class UserController extends Controller
                     )
                 );
 
-            if ($request->hasFile('photo')) {
-                $path = Storage::disk(env('FILESYSTEM_DRIVER'))
-                    ->putFile(
-                        'img', 
-                        $request->file('photo')
-                    );
+                if ($request->get('photo')) {
+                    $photo = $request->get('photo');
+                    $name = time().'-'.Str::random(20);
+                    $extension = explode('/', explode(':', substr($photo, 0, strpos($photo, ';')))[1])[1];
+        
+                    if (preg_match('/^data:image\/(\w+);base64,/', $photo)) {
+                        $data = substr($photo, strpos($photo, ',') + 1);
+                        $data = base64_decode($data);
+        
+                        Storage::disk(env('FILESYSTEM_DRIVER'))
+                            ->put($name.'.'.$extension, $data);
+        
+                        Storage::disk(env('FILESYSTEM_DRIVER'))
+                            ->url($data);
 
-                $url = Storage::disk(env('FILESYSTEM_DRIVER'))
-                    ->url($path);
+                        $url = Storage::url($name.'.'.$extension);
 
-                UserProfile::uploadPhoto($url, $user->id);
-            }
+                        UserProfile::uploadPhoto($url, $user->id);
+                    }
+                }
+
+                if ($request->get('coverPhoto')) {
+                    $photo = $request->get('coverPhoto');
+                    $name = time().'-'.Str::random(20);
+                    $extension = explode('/', explode(':', substr($photo, 0, strpos($photo, ';')))[1])[1];
+        
+                    if (preg_match('/^data:image\/(\w+);base64,/', $photo)) {
+                        $data = substr($photo, strpos($photo, ',') + 1);
+                        $data = base64_decode($data);
+        
+                        Storage::disk(env('FILESYSTEM_DRIVER'))
+                            ->put($name.'.'.$extension, $data);
+        
+                        Storage::disk(env('FILESYSTEM_DRIVER'))
+                            ->url($data);
+
+                        $url = Storage::url($name.'.'.$extension);
+
+                        UserProfile::uploadCoverPhoto($url, $user->id);
+                    }
+                }
 
             return User::with('profile')->find($user->id);
         });
@@ -229,5 +262,72 @@ class UserController extends Controller
                     'message' => 'An error occurred. Please try again.'
                 ], 500);
         }
+    }
+
+    /**
+     * Add user card
+     *
+     * @param int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getCards(Request $request)
+    {
+        $cards = CustomerCredential::where([
+                ['user_id', auth()->user()->id], 
+                ['model_id', $request->organization_id], 
+                ['model_type', 'App\Organization']
+            ])->get(); 
+
+        return response()->json($cards);
+    }
+
+    /**
+     * Add user card
+     *
+     * @param int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function addCard(Request $request, Organization $organization)
+    {
+        $key = OrganizationCredential::where(
+                'organization_id', $organization->id
+            )
+            ->first();
+
+        if (!$key) {
+            return response()->json([
+                'message' => "Please check your API keys.",
+            ], 422);
+        }
+
+        \Stripe\Stripe::setApiKey($key->secret_key);
+
+        $credential = new CustomerCredential;
+    
+        if (!$credential->customer_id) {
+            $createdCustomer = \Stripe\Customer::create([
+                    'name' => $request->name,
+                ]);
+
+            $credential->customer_id = $createdCustomer->id;
+        }
+
+        if (!$credential->card_id) {
+            $card = \Stripe\Customer::createSource(
+                    $credential->customer_id,
+                    ['source' => $request->token]
+                );
+
+            $credential->card_id = $card->id;
+        }
+
+        $credential->user_id = auth()->user()->id;
+        $credential->name = $request->name;
+        $credential->card_brand = $request->brand;
+        $credential->last_four_number = $request->last4;
+
+        $cardCredential = $organization->customerCredential()->save($credential); 
+
+        return response()->json($cardCredential, 202);
     }
 }

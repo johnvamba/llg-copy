@@ -16,6 +16,7 @@ class CreateNeedsCategoriesTable extends Migration
         Schema::create('needs_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('type')->default('monetary')->nullable(); //not enum, //organizational
             $table->string('icon')->nullable();
             $table->boolean('status')->default(true);
             $table->timestamps();

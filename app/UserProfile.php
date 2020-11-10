@@ -27,8 +27,7 @@ class UserProfile extends Model
                         'bio',
                         'location',
                         'lat',
-                        'lng',
-                        'photo'
+                        'lng'
                     ), [
                         'user_id' => $id,
                         'first_name' => $request->firstName,
@@ -47,7 +46,20 @@ class UserProfile extends Model
     public static function uploadPhoto($url, $id)
     {
         $profile = UserProfile::where('user_id', $id)->first();
-        $profile->photo = $url;
+        $profile->avatar = $url;
+        $profile->save();
+
+        return $profile;
+    }
+    
+    /**
+     * Upload user cover photo
+     * @return object
+     */
+    public static function uploadCoverPhoto($url, $id)
+    {
+        $profile = UserProfile::where('user_id', $id)->first();
+        $profile->cover_photo = $url;
         $profile->save();
 
         return $profile;

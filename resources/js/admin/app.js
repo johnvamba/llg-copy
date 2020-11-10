@@ -17,6 +17,7 @@ const Home = () => {
     const [notifications, setNotifications] = useState([]);
     const [organization, setOrganization] = useState(null);
     const [showSidebarMobile, setShowSidebarMobile] = useState(false);
+    // const [show]
 
     const windowWidth = window.innerWidth;
 
@@ -97,7 +98,7 @@ const Home = () => {
                                 Admin
                             </button>
                             <div className="admin-notif relative">
-                                <Link className="mr-6 text-lg" to="/">
+                                <Link className="mr-6 text-lg" to={'/push-notifications'}>
                                     <i className="far fa-bell"></i>
                                 </Link>
                                 {notifications.length > 0 && 
