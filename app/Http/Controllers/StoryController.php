@@ -99,6 +99,40 @@ class StoryController extends Controller
 
         return response()->json($story);
     }
+    
+    /**
+     * Display search story
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function searchStory(Request $request, $search)
+    {
+        $query = Story::with([
+                'user', 
+                'user.profile', 
+                'organization', 
+            ])
+            ->withCount('appreciates');
+
+        if($search)
+            $query->where('title', 'LIKE', '%'.strtolower($search).'%');
+        
+        $stories = $query->orderBy('created_at', 'desc')
+            ->paginate();
+
+        foreach ($stories as $story) {
+            $story['photo'] = $story->getFirstMediaUrl('photo');
+
+            $appreciate = StoryAppreciate::where([
+                ['user_id', auth()->user()->id],
+                ['story_id', $story->id]
+            ])->count();
+
+            $story['appreciated'] = $appreciate ? true  : false;
+        }
+
+        return response()->json($stories);
+    }
 
     /**
      * Store a newly created resource in storage.

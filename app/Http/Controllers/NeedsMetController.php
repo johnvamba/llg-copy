@@ -72,7 +72,14 @@ class NeedsMetController extends Controller
      */
     public function getGroupNeedsMet(Request $request, Group $group)
     {
-        $users = GroupParticipant::where('group_id', $group->id)->pluck('user_id');
+        $users = GroupParticipant::where([
+                ['group_id', $group->id],
+                ['status', 'approved']
+            ])->pluck('user_id');
+
+        if (!$users) {
+            return response()->json($users);
+        }
         
         $needsMet = NeedMet::whereHasMorph(
                 'model',

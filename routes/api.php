@@ -85,6 +85,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('story/lists', 'StoryController@getStories');
     Route::get('featured/stories', 'StoryController@featuredStory');
     Route::post('stories/{story}/appreciate', 'StoryController@Appreciate');
+    Route::get('stories/search/{keyword}', 'StoryController@searchStory');
     Route::get('stories/{story}/comments', 'StoryController@getComments');
     Route::post('stories/{story}/comments', 'StoryController@addComment');
     Route::resource('stories', 'StoryController');
