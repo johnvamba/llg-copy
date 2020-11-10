@@ -50,7 +50,7 @@ const FormTabInfo = () => {
                         </div>
                     </div>
                     <div className="w-full sm:w-full md:w-full">
-                        <div className={`form-group form-select ${privacyOpen ? 'active' : ''}`}>
+                        <div className={`form-group form-input-select ${privacyOpen ? 'active' : ''}`}>
                             <label>Privacy</label>
                             <Dropdown isOpen={privacyOpen} toggle={() => setPrivacyOpen(prevState => !prevState)}>
                                 <DropdownToggle>

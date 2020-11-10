@@ -19,7 +19,7 @@ const PaymentForm = ({ closeForm }) => {
                 <section className="payment-form__body">
                     <form className="flex flex-wrap justify-between -mx-2">
                         <div className="w-full sm:w-full md:w-full px-2">
-                            <div className={`form-group form-select ${needOpen ? 'active' : ''}`}>
+                            <div className={`form-group form-input-select ${needOpen ? 'active' : ''}`}>
                                 <label>Need</label>
                                 <Dropdown isOpen={needOpen} toggle={() => setNeedOpen(prevState => !prevState)}>
                                     <DropdownToggle>

@@ -248,25 +248,25 @@ td.actions, th.actions{
     color: #4F6880;
     opacity: 0.3;
 }
-.form-select{
+.form-input-select{
 	border-bottom: 1px solid #D7DEE3;
     padding: 9px 0;
 }
-.form-select label{
+.form-input-select label{
 	font-style: normal;
     font-weight: normal;
     font-size: 12px;
     line-height: 24px;
     color: rgba(74, 108, 140, 0.56);
 }
-.form-select label{
+.form-input-select label{
 	font-style: normal;
     font-weight: normal;
     font-size: 12px;
     line-height: 24px;
     color: rgba(74, 108, 140, 0.56);
 }
-.form-select .dropdown button{
+.form-input-select .dropdown button{
 	width: 100%;
     background: transparent;
     color: #4F6880;
@@ -284,49 +284,49 @@ td.actions, th.actions{
     padding-right: 5px;
     cursor: pointer;
 }
-.form-select .dropdown button .default{
+.form-input-select .dropdown button .default{
 	font-style: normal;
     font-weight: normal;
     font-size: 14px;
     line-height: 24px;
     color: rgba(74, 108, 140, 0.56);
 }
-.form-select .dropdown button .selected{
+.form-input-select .dropdown button .selected{
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
     line-height: 24px;
     color: #4F6880;
 }
-.form-select .dropdown button:focus{
+.form-input-select .dropdown button:focus{
     box-shadow: none !important;
     background: transparent;
     color: #4F6880;
     outline: none;
 }
-.form-select .dropdown button:focus{
+.form-input-select .dropdown button:focus{
     box-shadow: none !important;
     background: transparent;
     color: #4F6880;
     outline: none;
 }
-.form-select .dropdown.show > .btn-secondary.dropdown-toggle{
+.form-input-select .dropdown.show > .btn-secondary.dropdown-toggle{
     color: #4F6880;
     background-color: transparent;
     border-color: #fff;
 }
-.form-select .dropdown .btn-secondary:not(:disabled):not(.disabled):active{
+.form-input-select .dropdown .btn-secondary:not(:disabled):not(.disabled):active{
     color: #4F6880;
     background-color: transparent;
     border-color: #fff;
 }
-.form-select .dropdown.show .dropdown-menu{
+.form-input-select .dropdown.show .dropdown-menu{
     margin-top: 20px;
 }
-.form-select .dropdown.show .dropdown-menu button{
+.form-input-select .dropdown.show .dropdown-menu button{
     padding: 6px 20px;
 }
-.form-select .dropdown.show .dropdown-menu button:hover{
+.form-input-select .dropdown.show .dropdown-menu button:hover{
     background: rgba(16, 156, 241, 0.08);
 }
 .form-search input{
@@ -404,4 +404,7 @@ input[type=checkbox]{
     letter-spacing: 0.01em;
     color: #FFFFFF;
     margin-left: 9px;
+}
+.form-input-radio{
+    border: none;
 }

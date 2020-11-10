@@ -20,7 +20,7 @@ const TransactionsForm = ({ closeForm, activeForm }) => {
                 <section className="transaction-form__body">
                     <form className="flex flex-wrap justify-between -mx-2">
                         <div className="w-full sm:w-full md:w-full px-2">
-                            <div className={`form-group form-select ${privacyOpen ? 'active' : ''}`}>
+                            <div className={`form-group form-input-select ${privacyOpen ? 'active' : ''}`}>
                                 <label>Organisation</label>
                                 <Dropdown isOpen={privacyOpen} toggle={() => setPrivacyOpen(prevState => !prevState)}>
                                     <DropdownToggle>
