@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCommentStoriesTable extends Migration
+class CreateGroupInvitesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreateCommentStoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('comment_stories', function (Blueprint $table) {
+        Schema::create('group_invites', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('story_id')->unsigned();
+            $table->bigInteger('group_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
-            $table->text('comment')->nullable();
+            $table->enum('status', ['pending', 'denied', 'approved'])
+                ->default('pending');
             $table->timestamps();
 
-            $table->foreign('story_id')->references('id')->on('stories');
+            $table->foreign('group_id')->references('id')->on('groups');
             $table->foreign('user_id')->references('id')->on('users');
         });
     }
@@ -32,6 +33,6 @@ class CreateCommentStoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('comment_stories');
+        Schema::dropIfExists('group_invites');
     }
 }

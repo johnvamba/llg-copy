@@ -31,9 +31,9 @@ class NeedsStoreRequest extends FormRequest
             'description' => 'required',
             'raised' => 'sometimes|required',
             'goal' => 'required',
-            'location' => 'required',
-            'lat' => 'required',
-            'lng' => 'required',
+            'location' => 'sometimes|required',
+            'lat' => 'sometimes|required',
+            'lng' => 'sometimes|required',
             'tags' => 'sometimes|required'
         ];
     }
