@@ -267,18 +267,6 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                             </div>
                         )
                     }
-                    
-                    {roles.name === 'organization admin' &&
-                        <div
-                            className={`mt-6 
-                            ${location.pathname == "/transactions" ? "text-blue-400" : "text-gray-400"}`}
-                        >
-                            <Link to="/transactions" className="flex items-center">
-                                <i className="text-xl fas fa-retweet"></i>
-                                <span className="px-4">Transactions</span>
-                            </Link>
-                        </div>
-                    }
 
                     {roles.name === 'organization admin' &&
                         (
@@ -325,7 +313,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         </div>
                         )
                     }
-                    {roles.name === 'organization admin' &&
+                    {roles.name === 'admin' &&
                         <div
                             className={`mt-6 
                             ${location.pathname == "/api" ? "text-blue-400" : "text-gray-400"}`}

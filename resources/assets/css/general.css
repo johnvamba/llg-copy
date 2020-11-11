@@ -772,3 +772,14 @@ input[type=checkbox]{
 .form-input-radio{
     border: none;
 }
+.form-input-text.has-error,
+.form-input-select.has-error{
+	border-bottom: 1px solid red;
+}
+.input-error-msg{
+    position: relative;
+    top: -13px;
+    font-size: 12px;
+    font-style: italic;
+    color: red;
+}
