@@ -89,7 +89,7 @@ const GroupsForm = ({ showAdd, setState }) => {
                     ? (<>
                             <div className="relative pt-1">
                                 <div className="w-full bg-gray-400 rounded-full">
-                                    <div className={`bg-blue-400 rounded-full leading-none py-1 text-white tab-${activeTab}`}></div>
+                                    <div className={`bg-blue-400 rounded-full leading-none py-1 text-white tab-${countTab}`}></div>
                                 </div>
                             </div>
                             <p>{countTab} of 3</p>
