@@ -773,7 +773,8 @@ input[type=checkbox]{
     border: none;
 }
 .form-input-text.has-error,
-.form-input-select.has-error{
+.form-input-select.has-error,
+.form-group-textarea.has-error{
 	border-bottom: 1px solid red;
 }
 .input-error-msg{
@@ -782,4 +783,7 @@ input[type=checkbox]{
     font-size: 12px;
     font-style: italic;
     color: red;
+}
+.form-group-textarea{
+	border-bottom: 1px solid #D7DEE3;
 }
