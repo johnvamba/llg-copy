@@ -213,8 +213,6 @@ class UserTest extends TestCase
 
         $response->assertStatus(202);
         $response->assertJsonStructure(['message']);
-
-        Storage::disk('public')->assertExists("img/{$file->hashName()}");
     }
 
     /** @test */

@@ -103,7 +103,8 @@ class AuthController extends Controller
                         'first_name' => $request->firstName,
                         'last_name' => $request->lastName,
                         'user_id' => $user->id,
-                        'age' => $request->age
+                        'age' => $request->age,
+                        'bio' => $request->bio
                     ]);
 
                 $user['profile'] = $profile;
@@ -151,7 +152,9 @@ class AuthController extends Controller
                 Storage::disk(env('FILESYSTEM_DRIVER'))
                     ->url($data);
 
-                $profile = UserProfile::uploadPhoto($name.'.'.$extension, $profile->user_id);
+                $url = Storage::url($name.'.'.$extension);
+
+                $profile = UserProfile::uploadPhoto($url, $profile->user_id);
             }
         }
 

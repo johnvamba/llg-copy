@@ -6,11 +6,13 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActivityController;
 use App\User;
+use App\UserProfile;
 use App\Need;
 use App\Organization;
 use App\CustomerCredential;
 use App\OrganizationCredential;
 use App\Invoice;
+use App\NeedMet;
 use DB;
 
 class PaymentController extends Controller
@@ -81,10 +83,8 @@ class PaymentController extends Controller
         ActivityController $activity, 
         Need $need
     ){
-        $org = Organization::find($need->organization_id);
-
         $key = OrganizationCredential::where(
-                    'organization_id', $org->id
+                    'organization_id', $need->organization_id
                 )
                 ->first();
 
@@ -95,69 +95,58 @@ class PaymentController extends Controller
         }
 
         \Stripe\Stripe::setApiKey($key->secret_key);
-        
-        $credential = CustomerCredential::where([
-                ['user_id', auth()->user()->id],
-                ['model_id', $org->id]
-            ])
-            ->first();
 
         try {
-            if (!$credential) {
-                $credential = new CustomerCredential;
-    
-                if (!$credential->customer_id) {
-                    $createdCustomer = \Stripe\Customer::create([
-                            'name' => auth()->user()->name,
-                            'email' => auth()->user()->email
-                        ]);
+            $result = DB::transaction(function () use ($request, $need, $activity) {
+                $uuid = (string) Str::uuid();
+                $description = 'donated to '.$need->title;
 
-                    $credential->customer_id = $createdCustomer->id;
-                }
+                $need->update(['raised' => floatval($need->raised)+floatval($request->amount)]);
+                
+                $makeNeedMet = NeedMet::make([
+                        'need_id' => $need->id,
+                        'amount' => floatval($request->amount)
+                    ]);
+
+                auth()->user()->needsMet()->save($makeNeedMet);
+
+                $userProfile = UserProfile::where('user_id', auth()->user()->id)
+                    ->first();
+
+                $userProfile->update([
+                        'amount_given' => $userProfile->amount_given + floatval($request->amount)
+                    ]);
+                    
+                $activity->store($need, [
+                        'description' => 'donated to ',
+                        'short_description' => $need->title,
+                    ]);
+
+    
+                $charge = \Stripe\Charge::create([
+                        'customer' => $request->customer_id,
+                        'amount' => floatval($request->amount),
+                        'currency' => 'usd',
+                        'description' => $description
+                    ]);
+
+                $initInvoice = Invoice::make([
+                        'user_id' => auth()->user()->id,
+                        'organization_id' => $need->organization_id,
+                        'receipt' => $uuid,
+                        'charge_id' => $charge->id,
+                        'description' => $description,
+                        'amount' => $request->amount,
+                    ]);
         
-                if (!$credential->card_id) {
-                    $card = \Stripe\Customer::createSource(
-                            $credential->customer_id,
-                            ['source' => $request->token]
-                        );
+                $invoice = $need->invoices()->save($initInvoice);
 
-                    $credential->card_id = $card->id;
-                }
-    
-                $credential->user_id = auth()->user()->id;
-    
-                $org->customerCredential()->save($credential);
-            }
-    
-            $description = 'donated to '.$need->title;
-    
-            $charge = \Stripe\Charge::create([
-                    'customer' => $credential->customer_id,
-                    'amount' => $request->amount,
-                    'currency' => $request->currency,
-                    'description' => $description
-                ]);
-
-            $uuid = (string) Str::uuid();
-    
-            $initInvoice = Invoice::make([
-                    'user_id' => auth()->user()->id,
-                    'receipt' => $uuid,
-                    'charge_id' => $charge->id,
-                    'description' => $description,
-                    'amount' => $request->amount,
-                ]);
-    
-            $invoice = $need->invoices()->save($initInvoice);
-
-            $activity->store($need, [
-                    'description' => 'donated to ',
-                    'short_description' => $need->title,
-                ]);
+                return $invoice;
+            });
     
             return response()->json([
                     'message' => 'Successfully donated.',
-                    'data' => $invoice
+                    'data' => $result
                 ], 202);
                 
         } catch(\Stripe\Exception\CardException $e) {

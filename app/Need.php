@@ -38,6 +38,11 @@ class Need extends Model implements HasMedia
     {
         return $this->hasMany('App\NeedHasCategory', 'need_id');
     }
+
+    public function contribution()
+    {
+        return $this->hasOne('App\NeedMet', 'need_id');
+    }
     
     public function organization()
     {
@@ -47,6 +52,11 @@ class Need extends Model implements HasMedia
     public function type()
     {
         return $this->belongsTo('App\NeedsType', 'needs_type_id');
+    }
+
+    public function categoriesList()
+    {
+        return $this->morphedByMany("App\NeedsCategory", "model", 'need_has_categories');
     }
 
     /**

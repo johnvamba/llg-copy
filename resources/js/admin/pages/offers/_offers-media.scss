@@ -1,0 +1,120 @@
+@media (max-width: 1024px) {
+
+    // ----------------------------------------------------------
+    // temporary only. this is for the header part
+        .dashboard-header{
+            > div{
+                padding-left: 10px;
+                input{
+                    width: 100%;
+                }
+            }
+            .admin-notif{
+                .mr-6{
+                    margin-right: 10px;
+                }
+            }
+            .admin-exit{
+                margin-right: 10px;
+            }
+        }
+        
+            
+        .dashboard-header__bars{
+            display: block;
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+        }
+        .admin-mobile{
+            display: block;
+            margin-right: 10px;
+        }
+        .admin-desktop{
+            display: none;
+        }
+        .sidebar__mobile{
+            position: absolute;
+        }
+    // ----------------------------------------------------------
+
+
+    .offers-table{
+        overflow-x: auto;
+        padding: 10px;
+        table{
+            width: 100%;
+            min-width: 800px;
+        }
+    }
+    .offers-create{
+        padding: 0 10px;
+    }
+    .offers-create-form{
+        max-width: none;
+    }
+    .offers-create-form__body .offers-category__item{
+        width: 100%;
+        flex: calc(33.333% - 10px);
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-bottom: 10px;
+    }
+    .offers-category-opt .discard{
+        padding: 6px 23px;
+        font-size: 14px;
+    }
+    .offers-category-opt .back{
+        padding: 6px 23px;
+        font-size: 14px;
+    }
+    .offers-category-opt .next{
+        padding: 8px 23px;
+        font-size: 14px;
+    }
+    .view-offer{
+        max-width: none;
+    }
+    .offers-edit-opt .next,
+    .offers-edit-opt .discard{
+        padding: 8px 23px;
+        font-size: 14px;
+    }
+    .offers-edit__category__item{
+        width: 100%;
+        flex: calc(33.333% - 10px);
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-bottom: 10px;
+    }
+
+}
+
+@media (max-width: 425px) {
+    .view-offer__body{
+        padding: 15px;
+    }
+    .offers-edit__category{
+        padding: 10px;
+    }
+    .offers-edit__service {
+        padding: 10px;
+    }
+    .offers-edit__business {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 320px) {
+    .offers-category-opt .back{
+        padding: 6px 17px;
+    }
+    .offers-category-opt .next{
+        padding: 8px 20px;
+    }
+    .view-offer{
+        max-width: none;
+    }
+}
+
+

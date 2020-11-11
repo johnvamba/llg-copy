@@ -17,7 +17,7 @@ class CreateCommentStoriesTable extends Migration
             $table->id();
             $table->bigInteger('story_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
-            $table->text('comment');
+            $table->text('comment')->nullable();
             $table->timestamps();
 
             $table->foreign('story_id')->references('id')->on('stories');

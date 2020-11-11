@@ -17,13 +17,14 @@ class NeedSeeder extends Seeder
 
             $category = factory(\App\NeedsCategory::class)->create();
 
-            $type = factory(\App\NeedsType::class)->create();
+            $type = \App\NeedsType::get();
 
-            $needs = factory(\App\Need::class, 5)->create([
-                'model_id' => $org->id,
-                'model_type' => 'App\Organization',
-                'needs_category_id' => $category->id,
-                'needs_type_id' => $type->id
+            $needs = factory(\App\Need::class, 15)->create([
+                // 'model_id' => $org->id,
+                // 'model_type' => 'App\Organization',
+                'organization_id' => $org->id,
+                // 'needs_category_id' => $category->id,
+                'needs_type_id' => $type->random()->id
             ]);
         });
     }

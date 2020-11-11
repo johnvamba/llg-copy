@@ -24,17 +24,42 @@ Route::post('auth/{user}', 'AuthController@authUser');
 Route::get('need/categories', 'NeedsCategoryController@index');
 
 Route::group(['middleware' => ['auth:api']], function () {
+
+    Route::group(['prefix'=>'web', 'namespace'=>'Admin'], function() {
+        Route::get('needs/types', 'NeedsController@types');
+
+        Route::resource('needs', 'NeedsController');
+        Route::post('needs/{need}/approve', 'NeedsController@approve');
+        Route::post('needs/{need}/disapprove', 'NeedsController@disapprove');
+
+        Route::resource('organizations', 'OrganizationController');
+        Route::get('organizations/async', 'OrganizationController@async');
+        Route::get('organizations/{organization}/members', 'OrganizationController@members');
+        Route::post('organizations/{organization}/members', 'OrganizationController@membersInvite');
+        Route::get('organizations/{organization}/needs', 'OrganizationController@needs');
+
+        Route::resource('offers', 'OffersController');
+
+        Route::resource('users', 'UsersController');
+
+        Route::resource('campuses', 'CampusController');
+    });
+
     /** Role resource module */
     Route::resource('roles', 'RoleController');
 
     /** User resource module */
     Route::get('user/me', 'UserController@getProfile');
+    Route::get('user/me/update-profile', 'UserController@updateProfile');
     Route::get('user/stats', 'UserController@getUsersStatistics');
     Route::post('users/lists', 'UserController@getUsers');
+    Route::post('user/add-card/{organization}', 'UserController@addCard');
+    Route::post('user/cards', 'UserController@getCards');
     Route::resource('users', 'UserController');
     
     /** Goal resource module */
     Route::get('goal/user', 'GoalController@getUserGoal');
+    Route::get('goal/group/{groupId}', 'GoalController@getGroupGoal');
     Route::resource('goals', 'GoalController');
 
     /** Need resource module */
@@ -54,11 +79,14 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('needs-types', 'NeedsTypeController');
     
     /** Needs Met resource module */
+    Route::get('needs-mets/group/{group}', 'NeedsMetController@getGroupNeedsMet');
+    Route::get('needs-mets/user', 'NeedsMetController@getUserNeedsMet');
     Route::get('needs-mets/total', 'NeedsMetController@getTotalNeedsMet');
     Route::resource('needs-met', 'NeedsMetController');
 
     /** Service Offered resource module */
     Route::post('offer/lists', 'ServiceOfferController@getOffers');
+    Route::get('service-offer/user', 'ServiceOfferController@getServiceOffered');
     Route::get('service-offer/help/total', 'ServiceOfferController@getTotalOffers');
     Route::get('service-offer/user/request', 'ServiceOfferController@getServicesRequest');
     Route::post('service-offer/{serviceOffer}/request', 'ServiceOfferController@requestAction');
@@ -70,17 +98,29 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Stories resource module */
     Route::post('story/lists', 'StoryController@getStories');
     Route::get('featured/stories', 'StoryController@featuredStory');
-    Route::post('stories/{story}/appreciate', 'StoryController@addAppreciate');
+    Route::post('stories/{story}/appreciate', 'StoryController@Appreciate');
+    Route::get('stories/search/{keyword}', 'StoryController@searchStory');
+    Route::get('stories/{story}/comments', 'StoryController@getComments');
     Route::post('stories/{story}/comments', 'StoryController@addComment');
+    Route::get('stories/recommended', 'StoryController@recommended');
     Route::resource('stories', 'StoryController');
 
+    /** Group invite resource module */
+    Route::get('users-not-in-group/{group}', 'GroupInviteController@getUsersNotInGroup');
+    Route::resource('group-invites', 'GroupInviteController');
+
     /** Group resource module */
+    Route::get('group/me', 'GroupController@getMyGroup');
     Route::post('group/lists', 'GroupController@getGroups');
-    Route::post('groups/{group}/participate', 'GroupController@addParticipant');
+    Route::post('group/search/people', 'GroupController@searchPeople');
+    Route::post('group/{group}/update-goal', 'GoalController@updateGroupGoal');
+    Route::post('group/{group}/add-photo', 'GroupController@addPhoto');
     Route::post('groups/join-request/{participantId}', 'GroupController@joinRequest');
+    Route::post('groups/{group}/participate', 'GroupController@addParticipant');
     Route::get('groups/{group}/join-request', 'GroupController@getJoinRequest');
     Route::get('groups/messages/{group}', 'GroupController@messages');
     Route::post('groups/message/{group}', 'GroupController@addMessage');
+    Route::post('groups/discover', 'GroupController@getDiscoverGroups');
     Route::resource('groups', 'GroupController');
 
     /** Orgnization Categories resource module */

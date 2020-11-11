@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests\GoalStoreRequest;
 use App\Goal;
 use App\User;
+use App\Group;
+use App\NeedMet;
+use Carbon\Carbon;
 
 class GoalController extends Controller
 {
@@ -99,6 +102,70 @@ class GoalController extends Controller
             ->orderBy('id', 'desc')
             ->first();
 
+        $date = Carbon::parse($goal->created_at);
+        
+        if ($goal->term == 'year') {
+            $goal['needs_met'] = NeedMet::where('created_at', '>=', $date->toDateTimeString())
+                ->where('created_at', '<=', $date->copy()->endOfYear())
+                ->get();
+        } else {
+            $goal['needs_met'] = NeedMet::where('created_at', '>=', $date->toDateTimeString())
+            ->where('created_at', '<=', $date->copy()->endOfMonth())
+            ->get();
+        }
+
         return response()->json($goal, 200);
+    }
+
+    /**
+     * Update group goal
+     * @param request
+     * @return json
+     */
+    public function updateGroupGoal(Request $request, Group $group)
+    {
+        $goal = Goal::whereHasMorph(
+                'model',
+                ['App\Group'],
+                function($query) use ($request, $group) {
+                    $query->where('model_id', $group->id);
+                }
+            )->first();
+
+        $goal->update([
+                'need' => $request->need,
+                'term' => $request->term
+            ]);
+
+        return response()->json($goal, 202);
+    }
+    
+    /**
+     * Get group goal
+     * @param request
+     * @return json
+     */
+    public function getGroupGoal(Request $request, Group $group)
+    {
+        $fetchGroup = Group::with(['goals' => function($query) {
+                $query->where('status', 'in progress')
+                    ->orderBy('created_at')
+                    ->first();
+            }])
+            ->find($group->id);
+
+        // $date = Carbon::parse($goal->created_at);
+        
+        // if ($goal->term == 'year') {
+        //     $goal['needs_met'] = NeedMet::where('created_at', '>=', $date->toDateTimeString())
+        //         ->where('created_at', '<=', $date->copy()->endOfYear())
+        //         ->get();
+        // } else {
+        //     $goal['needs_met'] = NeedMet::where('created_at', '>=', $date->toDateTimeString())
+        //     ->where('created_at', '<=', $date->copy()->endOfMonth())
+        //     ->get();
+        // }
+
+        return response()->json($fetchGroup, 200);
     }
 }

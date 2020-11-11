@@ -48,14 +48,16 @@ class NeedsController extends Controller
             }
         }
         
-        $results = $needs->orderBy('created_at', 'desc')
+        $results = $needs->whereRaw('raised < goal')
+            ->orderBy('created_at', 'desc')
             ->paginate(10, ['*'], 'needs', $page);
 
         foreach ($results as $need) {
             $need->model;
             $need->getMedia('photo');
-            $need['photo'] = $need->organization->getMedia('photo');
-            $need['cover_photo'] = $need->organization->getMedia('cover_photo');
+
+            $need['photo'] = $need->organization->getFirstMediaUrl('photo');
+            $need['cover_photo'] = $need->organization->getFirstMediaUrl('cover_photo');
 
             $need['totalActiveNeeds'] = Need::where(
                     'organization_id', $need->organization_id
@@ -108,6 +110,10 @@ class NeedsController extends Controller
         }
     
         $results = $needs->get();
+
+        foreach($results as $result) {
+           $result['photo'] = $result->getFirstMediaUrl('photo');
+        }
     
         return response()->json($results);
     }

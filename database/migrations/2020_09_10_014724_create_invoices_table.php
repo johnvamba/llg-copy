@@ -20,7 +20,7 @@ class CreateInvoicesTable extends Migration
             $table->bigInteger('organization_id')->unsigned();
             $table->morphs('model');
             $table->string('charge_id');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->double('amount', 15, 2);
             $table->timestamps();
 

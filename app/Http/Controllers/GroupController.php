@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Http\Requests\GroupUpdateRequest;
 use App\Http\Requests\GroupStoreRequest;
 use Illuminate\Http\Request;
+use App\User;
 use App\GroupParticipant;
 use App\Group;
 use App\Goal;
 use App\Tag;
 use App\GroupChat;
+use App\NeedMet;
 use DB;
+use Carbon\Carbon;
 
 class GroupController extends Controller
 {
@@ -22,6 +26,7 @@ class GroupController extends Controller
     public function index()
     {
         $groups = Group::with('user')
+            ->where('privacy', 'public')
             ->orderBy('created_at', 'desc')
             ->paginate();
 
@@ -71,13 +76,112 @@ class GroupController extends Controller
     }
 
     /**
+     * Display discover groups
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getDiscoverGroups(Request $request)
+    {
+        $groups = Group::with(['goals' => function($query) {
+                $query->where('status', 'in progress')
+                    ->orderBy('id', 'desc')
+                    ->first();
+            }])
+            ->where([
+                ['user_id', '!=', auth()->user()->id],
+                ['privacy', 'public']
+            ])
+            ->inRandomOrder()
+            ->get();
+
+        foreach ($groups as $group) {
+            $participants = GroupParticipant::where([
+                    ['group_id', $group->id],
+                    ['status', 'approved'],
+                ])
+                ->pluck('user_id');
+
+            $group['need_mets_count'] = count($participants) > 0 
+                ? NeedMet::whereHasMorph(
+                    'model',
+                        ['App\User'],
+                        function ($query) use ($participants) {
+                            $query->whereIn('model_id', $participants);
+                        }
+                    )->count()
+                : 0;
+
+            $group['members_count'] = GroupParticipant::where([
+                    ['group_id', $group->id],
+                    ['status', 'approved']
+                ])->count();
+        }
+
+        return response()->json($groups, 200);
+    }
+
+    /**
+     * Display user joined/created group.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getMyGroup(Request $request)
+    {
+        $group = Group::with(['goals' => function($query) {
+                $query->where('status', 'in progress')
+                    ->orderBy('id', 'desc')
+                    ->first();
+            }])
+            ->where('user_id', auth()->user()->id)
+            ->first();
+
+        if (!$group) {
+            $participated = GroupParticipant::where([
+                    ['user_id', auth()->user()->id],
+                    ['status', 'approved']
+                ])
+                ->first();
+
+            if ($participated) {
+                $group = Group::where('group_id', $participated->group_id)
+                    ->first();
+            } else {
+                return response()->json($participated);
+            }
+        }
+
+        $participants = GroupParticipant::where([
+                ['group_id', $group->id],
+                ['status', 'approved'],
+            ])
+            ->pluck('user_id');
+
+        $group['need_mets_count'] = count($participants) > 0 
+            ? NeedMet::whereHasMorph(
+                'model',
+                    ['App\User'],
+                    function ($query) use ($participants) {
+                        $query->whereIn('model_id', $participants);
+                    }
+                )->count()
+            : 0;
+
+        $group['members_count'] = GroupParticipant::where([
+                ['group_id', $group->id],
+                ['status', 'approved']
+            ])->count();
+
+        return response()->json($group);
+    }
+
+    /**
      * Display join request of a group.
      *
      * @return \Illuminate\Http\Response
      */
     public function getJoinRequest(Request $request, Group $group)
     {
-        $participants = GroupParticipant::with('user')
+        $participants = GroupParticipant::with('user', 'user.profile')
             ->where('status', 'pending')
             ->get();
 
@@ -91,10 +195,27 @@ class GroupController extends Controller
      */
     public function messages(Request $request, Group $group)
     {
-        $chats = GroupChat::with('user')
+        $chats = GroupChat::with('user', 'user.profile')
             ->where('group_id', $group->id)
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->get()
+            ->groupBy(function($q) {
+                return Carbon::parse($q->created_at)->calendar();
+            });
+        
+        foreach ($chats as $time) {
+            foreach($time as $chat) {
+                $chat->getMedia();
+            }
+        }
+
+        foreach($chats as $time) {
+            foreach($time as $chat) {
+                foreach($chat['media'] as $media) {
+                    $media['publicUrl'] = $media->getFullUrl();
+                }
+            }
+        }
 
         return response()->json($chats, 200);
     }
@@ -121,16 +242,14 @@ class GroupController extends Controller
                     )
                 );
             
-            if ($request->term && $request->need) {
-                $goal = Goal::make(request()->only([
-                        'need',
-                        'term'
-                    ]));
-    
-                $createdGoal = $group->goals()->save($goal);
-    
-                $group['goal'] = $createdGoal;
-            }
+            $goal = Goal::make([
+                    'need' => 8,
+                    'term' => 'year'
+                ]);
+
+            $createdGoal = $group->goals()->save($goal);
+
+            $group['goal'] = $createdGoal;
 
             if ($request->tags) {
                 $tags = Tag::createTag($group, $request->tags);
@@ -145,11 +264,39 @@ class GroupController extends Controller
                 $group->getMedia('photo');
             }
 
-
             return $group;
         });
 
         return response()->json($result, 202);
+    }
+
+    /**
+     * Add group photo
+     *
+     * @param  json
+     * @return \Illuminate\Http\Response
+     */
+    public function addPhoto(Request $request, Group $group)
+    {
+        $group->clearMediaCollection('photo');
+
+        if ($request->get('photo')) {
+            $image = $request->get('photo');
+            $name = time().'-'.Str::random(20);
+            $extension = explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            
+            $group 
+                ->addMediaFromBase64($image)
+                ->usingName($name)
+                ->usingFileName($name.'.'.$extension)
+                ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
+
+            $group->getMedia('photo');
+            
+            return response()->json($group, 202);
+        }
+
+        return response()->json(['message' => 'Please select a photo.'], 422);
     }
 
     /**
@@ -162,7 +309,7 @@ class GroupController extends Controller
     {
         $participant = GroupParticipant::create([
                 'group_id' => $group->id,
-                'user_id' => auth()->user()->id
+                'user_id' => $request->user_id
             ]);
 
         return response()->json($participant, 202);
@@ -181,6 +328,26 @@ class GroupController extends Controller
                 'sender' => auth()->user()->id,
                 'message' => $request->message
             ]);
+
+        if ($request->get('attachment')) {
+            $image = $request->get('attachment');
+            $name = time().'-'.Str::random(20);
+            $extension = explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            
+            $chat 
+                ->addMediaFromBase64($image)
+                ->usingName($name)
+                ->usingFileName($name.'.'.$extension)
+                ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
+        }
+
+        $chat->getMedia();
+
+        foreach($chat['media'] as $media) {
+            $media['publicUrl'] = $media->getFullUrl();
+        }
+
+        $chat->load('user', 'user.profile');
 
         return response()->json($chat, 202);
     }
@@ -247,5 +414,20 @@ class GroupController extends Controller
                     'message' => 'An error occurred. Please try again.'
                 ], 500);
         }
+    }
+
+    /**
+     * Search user's to invite
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function searchPeople(Request $request)
+    {
+        $users = User::where('name', 'like', '%'.$request->searchName.'%')
+            ->with('profile')
+            ->get();
+
+        return response()->json($users);
     }
 }

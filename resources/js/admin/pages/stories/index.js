@@ -1,11 +1,29 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import { useLocation } from 'react-router-dom'
 import * as StoriesActions from '../../../redux/stories/actions';
-import DataTable from '../../../components/layout/DataTable';
+import List from './list';
+import OffersPlus from '../../../svg/offers-plus';
+import CreateStory from './create';
+import StoriesForm from './form';
+import EditStory from './edit';
+import View from './view';
+import StoriesHeader from './header';
+import StoriesDrafts from './drafts';
+
+import './story.css';
 
 const Stories = () => {
+
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
+
+    const [showCreateStory, setShowCreateStory] = useState(false);
+    const [showViewStory, setShowViewStory] = useState(false);
+    const [showEditStory, setShowEditStory] = useState(false);
+
+    const location = useLocation();
+    const windowWidth = window.innerWidth;
 
     const stories = useSelector(
             state => state.StoriesReducer.stories
@@ -21,9 +39,18 @@ const Stories = () => {
 
             dispatch(StoriesActions.setStories(data));
         }
-
         fetchData();
     }, [limit])
+
+    //disable scrolling if there is any modal/popup
+    if (windowWidth < 1024) {
+        useEffect(() => {
+            ((showCreateStory || showViewStory || showEditStory) && windowWidth < 1024)
+            ? document.body.style.overflow = 'hidden'
+            : document.body.style.overflow = 'auto'; 
+        }, [showCreateStory, showViewStory, showEditStory])
+    }
+    
 
     const handleLimitChange = (limit) => {
         setLimit(parseInt(limit));
@@ -35,23 +62,19 @@ const Stories = () => {
 
     return (
         <>
-            <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
-                <ol className="list-reset flex text-grey-dark text-base">
-                    <li className="font-thin">Stories</li>
-                    <li><span className="mx-2">/</span></li>
-                    <li><a href="#" className="text-blue-400 font-semibold">Contents</a></li>
-                </ol>
-            </div>
-            <div className="flex flex-col p-12">
-                <DataTable
-                    module={stories.module}
-                    records={stories}
-                    changeLimit={handleLimitChange}
-                    currentPage={page}
-                    changePage={handleChangePage}
-                    canAdd={false}
-                />
-            </div>
+            <section className="stories">
+                <StoriesHeader title={(location.pathname == "/stories") ? 'Published (9)' : 'Drafts (0)'} setState={setShowCreateStory} />
+                {
+                    (location.pathname == "/stories")
+                    ? <List setShowViewStory={setShowViewStory} />
+                    : <StoriesDrafts setShowCreateStory={setShowCreateStory} />
+                }
+            </section>
+            
+            { showCreateStory && <StoriesForm state='create' setState={setShowCreateStory} setShowViewStory={setShowViewStory} /> }
+            { showViewStory && <View setShowEditStory={setShowEditStory} /> }
+            { showEditStory && <StoriesForm state='edit' setState={setShowEditStory} setShowViewStory={setShowViewStory} /> }
+
         </>
     )
 }

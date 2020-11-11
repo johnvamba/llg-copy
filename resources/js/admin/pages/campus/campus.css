@@ -1,0 +1,230 @@
+.campus-list{
+    padding: 48px;
+}
+.campus-list ul{
+    margin: 0 -12.5px;
+}
+.campus-list ul li{
+    flex: 0 1 calc(25% - 25px);
+    background: #fff;
+    border: 1px solid #EBEFF2;
+    margin-bottom: 25px;
+    cursor: pointer;
+    margin: 12.5px;
+}
+.campus-list ul li header > div{
+    width: 100%;
+    height: 99px;
+    background: #D3E9F6;
+}
+.campus-list__body{
+    padding: 19px;
+}
+.campus-list__body h2{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: 0.01em;
+    color: #323C47;
+    margin-bottom: 9px;
+}
+.campus-list__body p{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 150%;
+    color: #4F6880;
+}
+.campus-list__body > div{
+    margin-top: 13px;
+}
+.campus-list__body > div label{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 12px;
+    letter-spacing: 0.01em;
+    color: #109CF1;
+    margin-left: 6px;
+}
+.form-group-textarea label{
+    font-family: "Lato", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 24px;
+    color: rgba(74, 108, 140, 0.56);
+}
+.campus-form__body{
+    margin-top: 22px;
+}
+.campus-form__body .bg-cover{
+    width: 100%;
+    height: 245px;
+    background: #D3E9F6;
+    position: relative;
+    margin-bottom: 22px;
+}
+.campus-form__body .bg-cover button{
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-sizing: border-box;
+    border-radius: 4px;
+    outline: none;
+    align-items: center;
+    display: flex;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 24px;
+    text-align: center;
+    color: #FFFFFF;
+    padding: 7px 23px;
+    position: absolute;
+    right: 13px;
+    top: 13px;
+}
+.campus-form__body .bg-cover svg{
+    margin-right: 11px;
+}
+.campus-view.create-form{
+    padding: 0;
+}
+.campus-view__header{
+    margin-bottom: 24px;
+}
+.campus-view__header .bg-cover{
+    width: 100%;
+    height: 274px;
+    background: #D3E9F6;
+    position: relative;
+}
+.campus-view__header .bg-cover path{
+    stroke: #fff;
+}
+.campus-view__body{
+    padding: 0 30px;
+}
+.campus-view__body .title{
+    margin-bottom: 10px;
+}
+.campus-view__body .title h2{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: 0.01em;
+    color: #323C47;
+}
+.campus-view__body .title button{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    color: #2DA9F3;
+}
+.campus-view__body .title svg{
+    margin-right: 10px;
+}
+.campus-view__body .address{
+    margin-bottom: 24px;
+}
+.campus-view__body .address svg{
+    width: 100%;
+    height: 16.19px;
+    max-width: 10.63px;
+}
+.campus-view__body .address label{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 150%;
+    color: #109CF1;
+    margin-left: 12px;
+}
+.campus-view__body p{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 24px;
+    color: #4F6880;
+}
+.tab-org ul{
+    padding: 0 30px;
+}
+.tab-org ul li{
+    display: flex;
+    align-items: flex-start;
+    border-bottom: 1.5px solid #F5F8FA;
+    padding: 16px 0;
+}
+.tab-org ul li img{
+    width: 35px;
+    height: 35px;
+    margin-right: 15px;
+}
+.tab-org__details{
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+}
+.tab-org__details h2{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 24px;
+    color: #231F20;
+}
+.tab-org__details p{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 140%;
+    color: #98999B;
+}
+.tab-org__details button{
+    display: flex;
+    align-items: center;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 12px;
+    letter-spacing: 0.01em;
+    color: #109CF1;
+}
+.tab-org__details svg{
+    margin-right: 7px;
+}
+
+
+@media (max-width: 1023px) {
+    .campus-list ul li{
+        flex: 0 1 calc(33.3333% - 25px);
+    }
+}
+@media (max-width: 768px) {
+    .campus-list ul li{
+        flex: 0 1 calc(50% - 25px);
+    }
+}
+@media (max-width: 767px) {
+    .campus-list{
+        padding: 20px;
+    }
+    .campus-list ul li {
+        flex: 0 1 100%;
+    }
+    .campus-form.create-form{
+        width: 100%;
+        height: auto;
+        padding: 10px;
+    }
+    .tab-org ul{
+        padding: 10px;
+    }
+    .campus-view.create-form{
+        width: 100%;
+    }
+}

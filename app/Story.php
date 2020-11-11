@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Carbon\Carbon;
 
 class Story extends Model implements HasMedia
 {
@@ -13,6 +14,8 @@ class Story extends Model implements HasMedia
     use SoftDeletes;
 
     protected $guarded = [];
+
+    protected $appends = ['created'];
 
     protected $with = ['tags'];
 
@@ -42,5 +45,13 @@ class Story extends Model implements HasMedia
     public function setShortDescriptionAttribute($value)
     {
         $this->attributes['short_description'] = substr($value, 0, 40).'...';
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedAttribute()
+    {
+        return Carbon::parse($this->attributes['created_at'])->diffForHumans();
     }
 }

@@ -1,0 +1,127 @@
+.form.need-form {
+	margin-right: auto;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	border: 1px solid rgba(231,234,239,1);
+	background-color: #FFF;
+	width: 600px; /* change this accordingly */
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+
+/*Need info*/
+.need-info {
+	margin-right: auto;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    border: 1px solid rgba(231,234,239,1);
+    background-color: #FFF;
+    width: 430px;
+    height: 100%;
+}
+.need-info .need-header {
+    height: 60px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    display: inline-flex;
+    padding: 0 20px;
+    border-bottom: 1px solid #E6E7EF;
+}
+.need-info .need-title .need-img {
+	margin: 20px 0px;
+	height: 150px; 
+}
+.need-info .need-title h3{
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 24px;
+	color: #4F6880;
+}
+.need-info .need-title h3 span{
+	float: right;
+	color: rgba(74, 108, 140, 0.56);
+	font-size: 12px;
+}
+.need-info .need-title h5{
+	font-size: 14px;
+	line-height: 24px;
+	color: #109CF1;
+}
+.need-info .need-header .circlet{
+	margin-right:20px;
+}
+.need-info .need-header button{
+	color: #2DA9F3;
+}
+.need-info .need-header h4.need-status{
+	flex:2 ;
+	color:#7690A8;
+}
+.need-info .need-content, .need-info .need-footer {
+	/*height: calc(100% - 60px);*/
+	padding: 0 20px;
+}
+.need-info .need-footer {
+    bottom: 0px;
+    position: absolute;
+    width: auto;
+    padding: 20px;
+}
+.need-content .group-content {
+	margin-bottom: 16px;
+}
+.need-content .group-content label{
+	font-size: 12px;
+	line-height: 24px;
+	color: rgba(74, 108, 140, 0.56);
+}
+.need-content .group-content p{
+	font-size: 13px;
+	line-height: 24px;
+	color: #4F6880;
+}
+.need-content .group-content .need-map{
+	width: 100%;
+	height: 90px;
+	background: rgba(255, 255, 255, 0.5);
+	mix-blend-mode: normal;
+	border-radius: 4px;
+}
+.action-content{
+	width: 171px;
+	height: 100px;
+	right: 0px;
+
+	background: #FFFFFF;
+	border: 1px solid #E7EBF3;
+	box-sizing: border-box;
+	box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+	border-radius: 4px;
+}
+
+header .filter-header .filter-need {
+	/*padding*/
+	width: 470px;
+	height: auto;
+}
+.filter-need .filter-body {
+	overflow-y: unset;
+	overflow: unset;
+	height: unset;
+}
+
+.filter-need .input-container .react-datepicker-wrapper:first-child {
+	margin-right: 8px;
+}
+/*
+.icon-circle .icon-png {
+	height: 20px;
+	width: 20px;
+	background-size: contain;
+	background-position: center; 
+}*/

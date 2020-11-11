@@ -1,0 +1,115 @@
+.api-form.create-form{
+    width: 100%;
+    max-width: 422px;
+}
+.api-list{
+    padding: 40px;
+}
+.api-list li{
+    background: #FFFFFF;
+    border: 1px solid #EBEFF2;
+    flex: 0 1 calc(50% - 15px);
+    padding: 25px 30px;
+    margin-bottom: 30px;
+}
+.api-list li header h2{
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    color: #323C47;
+}
+.api-list__actions button:first-child{
+    position: relative;
+    right: 17px;
+}
+.share{
+    margin-top: 7px;
+}
+.share label{
+    font-family: Lato;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
+    color: #4F6880;
+    margin-bottom: 15px;
+}
+.share > p{
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0.01em;
+    color: #A5B0BF;
+    margin-top: 13px;
+}
+input[type=radio].form-radio{
+    color: #109CF1;
+    border: 1.5px solid rgba(156, 174, 185, 0.4);
+}
+.api-form__radio{
+    background: rgba(156, 174, 185, 0.05);
+    border: 1px solid rgba(156, 174, 185, 0.4);
+    box-sizing: border-box;
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+.api-form__radio .details{
+    margin-left: 20px;
+}
+.api-form__radio .details h3{
+    font-family: Lato;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+    letter-spacing: 0.01em;
+    color: #323C47;
+    margin-bottom: 10px;
+}
+.api-form__radio .details p{
+    font-family: Lato;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 150%;
+    color: #4F6880;
+}
+.api-form__radio.active{
+    background: rgba(16, 156, 241, 0.05);
+    border: 1px solid #109CF1;
+}
+.api-form__body .form-input-radio{
+    padding: 9px 0 0;
+}
+
+
+@media (max-width: 768px) {
+    .api-list li{
+        flex: 0 1 100%;
+    }
+    .api-list__body .share__container{
+        position: relative;
+        height: 50px;
+    }
+    .api-list__body .share__container button{
+        position: absolute;
+        right: 6px;
+    }
+    .api-list__body .share__container > div span{
+        overflow: hidden;
+        position: absolute;
+    }
+    .api-list{
+        padding: 10px;
+    }
+    .page-header-btn__text{
+        font-size: 12px !important;
+    }
+}

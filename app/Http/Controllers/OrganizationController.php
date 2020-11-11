@@ -26,7 +26,16 @@ class OrganizationController extends Controller
         $orgs = Organization::orderBy('created_at', 'desc')->get();
 
         foreach ($orgs as $org) {
-            $org->getMedia('photo');
+            $org['photo'] = $org->getFirstMediaUrl('photo');
+            $org['cover_photo'] = $org->getFirstMediaUrl('cover_photo');
+                
+            $org['activeNeeds'] = Need::where('organization_id', $org->id)
+                ->whereRaw('raised < goal')
+                ->count();
+
+            $org['pastNeeds'] = Need::where('organization_id', $org->id)
+                ->whereRaw('raised >= goal')
+                ->count();
         }
 
         return response()->json($orgs);
@@ -93,9 +102,8 @@ class OrganizationController extends Controller
         $results = $orgs->orderBy('distance')->get();
 
         foreach($results as $result) {
-            $result->getMedia();
-            $result['photo'] = $result->getMedia('photo');
-            $result['cover_photo'] = $result->getMedia('cover_photo');
+            $result['photo'] = $result->getFirstMediaUrl('photo');
+            $result['cover_photo'] = $result->getFirstMediaUrl('cover_photo');
         } 
             
         return response()->json($results, 200);

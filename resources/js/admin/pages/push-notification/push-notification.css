@@ -1,0 +1,122 @@
+.btn-scheduled{
+    background: rgba(242, 201, 76, 0.12);
+    border-radius: 50px;
+    color: #E2B324;
+    padding: 7px 15px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 16px;
+    text-align: center;
+    letter-spacing: 0.01em;
+}
+.btn-sent{
+    background: rgba(82, 204, 138, 0.12);
+    border-radius: 50px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 16px;
+    text-align: center;
+    letter-spacing: 0.01em;
+    color: #52CC8A;
+    padding: 6px 15px;
+}
+.push-form__body{
+    margin-top: 20px;
+}
+.push-form.create-form{
+    width: 100%;
+    max-width: 422px;
+}
+.toggle-sched__container{
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+    margin-top: 9px;
+    background: rgba(156, 174, 185, 0.05);
+    border: 1px solid rgba(155, 174, 185, 0.4);
+    box-sizing: border-box;
+    border-radius: 4px;
+    width: 100%;
+}
+.toggle-sched__container span{
+    padding: 9px 0;
+    width: 50%;
+    text-align: center;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    color: #63819D;
+    cursor: pointer;
+}
+.toggle-sched__container span.active{
+    color: #FFFFFF;
+    background: #109CF1;
+}
+.toggle-sched label {
+    font-family: "Lato", sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 24px;
+    color: rgba(74, 108, 140, 0.56);
+}
+.push-form__meridiem span{
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 24px;
+    font-feature-settings: 'liga' off;
+    color: #B3C1CF;
+    cursor: pointer;
+}
+.push-form__meridiem span:first-child{
+    margin-right: 7px;
+}
+.push-form__meridiem span.active{
+    color: #109CF1;
+}
+.toggle-sched{
+    margin-bottom: 20px;
+}
+.push-notif-header ul li{
+    margin-right: 38px;
+}
+.push-notif-header ul li.active label{
+    font-weight: bold;
+    color: #109CF1;
+}
+.push-notif-header ul li label{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    letter-spacing: 0.01em;
+    color: #C2CFE0;
+}
+.push-list.offers-table .title p{
+    cursor: pointer;
+}
+
+
+@media (max-width: 767px) {
+    .push-notif-header ul li {
+        margin-right: 8px;
+    }
+    .push-notif-header.offers-create button{
+        padding: 10px;
+    }
+    .push-notif-header.offers-create button span{
+        font-size: 11px;
+    }
+    .push-form.create-form{
+        max-width: none;
+        padding: 10px;
+    }
+    .org-form__footer{
+        padding: 15px 0;
+    }
+}
