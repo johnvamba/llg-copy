@@ -21,7 +21,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
 
     useEffect(()=>{
         const {name, description}= data;
-        setForm({name, description})
+        setForm({name:name || '', description:description || ''})
     }, [data])
 
     const handleInput = (e) => {
@@ -40,11 +40,12 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
         })
     }
 
-    const validateSubmit = (e) => {
+    const validateSubmit = () => {
         const { name, description } = form
         const set = {
             name: name == '' ? "Missing campus name" : null,
             description: description == '' ? "Missing description" : null,
+            location: location == '' ? "Missing location" : null,
         }
         setErrors({...set})
         return set;
@@ -122,7 +123,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
                     </div>
                     <div className="w-full">
                         <Location 
-                            className={`short-width ${errors.location && 'form-error'}`}
+                            className={`form-group ${errors.location && 'form-error'}`}
                             name={'location'}
                             placesSelected={handleLocation}
                             errors={errors.location || []}/>
@@ -145,7 +146,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
             <footer className="org-form__footer">
                 <div className="flex">
                     <button className="discard" onClick={reset}>Discard</button>
-                    <button className="next" onClick={submit}>Add</button>
+                    <button className="next" onClick={submit}>{data.id ? 'Edit' : 'Add'} </button>
                 </div>
             </footer>
         </section>

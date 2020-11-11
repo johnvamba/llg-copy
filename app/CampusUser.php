@@ -2,11 +2,11 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 
-class CampusUser extends Pivot
+class CampusUser extends Model
 {
-    protected $incrementing = true;
+    // public $incrementing = true;
 
     public function campus(){
     	return $this->belongsTo(\App\Campus::class);

@@ -12,9 +12,9 @@ import Select from 'react-select';
 const UsersForm = ({ data, showItem, handleForm }) => {
     const label = data.id ? 'Edit User' : 'Add User';
     const selectOptions = [
-        { value: 'app user', label: 'App User'},
-        { value: 'organization user', label: 'Organization User'},
-        { value: 'campus user', label: 'Campus User'},
+        { value: 'user', label: 'App User'},
+        { value: 'organization admin', label: 'Organization User'},
+        { value: 'campus admin', label: 'Campus User'},
         { value: 'admin', label: 'Super User'},
     ];
     const [form, setForm] = useState({
@@ -103,16 +103,10 @@ const UsersForm = ({ data, showItem, handleForm }) => {
 
     const attemptSubmit = ()=>{
         const set = validateSubmit()
-        const { firstName, lastName, email, age, bio } = form
-
         if(_.isEmpty({...set})){
             setSubmitting(true)
             const params = {
-                firstName,
-                lastName,
-                email,
-                age,
-                bio,
+                ...form,
                 type,
                 organization,
             }
