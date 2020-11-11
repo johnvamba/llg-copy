@@ -17,7 +17,6 @@ class CreateCampusUsersTable extends Migration
             $table->id();
             $table->bigInteger('campus_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
-            $table->text('description')->nullable();
             $table->timestamps();
 
             $table->foreign('campus_id')->references('id')->on('campuses');

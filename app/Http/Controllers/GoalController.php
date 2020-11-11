@@ -124,12 +124,18 @@ class GoalController extends Controller
      */
     public function updateGroupGoal(Request $request, Group $group)
     {
-        $goal = Goal::make([
-            'term' => $request->term,
-            'need' => $request->need
-        ]);
+        $goal = Goal::whereHasMorph(
+                'model',
+                ['App\Group'],
+                function($query) use ($request, $group) {
+                    $query->where('model_id', $group->id);
+                }
+            )->first();
 
-        $result = $group->goals()->save($goal);
+        $goal->update([
+                'need' => $request->need,
+                'term' => $request->term
+            ]);
 
         return response()->json($goal, 202);
     }

@@ -23,6 +23,7 @@ class CreateGroupsTable extends Migration
             $table->text('location');
             $table->string('lat');
             $table->string('lng');
+            $table->text('link')->nullable();
             $table->boolean('status')->default(true);
             $table->timestamps();
             $table->softDeletes();

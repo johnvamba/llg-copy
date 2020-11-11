@@ -19,6 +19,7 @@ class CreateCampusesTable extends Migration
             $table->text('location');
             $table->string('lat');
             $table->string('lng');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

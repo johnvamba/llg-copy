@@ -46,6 +46,36 @@ class StoryController extends Controller
     }
 
     /**
+     * Display recommended stories
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function recommended(Request $request)
+    {
+        $stories = Story::with([
+                'user', 
+                'user.profile', 
+                'organization', 
+            ])
+            ->withCount('appreciates')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        foreach ($stories as $story) {
+            $story['photo'] = $story->getFirstMediaUrl('photo');
+
+            $appreciate = StoryAppreciate::where([
+                ['user_id', auth()->user()->id],
+                ['story_id', $story->id]
+            ])->count();
+
+            $story['appreciated'] = $appreciate ? true  : false;
+        }
+
+        return response()->json($stories);
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

@@ -88,6 +88,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('stories/search/{keyword}', 'StoryController@searchStory');
     Route::get('stories/{story}/comments', 'StoryController@getComments');
     Route::post('stories/{story}/comments', 'StoryController@addComment');
+    Route::get('stories/recommended', 'StoryController@recommended');
     Route::resource('stories', 'StoryController');
 
     /** Group invite resource module */
