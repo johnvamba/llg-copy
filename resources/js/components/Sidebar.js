@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as AuthUserActions from '../redux/auth-user/actions';
 import { Link, useLocation } from 'react-router-dom';
 import OffersFormCross from '../svg/offers-form-cross';
+import Organisation from '../svg/organisation';
+import SidebarCampus from '../svg/sidebar-campus';
 import './css/sidebar.css';
 
 const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
@@ -30,6 +32,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
     const [show, setShow] = useState({
         need: false,
         story: false,
+        payment: false,
     });
 
     const handleOpen = (key) => {
@@ -59,25 +62,21 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                 </div>
 
                 <nav className="mx-6 text-sm">
-                    {roles.name === 'admin' &&
-                        (
-                            <div
-                                className={`mt-6 
-                                ${location.pathname == "/dashboard" ? "text-blue-400" : "text-gray-400"}`}
-                            >
-                                <Link to="/dashboard" className="flex items-center">
-                                    <i className="text-xl fa fa-th-large" aria-hidden="true"></i>
-                                    <span className="px-4">Dashboard</span>
-                                </Link>
-                            </div>
-                        )
-                    }
+                    <div
+                        className={`mt-6 
+                        ${location.pathname == "/dashboard" ? "text-blue-400" : "text-gray-400"}`}
+                    >
+                        <Link to="/dashboard" className="flex items-center">
+                            <i className="text-xl fa fa-th-large" aria-hidden="true"></i>
+                            <span className="px-4">Dashboard</span>
+                        </Link>
+                    </div>
 
                     <div className="mt-6 text-gray-400">
                         <button
                             onClick={() => handleOpen('need')}
                             className={`relative w-full flex items-center focus:outline-none
-                            ${(location.pathname == "/needs") || (location.pathname == "/needs/category") ? "text-blue-400" : "text-gray-400"}`}
+                            ${(location.pathname == "/needs") || (location.pathname == "/needs/requests") ? "text-blue-400" : "text-gray-400"}`}
                         >
                             <i className="text-xl fab fa-gratipay"></i>
                             <span className="px-4">Needs</span>
@@ -116,15 +115,19 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         }
                     </div>
 
-                    <div
-                        className={`mt-6 
-                        ${location.pathname == "/offers" ? "text-blue-400" : "text-gray-400"}`}
-                    >
-                        <Link to="/offers" className="flex items-center">
-                            <i className="text-xl fas fa-hand-holding-heart"></i>
-                            <span className="px-4">Offers</span>
-                        </Link>
-                    </div>
+                    {roles.name === 'admin' &&
+                        (
+                            <div
+                                className={`mt-6 
+                                ${location.pathname == "/offers" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/offers" className="flex items-center">
+                                    <i className="text-xl fas fa-hand-holding-heart"></i>
+                                    <span className="px-4">Offers</span>
+                                </Link>
+                            </div>
+                        )
+                    }
 
                     <div className="mt-6 text-gray-400">
                         <button
@@ -196,35 +199,143 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         )
                     }
 
-                    <div
-                        className={`mt-6 
-                        ${location.pathname == "/organizations" ? "text-blue-400" : "text-gray-400"}`}
-                    >
-                        <Link to="/organizations" className="flex items-center">
-                            <i className="text-xl fas fa-border-none"></i>
-                            <span className="px-4">Organisations</span>
-                        </Link>
-                    </div>
+                    {roles.name === 'admin' &&
+                        (
+                            <div
+                                className={`mt-6 
+                                ${location.pathname == "/organizations" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/organizations" className="flex items-center">
+                                    <Organisation />
+                                    <span className="px-4">Organizations</span>
+                                </Link>
+                            </div>
+                        )
+                    }
 
-                    <div
-                        className={`mt-6 
-                        ${location.pathname == "/push-notifications" ? "text-blue-400" : "text-gray-400"}`}
-                    >
-                        <Link to="/organizations" className="flex items-center">
-                            <i className="text-xl far fa-bell"></i>
-                            <span className="px-4">Push Notifications</span>
-                        </Link>
-                    </div>
+                    {roles.name === 'admin' &&
+                        (
+                            <div
+                                className={`mt-6 
+                                ${location.pathname == "/campus" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/campus" className="flex items-center">
+                                    <SidebarCampus />
+                                    <span className="px-4">Campus</span>
+                                </Link>
+                            </div>
+                        )
+                    }
 
-                    <div
-                        className={`mt-6 
-                        ${location.pathname == "/transactions" ? "text-blue-400" : "text-gray-400"}`}
-                    >
-                        <Link to="/transactions" className="flex items-center">
-                            <i className="text-xl fas fa-retweet"></i>
-                            <span className="px-4">Transactions</span>
-                        </Link>
-                    </div>
+                    {roles.name === 'admin' &&
+                        (
+                            <div
+                                className={`mt-6 
+                                ${location.pathname == "/push-notifications" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/push-notifications" className="flex items-center">
+                                    <i className="text-xl far fa-bell"></i>
+                                    <span className="px-4">Push Notifications</span>
+                                </Link>
+                            </div>
+                        )
+                    }
+
+                    {roles.name === 'admin' &&
+                        (
+                            <div
+                                className={`mt-6 
+                                ${location.pathname == "/transactions" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/transactions" className="flex items-center">
+                                    <i className="text-xl fas fa-retweet"></i>
+                                    <span className="px-4">Transactions</span>
+                                </Link>
+                            </div>
+                        )
+                    }
+                    {roles.name === 'organization admin' &&
+                        (
+                            <div
+                                className={`mt-6 
+                                ${location.pathname == "/users" ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <Link to="/users" className="flex items-center">
+                                    <i className="text-xl far fa-key"></i>
+                                    <span className="px-4">API</span>
+                                </Link>
+                            </div>
+                        )
+                    }
+                    
+                    {roles.name === 'organization admin' &&
+                        <div
+                            className={`mt-6 
+                            ${location.pathname == "/transactions" ? "text-blue-400" : "text-gray-400"}`}
+                        >
+                            <Link to="/transactions" className="flex items-center">
+                                <i className="text-xl fas fa-retweet"></i>
+                                <span className="px-4">Transactions</span>
+                            </Link>
+                        </div>
+                    }
+
+                    {roles.name === 'organization admin' &&
+                        (
+                        <div className="mt-6 text-gray-400">
+                            <button
+                                onClick={() => handleOpen('payment')}
+                                className={`relative flex items-center focus:outline-none w-full
+                                ${(location.pathname == "/payments") ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <i className="text-xl fas fa-leaf"></i>
+                                <span className="px-4">Payments</span>
+
+                                <div className="absolute inset-y-0 right-0 text-gray-400">
+                                    <svg
+                                        className="fill-current h-6 w-6"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                    </svg>
+                                </div>
+                            </button>
+
+                            {show.payment &&
+                                <div className={`ml-8`}>
+                                    <div
+                                        className={`mt-4
+                                        ${(location.pathname == "/payments") ? "text-blue-400" : "text-gray-400"}`}
+                                    >
+                                        <Link to="/payments">
+                                            Payment List (7)
+                                        </Link>
+                                    </div>
+                                    <div
+                                        className={`mt-4
+                                        ${(location.pathname == "/payments/receipt-templates") ? "text-blue-400" : "text-gray-400"}`}
+                                    >
+                                        <Link to="/payments/receipt-templates">
+                                            Receipt Template
+                                        </Link>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        )
+                    }
+                    {roles.name === 'organization admin' &&
+                        <div
+                            className={`mt-6 
+                            ${location.pathname == "/api" ? "text-blue-400" : "text-gray-400"}`}
+                        >
+                            <Link to="/api" className="flex items-center">
+                                <i className="text-xl fas fa-hand-holding-heart"></i>
+                                <span className="px-4">API</span>
+                            </Link>
+                        </div>
+                    }
                 </nav>
             </div>
         </>

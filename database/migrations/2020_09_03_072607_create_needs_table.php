@@ -25,6 +25,10 @@ class CreateNeedsTable extends Migration
             $table->string('lng')->nullable();
             $table->double('raised', 15, 2);
             $table->double('goal', 15, 2);
+            $table->unsignedBigInteger('request_by')->nullable();
+            $table->unsignedBigInteger('approved_by')->nullable();
+            $table->dateTime('approved_at')->nullable();
+            $table->dateTime('scheduled_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

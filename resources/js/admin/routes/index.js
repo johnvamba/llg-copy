@@ -19,9 +19,14 @@ import Groups from '../pages/groups';
 import CreateGroup from '../pages/groups/create';
 import EditGroup from '../pages/groups/edit';
 import Organizations from '../pages/organizations';
+import Campus from '../pages/campus';
 import CreateOrganization from '../pages/organizations/create';
 import EditOrganization from '../pages/organizations/edit';
+import PushNotification from '../pages/push-notification';
 import Transactions from '../pages/transactions';
+import Payments from '../pages/payments';
+import Api from '../pages/api';
+import ReceiptTemplate from '../pages/payments/receipt-template';
 import InviteMember from '../pages/invite-member';
 import NotFound from '../../components/NotFound';
 
@@ -147,9 +152,34 @@ const routes = [
         component: () => <Transactions />
     },
     {
+        path: '/payments',
+        exact: true,
+        component: () => <Payments />
+    },
+    {
+        path: '/payments/receipt-templates',
+        exact: true,
+        component: () => <ReceiptTemplate />
+    },
+    {
+        path: '/api',
+        exact: true,
+        component: () => <Api />
+    },
+    {
         path: '/organizations/:id/invite',
         exact: true,
         component: () => <InviteMember />
+    },
+    {
+        path: '/campus',
+        exact: true,
+        component: () => <Campus />
+    },
+    {
+        path: '/push-notifications',
+        exact: true,
+        component: () => <PushNotification />
     },
     {
         path: '*',

@@ -33,45 +33,49 @@ const Dashboard = ({ ...props }) => {
                     </button>
                 </div>
             </div>
+            <div className="flex">
+                
+                <div className="w-full flex flex-col bg-gray-100 px-12 pt-8 pb-8">
+                    <div className="flex flex-row space-x-6">
+                        <NeedsOpen />
 
-            <div className="w-full flex flex-col bg-gray-100 px-12 pt-8 pb-8">
-                <div className="flex flex-row space-x-6">
-                    <NeedsOpen />
+                        <NeedsMet />
 
-                    <NeedsMet />
+                        <OffersHelp />
 
-                    <OffersHelp />
+                        <Donations />
+                    </div>
 
-                    <Donations />
-                </div>
+                    <div className="mt-8 w-full">
+                        <div className="flex flex-row space-x-8">
+                            <div className="flex-1">
+                                <DonationGraph />
+                            </div>
 
-                <div className="mt-8 w-full">
-                    <div className="flex flex-row space-x-8">
-                        <div className="flex-1">
-                            <DonationGraph />
+                            <div className="flex flex-initial flex-shrink-0 flex-col w-64">
+                                <UserMonitoring />
+                                <RecentNeeds />
+                            </div>
                         </div>
+                    </div>
 
-                        <div className="flex flex-initial flex-shrink-0 flex-col w-64">
-                            <UserMonitoring />
-                            <RecentNeeds />
+                    <div className="mt-8 w-full">
+                        <div className="flex flex-row">
+                            <div className="flex flex-1 mr-4">
+                                <NearbyOrganizations {...props} />
+                            </div>
+
+                            <div className="flex flex-1 ml-4">
+                                <TopDonors />
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div className="mt-8 w-full">
-                    <div className="flex flex-row">
-                        <div className="flex flex-1 mr-4">
-                            <NearbyOrganizations {...props} />
-                        </div>
-
-                        <div className="flex flex-1 ml-4">
-                            <TopDonors />
-                        </div>
-                    </div>
-                </div>
+                {
+                // Originally from app.js
+                }
+                <RecentActivities />
             </div>
-            // Originally from app.js
-            <RecentActivities />
         </>
     )
 }

@@ -11,5 +11,5 @@ export const setNeeds = (params) => ({
 
 export const setFilters = (set) => ({
     type: SET_FILTERS,
-    payload: {...set}
+    payload: { filter: true, ...set }
 })

@@ -17,7 +17,7 @@ class CreateOrganizationMembersTable extends Migration
             $table->id();
             $table->bigInteger('organization_id')->unsigned();
             $table->morphs('model');
-            $table->enum('status', ['pending', 'approved', 'dennied'])->default('pending');
+            $table->enum('status', ['pending', 'approved', 'dennied'])->default('pending'); //correct is denied
 
             $table->foreign('organization_id')->references('id')->on('organizations');
         });

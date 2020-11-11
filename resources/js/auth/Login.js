@@ -15,7 +15,10 @@ const Login = () => {
 
     if (Cookie.get('oToken_admin')) {
         window.location.href = '/admin'
-    }
+    } 
+    // else if(Cookie.get('oToken_org_admin')){
+    //     window.location.href = '/org'
+    // }
 
     const handleCheck = useCallback(() => {
         setRemember(prev => !prev);
@@ -32,7 +35,7 @@ const Login = () => {
 
         try {
             let {data} = await axios.post('api/login', form);
-
+            
             if (data.user.roles[0].name != 'user') {
                 Cookie.set("oToken_admin", data.token);
 
@@ -40,6 +43,20 @@ const Login = () => {
             } else {
                 alert("user is not allowed to sign in here");
             }
+            // switch(data.user.roles[0].name){
+            //     case 'admin':
+            //         Cookie.set("oToken_admin", data.token);
+            //         window.location.href = '/admin';
+            //     break;
+            //     case 'organization admin':
+            //         Cookie.set("oToken_org_admin", data.token);
+            //         window.location.href = '/org';
+            //     break;
+            //     case 'user':
+            //     default:
+            //         alert("user is not allowed to sign in here");
+            //     return;
+            // }            
         } catch(err) {
             let response = err.response;
             

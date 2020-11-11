@@ -12,5 +12,7 @@ $factory->define(ServiceOffer::class, function (Faker $faker) {
         'location' => $this->faker->address,
         'lat' => $this->faker->latitude,
         'lng' => $this->faker->longitude,
+        'business_name' => ucfirst($faker->words(2, true)),
+        'business_contact' => ucfirst($faker->words(2, true))
     ];
 });

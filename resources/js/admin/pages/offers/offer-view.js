@@ -1,18 +1,55 @@
-import React from 'react';
+import React, { useEffect} from 'react';
 import OffersEmployment from '../../../svg/offers-employment';
-import OffersViewStatus from '../../../svg/offers-view-status';
+import Circlet from '../../../svg/circlet';
+
 import OffersViewEdit from '../../../svg/offers-view-edit';
 import OffersViewWeb from '../../../svg/offers-view-web';
 import OffersViewPhone from '../../../svg/offers-view-phone';
+import MapMini from '../../../components/helpers/map/index-mini';
 
+import { volunteer } from '../needs/categorylist';
+import { Other } from '../needs/categories'
 
-const OfferView = ({ setShowOfferEdit }) => {
+const OfferView = ({ setShowOfferEdit, data = {} }) => {
+    const { title, type, location, business_name, status, business_site, business_contact, photo, description, date, lng, lat } = data
+    const catIcon = volunteer.find(i=>i.name == type);
+
+    const addHttp = () => {
+        let newLink = encodeURI(business_site);
+        return newLink.search(/^(http|https)/) >= 0 ? newLink : 'http://' + newLink; 
+    }
+
+    const switchStatus=()=>{
+        switch(status){
+            case 'approved':
+            return <label>Approved</label>;
+            case 'pending':
+            return <label>Pending</label>;
+            case 'dennied':
+            return <label>Denied</label>;
+            default:
+            return <label>Unknown</label>;
+        }
+    }
+
+    const fillCirclet=()=>{
+        switch(status){
+            case 'approved':
+            return "#52CC8A";
+            case 'pending':
+            return '#2F80ED';
+            case 'dennied':
+            default:
+            return '#DDB335'
+        }
+    }
+
     return(
-        <>
+        <div className="view-offer">
             <div className="view-offer__header flex flex-wrap">
                 <div className="view-offer__header-left flex flex-wrap">
-                    <OffersViewStatus />
-                    <label>On-Going</label>
+                    <Circlet stroke={fillCirclet} />
+                    {switchStatus()}
                 </div>
                 <div className="view-offer__header-right flex flex-wrap" onClick={() => setShowOfferEdit(true)} >
                     <OffersViewEdit />
@@ -22,40 +59,53 @@ const OfferView = ({ setShowOfferEdit }) => {
             <div className="view-offer__body">
                 <div className="bg-cover bg-center" style={{backgroundImage: "url(https://www.ratemds.com/blog/wp-content/uploads/2015/09/handshake-shaking-hands-shake-hands-trust.jpg)"}}></div>
                 <div className="view-offer__body-title flex">
-                    <h2>Sample Title Here</h2>
-                    <label>08/27/20</label>
+                    <h2>{title}</h2>
+                    <label>{date}</label>
                 </div>
-                <div className="under-title flex flex-wrap">
-                    <OffersEmployment />
-                    <label>Employment</label>
-                </div>
-                <div className="view-offer__map">
-                    <label>Location</label>
-                    <div>
-
+                    <div className="under-title flex flex-wrap">
+                    {
+                        catIcon ? 
+                        <catIcon.svg_class active={true} style={{width: '15px !important', height: '15px !important' }}/> :
+                        <Other active={true} style={{width: '15px !important', height: '15px !important' }} />
+                    }
+                        <label>{type}</label>
+                    </div>
+                <div className="view-map">
+                    <label>Location</label>                    
+                    <div className="google-map">
+                        <MapMini lat={lat} lng={lng}/>
                     </div>
                 </div>
                 <label className="view-offer__about">About</label>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute</p>
+                <p>{ description }</p>
                 <div className="view-offer__bottom flex">
                     <div>
                         <label>Offer By</label>
-                        <h3>Business Name Sample</h3>
-                        <div className="flex">
-                            <OffersViewWeb />
-                            <label>www.business.com</label>
-                        </div>
-                        <div className="flex">
-                            <OffersViewPhone />
-                            <label>(02)9876 5432</label>
-                        </div>
+                        <h3>{business_name}</h3>
+                        {
+                            business_site &&
+                            <div className="flex">
+                                <OffersViewWeb />
+                                <a className="link" href={addHttp()} target="_blank">{business_site}</a>
+                            </div>
+                        }
+                        {
+                            business_contact && 
+                            <div className="flex">
+                                <OffersViewPhone />
+                                <a className="link" href="#">{ business_contact }</a>
+                            </div>
+                        }
                     </div>
-                    <div>
-                        <button>View Website</button>
-                    </div>
+                    {
+                        business_site &&
+                        <div>
+                            <a className='button' href={addHttp()} target="_blank">View Website</a>
+                        </div>
+                    }
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

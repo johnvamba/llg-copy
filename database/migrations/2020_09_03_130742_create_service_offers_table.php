@@ -25,6 +25,9 @@ class CreateServiceOffersTable extends Migration
             $table->string('lat');
             $table->string('lng');
             $table->enum('status', ['pending', 'denied', 'approved'])->default('pending');
+            $table->string('business_name');
+            $table->string('business_site')->nullable();
+            $table->string('business_contact');
             $table->timestamps();
             $table->softDeletes();
 

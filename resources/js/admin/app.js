@@ -17,6 +17,7 @@ const Home = () => {
     const [notifications, setNotifications] = useState([]);
     const [organization, setOrganization] = useState(null);
     const [showSidebarMobile, setShowSidebarMobile] = useState(false);
+    // const [show]
 
     const windowWidth = window.innerWidth;
 
@@ -51,7 +52,9 @@ const Home = () => {
     return (
         <Router basename="/admin">
             <div className="flex min-h-screen">
-                <Sidebar />
+                {
+                    (windowWidth > 1024 || showSidebarMobile ) && <Sidebar showSidebarMobile={showSidebarMobile} setShowSidebarMobile={setShowSidebarMobile} />
+                }
 
                 <div className="flex flex-1 flex-col w-full">
                     <header className="dashboard-header flex flex-rowl h-16 border-b">
@@ -95,7 +98,7 @@ const Home = () => {
                                 Admin
                             </button>
                             <div className="admin-notif relative">
-                                <Link className="mr-6 text-lg" to="/">
+                                <Link className="mr-6 text-lg" to={'/push-notifications'}>
                                     <i className="far fa-bell"></i>
                                 </Link>
                                 {notifications.length > 0 && 

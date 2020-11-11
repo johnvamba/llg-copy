@@ -1,0 +1,199 @@
+.users-table .actions{
+    display: flex;
+    align-items: center;
+}
+.users-table .actions svg:first-child{
+    margin-right: 16px;
+}
+.users-table.offers-table .title-img{
+    border-radius: 50px;
+}
+.users-form{
+    width: 544px;
+    background-color: #fff;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: auto;
+    overflow: auto;
+    border: 1px solid #E7EAEF;
+    border-top: none;
+}
+.users-form header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 35px;
+}
+.users-form header h2{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    color: #3C5A77;
+}
+.users-form__body{
+    padding: 30px;
+}
+.users-form__body .content > div{
+    display: flex;
+    align-items: center;
+}
+.users-form__body .content .image{
+    width: 100%;
+    max-width: 80px;
+    height: 80px;
+    background-color: #D3E9F6;
+    border-radius: 50px;
+    margin-right: 22px;
+}
+.users-form__body .content > div button{
+    background: #109CF1;
+    border-radius: 4px;
+    color: #fff;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    text-align: center;
+    letter-spacing: 0.01em;
+    padding: 9px 24px;
+}
+.users-form__body .content > div p{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 24px;
+    font-feature-settings: 'liga' off;
+    color: rgba(74, 108, 140, 0.56);
+    margin-top: 3px;
+}
+.users-form__body .content form{
+    margin-top: 15px;
+}
+.users-form__body form .form-group{
+    /*border-bottom: 1px solid #D7DEE3;*/
+    /*padding: 9px 0;*/
+}
+.users-form__body form .form-group label{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 24px;
+    color: rgba(74, 108, 140, 0.56);
+}
+.users-form__body form label{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 24px;
+    color: rgba(74, 108, 140, 0.56);
+}
+.users-form__body form .form-group input::-webkit-input-placeholder,
+.users-form__body form .form-group input::-moz-placeholder,
+.users-form__body form .form-group input:-ms-input-placeholder,
+.users-form__body form .form-group input:-moz-placeholder{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    color: #4F6880;
+    opacity: 0.3;
+}
+.users-form__body form .form-group input{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    color: #4F6880;
+}
+.users-form__body form .dropdown button{
+    width: 100%;
+    background: transparent;
+    color: #4F6880;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    border: none;
+    padding: 0;
+    text-align: left;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 5px;
+    cursor: pointer;
+}
+.users-form__body form .dropdown button .default{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    color: #4F6880;
+    opacity: 0.3;
+}
+.users-form__body form .dropdown button .selected{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    color: #4F6880;
+}
+.users-form__body form .dropdown button:focus{
+    box-shadow: none !important;
+    background: transparent;
+    color: #4F6880;
+    outline: none;
+}
+.users-form__body form .dropdown button:focus{
+    box-shadow: none !important;
+    background: transparent;
+    color: #4F6880;
+    outline: none;
+}
+.users-form__body form .dropdown.show > .btn-secondary.dropdown-toggle{
+    color: #4F6880;
+    background-color: transparent;
+    border-color: #fff;
+}
+.users-form__body form .dropdown .btn-secondary:not(:disabled):not(.disabled):active{
+    color: #4F6880;
+    background-color: transparent;
+    border-color: #fff;
+}
+.users-form__body form .dropdown.show .dropdown-menu{
+    margin-top: 20px;
+}
+.users-form__body form .dropdown.show .dropdown-menu button{
+    padding: 6px 20px;
+}
+.users-form__body form .dropdown.show .dropdown-menu button:hover{
+    background: rgba(16, 156, 241, 0.08);
+}
+.users-table.offers-table tbody .active{
+    background: #109CF1;
+}
+.users-table.offers-table tbody .active td p{
+    color: #fff;
+}
+.users-table.offers-table tbody .active .actions path{ 
+    fill: #fff;
+}
+.users-table.offers-table tbody tr{
+    cursor: initial;
+}
+.users-table .actions span{
+    cursor: pointer;
+}
+.users-form__body form .form-group.active{
+    border-bottom: 1px solid #109CF1;
+}
+
+
+@media (max-width: 768px) {
+    .users-form{
+        width: 100%;
+    }
+}
