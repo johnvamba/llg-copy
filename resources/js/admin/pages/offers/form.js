@@ -121,11 +121,12 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
             }
 
         setCountTab(newCount)
+        return set;
     }
 
     const submit = () => {
-        validateTab(3);
-        if(_.isEmpty(errors)){
+        const set = validateTab(3);
+        if(_.isEmpty({...set})){
             setSubmitting(true)
             const params = {
                 title,

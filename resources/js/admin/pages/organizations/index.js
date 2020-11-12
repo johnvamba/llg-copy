@@ -6,7 +6,6 @@ import List from './list';
 import Form from './form';
 import OrgView from './info';
 import OrgInvite from './invite';
-import OrgInvite2 from './invite2';
 
 import './organizations.css';
 
@@ -14,30 +13,16 @@ import './organizations.css';
 const Organizations = () => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
+    const [loading, setLoading] = useState(false);
+    const [orgs, setOrgs] = useState([]);
+    const [count, setCount] = useState(0);
 
-    const [showAddOrg, setShowAddOrg] = useState(false);
-    const [showEditOrg, setShowEditOrg] = useState(false);
-    const [showViewOrg, setShowViewOrg] = useState(false);
-    const [showInvite, setShowInvite] = useState(false);
+    const [info, setInfo] = useState({});
+    const [form, showForm] = useState(false);
+    const [invite, showInvite] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
 
-
-    const organizations = useSelector(
-        state => state.OrganizationsReducer.organizations
-    );
-
-    const disptach = useDispatch();
-
-    useEffect(() => {
-        async function fetchOrg() {
-            let { data } = await axios.post('/api/organization/lists', {
-                limit: limit
-            });
-
-            disptach(OrganizationsActions.setOrganizations(data));
-        }
-
-        fetchOrg()
-    }, [limit]);
+    const dispatch = useDispatch();
 
     const handleLimitChange = (limit) => {
         setLimit(parseInt(limit));
@@ -47,59 +32,62 @@ const Organizations = () => {
         setPage(parseInt(page));
     }
 
-    const [data, setData] = useState({
-        id: 1,
-        name: 'test',
-        site: 'test.com',
-        phone_number: '9820931',
-        email: 'test@gmail.com',
-        description: 'dasdsadasda'
-    });
-
-    const handleInvite = () => {
-        setShowViewOrg(false);
-        setShowInvite(true);
+    const loadTable = (clearCache = false) => {
+        const addFilter = {}; //for redux values
+        const token = axios.CancelToken.source();
+        api.get(`/api/web/organizations`, {
+            params: {
+                page, ...addFilter
+            },
+            cache: {
+                exclude: { query: false },
+            }, 
+            clearCacheEntry: clearCache,
+            cancelToken: token.token
+        }).then(({ data })=>{
+            const { org_count } = data
+            setOrgs(data.data || [])
+            setCount(org_count || 0)
+        }).finally(()=>{
+            setLoading(false)
+        })
+        return token; //for useEffect
     }
 
-    const handleBackInvite = () => {
-        setShowViewOrg(true);
-        setShowInvite(false);
-    }
+    useEffect(() => {
+        setLoading(true)
+        const ct = loadTable();
+        return ()=>{
+            //cancel api here
+            ct.cancel('Resetting');
+        }
+    }, []);
 
-    const handleEdit = () => {
-        setShowEditOrg(true);
-        setShowViewOrg(false);
-    }
-
-    const handleClose = () => {
-        setShowEditOrg(false);
-        setShowAddOrg(false);
+    const handlePanels = (data = {},  form = false, info = false, invite = false) => {
+        setInfo(data)
+        showForm(form)
+        setShowInfo(info)
+        showInvite(invite)
     }
 
     return (
         <>
-            <Header
-                setState = {setShowAddOrg}
-            />
-            <List
-                setState = {setShowViewOrg}
-            />
+            <Header count={count} handlePanels={handlePanels} />
+            <List set={orgs} handlePanels={handlePanels} />
             {
-                (showAddOrg || showEditOrg) && 
-                    <Form
-                        page={showAddOrg ? 'Add' : 'Edit'}
-                        handleClose={handleClose}
-                    />
+                form && <Form data={info} handlePanels={handlePanels} handleClose={handlePanels}/>
             }
-            {showViewOrg && 
-                <OrgView
-                    setShowViewOrg={setShowViewOrg}
-                    handleEdit={handleEdit}
-                    handleInvite={handleInvite}
+            { 
+                showInfo && <OrgView
+                    data={info}
+                    closePanel={handlePanels}
+                    handleEdit={() => handlePanels(info, true)}
+                    handleInvite={() => handlePanels(info, false, false, true)}
                 />
             }
-            {showInvite && 
-                <OrgInvite handleBackInvite={handleBackInvite} />
+            {
+                invite && 
+                <OrgInvite data={info} handleBackInvite={() => handlePanels(info, false, true)} />
             }
         </>
     )

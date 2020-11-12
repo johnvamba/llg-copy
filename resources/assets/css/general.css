@@ -214,11 +214,19 @@ td.actions, th.actions{
 	color:rgba(74, 108, 140, 0.56);
 	margin-bottom: 10px;
 }
-.form-group input.input-field {
+.form-group input.input-field, .form-group select.input-field {
 	border-bottom: 1px solid #D7DEE3;
 	font-size: 14px;
 	line-height: 24px;
 	padding: 10px 0px;
+	width: 100%;
+	display: block;
+	outline: none;
+}
+.form-group select.input-field option{
+	font-size: 14px;
+	line-height: 24px;
+	padding: 5px;
 	width: 100%;
 	display: block;
 	outline: none;

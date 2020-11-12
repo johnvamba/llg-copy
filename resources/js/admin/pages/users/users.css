@@ -73,8 +73,8 @@
     margin-top: 15px;
 }
 .users-form__body form .form-group{
-    border-bottom: 1px solid #D7DEE3;
-    padding: 9px 0;
+    /*border-bottom: 1px solid #D7DEE3;*/
+    /*padding: 9px 0;*/
 }
 .users-form__body form .form-group label{
     font-style: normal;

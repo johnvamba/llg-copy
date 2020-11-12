@@ -1,101 +1,155 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import OffersFormCross from '../../../svg/offers-form-cross';
 import Camera from '../../../svg/camera';
 
-const CampusForm = ({ handleClose, activeForm }) => {
+import Location from '../../../components/Location'
+import { swalError } from '../../../components/helpers/alerts';
 
-    const [fieldErrors, setFieldErrors] = useState({});
-    const [fields, setFields] = useState({
+
+const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
+    const [form, setForm] = useState({
         name: '',
-        location: '',
         description: ''
-    });
-    const fieldErrorMsg = {
-        name: 'Missing Campus Name',
-        location: 'Missing Location',
-        description: 'Missing Description'
+    })
+    const [cover, setCover] = useState('')
+    const [location, setLocation] = useState({
+        location: '',
+        lat: 0,
+        lng: 0,
+    })
+    const [errors, setErrors] = useState({})
+
+    useEffect(()=>{
+        const {name, description}= data;
+        setForm({name:name || '', description:description || ''})
+    }, [data])
+
+    const handleInput = (e) => {
+        const { name, value } = e.target
+        setForm({ ...form,
+            [name]: value
+        })
+        removeError(name)
+    }
+    
+    const handleLocation = ({formatted_address, geometry}) => {
+        setLocation({
+            location: formatted_address, 
+            lat: geometry.location.lat(), 
+            lng: geometry.location.lng()
+        })
     }
 
-    const handleInputChange = (e) => {
-        setFieldErrors({...fieldErrors, [e.target.name] : '' });
-        setFields({...fields, [e.target.name] : e.target.value });
+    const validateSubmit = () => {
+        const { name, description } = form
+        const set = {
+            name: name == '' ? "Missing campus name" : null,
+            description: description == '' ? "Missing description" : null,
+            location: location == '' ? "Missing location" : null,
+        }
+        setErrors({...set})
+        return set;
     }
-
-    const validateForm = () => {
-        let errors = {};
-        Object.keys(fields).map((keyname, i) => {
-            if(!fields[keyname]) errors[keyname] = fieldErrorMsg[keyname];
-        });
-
-        setFieldErrors(errors);
-        if(Object.keys(errors).length === 0) return true;
-        return false;
+    const removeError= (name = '') => {
+        delete errors[name]
+        setErrors(errors)
     }
+    const reset = ()=>{
+        setForm({ name: '', description: ''})
+        setLocation({
+            location: '',
+            lat: 0,
+            lng: 0,
+        })
+        setCover('')
+    }
+    const submit = ()=>{
+        const set = validateSubmit()
+        if(_.isEmpty(set)){
+            const params = {
+                ...form,
+                ...location,
+                photo: cover
+            }
+            const submitPromise = !data.id ? 
+                api.post(`/api/web/campuses`, params) : 
+                api.update(`/api/web/campuses/${data.id}`, { params })
 
-    const handleSubmit = () => {
-        if(validateForm()) console.log('success');
+            submitPromise.then(({data})=>{
+                afterSubmit(data.data);
+                handleForm({}, false, false)
+            }).catch(({response})=>{
+                if(response){
+                    setErrors(response.data)
+                }
+                swalError('Errors occured on server.')
+            })
+        } else {
+            swalError('Fields are incorrect or missing')
+        }
     }
 
     return(
-        <>
-            <section className="campus-form create-form">
-                <header className="create-story__header">
-                    <h2>{activeForm} Campus</h2>
-                    <button type="button" onClick={handleClose}>
-                        <OffersFormCross />
+        <section className="campus-form create-form">
+            <header className="create-story__header">
+                <h2>{data.id ? 'Edit' : 'Add'} Campus</h2>
+                <button type="button" onClick={()=> handleForm(data, false, false)}>
+                    <OffersFormCross />
+                </button>
+            </header>
+            <section className="campus-form__body">
+                <div className="flex bg-cover bg-center" style={{backgroundImage: "url()"}}>
+                    <button>
+                        <Camera /> 
+                        Add Cover
                     </button>
-                </header>
-                <section className="campus-form__body">
-                    <div className="flex bg-cover bg-center" style={{backgroundImage: "url()"}}>
-                        <button>
-                            <Camera /> 
-                            Add Cover
-                        </button>
+                </div>
+                <form>
+                    <div className="w-full">
+                        <div className={`form-group ${errors.name && 'form-error'}`}>
+                            <label>Campus Name</label>
+                            <input
+                                className="input-field"
+                                type="text"
+                                placeholder="Enter Campus Name"
+                                name="name"
+                                value={form.name || ''}
+                                onChange={handleInput}
+                            />
+                            {
+                                (errors.name || false) && <span className="text-xs pt-1 text-red-500 italic">Missing campus name</span>
+                            }
+                        </div>
                     </div>
-                    <form>
-                        <div className="w-full">
-                            <div className={`form-group form-input-text ${fieldErrors.name ? 'has-error' : ''}`}>
-                                <label>Campus Name</label>
-                                <input
-                                    className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
-                                    type="text"
-                                    placeholder="Enter Campus Name"
-                                    name="name"
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <span className="input-error-msg">{fieldErrors.name}</span>
-                        </div>
-                        <div className="w-full">
-                            <div className={`form-group form-input-text ${fieldErrors.location ? 'has-error' : ''}`}>
-                                <label>Location</label>
-                                <input
-                                    className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
-                                    type="text"
-                                    placeholder="Enter Location"
-                                    name="location"
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <span className="input-error-msg">{fieldErrors.location}</span>
-                        </div>
-                        <div className="w-full">
-                            <div className={`form-group form-group-textarea ${fieldErrors.description ? 'has-error' : ''}`}>
-                                <label>Description</label>
-                                <textarea type="text" placeholder="Write something about this campus" rows="3" name="description" onChange={handleInputChange} ></textarea>
-                            </div>
-                            <span className="input-error-msg">{fieldErrors.description}</span>
-                        </div>
-                    </form>
-                </section>
-                <footer className="org-form__footer">
-                    <div className="flex">
-                        <button className="discard" onClick={handleClose}>Discard</button>
-                        <button className="next" onClick={handleSubmit}>Add</button>
+                    <div className="w-full">
+                        <Location 
+                            className={`form-group ${errors.location && 'form-error'}`}
+                            name={'location'}
+                            placesSelected={handleLocation}
+                            errors={errors.location || []}/>
                     </div>
-                </footer>
+                    <div className="w-full">
+                        <div className={`form-group form-group-textarea ${errors.description && 'form-error'}`}>
+                            <label>Description</label>
+                            <textarea type="text" placeholder="Write something about this campus" rows="3"
+                                value={form.description || ''}
+                                name="description"
+                                onChange={handleInput}
+                            ></textarea>
+                            {
+                                (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing description</span>
+                            }
+                        </div>
+                    </div>
+                </form>
             </section>
-        </>
+            <footer className="org-form__footer">
+                <div className="flex">
+                    <button className="discard" onClick={reset}>Discard</button>
+                    <button className="next" onClick={submit}>{data.id ? 'Edit' : 'Add'} </button>
+                </div>
+            </footer>
+        </section>
     )
 }
 

@@ -19,8 +19,12 @@ import Location from '../../../components/Location'
 import CategoryScroll from '../../../components/CategoryScroll'
 import Imagepond from '../../../components/Imagepond'
 
-const NeedForm = ({handleForm, data = {}}) => {
+import { connect } from 'react-redux';
 
+const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
+    //user
+    const { roles } = AuthUserReducer;
+    //form
     const [title, setTitle] = useState('');
     const [about, setAbout] = useState('');
     const [bring, setBring] = useState('');
@@ -204,7 +208,7 @@ const NeedForm = ({handleForm, data = {}}) => {
                 </div>
                 {
                     //Set user priveledges here.. campus users will need to know what organization is asking for need.
-                    (true) && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
+                    (roles.name == 'admin') && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
                         <label>Organization</label>
                         <AsyncSelect
                             styles={selectStyle}
@@ -334,4 +338,12 @@ NeedForm.defaultProps = {
 
     }
 }
-export default NeedForm;
+export default connect(({AuthUserReducer})=>{
+    return {
+        AuthUserReducer
+    }
+},(dispatch)=>{
+    return {
+
+    }
+})(NeedForm);

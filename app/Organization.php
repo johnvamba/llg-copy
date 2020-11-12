@@ -38,6 +38,16 @@ class Organization extends Model implements HasMedia
     {
         return $this->hasMany('App\Need');
     }
+    
+    public function categoriesList()
+    {
+        return $this->morphedByMany("App\OrganizationCategory", "model", 'organization_has_categories');
+    }
+
+    public function members()
+    {
+        return $this->morphedByMany("App\User", "model", 'organization_members');
+    }
 
     /**
      * Set short description column value

@@ -53,6 +53,7 @@ class ServiceOfferController extends Controller
 
         foreach ($serviceOffers as $serviceOffer) {
             $serviceOffer->getMedia();
+            $serviceOffer['photo'] = $serviceOffer->getFirstMediaUrl('photo');
         }
 
         return response()->json($serviceOffers);

@@ -15,17 +15,22 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        $profile = $this->relationLoaded('profile', $this->profile, new UserProfile);
-
         return [
             'id' => $this->id,
             'title' => $this->name,//$this->when($profile, optional($profile)->firstname . ' '. optional($profile)->lastname, $this->name),
             'email' => $this->email,
             'status' => ucfirst($this->status),
-            'photo' => $this->when($profile, optional($profile)->getFirstMediaUrl('photo')),
-            'age' => $this->when($profile, optional($profile)->age, 18),
-            'bio' => $this->when($profile, optional($profile)->bio),
-            'date' => $this->created_at->format('m/d/Y')
+            'date' => $this->created_at->format('m/d/Y'),
+            //profile
+            'firstName' => $this->when($this->relationLoaded('profile'), optional($this->profile)->first_name),
+            'lastName' => $this->when($this->relationLoaded('profile'), optional($this->profile)->last_name),
+            'photo' => $this->when($this->relationLoaded('profile'), optional($this->profile)->avatar),
+            'cover_photo' => $this->when($this->relationLoaded('profile'), optional($this->profile)->cover_photo),
+            'age' => $this->when($this->relationLoaded('profile'), optional($this->profile)->age, 18),
+            'bio' => $this->when($this->relationLoaded('profile'), optional($this->profile)->bio),
+
+            'type' => $this->when($this->relationLoaded('roles'), optional($this->getRoleNames())->first()),
+            'organization' => $this->when(false, 'something'),
         ];
     }
 

@@ -3,7 +3,7 @@ import Needs from './needs';
 import OrganizationMembers from './members';
 import MemberThumbnails from './member-thumbnails';
 
-const OrgView = ({ data, ...props }) => {
+const OrgView = ({ data, closePanel , ...props }) => {
     const [activeNeeds, setActiveNeeds] = useState([]);
     const [pastNeeds, setPastNeeds] = useState([]);
     const [members, setMembers] = useState([]);
@@ -60,7 +60,7 @@ const OrgView = ({ data, ...props }) => {
             <div>
                 <div className="relative h-48 bg-blue-200 w-full">
                     <button
-                        onClick={handleClose}
+                        onClick={() =>closePanel()}
                         className="absolute right-0 top-10 mr-4 mt-8 bg-gray-600 rounded-full px-4 py-2 text-white focus:outline-none"
                     >
                         <i className="fas fa-times"></i>

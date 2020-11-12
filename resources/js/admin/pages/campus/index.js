@@ -6,30 +6,62 @@ import CampusView from './view';
 
 
 const Campus = () => {
+    const [form, showForm] = useState(false); //false
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
+    const [info, setInfo] = useState({});
 
-    const [showAdd, setShowAdd] = useState(false);
-    const [showEdit, setShowEdit] = useState(false);
-    const [showView, setShowView] = useState(false);
+    const [campuses, setCampuses] = useState([]);
 
-    const handleClose = () => {
-        setShowAdd(false);
-        setShowEdit(false);
+    useEffect(() => {
+        setLoading(true)
+        const ct = loadTable();
+        return ()=>{
+            //cancel api here
+            ct.cancel('Resetting');
+        }
+    }, [ page ]);
+
+    const loadTable = (clearCache = false) => {
+        const token = axios.CancelToken.source();
+        api.get(`/api/web/campuses`, {
+            params: {
+                page, 
+            },
+            cache: {
+                exclude: { query: false },
+            }, 
+            clearCacheEntry: clearCache,
+            cancelToken: token.token
+        }).then((res)=>{
+            const { data } = res
+            setCampuses(data.data)
+        }).finally(()=>{
+            setLoading(false)
+        })
+        return token; //for useEffect
     }
 
-    const handleEdit = () => {
-        setShowView(false);
-        setShowEdit(true);
+    const handleForm = (data = {}, form = true, showInfo = false) => {
+        setInfo(data)
+        showForm(form);
+        setShowInfo(showInfo);
+    }
+
+    const afterSubmit = (data = {}) => {
+        //do data manipulation here.
     }
 
     return(
         <>
-            <CampusHeader setShowAdd={setShowAdd} />
-            <CampusList setShowView={setShowView} />
+            <CampusHeader setShowAdd={() => handleForm({}, true, false)} />
+            <CampusList campuses={campuses} setShowView={handleForm} />
             {
-                (showAdd || showEdit) && <CampusForm activeForm={showEdit ? 'Edit' : 'Add'} handleClose={handleClose} />
+                form && <CampusForm data={info} afterSubmit={afterSubmit} handleForm={handleForm} />
             }
             {
-                showView && <CampusView setShowView={setShowView} handleEdit={handleEdit} />
+                showInfo && <CampusView data={info} handleForm={handleForm} />
             }
         </>
     )

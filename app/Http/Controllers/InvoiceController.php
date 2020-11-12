@@ -53,8 +53,13 @@ class InvoiceController extends Controller
     public function getRecentDonors(Request $request)
     {
         $recentDonors = Invoice::with('user')
-            ->where('model_type', 'App\Need')
-            ->where('model_id', $request->need_id)
+            ->whereHasMorph(
+                'model',
+                ['App\Need'],
+                function($query) use ($request){
+                    $query->where('model_id', $request->need_id);
+                }
+            )
             ->orderBy('created_at', 'desc')
             ->get();
 

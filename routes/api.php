@@ -32,12 +32,17 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('needs/{need}/approve', 'NeedsController@approve');
         Route::post('needs/{need}/disapprove', 'NeedsController@disapprove');
 
-        Route::get('organizations/async', 'OrganizationController@async');
         Route::resource('organizations', 'OrganizationController');
+        Route::get('organizations/async', 'OrganizationController@async');
+        Route::get('organizations/{organization}/members', 'OrganizationController@members');
+        Route::post('organizations/{organization}/members', 'OrganizationController@membersInvite');
+        Route::get('organizations/{organization}/needs', 'OrganizationController@needs');
 
         Route::resource('offers', 'OffersController');
 
         Route::resource('users', 'UsersController');
+
+        Route::resource('campuses', 'CampusController');
     });
 
     /** Role resource module */
@@ -74,6 +79,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('needs-types', 'NeedsTypeController');
     
     /** Needs Met resource module */
+    Route::get('needs-mets/group/{group}', 'NeedsMetController@getGroupNeedsMet');
     Route::get('needs-mets/user', 'NeedsMetController@getUserNeedsMet');
     Route::get('needs-mets/total', 'NeedsMetController@getTotalNeedsMet');
     Route::resource('needs-met', 'NeedsMetController');
@@ -92,11 +98,18 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Stories resource module */
     Route::post('story/lists', 'StoryController@getStories');
     Route::get('featured/stories', 'StoryController@featuredStory');
-    Route::post('stories/{story}/appreciate', 'StoryController@addAppreciate');
+    Route::post('stories/{story}/appreciate', 'StoryController@Appreciate');
+    Route::get('stories/search/{keyword}', 'StoryController@searchStory');
+    Route::get('stories/{story}/comments', 'StoryController@getComments');
     Route::post('stories/{story}/comments', 'StoryController@addComment');
     Route::resource('stories', 'StoryController');
 
+    /** Group invite resource module */
+    Route::get('users-not-in-group/{group}', 'GroupInviteController@getUsersNotInGroup');
+    Route::resource('group-invites', 'GroupInviteController');
+
     /** Group resource module */
+    Route::get('group/me', 'GroupController@getMyGroup');
     Route::post('group/lists', 'GroupController@getGroups');
     Route::post('group/search/people', 'GroupController@searchPeople');
     Route::post('group/{group}/update-goal', 'GoalController@updateGroupGoal');
