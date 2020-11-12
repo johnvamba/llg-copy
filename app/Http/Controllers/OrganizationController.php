@@ -9,6 +9,7 @@ use App\Http\Requests\OrganizationUpdateRequest;
 use App\Http\Requests\OrganizationStoreRequest;
 use Illuminate\Http\Request;
 use App\Need;
+use App\Group;
 use App\Organization;
 use App\OrganizationCredential;
 use App\OrganizationHasCategory;
@@ -86,7 +87,9 @@ class OrganizationController extends Controller
      */
     public function nearby(Request $request, $lat, $lng)
     {
-        $orgs = Organization::select('organizations.*')
+        $collections = collect();
+
+        $fetchOrgs = Organization::select('organizations.*')
             ->selectRaw('( 6371 * acos( cos( radians(?) ) 
                 * cos( radians( lat ) ) * cos( radians( lng ) 
                 - radians(?) ) + sin( radians(?) ) 
@@ -94,17 +97,35 @@ class OrganizationController extends Controller
                 [$lat, $lng, $lat]);
 
         if ($request->filter) {
-            $orgs->whereHas('categories', function($query) use ($request) {
+            $fetchOrgs->whereHas('categories', function($query) use ($request) {
                     $query->whereIn('organization_category_id', $request->filter);
                 });
         }
 
-        $results = $orgs->orderBy('distance')->get();
+        $orgs = $fetchOrgs->orderBy('distance')->get();
 
-        foreach($results as $result) {
-            $result['photo'] = $result->getFirstMediaUrl('photo');
-            $result['cover_photo'] = $result->getFirstMediaUrl('cover_photo');
+        foreach($orgs as $org) {
+            $org['type'] = 'organisation';
+            $org['photo'] = $org->getFirstMediaUrl('photo');
+            $org['cover_photo'] = $org->getFirstMediaUrl('cover_photo');
         } 
+
+        $groups = Group::select('groups.*')
+            ->selectRaw('( 6371 * acos( cos( radians(?) ) 
+                * cos( radians( lat ) ) * cos( radians( lng ) 
+                - radians(?) ) + sin( radians(?) ) 
+                * sin( radians( lat ) ) ) ) AS distance', 
+                [$lat, $lng, $lat])
+            ->orderBy('distance')->get();
+        
+        foreach($groups as $group) {
+            $group['type'] = 'church';
+            $group['photo'] = $group->getFirstMediaUrl('photo');
+        } 
+
+        $merged = $collections->merge($orgs)->merge($groups);
+
+        $results = $merged->sortBy('distance');
             
         return response()->json($results, 200);
     }
