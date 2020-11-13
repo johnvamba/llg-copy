@@ -171,6 +171,9 @@ class GroupController extends Controller
                 ['status', 'approved']
             ])->count();
 
+        $group->getMedia();
+        $group['photo'] = $group->getFirstMediaUrl('photo');
+
         return response()->json($group);
     }
 
