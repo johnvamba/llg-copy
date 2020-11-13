@@ -24,7 +24,7 @@ const NeedCard = ({ title, type, date, goal, ratio = 0, description = '' }) => {
                 </div>
                 <p>{description}</p>
                 <div className="content-bottom">
-                    <label>2 days ago</label>
+                    <label>{date || 'missing-date'}</label>
                     {
                         (type == 'Volunteer' || type == 'volunteer') ?
                         <button>Goal: {goal} PAX</button> : <button>Goal: $ {goal}</button>

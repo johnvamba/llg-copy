@@ -113,7 +113,7 @@ const OrgForm = ({ data = {}, handleClose, page }) => {
             }
             const submitPromise = !data.id ? 
                 api.post(`/api/web/organizations`, params) : 
-                api.update(`/api/web/organizations/${data.id}`, { params })
+                api.patch(`/api/web/organizations/${data.id}`, { ...params })
 
             submitPromise.then(({data})=>{
                 setSubmitting(false)

@@ -13,8 +13,12 @@ use App\User;
 use App\Need;
 
 use App\Http\Resources\OrganizationResource;
+use App\Http\Resources\Async\OrganizationResource as AsyncResource;
+
 use App\Http\Resources\Mini\UserResource;
 use App\Http\Resources\Mini\NeedResource;
+
+use DB;
 
 class OrganizationController extends Controller
 {
@@ -59,7 +63,7 @@ class OrganizationController extends Controller
             $orgs->where('name', 'like', '%'.$name.'%');
         }
 
-        return OrganizationResource::collection( $orgs->paginate( $request->get('paginate') ) );
+        return AsyncResource::collection( $orgs->paginate() );
     }
 
     /**
@@ -80,7 +84,14 @@ class OrganizationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['errors'=>$e->getMessage], 400);
+        }
     }
 
     /**
