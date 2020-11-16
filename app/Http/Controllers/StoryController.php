@@ -20,7 +20,7 @@ class StoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $page = 1)
     {
         $stories = Story::with([
                 'user', 
@@ -29,7 +29,7 @@ class StoryController extends Controller
             ])
             ->withCount('appreciates')
             ->orderBy('created_at', 'desc')
-            ->paginate();
+            ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($stories as $story) {
             $story['photo'] = $story->getFirstMediaUrl('photo');

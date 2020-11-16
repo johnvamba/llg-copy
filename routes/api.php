@@ -22,6 +22,8 @@ Route::post('register/upload-photo', 'AuthController@registerUploadPhoto');
 Route::post('register/goal', 'GoalController@setUserGoal');
 Route::post('auth/{user}', 'AuthController@authUser');
 Route::get('need/categories', 'NeedsCategoryController@index');
+Route::get('campus', 'CampusController@index');
+Route::post('register/campus/user', 'CampusController@addUser');
 
 Route::group(['middleware' => ['auth:api']], function () {
 
@@ -61,6 +63,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('goal/user', 'GoalController@getUserGoal');
     Route::get('goal/group/{groupId}', 'GoalController@getGroupGoal');
     Route::resource('goals', 'GoalController');
+
+    /** Campus resource module */
+    Route::resource('campuses', 'CampusController');
 
     /** Need resource module */
     Route::post('need/lists', 'NeedsController@getNeeds');
@@ -103,6 +108,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('stories/{story}/comments', 'StoryController@getComments');
     Route::post('stories/{story}/comments', 'StoryController@addComment');
     Route::get('stories/recommended', 'StoryController@recommended');
+    Route::get('stories/page/{page?}', 'StoryController@index');
     Route::resource('stories', 'StoryController');
 
     /** Group invite resource module */
@@ -120,7 +126,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('groups/{group}/join-request', 'GroupController@getJoinRequest');
     Route::get('groups/messages/{group}', 'GroupController@messages');
     Route::post('groups/message/{group}', 'GroupController@addMessage');
-    Route::post('groups/discover', 'GroupController@getDiscoverGroups');
+    Route::get('groups/discover/page/{page?}', 'GroupController@getDiscoverGroups');
     Route::resource('groups', 'GroupController');
 
     /** Orgnization Categories resource module */
@@ -136,6 +142,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('organizations/{organization}/credential', 'OrganizationController@getCredential');
     Route::post('organizations/{organization}/credential', 'OrganizationController@addCredential');
     Route::post('organizations/nearby/{lat}/{lng}', 'OrganizationController@nearby');
+    Route::get('organizations/page/{page?}', 'OrganizationController@index');
     Route::resource('organizations', 'OrganizationController');
 
     /** Payment resource module */

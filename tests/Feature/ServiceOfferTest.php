@@ -59,6 +59,9 @@ class ServiceOfferTest extends TestCase
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
                 'lng' => $this->faker->longitude,
+                'businessName' => $this->faker->text,
+                'businessSite' => 'www.example.com',
+                'contactNumber' => $this->faker->tollFreePhoneNumber,
             ]);
 
         $response->assertStatus(202);
@@ -78,7 +81,10 @@ class ServiceOfferTest extends TestCase
                 'location' => $this->faker->address,
                 'lat' => $this->faker->latitude,
                 'lng' => $this->faker->longitude,
-                'tags' => json_encode($this->faker->words)
+                'tags' => json_encode($this->faker->words),
+                'businessName' => $this->faker->text,
+                'businessSite' => 'www.example.com',
+                'contactNumber' => $this->faker->tollFreePhoneNumber
             ]);
 
         $response->assertStatus(202);
@@ -103,6 +109,9 @@ class ServiceOfferTest extends TestCase
                 'lat' => $this->faker->latitude,
                 'lng' => $this->faker->longitude,
                 'tags' => json_encode($this->faker->words),
+                'businessName' => $this->faker->text,
+                'businessSite' => 'www.example.com',
+                'contactNumber' => $this->faker->tollFreePhoneNumber,
                 'media' => $file
             ]);
 

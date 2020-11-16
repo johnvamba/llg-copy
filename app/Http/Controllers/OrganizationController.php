@@ -22,9 +22,10 @@ class OrganizationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $page = 1)
     {
-        $orgs = Organization::orderBy('created_at', 'desc')->get();
+        $orgs = Organization::orderBy('created_at', 'desc')
+            ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($orgs as $org) {
             $org['photo'] = $org->getFirstMediaUrl('photo');

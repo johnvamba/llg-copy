@@ -80,7 +80,7 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getDiscoverGroups(Request $request)
+    public function getDiscoverGroups(Request $request, $page = 1)
     {
         $groups = Group::with(['goals' => function($query) {
                 $query->where('status', 'in progress')
@@ -91,8 +91,7 @@ class GroupController extends Controller
                 ['user_id', '!=', auth()->user()->id],
                 ['privacy', 'public']
             ])
-            ->inRandomOrder()
-            ->get();
+            ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($groups as $group) {
             $participants = GroupParticipant::where([

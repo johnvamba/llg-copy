@@ -140,15 +140,22 @@ class ServiceOfferController extends Controller
                     : User::find(auth()->user()->id);
 
                 $makeOffer = ServiceOffer::make(
-                        request()->only([
-                            'service_type_id',
-                            'name',
-                            'title',
-                            'description',
-                            'location',
-                            'lat',
-                            'lng'
-                        ])
+                        array_merge(
+                            request()->only([
+                                'service_type_id',
+                                'name',
+                                'title',
+                                'description',
+                                'location',
+                                'lat',
+                                'lng'
+                            ]),
+                            [ 
+                                'business_name' => $request->businessName,
+                                'business_site' => $request->businessSite,
+                                'business_contact' => $request->contactNumber
+                            ]
+                        )
                     );
 
                 $serviceOffer = $model->offers()->save($makeOffer);
