@@ -24,6 +24,7 @@ const Offers = () => {
     const loadTable = (clearCache = false) => {
         const addFilter = {}; //for redux values
         const token = axios.CancelToken.source();
+        setLoading(true)
         api.get(`/api/web/offers`, {
             params: {
                 page, ...addFilter
@@ -45,7 +46,7 @@ const Offers = () => {
     }
 
     useEffect(() => {
-        setLoading(true)
+        
         const ct = loadTable();
         return ()=>{
             //cancel api here

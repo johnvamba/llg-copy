@@ -7,7 +7,7 @@ import CategoryScroll from '../../../components/CategoryScroll'
 import { swalError } from '../../../components/helpers/alerts';
 import { validateEmail, isValidated } from '../../../components/helpers/validator';
 
-const OrgForm = ({ data = {}, handleClose, page }) => {
+const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
     const [category, setCategory] = useState([]);
     const [form, setForm] = useState({
         name: '', 
@@ -18,16 +18,20 @@ const OrgForm = ({ data = {}, handleClose, page }) => {
     })
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
-
+    const [location, setLocation] = useState({
+        location: 'Sydney, Australia',
+        lat: -33.868782, 
+        lng: 151.207583
+    })
     const [loading, setLoading] = useState(false);
 
     //Loading data from table
     useEffect(()=>{
         if(data.id){
-            if(form.name == ''){
                 const { name, email, site, phone_number, description, category } = data
-                setForm({ ...form, name, phone_number, description})
-            }
+                setForm({ ...form, name, email, site, phone_number, description})
+            // if(form.name == ''){
+            // }
             loadAll()
         }
     }, [data])
@@ -43,7 +47,7 @@ const OrgForm = ({ data = {}, handleClose, page }) => {
             cancelToken: token.token
         }).then(({ data })=>{
             const { name, email, site, phone_number, description, category } = data
-            setForm({...form, email, site, phone_number, description})
+            // setForm({...form, name, email, site, phone_number, description})
             setCategory(category || [])
             setLoading(false)
         }).catch(({response})=>{
@@ -109,6 +113,7 @@ const OrgForm = ({ data = {}, handleClose, page }) => {
             setSubmitting(true)
             const params = {
                 ...form,
+                ...location,
                 category,
             }
             const submitPromise = !data.id ? 
@@ -117,7 +122,8 @@ const OrgForm = ({ data = {}, handleClose, page }) => {
 
             submitPromise.then(({data})=>{
                 setSubmitting(false)
-                handleForm(false, 'submit', data.data);
+                afterSubmit()
+                handleClose(data.data);
             }).catch(err=>{
                 if(err.response){
                     const { data } = err.response
@@ -174,7 +180,7 @@ const OrgForm = ({ data = {}, handleClose, page }) => {
                     <div className="flex flex-wrap -mx-2">
                         <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
                             <div className={`form-group ${errors.name && 'form-error'}`}>
-                                <label>OrganiZation Name</label>
+                                <label>Organisation Name</label>
                                 <input
                                     className="input-field"
                                     type="text"

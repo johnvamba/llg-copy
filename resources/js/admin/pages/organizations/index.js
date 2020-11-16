@@ -70,12 +70,16 @@ const Organizations = () => {
         showInvite(invite)
     }
 
+    const afterSubmit = () =>{
+        loadTable(true)
+    }
+
     return (
         <>
             <Header count={count} handlePanels={handlePanels} />
             <List set={orgs} handlePanels={handlePanels} />
             {
-                form && <Form data={info} handlePanels={handlePanels} handleClose={handlePanels}/>
+                form && <Form data={info} afterSubmit={afterSubmit} handlePanels={handlePanels} handleClose={handlePanels}/>
             }
             { 
                 showInfo && <OrgView

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar'; 
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 import Cookie from 'js-cookie';
 import Content from './content';
 import OrganizationView from './pages/organizations/view';
@@ -64,19 +64,22 @@ const Home = () => {
                                     <i className="fas fa-bars"></i>
                                 </div>
                         }
-                        <div className="flex items-center pl-12 filter-header">
-                            <button className="text-black-500 flex items-center mr-4 focus:outline-none" 
-                                onClick={e=>showFilter(!toggleFilter)}>
-                                <i className="mr-4" ref={setFilterElement}>
-                                    <Filter/>
-                                </i>
-                                Filter
-                            </button>
-                            {
-                                toggleFilter &&
-                                <MainFilter referElement={filterElement} onClose={()=>showFilter(false)}/>
-                            }
-                        </div>
+                        <Route path={['/needs']} 
+                            render={()=>
+                                <div className="flex items-center pl-12 filter-header">
+                                    <button className="text-black-500 flex items-center mr-4 focus:outline-none" 
+                                        onClick={e=>showFilter(!toggleFilter)}>
+                                        <i className="mr-4" ref={setFilterElement}>
+                                            <Filter/>
+                                        </i>
+                                        Filter
+                                    </button>
+                                    {
+                                        toggleFilter &&
+                                                <MainFilter referElement={filterElement} onClose={()=>showFilter(false)}/>
+                                    }
+                                </div>
+                        }/>
                         <div className="flex flex-1 items-center pl-12">
                             <button className="text-gray-500 mr-4 focus:outline-none">
                                 <i className="fa fa-search" aria-hidden="true"></i>

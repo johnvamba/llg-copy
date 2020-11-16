@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Organization;
 use App\OrganizationCredential;
 use App\OrganizationHasCategory;
+use App\OrganizationCategory;
 
 use App\User;
 use App\Need;
@@ -84,13 +85,35 @@ class OrganizationController extends Controller
      */
     public function store(Request $request)
     {
-        DB::beginTransaction();
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:organizations',
+            'site' => 'required',
+            'phone_number' => 'required',
+            'description' => 'required',
+            'category' => 'required',
+            'location' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
+        ]);
 
+        DB::beginTransaction();
         try {
+            $org = Organization::create( 
+                $request->only('name', 'email', 'phone_number', 'site', 'description', 'location', 'lat', 'lng') 
+                + [
+                    'short_description' => substr($request->get('description'), 0, 100)
+                ]);
+
+            if($catlist = $request->get('category')){
+
+            }
+
             DB::commit();
+            return new OrganizationResource($org);
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['errors'=>$e->getMessage], 400);
+            return response()->json(['errors'=>$e->getMessage()], 400);
         }
     }
 
@@ -102,7 +125,7 @@ class OrganizationController extends Controller
      */
     public function show(Organization $organization)
     {
-        //
+        return new OrganizationResource($organization);
     }
 
     /**
@@ -125,7 +148,39 @@ class OrganizationController extends Controller
      */
     public function update(Request $request, Organization $organization)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'site' => 'required',
+            'phone_number' => 'required',
+            'description' => 'required',
+            'category' => 'required',
+            'location' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $organization->fill( 
+                $request->only('name', 'email','phone_number', 'site', 'description', 'location', 'lat', 'lng') 
+                + [
+                    'short_description' => substr($request->get('description'), 0, 100)
+                ]);
+
+            if($catlist = $request->get('category')){
+
+            }
+
+            if($organization->isDirty())
+                $organization->save();
+
+            DB::commit();
+            return new OrganizationResource($organization);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['errors'=>$e->getMessage()], 400);
+        }
     }
 
     /**
@@ -136,7 +191,16 @@ class OrganizationController extends Controller
      */
     public function destroy(Organization $organization)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $organization->delete();
+
+            DB::commit();
+            return response()->json('Deleted', 200);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['errors'=>$e->getMessage()], 400);
+        }
     }
     
     /**

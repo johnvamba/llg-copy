@@ -18,7 +18,7 @@ class CampusController extends Controller
      */
     public function index()
     {
-        $campus = Campus::latest()->get();
+        $campus = Campus::withCount('organizations')->latest()->get();
 
         return CampusResource::collection($campus);
     }

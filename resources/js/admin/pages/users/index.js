@@ -87,7 +87,7 @@ const Users = () => {
             loadTable(true)
             //or insert data here
         }
-        showForm(form)
+        setShowForm(form)
     }
 
     return (

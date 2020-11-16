@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { UncontrolledDropdown, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button, ButtonGroup } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import TextInput from '../../../components/TextInput';
 import TextArea from '../../../components/TextArea';
-import Button from '../../../components/Button';
+// import Button from '../../../components/Button';
 //import Select from '../../../components/Select';
-import { Link } from 'react-router-dom';
 import { swalCreate } from '../../../components/helpers/alerts';
 import ReactTagInput from "@pathofdev/react-tag-input";
 import OffersFormCross from '../../../svg/offers-form-cross';
@@ -13,18 +14,46 @@ import StoriesPublishIcon from '../../../svg/stories-publish';
 import OffersViewEdit from '../../../svg/offers-view-edit';
 import StoriesModal from './modal';
 import "@pathofdev/react-tag-input/build/index.css";
+import CategoryScroll from '../../../components/CategoryScroll'
+import TextEditor from '../../../components/TextEditor'
+import Imagepond from '../../../components/Imagepond'
+import { EditorState, convertFromHTML, ContentState } from 'draft-js';
+import { tryParseJson } from '../../../components/helpers/validator'
 
-const StoriesForm = ({ state, setState, setShowViewStory }) => {
+
+const StoriesForm = ({ data={}, handleForm, afterSubmit }) => {
     const [errors, setErrors] = useState({});
     const [tags, setTags] = useState([]);
     const [form, setForm] = useState({});
     const [modal, setModal] = useState(false);
-
+    const [category, setCategory] = useState([]);
+    const [photo, setPhoto] = useState(null);
+    const [oldContent, setOldContent] = useState('');
+    const [editorState, setEditorState] = useState( EditorState.createEmpty() );
+    const [content, setContent] = useState(''); //new text content
+    const [saveAs, setSaveAs] = useState('publish');
+    const [togglePub, setTogglePub] = useState(false);
     // temporary has value
     const [hasFeaturedImage, setHasFeaturedImage] = useState(true);
-    
+    const [submitting, setSubmitting] = useState(false);
+
     const toggle = () => setModal(!modal);
 
+    useEffect(()=>{
+        if(data.id){
+            const { title, description, short_description } = data
+            setForm({ title })
+            if(tryParseJson(description)){
+                setOldContent(description)
+            } else {
+                const block = convertFromHTML(description);
+                const cState = ContentState.createFromBlockArray( block.contentBlocks, block.entityMap)
+                setEditorState(EditorState.createWithContent(cState));
+            }
+
+        }
+    }, [data])
+    //Depreciate
     const handleSubmit = async (e) => {
         e.preventDefault();
         let formData = new FormData();
@@ -37,8 +66,11 @@ const StoriesForm = ({ state, setState, setShowViewStory }) => {
             });
 
             formData.append('tags', JSON.stringify(tags));
+            formData.append('description', content)
+            formData.append('short_description', editorState.getCurrentContent().getPlainText('\u0001') );
+            formData.append('saveAs', saveAs);
 
-            let response = await axios.post('/api/stories', formData)
+            let response = await axios.post('/api/web/stories', formData)
 
             await swalCreate("/admin/stories")
         } catch (err) {
@@ -50,10 +82,40 @@ const StoriesForm = ({ state, setState, setShowViewStory }) => {
         setErrors(errors || {});
     }
 
+    const attemptSubmit = () => {
+        setSubmitting(true)
+        const params = {
+            ...form,
+            saveAs,
+            description: content,
+            short_description: editorState.getCurrentContent().getPlainText('\u0001')
+        }
+        const submitPromise = !data.id ? 
+            api.post(`/api/web/stories`, params) : 
+            api.patch(`/api/web/stories/${data.id}`, { ...params })
+
+        submitPromise.then(({data})=>{
+            setSubmitting(false)
+            handleForm(); //cleardata
+            afterSubmit(data.data, saveAs)
+        }).catch(err=>{
+            if(err.response){
+                const { data } = err.response
+                setErrors(data.errors || [])
+            }
+            setSubmitting(false)
+        })
+    }
+
     const handleChange = (e) => {
         let inputs = { ...form };
         inputs[e.target.name] = e.target.value;
         setForm(inputs);
+    }
+
+    const removeError= (name = '') => {
+        delete errors[name]
+        setErrors(errors)
     }
 
     const handleUpload = (e) => {
@@ -64,6 +126,13 @@ const StoriesForm = ({ state, setState, setShowViewStory }) => {
         }
 
         createImage(files[0]);
+    }
+
+    const handleCategories = (item, truth = false) => {
+        if(truth)
+            setCategory(category.filter(i=>item.slug != i.slug))
+        else 
+            setCategory([item, ...category])
     }
 
     const createImage = (file) => {
@@ -77,137 +146,80 @@ const StoriesForm = ({ state, setState, setShowViewStory }) => {
     }
 
     const handleClose = () => {
-        setState(false);
-        setShowViewStory(false);
+        handleForm({});
     }
 
 
     return (
-        <>
-            <section className="create-story">
-                <section className="create-story__header">
-                    <h2>{ (state == 'create') ? 'Create' : 'Edit' } Story</h2>
-                    <button type="button" onClick={handleClose}>
-                        <OffersFormCross />
-                    </button>
-                </section>
-                <section className="create-story__body">
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-group create-story__category">
-                            <label>Select Category</label>
-                            <ul>
-                                <li>
-                                    <div>
-                                        <StoriesHouseIcon />
-                                    </div>
-                                    <label>Housing</label>
-                                </li>
-                                <li>
-                                    <div>
-                                        <StoriesHouseIcon />
-                                    </div>
-                                    <label>Housing</label>
-                                </li>
-                                <li>
-                                    <div>
-                                        <StoriesHouseIcon />
-                                    </div>
-                                    <label>Housing</label>
-                                </li>
-                                <li>
-                                    <div>
-                                        <StoriesHouseIcon />
-                                    </div>
-                                    <label>Housing</label>
-                                </li>
-                                <li>
-                                    <div>
-                                        <StoriesHouseIcon />
-                                    </div>
-                                    <label>Housing</label>
-                                </li>
-                                <li>
-                                    <div>
-                                        <StoriesHouseIcon />
-                                    </div>
-                                    <label>Housing</label>
-                                </li>
-                                <li>
-                                    <div>
-                                        <StoriesHouseIcon />
-                                    </div>
-                                    <label>Housing</label>
-                                </li>
-                                <li>
-                                    <div>
-                                        <StoriesHouseIcon />
-                                    </div>
-                                    <label>Housing</label>
-                                </li>
-                                <li>
-                                    <div>
-                                        <StoriesHouseIcon />
-                                    </div>
-                                    <label>Housing</label>
-                                </li>
-                                <li className={ (state == 'edit') ? 'active' : '' }>
-                                    <div>
-                                        <StoriesHouseIcon />
-                                    </div>
-                                    <label>Housing</label>
-                                </li>
-                            </ul>
-                        </div>
-                        <div className="form-group">
-                            <label>Title</label>
-                            <input 
-                                className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 leading-tight focus:outline-none"
-                                type="text"
-                                placeholder="Enter Title"
-                                defaultValue={ (state == 'edit') ? 'Sample Text Here' : '' }
-                            />
-                        </div>
-                        <div className="create-story__wysiwyg form-group">
-                            
-                        </div>
-                        <div className="create-story__featured form-group">
-                            <label>Featured Image</label>
-                            {
-                                (state == 'edit')
-                                    ?   <div className="flex bg-cover bg-center" style={{backgroundImage: "url(https://www.ratemds.com/blog/wp-content/uploads/2015/09/handshake-shaking-hands-shake-hands-trust.jpg)"}}>
-                                            <button>
-                                                <OffersViewEdit /> 
-                                                Update Image
-                                            </button>
-                                        </div>
-                                    :   <div className="create-story__featured-container">
-                                            <div>
-                                                <Browse />
-                                                <span>Drag & drop or browse</span>
-                                            </div>
-                                        </div>
-                                    
-                            }
-                        </div>
-                    </form>
-                </section>
-                <section className="create-story__footer">
+        <section className="create-story">
+            <section className="create-story__header">
+                <h2>{ !(data.id) ? 'Create' : 'Edit' } Story</h2>
+                <button type="button" onClick={handleClose}>
+                    <OffersFormCross />
+                </button>
+            </section>
+            <section className="create-story__body">
+                <form onSubmit={handleSubmit}>
+                    <CategoryScroll 
+                        type={'monetary'}
+                        selectedCategories={category} 
+                        handleCategories={handleCategories}
+                        errors={errors.category}
+                    />
+                    <div className="form-group">
+                        <label>Title</label>
+                        <input 
+                            className="input-field"
+                            type="text"
+                            placeholder="Enter Title"
+                            value={form.title}
+                            name="title"
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    { !modal &&
+                        <TextEditor className={''} rawBlocks={oldContent} handleUpdate={setContent} editorState={editorState} handleEditorState={setEditorState} />
+                    }
+                    
+                    <Imagepond photo={photo} imageSelected={setPhoto} errors={errors.photo}/>
+                </form>
+            </section>
+            <section className="create-story__footer">
+                {
+                    submitting ? 
+                    <div className="create-story__footer-container">Saving Story..</div> :
                     <div className="create-story__footer-container">
                         <button className="discard" onClick={handleClose}>Discard</button>
                         <div>
                             <span onClick={toggle}>Preview</span>
-                            <button className="publish">
+
+                            <ButtonGroup className={'publish-btn'}>
+                                <Button color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
+                                <ButtonDropdown className={'btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
+                                  <DropdownToggle tag="button">
+                                    <StoriesPublishIcon />
+                                  </DropdownToggle>
+                                  <DropdownMenu>
+                                    <DropdownItem onClick={()=>setSaveAs('draft')}>Draft</DropdownItem>
+                                    <DropdownItem onClick={()=>setSaveAs('publish')}>Publish</DropdownItem>
+                                  </DropdownMenu>
+                                </ButtonDropdown>
+                            </ButtonGroup>
+
+                            {/*<button className="publish">
                                 <span>Publish</span>
                                 <StoriesPublishIcon />
-                            </button>
+                            </button>*/}
                         </div>
                     </div>
-                </section>
+                }
             </section>
-            {
-                <StoriesModal modal={modal} toggle={toggle} />
-            }
-        </>
+        {
+            modal &&
+            <StoriesModal title={form.title} handleChange={handleChange} modal={modal} toggle={toggle} editorState={editorState} setEditorState={setEditorState}/>
+        }
+        </section>
        
     );
 }

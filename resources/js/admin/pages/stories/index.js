@@ -17,7 +17,15 @@ const Stories = () => {
 
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(5);
+    const [counts, setCounts] = useState({
+        published: 0,
+        drafts: 0
+    })
 
+    const [publishes, setPublishes] = useState([])
+    const [drafts, setDrafts] = useState([])
+
+    const [focus, setFocus] = useState({});
     const [showCreateStory, setShowCreateStory] = useState(false);
     const [showViewStory, setShowViewStory] = useState(false);
     const [showEditStory, setShowEditStory] = useState(false);
@@ -25,22 +33,90 @@ const Stories = () => {
     const location = useLocation();
     const windowWidth = window.innerWidth;
 
-    const stories = useSelector(
-            state => state.StoriesReducer.stories
-        )
+    const [submitting, setSubmitting] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const dispatch = useDispatch();
+    const loadPublished = (clearCache = false) => {
+        setLoading(true)
+        const addFilter = {}; //for redux values
+        const token = axios.CancelToken.source();
+        api.get(`/api/web/stories`, {
+            params: {
+                page, ...addFilter,
+                type: 'published'
+            },
+            cache: {
+                exclude: { query: false },
+            }, 
+            clearCacheEntry: clearCache,
+            cancelToken: token.token
+        }).then((res)=>{
+            const { data } = res
+            const { publishes_count } = data
+            setPublishes(data.data || [])
+            setCounts({
+                ...counts,
+                published: publishes_count || 0
+            })
+            setLoading(false)
+        }).finally(()=>{
+        })
+        return token; //for useEffect
+    }
+    const loadDrafts = (clearCache = false) => {
+        setLoading(true)
+        const addFilter = {}; //for redux values
+        const token = axios.CancelToken.source();
+        api.get(`/api/web/stories`, {
+            params: {
+                page, ...addFilter,
+                type: 'drafts'
+            },
+            cache: {
+                exclude: { query: false },
+            }, 
+            clearCacheEntry: clearCache,
+            cancelToken: token.token
+        }).then((res)=>{
+            const { data } = res
+            const { drafts_count } = data
+            setDrafts(data.data || [])
+            setCounts({
+                ...counts,
+                drafts: drafts_count || 0
+            })
+            setLoading(false)
+        }).finally(()=>{
+        })
+        return token; //for useEffect
+    }
 
-    useEffect(() => {
-        async function fetchData() {
-            let {data} = await axios.post('/api/story/lists', {
-                    'limit': limit
-                });
 
-            dispatch(StoriesActions.setStories(data));
+    useEffect(()=>{
+        const c = loadPublished()
+        const d = loadDrafts()
+        return ()=>{
+            c.cancel('reset');
+            d.cancel('reset');
         }
-        fetchData();
-    }, [limit])
+    }, [page, limit])
+
+    // const stories = useSelector(
+    //         state => state.StoriesReducer.stories
+    //     )
+
+    // const dispatch = useDispatch();
+
+    // useEffect(() => {
+    //     async function fetchData() {
+    //         let {data} = await axios.post('/api/story/lists', {
+    //                 'limit': limit
+    //             });
+
+    //         dispatch(StoriesActions.setStories(data));
+    //     }
+    //     fetchData();
+    // }, [limit])
 
     //disable scrolling if there is any modal/popup
     if (windowWidth < 1024) {
@@ -60,21 +136,43 @@ const Stories = () => {
         setPage(parseInt(page));
     }
 
+    const handleForm = (data = {}, openForm = false, openView = false)=>{
+        setFocus(data)
+        setShowCreateStory(openForm)
+        setShowViewStory(openView)
+    }
+
+    const afterSubmit = (data = {}, type = 'draft') => {
+            console.log('afterSubmit',type,data)
+        if(type == 'draft'){
+            loadDrafts(true)
+            // setDrafts([data, ...drafts])
+            // setCounts({
+            //     ...counts,
+            //     drafts: counts.drafts+1
+            // })
+        } else {
+            loadPublished(true)
+            // setPublishes([data, ...publishes])
+            // setCounts({
+            //     ...counts,
+            //     published: counts.published+1
+            // })
+        }
+    }
+
     return (
         <>
             <section className="stories">
-                <StoriesHeader title={(location.pathname == "/stories") ? 'Published (9)' : 'Drafts (0)'} setState={setShowCreateStory} />
+                <StoriesHeader title={(location.pathname == "/stories") ? `Published (${counts.published || 0})` : `Draft (${counts.drafts || 0})`} setState={setShowCreateStory} />
                 {
-                    (location.pathname == "/stories")
-                    ? <List setShowViewStory={setShowViewStory} />
-                    : <StoriesDrafts setShowCreateStory={setShowCreateStory} />
+                    
+                    <List set={(location.pathname == "/stories") ? publishes : drafts} handleForm={handleForm} />
+                    // : <StoriesDrafts set={} setShowCreateStory={setShowCreateStory} />
                 }
             </section>
-            
-            { showCreateStory && <StoriesForm state='create' setState={setShowCreateStory} setShowViewStory={setShowViewStory} /> }
-            { showViewStory && <View setShowEditStory={setShowEditStory} /> }
-            { showEditStory && <StoriesForm state='edit' setState={setShowEditStory} setShowViewStory={setShowViewStory} /> }
-
+            { showCreateStory && <StoriesForm data={focus} handleForm={handleForm} afterSubmit={afterSubmit} /> }
+            { showViewStory && <View data={focus} handleForm={handleForm} /> }
         </>
     )
 }
