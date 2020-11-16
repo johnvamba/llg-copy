@@ -7,6 +7,6 @@ import { createLogger } from 'redux-logger';
 import rootReducer from './reducers';
 
 export const store = createStore(
-    rootReducer,
-    composeEnhancers ( applyMiddleware( createLogger() ) )
+    rootReducer
+    // ,composeEnhancers ( applyMiddleware( createLogger() ) )
 );

@@ -156,11 +156,10 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 photo: files.length > 0 ? photo : null,
                 description: about || bring || ''
             }) : 
-            api.update(`/api/web/needs/${data.id}`, {
-                params: { title, type, category, goal, date, openDate, time, location, organization,
-                    photo: files.length > 0 ? photo : null,
-                    description: about || bring || ''
-                }
+            api.patch(`/api/web/needs/${data.id}`, { 
+                title, type, category, goal, date, openDate, time, location, organization,
+                photo: files.length > 0 ? photo : null,
+                description: about || bring || ''
             })
 
         submitPromise.then(({data})=>{

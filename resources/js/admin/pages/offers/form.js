@@ -29,10 +29,29 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
 
     useEffect(()=>{
         //change form fields here
+        if(data.id) {
+            const { title, type, photo, description, location, lat, lng, business_name, business_site, business_contact} = data
+            setTitle(title)
+            setDesc(description)
+            setImage(photo)
+            setBusName(business_name)
+            setBusSite(business_site)
+            setBusContact(business_contact)
+            setLocation({
+                location,
+                lat,
+                lng
+            })
+        }
     }, [data])
 
     const handleCategories = (item, truth = false) => {0
         setCategory(item);
+    }
+
+    const removeError= (name = '') => {
+        delete errors[name]
+        setErrors(errors)
     }
 
     const updateService = ({title, desc, location, photo}) => {
@@ -40,12 +59,28 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
         setDesc(desc)
         setLocation(location)
         setImage(photo)
+        if(title !== '')
+            delete errors.title
+        if(desc !== '')
+            delete errors.desc
+        if(_.isEmpty(location))
+            delete errors.location
+        if(photo == null || photo == '')
+            delete errors.photo
+        setErrors(errors)
     }
 
     const updateBusiness = ({business_name, business_site, business_contact}) => {
         setBusName(business_name)
         setBusSite(business_site)
         setBusContact(business_contact)
+        if(business_name !== '')
+            delete errors.business_name
+        if(business_site !== '')
+            delete errors.business_site
+        if(business_contact !== '')
+            delete errors.business_contact
+        setErrors(errors)
     }
 
     const showTabTitle = () => {
@@ -140,7 +175,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
             }
             const submitPromise = !data.id ? 
                 api.post(`/api/web/offers`, params) : 
-                api.update(`/api/web/offers/${data.id}`, { params })
+                api.patch(`/api/web/offers/${data.id}`, { ...params })
 
             submitPromise.then(({data})=>{
                 setSubmitting(false)

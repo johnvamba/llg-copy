@@ -10,10 +10,10 @@ const filters = [
         path: '/needs',
         component: (props)=><NeedFilter {...props}/>
     },
-    {
-        path: '/organizations',
-        component: (props)=><OrganizationFilter {...props}/>
-    },
+    // {
+    //     path: '/organizations',
+    //     component: (props)=><OrganizationFilter {...props}/>
+    // },
     {
         path: '*',
         component: () => (

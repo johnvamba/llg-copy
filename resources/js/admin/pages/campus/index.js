@@ -50,7 +50,7 @@ const Campus = () => {
     }
 
     const afterSubmit = (data = {}) => {
-        //do data manipulation here.
+        loadTable(true)
     }
 
     return(

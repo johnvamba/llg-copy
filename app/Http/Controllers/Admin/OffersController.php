@@ -65,7 +65,7 @@ class OffersController extends Controller
 
         DB::beginTransaction();
         try {
-            $category = $request->get('category')[0] ?? null;
+            $category = $request->get('category') ?? null;
 
             $user = auth()->user();
 
@@ -155,7 +155,6 @@ class OffersController extends Controller
             $user = auth()->user();
 
             $type = ServiceType::where('name', $category['name'] ?? '')->firstOrFail();
-
             $location = $request->get('location');
 
             $offer->fill(
