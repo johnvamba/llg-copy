@@ -3,6 +3,7 @@ import OffersFormCross from '../../../svg/offers-form-cross';
 import Calendar from '../../../svg/calendar';
 import DatePicker from "react-datepicker";
 
+
 const PushForm = ({ activeForm, handleCloseForm }) =>{
 
     const [toggleSched, setToggleSched] = useState('send now');
@@ -11,6 +12,36 @@ const PushForm = ({ activeForm, handleCloseForm }) =>{
 
     // enable to open datapicker when clicking calendar icon
     const calendarRef = useRef();
+
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [fields, setFields] = useState({
+        title: '',
+        message: ''
+    });
+    const fieldErrorMsg = {
+        title: 'Missing Title',
+        message: 'Missing Message'
+    }
+
+    const handleInputChange = (e) => {
+        setFieldErrors({...fieldErrors, [e.target.name] : '' });
+        setFields({...fields, [e.target.name] : e.target.value });
+    }
+
+    const validateForm = () => {
+        let errors = {};
+        Object.keys(fields).map((keyname, i) => {
+            if(!fields[keyname]) errors[keyname] = fieldErrorMsg[keyname];
+        });
+
+        setFieldErrors(errors);
+        if(Object.keys(errors).length === 0) return true;
+        return false;
+    }
+
+    const handleSubmit = () => {
+        if(validateForm()) console.log('success');
+    }
 
     return(
         <>
@@ -24,20 +55,31 @@ const PushForm = ({ activeForm, handleCloseForm }) =>{
                 <section className="push-form__body">
                     <form>
                         <div className="w-full xl:w-full">
-                            <div className="form-group form-input-text">
+                            <div className={`form-group form-input-text ${fieldErrors.title ? 'has-error' : ''}`}>
                                 <label>Title</label>
                                 <input
                                     className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
                                     type="text"
                                     placeholder="Enter Title"
+                                    name="title"
+                                    onChange={handleInputChange}
                                 />
                             </div>
+                            <span className="input-error-msg">{fieldErrors.title}</span>
                         </div>
                         <div className="w-full xl:w-full">
-                            <div className="form-group form-group-textarea">
+                            <div className={`form-group form-group-textarea ${fieldErrors.message ? 'has-error' : ''}`}>
                                 <label>Notification</label>
-                                <textarea type="text" placeholder="Enter Message" rows="3"></textarea>
+                                <textarea
+                                    type="text"
+                                    placeholder="Enter Message"
+                                    rows="3"
+                                    name="message"
+                                    onChange={handleInputChange}
+                                >
+                                </textarea>
                             </div>
+                            <span className="txtarea-field input-error-msg">{fieldErrors.message}</span>
                         </div>
                         <div className="toggle-sched">
                             <label>Schedule</label>
@@ -79,7 +121,7 @@ const PushForm = ({ activeForm, handleCloseForm }) =>{
                 <footer className="org-form__footer">
                     <div className="flex">
                         <button className="discard" onClick={handleCloseForm}>Discard</button>
-                        <button className="next">Add</button>
+                        <button className="next" onClick={handleSubmit}>Add</button>
                     </div>
                 </footer>
             </section>

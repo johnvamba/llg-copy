@@ -77,6 +77,49 @@ const GroupsForm = ({ showAdd, setState }) => {
         }
     }
 
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [fields, setFields] = useState({
+        name: '',
+        description: '',
+        location: '',
+        privacy: ''
+
+    });
+    const fieldErrorMsg = {
+        name: 'Missing Campus Name',
+        description: 'Missing Description',
+        location: 'Missing Location',
+        privacy: 'Need to Select a Privacy'
+    }
+
+    const handleInputChange = (e) => {
+        setFieldErrors({...fieldErrors, [e.target.name] : '' });
+        setFields({...fields, [e.target.name] : e.target.value });
+    }
+
+    const validateForm = () => {
+        let errors = {};
+        Object.keys(fields).map((keyname, i) => {
+            if(!fields[keyname]) errors[keyname] = fieldErrorMsg[keyname];
+        });
+
+        setFieldErrors(errors);
+        if(Object.keys(errors).length === 0) return true;
+        return false;
+    }
+
+    // const handleSubmit = () => {
+    //     if(validateForm()) console.log('success');
+    // }
+
+    const handleSelectPrivacy = (option) => {
+        setFields({...fields, privacy : option});
+    }
+
+    const handleNext = () => {
+        if(validateForm()) nextTab(activeTab);
+    }
+
     return (
         <div className="offers-create-form">
             <button className="offers-create-form__close" type="button" onClick={()=>setState(false)}>
@@ -89,7 +132,7 @@ const GroupsForm = ({ showAdd, setState }) => {
                     ? (<>
                             <div className="relative pt-1">
                                 <div className="w-full bg-gray-400 rounded-full">
-                                    <div className={`bg-blue-400 rounded-full leading-none py-1 text-white tab-${activeTab}`}></div>
+                                    <div className={`bg-blue-400 rounded-full leading-none py-1 text-white tab-${countTab}`}></div>
                                 </div>
                             </div>
                             <p>{countTab} of 3</p>
@@ -106,7 +149,14 @@ const GroupsForm = ({ showAdd, setState }) => {
             </div>
             
             <div className="offers-create-form__body">
-                { showCategory && <FormTabInfo />}
+                { showCategory && 
+                    <FormTabInfo
+                        handleInputChange={handleInputChange}
+                        fieldErrors={fieldErrors}
+                        fields={fields}
+                        handleSelectPrivacy={handleSelectPrivacy}
+                    />
+                }
                 { showService && <FormTabInvite />}
                 { showBusiness && <FormTabGoal />}
             </div>
@@ -118,7 +168,7 @@ const GroupsForm = ({ showAdd, setState }) => {
                         <button className="back" onClick={() => backTab(activeTab)}>Back</button>
                         {
                             (activeTab !== "business") 
-                            ? (<button className="next" onClick={() => nextTab(activeTab)}>Next</button>)
+                            ? (<button className="next" onClick={handleNext}>Next</button>)
                             : (<button className="next">Create</button>)
                         }
                     </div>
