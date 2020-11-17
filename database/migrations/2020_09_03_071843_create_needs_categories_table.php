@@ -13,14 +13,15 @@ class CreateNeedsCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('needs_categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('type')->default('monetary')->nullable(); //not enum, //organizational
-            $table->string('icon')->nullable();
-            $table->boolean('status')->default(true);
-            $table->timestamps();
-        });
+        //Depreciate
+        // Schema::create('needs_categories', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('name');
+        //     $table->string('type')->default('monetary')->nullable(); //not enum, //organizational
+        //     $table->string('icon')->nullable();
+        //     $table->boolean('status')->default(true);
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -30,6 +31,6 @@ class CreateNeedsCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('needs_categories');
+        // Schema::dropIfExists('needs_categories');
     }
 }

@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+//Depreciate
 class NeedHasCategory extends Model
 {
     //

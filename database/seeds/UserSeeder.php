@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
         
-        $admin = User::create([
+        $admin = User::firstOrCreate([
                 'name' => 'admin user',
                 'email' => 'admin@gmail.com',
                 'password' => bcrypt('password'),
@@ -34,8 +34,8 @@ class UserSeeder extends Seeder
             'bio' => $faker->text,
         ]);
 
-        $org = User::create([
-            'name' => 'org user',
+        $org = User::firstOrCreate([
+            'name' => 'organization admin',
             'email' => 'organ@gmail.com',
             'password' => bcrypt('password'),
         ]);

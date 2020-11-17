@@ -158,13 +158,15 @@ class OrganizationController extends Controller
                 $org->save();
 
                 if ($request->category) {
-                    foreach($request->category as $value) {
-                        $hasCategory = OrganizationHasCategory::make([
-                                'organization_category_id' => $value
-                            ]);
+                    // Check 
+                    $org->categories()->sync($request->category);
+                    // foreach($request->category as $value) {
+                    //     $hasCategory = OrganizationHasCategory::make([
+                    //             'organization_category_id' => $value
+                    //         ]);
                             
-                        $org->categories()->save($hasCategory);
-                    }
+                    //     $org->categories()->save($hasCategory);
+                    // }
                 }
 
                 if ($request->secretKey && $request->publishableKey) {
@@ -268,15 +270,17 @@ class OrganizationController extends Controller
             ]));
             
         if (gettype($request->category) === 'array') {
-            $organization->categories()->delete();
 
-            foreach($request->category as $value) {
-                $hasCategory = OrganizationHasCategory::make([
-                        'organization_category_id' => $value
-                    ]);
+            $organization->categories()->sync($request->category);
 
-                $organization->categories()->save($hasCategory);
-            }
+            // $organization->categories()->delete();
+            // foreach($request->category as $value) {
+            //     $hasCategory = OrganizationHasCategory::make([
+            //             'organization_category_id' => $value
+            //         ]);
+
+            //     $organization->categories()->save($hasCategory);
+            // }
         }
 
         if ($request->secretKey && $request->publishableKey) {

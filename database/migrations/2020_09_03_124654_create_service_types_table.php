@@ -13,13 +13,14 @@ class CreateServiceTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('service_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->boolean('status')->default(true);
-            $table->text('icon')->nullable();
-            $table->timestamps();
-        });
+        //Depreciate
+        // Schema::create('service_types', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('name');
+        //     $table->boolean('status')->default(true);
+        //     $table->text('icon')->nullable();
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -29,6 +30,6 @@ class CreateServiceTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('service_types');
+        // Schema::dropIfExists('service_types');
     }
 }
