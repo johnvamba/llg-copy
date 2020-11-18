@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\User;
 use App\Group;
+use App\Goal;
 use App\Need;
 use App\NeedMet;
 use App\GroupParticipant;
 use DB;
+use Carbon\Carbon;
 
 class NeedsMetController extends Controller
 {
@@ -77,17 +80,33 @@ class NeedsMetController extends Controller
                 ['status', 'approved']
             ])->pluck('user_id');
 
-        if (!$users) {
-            return response()->json($users);
-        }
-        
+        $users->push($group->user_id);
+
+        $goal = Goal::whereHasMorph(
+                'model',
+                ['App\Group'],
+                function (Builder $query) use ($group) {
+                    $query->where('model_id', $group->id);
+                }
+            )
+            ->where('status', 'in progress')
+            ->latest()
+            ->first();
+
+        $date = Carbon::parse($goal->created_at);
+
         $needsMet = NeedMet::whereHasMorph(
                 'model',
                 ['App\User'],
                 function ($query) use ($users) {
                     $query->whereIn('model_id', $users);
                 }
-            )->pluck('need_id');
+            )
+            ->whereBetween('created_at', [
+                $date->copy()->toDateString(),
+                $date->copy()->endOfMonth()->toDateString()
+            ])
+            ->pluck('need_id');
 
         $needs = Need::with(['type', 'categories', 
             'contribution' => function ($query) {

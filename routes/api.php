@@ -72,7 +72,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('need/recent-added', 'NeedsController@getRecentAdded');
     Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsController@nearby');
     Route::get('needs/open/total', 'NeedsController@getTotalNeedsOpen');
-    Route::post('needs/organization/{organization}', 'NeedsController@getOrganizationNeeds');
+    Route::post('needs/organization/{organization}/page/{page}', 'NeedsController@getOrganizationNeeds');
     Route::post('needs/page/{page}', 'NeedsController@index');
     Route::resource('needs', 'NeedsController');
 

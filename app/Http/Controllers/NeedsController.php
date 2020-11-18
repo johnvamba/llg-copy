@@ -93,7 +93,7 @@ class NeedsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getOrganizationNeeds(Request $request, Organization $organization)
+    public function getOrganizationNeeds(Request $request, Organization $organization, $page = 1)
     {
         $needs = Need::with('type')
             ->where('organization_id', $organization->id);
@@ -109,7 +109,7 @@ class NeedsController extends Controller
                 break;
         }
     
-        $results = $needs->get();
+        $results = $needs->paginate(10, ['*'], 'organization_needs', $page);
 
         foreach($results as $result) {
            $result['photo'] = $result->getFirstMediaUrl('photo');
