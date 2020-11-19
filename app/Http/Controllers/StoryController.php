@@ -135,7 +135,7 @@ class StoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function searchStory(Request $request, $search)
+    public function searchStory(Request $request, $search, $page = 1)
     {
         $query = Story::with([
                 'user', 
@@ -148,7 +148,7 @@ class StoryController extends Controller
             $query->where('title', 'LIKE', '%'.strtolower($search).'%');
         
         $stories = $query->orderBy('created_at', 'desc')
-            ->paginate();
+            ->paginate(10, ['*'], 'needs', $page);
 
         foreach ($stories as $story) {
             $story['photo'] = $story->getFirstMediaUrl('photo');

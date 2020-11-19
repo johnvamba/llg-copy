@@ -60,7 +60,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('users', 'UserController');
     
     /** Goal resource module */
-    Route::get('goal/user', 'GoalController@getUserGoal');
+    Route::get('goal/me', 'GoalController@getUserGoal');
     Route::get('goal/group/{groupId}', 'GoalController@getGroupGoal');
     Route::resource('goals', 'GoalController');
 
@@ -85,7 +85,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     
     /** Needs Met resource module */
     Route::get('needs-mets/group/{group}', 'NeedsMetController@getGroupNeedsMet');
-    Route::get('needs-mets/user', 'NeedsMetController@getUserNeedsMet');
+    Route::get('needs-mets/user/{user}', 'NeedsMetController@getUserNeedsMet');
     Route::get('needs-mets/total', 'NeedsMetController@getTotalNeedsMet');
     Route::resource('needs-met', 'NeedsMetController');
 
@@ -104,7 +104,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('story/lists', 'StoryController@getStories');
     Route::get('featured/stories', 'StoryController@featuredStory');
     Route::post('stories/{story}/appreciate', 'StoryController@Appreciate');
-    Route::get('stories/search/{keyword}', 'StoryController@searchStory');
+    Route::get('stories/search/{keyword}/page/{page?}', 'StoryController@searchStory');
     Route::get('stories/{story}/comments', 'StoryController@getComments');
     Route::post('stories/{story}/comments', 'StoryController@addComment');
     Route::get('stories/recommended', 'StoryController@recommended');
@@ -114,6 +114,10 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Group invite resource module */
     Route::get('users-not-in-group/{group}', 'GroupInviteController@getUsersNotInGroup');
     Route::resource('group-invites', 'GroupInviteController');
+    
+    /** Group Participants resource module */
+    Route::get('group/{group}/participants/page/{page?}', 'GroupParticipantController@index');
+    Route::resource('group-participants', 'GroupParticipantController');
 
     /** Group resource module */
     Route::get('group/me', 'GroupController@getMyGroup');

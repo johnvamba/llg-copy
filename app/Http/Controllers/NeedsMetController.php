@@ -46,15 +46,33 @@ class NeedsMetController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getUserNeedsMet(Request $request)
+    public function getUserNeedsMet(Request $request, User $user)
     {
+        $goal = Goal::whereHasMorph(
+                'model',
+                ['App\User'],
+                function (Builder $query) use ($user) {
+                    $query->where('model_id', $user->id);
+                }
+            )
+            ->where('status', 'in progress')
+            ->latest()
+            ->first();
+
+        $date = Carbon::parse($goal->created_at);
+
         $needsMet = NeedMet::whereHasMorph(
                 'model',
                 ['App\User'],
-                function ($query) {
-                    $query->where('model_id', auth()->user()->id);
+                function ($query) use ($user) {
+                    $query->where('model_id', $user->id);
                 }
-            )->pluck('need_id');
+            )
+            ->whereBetween('created_at', [
+                $date->copy()->toDateString(),
+                $date->copy()->endOfMonth()->toDateString()
+            ])
+            ->pluck('need_id');
 
         $needs = Need::with('type', 'categories', 'contribution')
             ->whereIn('id', $needsMet)

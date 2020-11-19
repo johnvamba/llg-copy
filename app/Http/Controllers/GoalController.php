@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use App\Http\Requests\GoalStoreRequest;
 use App\Goal;
@@ -95,23 +96,45 @@ class GoalController extends Controller
      */
     public function getUserGoal(Request $request)
     {
-        $goal = Goal::where([
-                ['model_type', 'App\User'],
-                ['model_id', auth()->user()->id]
-            ])
-            ->orderBy('id', 'desc')
+        $goal = Goal::whereHasMorph(
+                'model',
+                ['App\User'],
+                function (Builder $query) {
+                    $query->where('model_id', auth()->user()->id);
+                }
+            )
+            ->where('status', 'in progress')
+            ->latest()
             ->first();
 
         $date = Carbon::parse($goal->created_at);
         
         if ($goal->term == 'year') {
-            $goal['needs_met'] = NeedMet::where('created_at', '>=', $date->toDateTimeString())
-                ->where('created_at', '<=', $date->copy()->endOfYear())
-                ->get();
+            $goal['needs_met_count'] = NeedMet::whereHasMorph(
+                    'model',
+                    ['App\User'],
+                    function (Builder $query) {
+                        $query->where('model_id', auth()->user()->id);
+                    }
+                )
+                ->whereBetween('created_at', [
+                    $date->copy()->toDateString(),
+                    $date->copy()->endOfYear()->toDateString()
+                ])
+                ->count();
         } else {
-            $goal['needs_met'] = NeedMet::where('created_at', '>=', $date->toDateTimeString())
-            ->where('created_at', '<=', $date->copy()->endOfMonth())
-            ->get();
+            $goal['needs_met_count'] = NeedMet::whereHasMorph(
+                    'model',
+                    ['App\User'],
+                    function (Builder $query) {
+                        $query->where('model_id', auth()->user()->id);
+                    }
+                )
+                ->whereBetween('created_at', [
+                    $date->copy()->toDateString(),
+                    $date->copy()->endOfMonth()->toDateString()
+                ])
+                ->count();
         }
 
         return response()->json($goal, 200);
