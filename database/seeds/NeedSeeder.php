@@ -18,6 +18,7 @@ class NeedSeeder extends Seeder
             for ($i=0; $i < 3; $i++) { 
                 # code...
                 $org = \App\Organization::inRandomOrder()->first();
+                //Change this
                 $category = \App\NeedsCategory::inRandomOrder()->first();
 
                 $type = \App\NeedsType::get();
