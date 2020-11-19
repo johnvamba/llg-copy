@@ -91,7 +91,7 @@ class UsersController extends Controller
             DB::commit();
             return new UserResource($user);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
@@ -179,7 +179,7 @@ class UsersController extends Controller
             DB::commit();
             return new UserResource($user);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
@@ -201,7 +201,7 @@ class UsersController extends Controller
             DB::commit();
             return response()->json('Successfully deleted user');
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }

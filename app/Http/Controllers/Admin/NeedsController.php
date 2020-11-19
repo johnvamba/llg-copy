@@ -179,7 +179,7 @@ class NeedsController extends Controller
             $need->loadMissing('type', 'media', 'organization');
             return new NeedResource($need);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error'=> $e->getMessage()], 400);
         }
     }
@@ -250,7 +250,7 @@ class NeedsController extends Controller
             DB::commit();
             return response()->json(['Success'], 200);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error'=>$e->getMessage()], 400);
         }
     }
@@ -263,7 +263,7 @@ class NeedsController extends Controller
             DB::commit();
             return response()->json(['Success'], 200);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error'=>$e->getMessage()], 400);
         }
     }

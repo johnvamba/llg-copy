@@ -101,7 +101,7 @@ class OffersController extends Controller
             DB::commit();
             return new OfferResource($offer);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error'=>$e->getMessage()], 400);
         }
     }
@@ -186,7 +186,7 @@ class OffersController extends Controller
             DB::commit();
             return new OfferResource($offer);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error'=>$e->getMessage()], 400);
         }
     }

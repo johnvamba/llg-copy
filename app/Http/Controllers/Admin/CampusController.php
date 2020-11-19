@@ -58,7 +58,7 @@ class CampusController extends Controller
             DB::commit();
             return new CampusResource($campus);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['errors'=>$e->getMessage()], 400);
         }
 
@@ -113,7 +113,7 @@ class CampusController extends Controller
             DB::commit();
             return new CampusResource($campus);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['errors'=>$e->getMessage()], 400);
         }
 

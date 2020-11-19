@@ -67,7 +67,7 @@ class StoryController extends Controller
             DB::commit();
             return new StoryResource($story);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
@@ -120,7 +120,7 @@ class StoryController extends Controller
             DB::commit();
             return new StoryResource($story);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }

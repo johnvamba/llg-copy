@@ -112,7 +112,7 @@ class OrganizationController extends Controller
             DB::commit();
             return new OrganizationResource($org);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['errors'=>$e->getMessage()], 400);
         }
     }
@@ -178,7 +178,7 @@ class OrganizationController extends Controller
             DB::commit();
             return new OrganizationResource($organization);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['errors'=>$e->getMessage()], 400);
         }
     }
@@ -198,7 +198,7 @@ class OrganizationController extends Controller
             DB::commit();
             return response()->json('Deleted', 200);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['errors'=>$e->getMessage()], 400);
         }
     }
