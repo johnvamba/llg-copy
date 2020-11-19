@@ -2,7 +2,11 @@ import React from 'react';
 import Search from '../../../svg/search';
 import Attachment from '../../../svg/attachment';
 
-const FormTabInvite = () => {
+const FormTabInvite = ({data = {}, users = [], setUsers}) => {
+    const handleSearch = () => {
+
+    }
+
 	return(
 		<>
             <h3>Invite People</h3>

@@ -4,69 +4,45 @@ import * as GroupsActions from '../../../redux/groups/actions';
 import DataTable from '../../../components/layout/DataTable';
 
 import GroupsHeader from './header';
-import List from './list';
-import Form from './form';
+import GroupsList from './list';
+import GroupsForm from './form';
 
-const Groupss = () => {
+const Groups = () => {
+    const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
+    const [showForm, setShowForm] = useState(false);
+    const [focus, setFocus] = useState({});
 
-    const [showAdd, setShowAdd] = useState(false);
-    const [showEdit, setShowEdit] = useState(false);
+    const [groups, setGroups] = useState([]);
 
-    const [data, setData] = useState([
-        {
-            id: 1,
-            title: 'Group Name 01',
-            members: 32,
-            privacy: 'Public',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
-        },
-        {
-            id: 2,
-            title: 'Group Name 01',
-            members: 32,
-            privacy: 'Public',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
-        },
-        {
-            id: 3,
-            title: 'Group Name 01',
-            members: 32,
-            privacy: 'Public',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
-        },
-        {
-            id: 4,
-            title: 'Group Name 01',
-            members: 32,
-            privacy: 'Public',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
-        },
-        {
-            id: 5,
-            title: 'Group Name 01',
-            members: 32,
-            privacy: 'Public',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
-        },
-        {
-            id: 6,
-            title: 'Group Name 01',
-            members: 32,
-            privacy: 'Public',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
-        },
-        {
-            id: 7,
-            title: 'Group Name 01',
-            members: 32,
-            privacy: 'Public',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...',
-        },
-    ]);
+    useEffect(()=>{
+        loadTable()
+    }, [page])
 
-    const handleActions = (row) => {
+    const loadTable = (clearCache = false) => {
+        const token = axios.CancelToken.source();
+        setLoading(true);
+        api.get(`/api/web/groups`, {
+            params: {
+                page, 
+            },
+            cache: {
+                exclude: { query: false },
+            }, 
+            clearCacheEntry: clearCache,
+            cancelToken: token.token
+        }).then((res)=>{
+            const { data } = res
+            setGroups( page == 1 ? data.data : [...groups, ...data.data])
+        }).finally(()=>{
+            setLoading(false)
+        })
+        return token; //for useEffect
+    }
+
+    const handleActionButtons = (row) => {
         row.actions = row.actions ? false : true;
-        setData(data.map((obj) => {
+        setGroups(groups.map((obj) => {
             if(obj.id == row.id) return row;
             else{
                 obj.actions = false;
@@ -75,26 +51,39 @@ const Groupss = () => {
         }));
     }
 
+    const handleForm = (data={}, showForm=false)=>{
+        setFocus(data)
+        setShowForm(showForm)
+    }
+
+    const afterSubmit = (data = {}) => {
+        // setGroups([data, ...groups])
+        loadTable(true)
+    }
+
     return (
         <>
             <GroupsHeader
-                setShowAdd={setShowAdd}
+                setShowAdd={()=>handleForm({}, true)}
             />
-            <List
-                data={data}
-                setShowEdit={setShowEdit}
-                handleActions={handleActions}
+
+            <GroupsList
+                data={groups}
+                handleForm={handleForm}
+                afterSubmit={afterSubmit}
+                handleActionButtons={handleActionButtons}
             />
 
             {   
-                (showAdd || showEdit) && 
-                    <Form
-                        showAdd={showAdd}
-                        setState={showAdd ? setShowAdd : setShowEdit }
-                    />
+                showForm && 
+                <GroupsForm
+                    data={focus}
+                    handleForm={handleForm}
+                    afterSubmit={afterSubmit}
+                />
             }
         </>
     )
 }
 
-export default Groupss;
+export default Groups;

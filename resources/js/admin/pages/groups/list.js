@@ -6,65 +6,64 @@ import UsersActionsDelete from '../../../svg/users-actions-delete';
 
 import './groups.css';
 
-const GroupsHeader = ({ data, setShowEdit, handleActions }) => {
-
-    const [showAction, setShowAction] = useState(false);
-
+const GroupsList = ({ data = [], handleForm, handleActionButtons, afterSubmit }) => {
+    const removeGroup = ()=>{
+        //add api here
+        afterSubmit();
+    }
     return (
-        <>
-            <section className="groups-list">
-                <ul>
-                    {data.map((obj) => 
-                        <li key={obj.id}>
-                            <header>
-                                <div></div>
-                            </header>
-                            <div className="groups-list__body">
-                                <h2>{obj.title}</h2>
-                                <div>
-                                    <span>{`${obj.privacy} Group`}</span>
-                                    <span>.</span>
-                                    <span>{`${obj.members} members`}</span>
-                                </div>
-                                <p>{obj.description}</p>
-                                <div className="groups-list__progress-bar">
-                                    <label>2/8 Goals</label>
-                                    <div className="relative pt-1">
-                                        <div className="overflow-hidden h-2 text-xs flex rounded">
-                                            <div style={{ width: "12.5%" }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center"></div>
-                                        </div>
+        <section className="groups-list">
+            <ul>
+                {data.map((obj) => 
+                    <li key={obj.id}>
+                        <header>
+                            <div></div>
+                        </header>
+                        <div className="groups-list__body">
+                            <h2>{obj.name}</h2>
+                            <div>
+                                <span>{`${obj.privacy || 'Private'} Group`}</span>
+                                <span>.</span>
+                                <span>{`${obj.participants_count || '0'} members`}</span>
+                            </div>
+                            <p>{obj.short_description}</p>
+                            <div className="groups-list__progress-bar">
+                                <label>{obj.goal_ratio || 0} Goals</label>
+                                <div className="relative pt-1">
+                                    <div className="overflow-hidden h-2 text-xs flex rounded">
+                                        <div style={{ width: `${obj.goal_percent || 0}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div className={`actions ${obj.actions ? 'active' : null}`} onClick={() => handleActions(obj)}>
-                                <div className="actions__toggle">
-                                    <GroupsActionsIcon />
-                                </div>
-                                
-                                {
-                                    obj.actions && (
-                                        <div className="actions__content">
-                                            <GroupsTriangle />
-                                            <div>
-                                                <div onClick={() => setShowEdit(true)}>
-                                                    <UsersActionsEdit />
-                                                    <span>Edit</span>
-                                                </div>
-                                                <div>
-                                                    <UsersActionsDelete />
-                                                    <span>Delete</span>
-                                                </div>
+                        </div>
+                        <div className={`actions ${obj.actions ? 'active' : null}`} onClick={() => handleActionButtons(obj)}>
+                            <div className="actions__toggle">
+                                <GroupsActionsIcon />
+                            </div>
+                            
+                            {
+                                obj.actions && (
+                                    <div className="actions__content">
+                                        <GroupsTriangle />
+                                        <div>
+                                            <div onClick={() => handleForm(obj, true)}>
+                                                <UsersActionsEdit />
+                                                <span>Edit</span>
+                                            </div>
+                                            <div onClick={removeGroup}>
+                                                <UsersActionsDelete />
+                                                <span>Delete</span>
                                             </div>
                                         </div>
-                                    )
-                                }
-                                
-                            </div>
-                        </li>
-                    )}
-                </ul>
-            </section>
-        </>
+                                    </div>
+                                )
+                            }
+                            
+                        </div>
+                    </li>
+                )}
+            </ul>
+        </section>
     )
 }
-export default GroupsHeader;
+export default GroupsList;
