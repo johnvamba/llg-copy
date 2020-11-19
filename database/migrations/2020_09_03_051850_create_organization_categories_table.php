@@ -13,12 +13,13 @@ class CreateOrganizationCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('organization_categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->boolean('status')->default(true);
-            $table->timestamps();
-        });
+        //Depreciate
+        // Schema::create('organization_categories', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('name');
+        //     $table->boolean('status')->default(true);
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -28,6 +29,6 @@ class CreateOrganizationCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('organization_categories');
+        // Schema::dropIfExists('organization_categories');
     }
 }

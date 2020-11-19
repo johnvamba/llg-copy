@@ -13,14 +13,15 @@ class CreateNeedHasCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('need_has_categories', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('need_id')->unsigned();
-            $table->morphs('model');
-            $table->timestamps();
+        //Depreciate
+        // Schema::create('need_has_categories', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->bigInteger('need_id')->unsigned();
+        //     $table->morphs('model');
+        //     $table->timestamps();
 
-            $table->foreign('need_id')->references('id')->on('needs');
-        });
+        //     $table->foreign('need_id')->references('id')->on('needs');
+        // });
     }
 
     /**
@@ -30,6 +31,6 @@ class CreateNeedHasCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('need_has_categories');
+        // Schema::dropIfExists('need_has_categories');
     }
 }
