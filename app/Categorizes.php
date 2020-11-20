@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class Categorizes extends Pivot
 {
+    protected $table = 'categorizes';
+
     public $incrementing = true; //Keep incrementing
 
     public function category()

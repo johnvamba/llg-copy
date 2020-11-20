@@ -275,8 +275,7 @@ class NeedTest extends TestCase
             'organization_id' => $this->org->id,
             'needs_type_id' => $this->type->id,
         ]);
-
-        $response = $this->post("api/needs/organization/{$this->org->id}", [
+        $response = $this->post("api/needs/organization/{$this->org->id}/page/1", [
                 'type' => 'active'
             ]);
 

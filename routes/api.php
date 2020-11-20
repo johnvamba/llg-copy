@@ -143,6 +143,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Orgnization resource module */
     Route::post('organization/lists', 'OrganizationController@getOrganizations');
+    Route::get('organization/featured', 'OrganizationController@getFeaturedOrganizations');
     Route::get('organizations/{organization}/credential', 'OrganizationController@getCredential');
     Route::post('organizations/{organization}/credential', 'OrganizationController@addCredential');
     Route::post('organizations/nearby/{lat}/{lng}', 'OrganizationController@nearby');

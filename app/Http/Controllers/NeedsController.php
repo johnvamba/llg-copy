@@ -8,6 +8,7 @@ use App\Http\Requests\NeedsUpdateRequest;
 use Illuminate\Http\Request;
 use App\Organization;
 use App\NeedsCategory;
+use App\Categorizes;
 // use App\NeedHasCategory;
 use App\Need;
 use App\NeedMet;
@@ -25,34 +26,39 @@ class NeedsController extends Controller
     {
         $filters = $request->filters;
 
-        $needHasCategories = [];
+        $needIds = [];
+
+        if (!empty($filters)){
+            if(count($filters['category']) > 0) {
+                $needIds = Categorizes::whereHasMorph(
+                    'categorize',
+                    ['App\Need'],
+                    function() {}
+                    )
+                    ->whereIn('category_id', $filters['category'])
+                    ->groupBy('categorize_id')
+                    ->pluck('categorize_id');
+            }
+        }
 
         $needs = Need::with([
                 'organization',
                 'type', 
                 'categories',
-                // 'categories',
-                // 'categories.model'
             ]);
+
+        if (count($needIds) > 0)
+            $needs->whereIn('id', $needIds);
 
         if (!empty($filters)){
             $needs->where('needs_type_id', $filters['type']);
             
             if ($filters['filterAmount']) 
                 $needs->where('goal', '<=', floatval($filters['amount']));
-
-            if(count($filters['category']) > 0){
-                //When query. don't make external query outside of "$needs" query builder. if you can, do a subquery or query by relationship like this. remove comment if you understand this part
-                $needs->whereHas('categories', fn($list) => $list->whereIn('categories.id', $filters['category']) );
-                // $needHasCategories = NeedHasCategory::where('model_type', 'App\NeedsCategory')
-                //     ->whereIn('model_id', $filters['category'])
-                //     ->pluck('need_id');
-                // $needs->whereIn('id', $needHasCategories);
-            }
         }
         
         $results = $needs->whereRaw('raised < goal')
-            ->orderBy('created_at', 'desc')
+            ->latest()
             ->paginate(10, ['*'], 'needs', $page);
 
         foreach ($results as $need) {
