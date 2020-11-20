@@ -8,10 +8,13 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Carbon\Carbon;
 
+use App\Helper\Traits\NeedPortalTrait;
+
 class Need extends Model implements HasMedia
 {
     use InteractsWithMedia;
     use SoftDeletes;
+    use NeedPortalTrait;
 
     protected $guarded = [];
 
@@ -47,6 +50,11 @@ class Need extends Model implements HasMedia
     public function organization()
     {
         return $this->belongsTo('App\Organization', 'organization_id');
+    }
+
+    public function campus()
+    {
+        return $this->belongsTo(Campus::class, CampusOrganization::class, 'organization_id', 'campus_id', 'organization_id', 'campus_id');
     }
 
     public function type()

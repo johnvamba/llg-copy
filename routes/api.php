@@ -25,7 +25,7 @@ Route::get('need/categories', 'NeedsCategoryController@index');
 
 Route::group(['middleware' => ['auth:api']], function () {
 
-    Route::group(['prefix'=>'web', 'namespace'=>'Admin'], function() {
+    Route::group(['prefix'=>'web', 'namespace'=>'Admin', 'middleware' => 'datafilter'], function() {
         Route::get('needs/types', 'NeedsController@types');
 
         Route::resource('needs', 'NeedsController');

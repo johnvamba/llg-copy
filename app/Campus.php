@@ -21,4 +21,8 @@ class Campus extends Model
     {
     	return $this->hasManyThrough(\App\User::class, \App\CampusUser::class);
     }
+
+    public function needs() {
+        return $this->hasManyThrough(\App\Need::class, \App\CampusOrganisation::class, 'campus_id', 'organization_id', 'id', 'organization_id');
+    }
 }
