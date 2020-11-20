@@ -346,7 +346,7 @@ td.actions, th.actions{
   position: relative;
   align-items: center;
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
 }
 .input-container .currency, .input-container .time-toggle{
 	margin: 0px;

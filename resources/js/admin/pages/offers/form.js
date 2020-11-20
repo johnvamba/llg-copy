@@ -119,7 +119,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
                     title: title == '' ? 'Missing title' : null,
                     desc: desc == '' ? 'Missing title' : null,
                     photo: photo == null ? 'Missing photo' : null,
-                    location: _.isEmpty(location)
+                    location: _.isEmpty(location) ? 'Missing location' : null
                 }
                 if(Object.values(set).filter(i=>i).length > 0){
                     setErrors({
