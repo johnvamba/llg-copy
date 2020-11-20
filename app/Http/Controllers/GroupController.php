@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use App\Http\Requests\GroupUpdateRequest;
 use App\Http\Requests\GroupStoreRequest;
@@ -12,6 +13,7 @@ use App\Group;
 use App\Goal;
 use App\Tag;
 use App\GroupChat;
+use App\Need;
 use App\NeedMet;
 use DB;
 use Carbon\Carbon;
@@ -80,36 +82,48 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getDiscoverGroups(Request $request)
+    public function getDiscoverGroups(Request $request, $page = 1)
     {
-        $groups = Group::with(['goals' => function($query) {
-                $query->where('status', 'in progress')
-                    ->orderBy('id', 'desc')
-                    ->first();
-            }])
-            ->where([
+        $groups = Group::where([
                 ['user_id', '!=', auth()->user()->id],
                 ['privacy', 'public']
             ])
-            ->inRandomOrder()
-            ->get();
+            ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($groups as $group) {
+            $group['goal'] = Goal::whereHasMorph(
+                    'model',
+                    ['App\Group'],
+                    function(Builder $query) use ($group) {
+                        $query->where('model_id', $group->id);
+                    }
+                )
+                ->where('status', 'in progress')
+                ->latest()
+                ->first();
+
+            $date = Carbon::parse($group['goal']->created_at);
+
             $participants = GroupParticipant::where([
                     ['group_id', $group->id],
                     ['status', 'approved'],
                 ])
                 ->pluck('user_id');
 
-            $group['need_mets_count'] = count($participants) > 0 
-                ? NeedMet::whereHasMorph(
+            $participants->push($group->user_id);
+
+            $group['need_mets_count'] = NeedMet::whereHasMorph(
                     'model',
-                        ['App\User'],
-                        function ($query) use ($participants) {
-                            $query->whereIn('model_id', $participants);
-                        }
-                    )->count()
-                : 0;
+                    ['App\User'],
+                    function ($query) use ($participants) {
+                        $query->whereIn('model_id', $participants);
+                    }
+                )
+                ->whereBetween('created_at', [
+                    $date->copy()->toDateString(),
+                    $date->copy()->endOfMonth()->toDateString()
+                ])
+                ->count();
 
             $group['members_count'] = GroupParticipant::where([
                     ['group_id', $group->id],
@@ -127,13 +141,24 @@ class GroupController extends Controller
      */
     public function getMyGroup(Request $request)
     {
-        $group = Group::with(['goals' => function($query) {
-                $query->where('status', 'in progress')
-                    ->orderBy('id', 'desc')
-                    ->first();
-            }])
-            ->where('user_id', auth()->user()->id)
+        $group = Group::where('user_id', auth()->user()->id)
             ->first();
+
+        if (!$group)
+            return response()->json($group);
+
+        $group['goal'] = Goal::whereHasMorph(
+                'model',
+                ['App\Group'],
+                function(Builder $query) use ($group) {
+                    $query->where('model_id', $group->id);
+                }
+            )
+            ->where('status', 'in progress')
+            ->latest()
+            ->first();
+
+        $date = Carbon::parse($group['goal']->created_at);
 
         if (!$group) {
             $participated = GroupParticipant::where([
@@ -156,15 +181,20 @@ class GroupController extends Controller
             ])
             ->pluck('user_id');
 
-        $group['need_mets_count'] = count($participants) > 0 
-            ? NeedMet::whereHasMorph(
+        $participants->push($group->user_id);
+
+        $group['need_mets_count'] = NeedMet::whereHasMorph(
                 'model',
-                    ['App\User'],
-                    function ($query) use ($participants) {
-                        $query->whereIn('model_id', $participants);
-                    }
-                )->count()
-            : 0;
+                ['App\User'],
+                function ($query) use ($participants) {
+                    $query->whereIn('model_id', $participants);
+                }
+            )
+            ->whereBetween('created_at', [
+                $date->copy()->toDateString(),
+                $date->copy()->endOfMonth()->toDateString()
+            ])
+            ->count();
 
         $group['members_count'] = GroupParticipant::where([
                 ['group_id', $group->id],
@@ -186,6 +216,7 @@ class GroupController extends Controller
     {
         $participants = GroupParticipant::with('user', 'user.profile')
             ->where('status', 'pending')
+            ->where('group_id', $group->id)
             ->get();
 
         return response()->json($participants, 200);
@@ -244,6 +275,8 @@ class GroupController extends Controller
                         ]), ["user_id" => auth()->user()->id]
                     )
                 );
+
+            $group->update(['link' => "neuma://group/$group->id"]);
             
             $goal = Goal::make([
                     'need' => 8,
@@ -364,7 +397,14 @@ class GroupController extends Controller
     public function joinRequest(Request $request, $id)
     {
         $participant = GroupParticipant::find($id);
-        $participant->update(request()->only(['status']));
+
+        if ($request->status == 'approved') {
+            $participant->update(request()->only(['status']));
+            
+            GroupParticipant::where('user_id', $participant->user_id)
+                ->where('status', 'pending')
+                ->delete();
+        }
 
         return response()->json($participant, 202);
     }
@@ -377,9 +417,66 @@ class GroupController extends Controller
      */
     public function show($id)
     {
-        $group = Group::with('user', 'participants', 'participants.user')
-            ->where('id', $id)->first();
-        $group->getMedia('photo');
+        $group = Group::with([
+                'user', 
+            ])
+            ->withCount(['requesting' => function(Builder $query) {
+                $query->where('status', 'pending');
+            }, 'participants' => function(Builder $query) {
+                $query->with('participants.user')
+                    ->where('status', 'approved');
+            }])
+            ->where('id', $id)
+            ->first();
+
+        $group['isJoined'] = GroupParticipant::where([
+                ['group_id', $group->id],
+                ['user_id', auth()->user()->id],
+                ['status', 'approved']
+            ])->count();
+
+        $group['goal'] = Goal::whereHasMorph(
+                'model',
+                ['App\Group'],
+                function (Builder $query) use ($group) {
+                    $query->where('model_id', $group->id);
+                }
+            )
+            ->where('status', 'in progress')
+            ->latest()
+            ->first();
+
+        $date = Carbon::parse($group['goal']->created_at);
+
+        $group->getMedia();
+        $group['photo'] = $group->getFirstMediaUrl('photo');
+
+        $group['requestings'] = GroupParticipant::where([
+            ['group_id', $group->id],
+            ['status', 'pending'],
+        ])
+        ->pluck('user_id');
+
+        $participants = GroupParticipant::where([
+                ['group_id', $group->id],
+                ['status', 'approved'],
+            ])
+            ->pluck('user_id');
+        
+        $participants->push($group->user_id);
+
+        $group['needs_met_count'] = NeedMet::whereHasMorph(
+                'model',
+                    ['App\User'],
+                    function ($query) use ($participants) {
+                        $query->whereIn('model_id', $participants);
+                    }
+                )
+                ->whereBetween('created_at', [
+                    $date->copy()->toDateString(),
+                    $date->copy()->endOfMonth()->toDateString(),
+                ])
+                ->count();
 
         return response()->json($group);
     }

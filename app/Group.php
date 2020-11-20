@@ -35,6 +35,11 @@ class Group extends Model implements HasMedia
     {
         return $this->hasMany('App\GroupParticipant');
     }
+    
+    public function requesting()
+    {
+        return $this->hasMany('App\GroupParticipant');
+    }
 
     /**
      * Set short description column value

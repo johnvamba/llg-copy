@@ -26,7 +26,7 @@ class Organization extends Model implements HasMedia
 
     public function categories()
     {
-        return $this->morphMany('App\OrganizationHasCategory', 'model');
+        return $this->categoriesList();
     }
 
     public function offers()
@@ -41,7 +41,7 @@ class Organization extends Model implements HasMedia
     
     public function categoriesList()
     {
-        return $this->morphedByMany("App\OrganizationCategory", "model", 'organization_has_categories');
+        return $this->morphToMany("App\Category", "categorize", 'categorizes');;
     }
 
     public function members()

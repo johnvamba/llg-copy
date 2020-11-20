@@ -22,9 +22,10 @@ class OrganizationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $page = 1)
     {
-        $orgs = Organization::orderBy('created_at', 'desc')->get();
+        $orgs = Organization::orderBy('created_at', 'desc')
+            ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($orgs as $org) {
             $org['photo'] = $org->getFirstMediaUrl('photo');
@@ -157,13 +158,15 @@ class OrganizationController extends Controller
                 $org->save();
 
                 if ($request->category) {
-                    foreach($request->category as $value) {
-                        $hasCategory = OrganizationHasCategory::make([
-                                'organization_category_id' => $value
-                            ]);
+                    // Check 
+                    $org->categories()->sync($request->category);
+                    // foreach($request->category as $value) {
+                    //     $hasCategory = OrganizationHasCategory::make([
+                    //             'organization_category_id' => $value
+                    //         ]);
                             
-                        $org->categories()->save($hasCategory);
-                    }
+                    //     $org->categories()->save($hasCategory);
+                    // }
                 }
 
                 if ($request->secretKey && $request->publishableKey) {
@@ -267,15 +270,17 @@ class OrganizationController extends Controller
             ]));
             
         if (gettype($request->category) === 'array') {
-            $organization->categories()->delete();
 
-            foreach($request->category as $value) {
-                $hasCategory = OrganizationHasCategory::make([
-                        'organization_category_id' => $value
-                    ]);
+            $organization->categories()->sync($request->category);
 
-                $organization->categories()->save($hasCategory);
-            }
+            // $organization->categories()->delete();
+            // foreach($request->category as $value) {
+            //     $hasCategory = OrganizationHasCategory::make([
+            //             'organization_category_id' => $value
+            //         ]);
+
+            //     $organization->categories()->save($hasCategory);
+            // }
         }
 
         if ($request->secretKey && $request->publishableKey) {

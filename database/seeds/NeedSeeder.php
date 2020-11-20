@@ -23,15 +23,19 @@ class NeedSeeder extends Seeder
 
                 $type = \App\NeedsType::get();
 
-                $needs = factory(\App\Need::class, 3)->create([
-                    // 'model_id' => $org->id,
-                    // 'model_type' => 'App\Organization',
-                    'organization_id' => $org->id,
-                    // 'needs_category_id' => $category->id,
-                    'needs_type_id' => $type->random()->id
-                ]);
-            }
+                for ($i=0; $i < 5 ; $i++) { 
+                    # code...
+                    $need = factory(\App\Need::class)->create([
+                        // 'model_id' => $org->id,
+                        // 'model_type' => 'App\Organization',
+                        'organization_id' => $org->id,
+                        // 'needs_category_id' => $category->id,
+                        'needs_type_id' => $type->random()->id
+                    ]);
 
+                    $need->categoryList()->sync($category->random(rand(1,3)));
+                }
+            }
         });
     }
 }

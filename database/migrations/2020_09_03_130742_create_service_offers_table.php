@@ -30,8 +30,8 @@ class CreateServiceOffersTable extends Migration
             $table->string('business_contact');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('service_type_id')->references('id')->on('service_types');
+            //Transfer to categories table
+            // $table->foreign('service_type_id')->references('id')->on('categories');
         });
     }
 

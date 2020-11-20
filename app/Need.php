@@ -39,7 +39,8 @@ class Need extends Model implements HasMedia
 
     public function categories()
     {
-        return $this->hasMany('App\NeedHasCategory', 'need_id');
+        //
+        return $this->categoriesList();
     }
 
     public function contribution()
@@ -64,7 +65,7 @@ class Need extends Model implements HasMedia
 
     public function categoriesList()
     {
-        return $this->morphedByMany("App\NeedsCategory", "model", 'need_has_categories');
+        return $this->morphToMany("App\Category", "categorize", 'categorizes');
     }
 
     /**
