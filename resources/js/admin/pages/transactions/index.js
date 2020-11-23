@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TransactionsHeader from './header';
 import TransactionsList from './list';
 import TransactionsForm from './form';
@@ -6,92 +6,298 @@ import TransactionsForm from './form';
 import './transactions.css';
 
 const Transactions = () => {
-    const [showAdd, setShowAdd] = useState(false);
-    const [showEdit, setShowEdit] = useState(false);
+    const [showForm, setShowForm] = useState(false);
+    const [focus, setFocus] = useState({});
     const [isChecked, setIsChecked] = useState(false);
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
     const [organisations, setOrganisations] = useState(
-        {
-            data: [
-                {
-                    id: 1,
-                    title: "Organisation 01",
-                    giversName: "Jane Doe",
-                    email: "janedoe@gmail.com",
-                    phoneNumber: "(02) 9876 5432",
-                    amount: "100.00",
-                    date: "08/27/2020",
-                },
-                {
-                    id: 2,
-                    title: "Organisation 02",
-                    giversName: "Jane Doe",
-                    email: "janedoe@gmail.com",
-                    phoneNumber: "(02) 9876 5432",
-                    amount: "100.00",
-                    date: "08/27/2020",
-                },
-                {
-                    id: 3,
-                    title: "Organisation 03",
-                    giversName: "Jane Doe",
-                    email: "janedoe@gmail.com",
-                    phoneNumber: "(02) 9876 5432",
-                    amount: "100.00",
-                    date: "08/27/2020",
-                },
-                {
-                    id: 4,
-                    title: "Organisation 04",
-                    giversName: "Jane Doe",
-                    email: "janedoe@gmail.com",
-                    phoneNumber: "(02) 9876 5432",
-                    amount: "100.00",
-                    date: "08/27/2020",
-                },
-                {
-                    id: 5,
-                    title: "Organisation 05",
-                    giversName: "Jane Doe",
-                    email: "janedoe@gmail.com",
-                    phoneNumber: "(02) 9876 5432",
-                    amount: "100.00",
-                    date: "08/27/2020",
-                },
-                {
-                    id: 6,
-                    title: "Organisation 06",
-                    giversName: "Jane Doe",
-                    email: "janedoe@gmail.com",
-                    phoneNumber: "(02) 9876 5432",
-                    amount: "100.00",
-                    date: "08/27/2020",
-                },
-            ]
-        }
+        [
+            {
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },{
+                id: 1,
+                title: "Organisation 01",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            },
+            {
+                id: 2,
+                title: "Organisation 02",
+                giversName: "Jane Doe",
+                email: "janedoe@gmail.com",
+                phoneNumber: "(02) 9876 5432",
+                amount: "100.00",
+                date: "08/27/2020",
+            }
+        ]
     )
+    useEffect(() => {
+        setLoading(true)
+        // loadTransactions()
+    }, [page])
 
     const checkedAll = (e) => {
         setIsChecked(!isChecked);
-        const data = organisations.data.map(obj => {
+        const data = organisations.map(obj => {
                 obj.checked = !isChecked;
                 return obj;
             }
         )
-        setOrganisations({...organisations},{data : data});
+        setOrganisations(data);
     }
 
     const handleRowCheckbox = (row,input) => {
         setIsChecked(false);
         row.checked = input;
-        const data = organisations.data.map(obj => obj.id == row.id ? row : obj);
-        setOrganisations({...organisations},{data : data});
+        const data = organisations.map(obj => obj.id == row.id ? row : obj);
+        setOrganisations(data);
     }
 
     const handleRowActive = (row) => {
         if (showAdd) setShowAdd(false);
         setShowEdit(true);
         row.active = 'active';
-        const data = organisations.data.map(obj => {
+        const data = organisations.map(obj => {
                 if(obj.id == row.id) return row;
                 else{
                     obj.active = 'non-active'
@@ -99,32 +305,58 @@ const Transactions = () => {
                 }
             }
         );
-        setOrganisations({...organisations},{data : data});
+        setOrganisations(data);
     }
 
-    const handleCloseForm = () => {
-        setShowAdd(false);
-        setShowEdit(false);
+    const loadTransactions = (clearCache = false)=>{
+        const addFilter = {}; //for redux values
+        const token = axios.CancelToken.source();
+        if(!loading){
+            api.get(`/api/web/transacts`, {
+                params: {
+                    page, ...addFilter
+                },
+                cache: {
+                    exclude: { query: false },
+                }, 
+                clearCacheEntry: clearCache,
+                cancelToken: token.token
+            }).then((res)=>{
+                const { data } = res
+                setOrganisations(data.data)
+            }).finally(()=>{
+                setLoading(false)
+            })
+        }
+        return token; //for useEffect
+    }
+
+    const handleForm = (data = {}, showForm = false) => {
+        setFocus(data)
+        setShowForm(showForm)
+    }
+
+    const afterSubmit = () => {
+        setLoading(true)
+        loadTransactions(true)
     }
 
     return (
-        <>
-            <section>
-                <TransactionsHeader closeForm={setShowAdd} />
-                <TransactionsList
-                    state={organisations}
-                    checkedAll={checkedAll}
-                    handleRowCheckbox={handleRowCheckbox}
-                    handleRowActive={handleRowActive}
-                    showEdit={showEdit}
-                    isChecked={isChecked}
-                />
-                {
-                    (showAdd || showEdit) &&
-                        <TransactionsForm closeForm={handleCloseForm} activeForm={showAdd ? 'Add' : 'Edit'} />
-                }
-            </section>
-        </>
+        <section>
+            <TransactionsHeader handleForm={handleForm} />
+            <TransactionsList
+                set={organisations}
+                checkedAll={checkedAll}
+                handleRowCheckbox={handleRowCheckbox}
+                handleRowActive={handleRowActive}
+                isChecked={isChecked}
+                handleForm={handleForm}
+            />
+            {
+                showForm &&
+                <TransactionsForm data={focus} afterSubmit={afterSubmit} handleForm={handleForm}/>
+            }
+        </section>
     )
 }
 

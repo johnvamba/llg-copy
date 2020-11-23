@@ -88,6 +88,7 @@ class OffersController extends Controller
             if ($image = $request->get('photo')) {
                 $name = time().'-'.Str::random(20);
                 $extension = explode('/', mime_content_type($image))[1];
+                dd($image,$name,$extension);
                 
                 $offer 
                     ->addMediaFromBase64($image)

@@ -153,12 +153,12 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         const submitPromise = !data.id ? 
             api.post(`/api/web/needs`, {
                 title, type, category, goal, date, openDate, time, location, organization,
-                photo: files.length > 0 ? photo : null,
+                photo,//files.length > 0 ? photo : null,
                 description: about || bring || ''
             }) : 
             api.patch(`/api/web/needs/${data.id}`, { 
                 title, type, category, goal, date, openDate, time, location, organization,
-                photo: files.length > 0 ? photo : null,
+                photo,//files.length > 0 ? photo : null,
                 description: about || bring || ''
             })
 

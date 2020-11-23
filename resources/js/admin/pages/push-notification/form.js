@@ -1,15 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import OffersFormCross from '../../../svg/offers-form-cross';
 import Calendar from '../../../svg/calendar';
 import DatePicker from "react-datepicker";
 
 
-const PushForm = ({ activeForm, handleCloseForm }) =>{
-
-    const [toggleSched, setToggleSched] = useState('send now');
+const PushForm = ({ data={}, activeForm, handleForm }) =>{
+    const [toggleSched, setToggleSched] = useState('now');
     const [meridiem, setMeridiem] = useState('AM');
     const [startDate, setStartDate] = useState(new Date());
-
     // enable to open datapicker when clicking calendar icon
     const calendarRef = useRef();
 
@@ -22,6 +20,13 @@ const PushForm = ({ activeForm, handleCloseForm }) =>{
         title: 'Missing Title',
         message: 'Missing Message'
     }
+
+    useEffect(() => {
+        if(data.id) {
+            const { title, message } = data
+            setFields({title, message});
+        }
+    }, [data])
 
     const handleInputChange = (e) => {
         setFieldErrors({...fieldErrors, [e.target.name] : '' });
@@ -40,92 +45,99 @@ const PushForm = ({ activeForm, handleCloseForm }) =>{
     }
 
     const handleSubmit = () => {
-        if(validateForm()) console.log('success');
+        if(validateForm()) 
+        {
+
+        }
+    }
+
+    const onClear = () => {
+        handleForm();
     }
 
     return(
-        <>
-            <section className="push-form create-form">
-                <header className="create-story__header">
-                    <h2>{activeForm} Push Notification</h2>
-                    <button type="button" onClick={handleCloseForm}>
-                        <OffersFormCross />
-                    </button>
-                </header>
-                <section className="push-form__body">
-                    <form>
-                        <div className="w-full xl:w-full">
-                            <div className={`form-group form-input-text ${fieldErrors.title ? 'has-error' : ''}`}>
-                                <label>Title</label>
-                                <input
-                                    className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
-                                    type="text"
-                                    placeholder="Enter Title"
-                                    name="title"
-                                    onChange={handleInputChange}
-                                />
-                            </div>
-                            <span className="input-error-msg">{fieldErrors.title}</span>
+        <section className="push-form create-form">
+            <header className="create-story__header">
+                <h2>{activeForm} Push Notification</h2>
+                <button type="button" onClick={handleForm}>
+                    <OffersFormCross />
+                </button>
+            </header>
+            <section className="push-form__body">
+                <form>
+                    <div className="w-full xl:w-full">
+                        <div className={`form-group ${fieldErrors.title ? 'has-error' : ''}`}>
+                            <label>Title</label>
+                            <input
+                                className="input-field"
+                                type="text"
+                                placeholder="Enter Title"
+                                name="title"
+                                value={fields.title || ''}
+                                onChange={handleInputChange}
+                            />
                         </div>
-                        <div className="w-full xl:w-full">
-                            <div className={`form-group form-group-textarea ${fieldErrors.message ? 'has-error' : ''}`}>
-                                <label>Notification</label>
-                                <textarea
-                                    type="text"
-                                    placeholder="Enter Message"
-                                    rows="3"
-                                    name="message"
-                                    onChange={handleInputChange}
-                                >
-                                </textarea>
-                            </div>
-                            <span className="txtarea-field input-error-msg">{fieldErrors.message}</span>
+                        <span className="input-error-msg">{fieldErrors.title}</span>
+                    </div>
+                    <div className="w-full xl:w-full">
+                        <div className={`form-group form-group-textarea ${fieldErrors.message ? 'has-error' : ''}`}>
+                            <label>Notification</label>
+                            <textarea
+                                type="text"
+                                placeholder="Enter Message"
+                                rows="3"
+                                value={fields.message || ''}
+                                name="message"
+                                onChange={handleInputChange}
+                            >
+                            </textarea>
                         </div>
-                        <div className="toggle-sched">
-                            <label>Schedule</label>
-                            <div className="toggle-sched__container">
-                                <span className={toggleSched == 'send now' ? 'active' : null} onClick={() => setToggleSched('send now')}>Send Now</span>
-                                <span className={toggleSched == 'send later' ? 'active' : null} onClick={() => setToggleSched('send later')}>Send Later</span>
-                            </div>
+                        <span className="txtarea-field input-error-msg">{fieldErrors.message}</span>
+                    </div>
+                    <div className="toggle-sched">
+                        <label>Schedule</label>
+                        <div className="toggle-sched__container">
+                            <span className={toggleSched == 'now' ? 'active' : null} onClick={() => setToggleSched('now')}>Send Now</span>
+                            <span className={toggleSched == 'later' ? 'active' : null} onClick={() => setToggleSched('later')}>Send Later</span>
                         </div>
-                        {
-                            activeForm === 'Edit' &&
-                                <div className="flex justify-between flex-wrap -mx-2">
-                                    <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
-                                        <div className="form-group form-input-text">
-                                            <label>Date</label>
-                                            <div className="flex items-center">
-                                                <DatePicker ref={calendarRef} selected={startDate} onChange={date => setStartDate(date)} />
-                                                <i className="cursor-pointer" onClick={() => {calendarRef.current.setOpen(true)}}>
-                                                    <Calendar/>
-                                                </i>
-                                            </div>
-                                        </div>
+                    </div>
+                    {
+                        data.id &&
+                        <div className="flex justify-between flex-wrap -mx-2">
+                            <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
+                                <div className="form-group form-input-text">
+                                    <label>Date</label>
+                                    <div className="flex items-center">
+                                        <DatePicker ref={calendarRef} selected={startDate} onChange={date => setStartDate(date)} />
+                                        <i className="cursor-pointer" onClick={() => {calendarRef.current.setOpen(true)}}>
+                                            <Calendar/>
+                                        </i>
                                     </div>
-                                    <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
-                                        <div className="form-group form-input-text">
-                                            <label>Time</label>
-                                            <div className="flex items-center justify-between">
-                                                <input className="outline-none" type="time" />
-                                                <div className="push-form__meridiem">
-                                                    <span className={meridiem === 'AM' ? 'active' : null} onClick={() => setMeridiem('AM')}>AM</span>
-                                                    <span className={meridiem === 'PM' ? 'active' : null} onClick={() => setMeridiem('PM')}>PM</span>
-                                                </div>
-                                            </div>
+                                </div>
+                            </div>
+                            <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
+                                <div className="form-group form-input-text">
+                                    <label>Time</label>
+                                    <div className="flex items-center justify-between">
+                                        <input className="outline-none" type="time" />
+                                        <div className="push-form__meridiem">
+                                            <span className={meridiem === 'AM' ? 'active' : null} onClick={() => setMeridiem('AM')}>AM</span>
+                                            <span className={meridiem === 'PM' ? 'active' : null} onClick={() => setMeridiem('PM')}>PM</span>
                                         </div>
                                     </div>
                                 </div>
-                        }
-                    </form>
-                </section>
-                <footer className="org-form__footer">
-                    <div className="flex">
-                        <button className="discard" onClick={handleCloseForm}>Discard</button>
-                        <button className="next" onClick={handleSubmit}>Add</button>
-                    </div>
-                </footer>
+                            </div>
+                        </div>
+                    }
+                </form>
             </section>
-        </>
+            <footer className="org-form__footer">
+                <div className="flex">
+                    <button className="discard" onClick={onClear}>Discard</button>
+                    <button className="next" onClick={handleSubmit}>Add</button>
+                </div>
+            </footer>
+        </section>
     )
 }
 

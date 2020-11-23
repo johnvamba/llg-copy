@@ -170,7 +170,7 @@ class NeedsController extends Controller
                     ->addMediaFromBase64($image)
                     ->usingName($name)
                     ->usingFileName($name.'.'.$extension)
-                    ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
+                    ->toMediaCollection('photo');
 
                 $need->getMedia('photo');
             }
@@ -217,7 +217,88 @@ class NeedsController extends Controller
      */
     public function update(Request $request, Need $need)
     {
-        //
+        $request->validate([
+            'title' => 'required|string',
+            'category' => 'required',
+            'type'  => 'required',
+            'goal' => 'required',
+            'description' => 'required',
+            // 'time'=> 'exclude_if:type,volunteer|required',
+            // 'date'=> 'exclude_if:type,volunteer|required'
+        ]);
+        //->sometimes(['time', 'date'], 'required', fn($field) => $field == 'volunteer');
+
+        DB::beginTransaction();
+        try {
+            $type = NeedsType::where('name', ucfirst( $request->get('type') ) )->firstOrFail();
+
+            if($org = $request->get('organization')) {
+                $organization = Organization::findOrFail($org['id'] ?? 0);
+            } else {
+                //Query user under what organization here instead
+                $organization = Organization::first();
+            }
+
+            $location = $request->get('location');
+
+            $need->fill(
+                [   //attach references. type and organization
+                    'needs_type_id' => $type->id,
+                    'organization_id' => $organization->id
+                ] + //Add other settings 
+                $request->only([
+                    'needs_type_id',
+                    'title',
+                    'raised',
+                    'goal',
+                    'description'
+                ]) +
+                //dynamic details
+                [
+                    'short_description' => $request->get('description') ?? 'No description',
+                    'location' =>$location['formatted_address'] ?? null,
+                    'lat' => $location['lat'] ?? null,
+                    'lng' => $location['lng'] ?? null,
+                ]
+            );
+
+            if($catlist = $request->get('category')){
+                $catlist = array_map(fn($i) => $i['id'] ?? $i['name'] ?? null, $catlist);
+                $categories = NeedsCategory::whereIn('name', $catlist)
+                    ->orWhereIn('id', $catlist)
+                    ->get();
+                // dd($catlist, $categories);
+                //Technically this is not how you do it.
+                foreach ($categories as $key => $value) {
+                    $hasCategory = NeedHasCategory::make([
+                        'need_id' => $need->id
+                    ]);
+                            
+                    $value->category()->save($hasCategory);
+                }
+            }
+            //We can do better pd diri.
+            if ( ($image = $request->get('photo')) && !preg_match('^http', $image) ) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($image))[1];
+                
+                $need 
+                    ->addMediaFromBase64($image)
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('photo');
+
+                $need->getMedia('photo');
+            }
+
+            $need->save();
+            DB::commit(); //commit to db
+            $need->loadMissing('type', 'media', 'organization');
+            return new NeedResource($need);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error'=> $e->getMessage()], 400);
+        }
     }
 
     /**

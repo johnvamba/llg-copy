@@ -49,6 +49,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::resource('stories', 'StoryController');
 
         Route::resource('groups', 'GroupController');
+
+        Route::resource('transacts', 'TransactionController');
     });
 
     /** Role resource module */
