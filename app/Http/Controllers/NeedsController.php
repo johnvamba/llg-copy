@@ -8,7 +8,8 @@ use App\Http\Requests\NeedsUpdateRequest;
 use Illuminate\Http\Request;
 use App\Organization;
 use App\NeedsCategory;
-use App\NeedHasCategory;
+use App\Categorizes;
+// use App\NeedHasCategory;
 use App\Need;
 use App\NeedMet;
 use App\Tag;
@@ -25,36 +26,46 @@ class NeedsController extends Controller
     {
         $filters = $request->filters;
 
-        $needHasCategories = [];
+        $needIds = [];
+
+        if (!empty($filters)){
+            if(count($filters['category']) > 0) {
+                $needIds = Categorizes::whereHasMorph(
+                    'categorize',
+                    ['App\Need'],
+                    function() {}
+                    )
+                    ->whereIn('category_id', $filters['category'])
+                    ->groupBy('categorize_id')
+                    ->pluck('categorize_id');
+            }
+        }
 
         $needs = Need::with([
                 'organization',
                 'type', 
                 'categories',
-                'categories.model'
             ]);
+
+        if (count($needIds) > 0)
+            $needs->whereIn('id', $needIds);
 
         if (!empty($filters)){
             $needs->where('needs_type_id', $filters['type']);
             
             if ($filters['filterAmount']) 
                 $needs->where('goal', '<=', floatval($filters['amount']));
-
-            if(count($filters['category']) > 0){
-                $needHasCategories = NeedHasCategory::where('model_type', 'App\NeedsCategory')
-                    ->whereIn('model_id', $filters['category'])
-                    ->pluck('need_id');
-                $needs->whereIn('id', $needHasCategories);
-            }
         }
         
         $results = $needs->whereRaw('raised < goal')
-            ->orderBy('created_at', 'desc')
+            ->latest()
             ->paginate(10, ['*'], 'needs', $page);
 
         foreach ($results as $need) {
             $need->model;
             $need->getMedia('photo');
+
+            $need->categories = $need->categoriesList; //reset?
 
             $need['photo'] = $need->organization->getFirstMediaUrl('photo');
             $need['cover_photo'] = $need->organization->getFirstMediaUrl('cover_photo');
@@ -93,7 +104,7 @@ class NeedsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getOrganizationNeeds(Request $request, Organization $organization)
+    public function getOrganizationNeeds(Request $request, Organization $organization, $page = 1)
     {
         $needs = Need::with('type')
             ->where('organization_id', $organization->id);
@@ -109,7 +120,7 @@ class NeedsController extends Controller
                 break;
         }
     
-        $results = $needs->get();
+        $results = $needs->paginate(10, ['*'], 'organization_needs', $page);
 
         foreach($results as $result) {
            $result['photo'] = $result->getFirstMediaUrl('photo');
@@ -254,15 +265,17 @@ class NeedsController extends Controller
                 $need->save();
 
                 if ($request->category) {
-                    foreach($request->category as $value) {
-                        $fetchCategory = NeedsCategory::find($value);
+                    //assuming that request->category are array of ids from categories. then just sync. we dont need to query each one if existed.
+                    $need->categoriesList()->sync($request->category);
+                    // foreach($request->category as $value) {
+                    //     $fetchCategory = NeedsCategory::find($value);
 
-                        $hasCategory = NeedHasCategory::make([
-                                'need_id' => $need->id
-                            ]);
+                    //     $hasCategory = NeedHasCategory::make([
+                    //             'need_id' => $need->id
+                    //         ]);
                             
-                        $fetchCategory->category()->save($hasCategory);
-                    }
+                    //     $fetchCategory->category()->save($hasCategory);
+                    // }
                 }
 
                 if ($request->tags) {
@@ -323,15 +336,16 @@ class NeedsController extends Controller
             ]));
 
         if (gettype($request->category) === 'array') {
-            $need->categories()->delete();
-            
-            foreach($request->category as $value) {
-                $hasCategory = NeedHasCategory::make([
-                        'needs_category_id' => $value
-                    ]);
+            //Same as above but we don't need to categories()->delete(); might be a smart way but this actually delete the relationship instances meaning if the categories() are direct instance of categories table then those categories are deleted instead. do sync instead.
+            $need->categoriesList()->sync($request->category);
+            // $need->categories()->delete();
+            // foreach($request->category as $value) {
+            //     $hasCategory = NeedHasCategory::make([
+            //             'needs_category_id' => $value
+            //         ]);
                     
-                $need->categories()->save($hasCategory);
-            }
+            //     $need->categories()->save($hasCategory);
+            // }
         }
 
         return response()->json($need, 202);

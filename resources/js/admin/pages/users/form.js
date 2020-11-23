@@ -3,7 +3,7 @@ import OffersFormCross from '../../../svg/offers-form-cross';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 import { selectStylePaddingZero, loadOrganization } from '../../../components/helpers/async_options';
-import { validateEmail } from '../../../components/helpers/validator';
+import { validateEmail, isValidated } from '../../../components/helpers/validator';
 import { swalError } from '../../../components/helpers/alerts';
 
 import AsyncSelect from 'react-select/async';
@@ -27,7 +27,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
 
     const [loading, setLoading] = useState(false)
     const [photo, setPhoto] = useState('');
-    const [type, setType] = useState({ value: 'app user', label: 'App User'});
+    const [type, setType] = useState({ value: 'user', label: 'App User'});
     const [organization, setOrganization] = useState({});
     const [errors, setErrors] = useState({});
 
@@ -87,16 +87,16 @@ const UsersForm = ({ data, showItem, handleForm }) => {
 
     const validateSubmit = (e) => {
         const { firstName, lastName, email, age, bio } = form
-        const set = {
+        const set = isValidated({
             firstName: firstName == '' ? "Missing first name" : null,
             lastName: lastName == '' ? "Missing last name" : null,
             email: !validateEmail(email) ? "Proper email required" : null,
-            age: age <= 0 || !(typeof age == 'number') ? "Age not recognized" : null,
+            age: age <= 0 ? "Age not recognized" : null,
             bio: bio == '' ? 'Missing bio content' : null,
-            photo: !photo ? 'Missing photo' : null,
+            // photo: !photo ? 'Missing photo' : null,
             type: _.isEmpty(type) ? "Missing type" : null,
             organization: _.isEmpty(organization) ? "Missing organization" : null,
-        }
+        })
         setErrors({...set})
         return set;
     }
@@ -112,7 +112,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
             }
             const submitPromise = !data.id ? 
                 api.post(`/api/web/users`, params) : 
-                api.update(`/api/web/users/${data.id}`, { params })
+                api.patch(`/api/web/users/${data.id}`, params )
 
             submitPromise.then(({data})=>{
                 setSubmitting(false)
@@ -125,6 +125,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                 setSubmitting(false)
             })
         } else {
+            console.log('Errorlist', set)
             swalError('Invalid field content')
         }
     }
@@ -292,9 +293,9 @@ const UsersForm = ({ data, showItem, handleForm }) => {
             </div>
             <footer className="offers-edit-opt">
                 <div className="offers-edit-opt__container flex">
-                    <button className="discard" onClick={reset}>Discard</button>
+                    <button className="discard" onClick={reset} disabled={submitting}>Discard</button>
                     <div>
-                        <button className="next" onClick={attemptSubmit}>{label == 'Add User' ? 'Add' : 'Update' }</button>
+                        <button className="next" onClick={attemptSubmit} disabled={submitting}>{submitting ? 'Submitting' : (label == 'Add User' ? 'Add' : 'Update' ) }</button>
                     </div>
                 </div>
             </footer>

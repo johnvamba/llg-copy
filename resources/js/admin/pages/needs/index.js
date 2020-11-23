@@ -15,7 +15,7 @@ import './needs.css';
 import NeedForm from './form'
 import NeedTable from './table'
 import NeedInfo from './info'
-
+import StoriesForm from '../stories/form'
 import { CancelToken } from 'axios'
 
 const Needs = ({NeedsReducer}) => {
@@ -138,8 +138,8 @@ const Needs = ({NeedsReducer}) => {
                 <NeedInfo toClose={e=>setInfo(null)} clickEdit={openForm} data={info}/>
             }
             {
-                //story && //Open story here
-
+                story && //Open story here
+                <StoriesForm setState={()=>{}} setShowViewStory={()=>{}}/>
             }
         </>
     )

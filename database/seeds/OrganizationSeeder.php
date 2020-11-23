@@ -39,7 +39,7 @@ class OrganizationSeeder extends Seeder
 	    		]);
 
 	        	$categories = OrganizationCategory::inRandomOrder()->take(rand(1,2))->get();
-
+	        	//Change this later
         		$categories->each(function($cat) use ($org){
         			OrganizationHasCategory::create([
         				'organization_category_id' => $cat->id,

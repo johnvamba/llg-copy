@@ -1,0 +1,153 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Resources\GroupResource;
+use App\Group;
+
+use DB;
+
+class GroupController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $group = Group::withCount('participants')->withGoalRatio()->latest();
+
+        return GroupResource::collection($group->paginate());
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    public function inviteUser()
+    {
+
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'location' => 'required',
+            'privacy' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
+            'goal' => 'required',
+        ]);
+        DB::beginTransaction();
+        try {
+            $group = Group::create( 
+                $request->only('name','description','location','privacy','lat','lng') 
+                + [
+                    'user_id' => (auth()->user())->id,
+                    'short_description' => substr($request->description, 0, 100)
+                ]
+            );
+            DB::commit();
+            return new GroupResource($group);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  Group $group
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Group $group)
+    {
+        //load other parts here
+        return new GroupResource($group);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  Group $group
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Group $group)
+    {
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  Group $group
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Group $group)
+    {
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'location' => 'required',
+            'privacy' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
+            'goal' => 'required',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $group->fill( 
+                $request->only('name','description','location','privacy','lat','lng') 
+                + [
+                    'user_id' => (auth()->user())->id,
+                    'short_description' => substr($request->description, 0, 100)
+                ]
+            );
+
+            $group->save();
+            DB::commit();
+            return new GroupResource($group);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  Group $group
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Group $group)
+    {
+        DB::beginTransaction();
+        try {
+            $group->delete();
+            DB::commit();
+            return response()->json('Removed', 204);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+}

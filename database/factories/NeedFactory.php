@@ -13,8 +13,8 @@ $factory->define(Need::class, function (Faker $faker) {
         'location' => $faker->address,
         'lat' => $faker->latitude,
         'lng' => $faker->longitude,
-        'raised' => rand(0, 100),
-        'goal' => 100.00,
+        'raised' => rand(50, 150),
+        'goal' => rand(0, 100),
         'needs_type_id' => \optional(NeedsType::all()->random())->id,
     ];
 });

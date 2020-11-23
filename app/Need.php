@@ -8,10 +8,13 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Carbon\Carbon;
 
+use App\Helper\Traits\NeedPortalTrait;
+
 class Need extends Model implements HasMedia
 {
     use InteractsWithMedia;
     use SoftDeletes;
+    use NeedPortalTrait;
 
     protected $guarded = [];
 
@@ -36,7 +39,8 @@ class Need extends Model implements HasMedia
 
     public function categories()
     {
-        return $this->hasMany('App\NeedHasCategory', 'need_id');
+        //
+        return $this->categoriesList();
     }
 
     public function contribution()
@@ -49,6 +53,11 @@ class Need extends Model implements HasMedia
         return $this->belongsTo('App\Organization', 'organization_id');
     }
 
+    public function campus()
+    {
+        return $this->belongsTo(Campus::class, CampusOrganization::class, 'organization_id', 'campus_id', 'organization_id', 'campus_id');
+    }
+
     public function type()
     {
         return $this->belongsTo('App\NeedsType', 'needs_type_id');
@@ -56,7 +65,7 @@ class Need extends Model implements HasMedia
 
     public function categoriesList()
     {
-        return $this->morphedByMany("App\NeedsCategory", "model", 'need_has_categories');
+        return $this->morphToMany("App\Category", "categorize", 'categorizes');
     }
 
     /**

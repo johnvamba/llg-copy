@@ -29,16 +29,16 @@ class NeedsCategorySeeder extends Seeder
     public function run()
     {
         //Monetary
-        \App\NeedsCategory::create(['name' => 'Housing', 'icon' => 'Housing.png']);
-        \App\NeedsCategory::create(['name' => 'Food', 'icon' => 'Food.png']);
-        \App\NeedsCategory::create(['name' => 'Everyday Things', 'icon' => 'Everyday.png']);
-        \App\NeedsCategory::create(['name' => 'Domestic & Family Violence', 'icon' => 'Violence.png']);
-        \App\NeedsCategory::create(['name' => 'Health', 'icon' => 'Health.png']);
-        \App\NeedsCategory::create(['name' => 'Mental Health', 'icon' => 'MentalHealth.png']);
-        \App\NeedsCategory::create(['name' => 'Education', 'icon' => 'Education.png']);
-        \App\NeedsCategory::create(['name' => 'Advocacy', 'icon' => 'Advocacy.png']);
-        \App\NeedsCategory::create(['name' => 'Children', 'icon' => 'Children.png']);
-        \App\NeedsCategory::create(['name' => 'Youth', 'icon' => 'Youth.png']);
+        \App\NeedsCategory::create(['name' => 'Housing', 'icon' => env('APP_URL').'/assets/icons/Housing.png']);
+        \App\NeedsCategory::create(['name' => 'Food', 'icon' => env('APP_URL').'/assets/icons/Food.png']);
+        \App\NeedsCategory::create(['name' => 'Everyday Things', 'icon' => env('APP_URL').'/assets/icons/Everyday.png']);
+        \App\NeedsCategory::create(['name' => 'Domestic & Family Violence', 'icon' => env('APP_URL').'/assets/icons/Violence.png']);
+        \App\NeedsCategory::create(['name' => 'Health', 'icon' => env('APP_URL').'/assets/icons/Health.png']);
+        \App\NeedsCategory::create(['name' => 'Mental Health', 'icon' => env('APP_URL').'/assets/icons/MentalHealth.png']);
+        \App\NeedsCategory::create(['name' => 'Education', 'icon' => env('APP_URL').'/assets/icons/Education.png']);
+        \App\NeedsCategory::create(['name' => 'Advocacy', 'icon' => env('APP_URL').'/assets/icons/Advocacy.png']);
+        \App\NeedsCategory::create(['name' => 'Children', 'icon' => env('APP_URL').'/assets/icons/Children.png']);
+        \App\NeedsCategory::create(['name' => 'Youth', 'icon' => env('APP_URL').'/assets/icons/Youth.png']);
 
         foreach ($this->volunteering as $key => $value) {
             \App\NeedsCategory::firstOrCreate($value + ['type' => 'volunteer']);

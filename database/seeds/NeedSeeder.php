@@ -13,19 +13,29 @@ class NeedSeeder extends Seeder
     public function run()
     {   
         DB::transaction(function () {
-            $org = factory(\App\Organization::class)->create();
+            // $org = factory(\App\Organization::class)->create();
+            // $category = factory(\App\NeedsCategory::class)->create();
+            for ($i=0; $i < 3; $i++) { 
+                # code...
+                $org = \App\Organization::inRandomOrder()->first();
+                //Change this
+                $category = \App\NeedsCategory::inRandomOrder()->first();
 
-            $category = factory(\App\NeedsCategory::class)->create();
+                $type = \App\NeedsType::get();
 
-            $type = \App\NeedsType::get();
+                for ($i=0; $i < 5 ; $i++) { 
+                    # code...
+                    $need = factory(\App\Need::class)->create([
+                        // 'model_id' => $org->id,
+                        // 'model_type' => 'App\Organization',
+                        'organization_id' => $org->id,
+                        // 'needs_category_id' => $category->id,
+                        'needs_type_id' => $type->random()->id
+                    ]);
 
-            $needs = factory(\App\Need::class, 15)->create([
-                // 'model_id' => $org->id,
-                // 'model_type' => 'App\Organization',
-                'organization_id' => $org->id,
-                // 'needs_category_id' => $category->id,
-                'needs_type_id' => $type->random()->id
-            ]);
+                    $need->categoryList()->sync($category->random(rand(1,3)));
+                }
+            }
         });
     }
 }

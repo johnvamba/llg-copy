@@ -17,16 +17,16 @@ const ReceiptTemplate = () => {
                     <div className="flex flex-1">
                         <h1>Receipt Template</h1>
                     </div>
-                    <div className="flex flex-1 justify-end">
+                   {/* <div className="flex flex-1 justify-end">
                         <button className="flex rounded-sm" onClick={() => setAddTemplate(true)}>
                             <OffersPlus />
                             <span>Add Template</span>
                         </button>
-                    </div>
+                    </div>*/}
                 </header>
                 <section className="r-template__body">
-                    {/* <TemplateForm /> */}
-                    <ReceiptList />
+                    <TemplateForm />
+                    {/*<ReceiptList />*/}
                     {
                         // addTemplate && <ReceiptTemplateV2 />
                         // addTemplate && <TemplateForm1 />

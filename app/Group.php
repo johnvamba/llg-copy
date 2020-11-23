@@ -35,6 +35,11 @@ class Group extends Model implements HasMedia
     {
         return $this->hasMany('App\GroupParticipant');
     }
+    
+    public function requesting()
+    {
+        return $this->hasMany('App\GroupParticipant');
+    }
 
     /**
      * Set short description column value
@@ -42,5 +47,15 @@ class Group extends Model implements HasMedia
     public function setShortDescriptionAttribute($value)
     {
         $this->attributes['short_description'] = substr($value, 0, 40).'...';
+    }
+
+    /*
+        //Magic queries
+    */
+    public static function scopeWithGoalRatio($query)
+    {
+        return $query->withCount(['goals as goals_acheived'=>function($goalQuery) {
+            $goalQuery->where('status', 'acheived');
+        }, 'goals']);
     }
 }

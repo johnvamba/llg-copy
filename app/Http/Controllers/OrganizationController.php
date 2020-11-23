@@ -9,6 +9,7 @@ use App\Http\Requests\OrganizationUpdateRequest;
 use App\Http\Requests\OrganizationStoreRequest;
 use Illuminate\Http\Request;
 use App\Need;
+use App\Group;
 use App\Organization;
 use App\OrganizationCredential;
 use App\OrganizationHasCategory;
@@ -21,9 +22,10 @@ class OrganizationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $page = 1)
     {
-        $orgs = Organization::orderBy('created_at', 'desc')->get();
+        $orgs = Organization::orderBy('created_at', 'desc')
+            ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($orgs as $org) {
             $org['photo'] = $org->getFirstMediaUrl('photo');
@@ -67,6 +69,34 @@ class OrganizationController extends Controller
     }
 
     /**
+     * Get featured organizations
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getFeaturedOrganizations(Request $request)
+    {
+        $orgs = Organization::where('featured', true)
+            ->latest()
+            ->get();
+
+        foreach ($orgs as $org) {
+            $org['photo'] = $org->getFirstMediaUrl('photo');
+            $org['cover_photo'] = $org->getFirstMediaUrl('cover_photo');
+                
+            $org['activeNeeds'] = Need::where('organization_id', $org->id)
+                ->whereRaw('raised < goal')
+                ->count();
+
+            $org['pastNeeds'] = Need::where('organization_id', $org->id)
+                ->whereRaw('raised >= goal')
+                ->count();
+        }
+
+        return response()->json($orgs);
+    }
+    
+    /**
      * Get organization credential
      *
      * @param  int  $id
@@ -86,7 +116,9 @@ class OrganizationController extends Controller
      */
     public function nearby(Request $request, $lat, $lng)
     {
-        $orgs = Organization::select('organizations.*')
+        $collections = collect();
+
+        $fetchOrgs = Organization::select('organizations.*')
             ->selectRaw('( 6371 * acos( cos( radians(?) ) 
                 * cos( radians( lat ) ) * cos( radians( lng ) 
                 - radians(?) ) + sin( radians(?) ) 
@@ -94,17 +126,35 @@ class OrganizationController extends Controller
                 [$lat, $lng, $lat]);
 
         if ($request->filter) {
-            $orgs->whereHas('categories', function($query) use ($request) {
+            $fetchOrgs->whereHas('categories', function($query) use ($request) {
                     $query->whereIn('organization_category_id', $request->filter);
                 });
         }
 
-        $results = $orgs->orderBy('distance')->get();
+        $orgs = $fetchOrgs->orderBy('distance')->get();
 
-        foreach($results as $result) {
-            $result['photo'] = $result->getFirstMediaUrl('photo');
-            $result['cover_photo'] = $result->getFirstMediaUrl('cover_photo');
+        foreach($orgs as $org) {
+            $org['type'] = 'organisation';
+            $org['photo'] = $org->getFirstMediaUrl('photo');
+            $org['cover_photo'] = $org->getFirstMediaUrl('cover_photo');
         } 
+
+        $groups = Group::select('groups.*')
+            ->selectRaw('( 6371 * acos( cos( radians(?) ) 
+                * cos( radians( lat ) ) * cos( radians( lng ) 
+                - radians(?) ) + sin( radians(?) ) 
+                * sin( radians( lat ) ) ) ) AS distance', 
+                [$lat, $lng, $lat])
+            ->orderBy('distance')->get();
+        
+        foreach($groups as $group) {
+            $group['type'] = 'church';
+            $group['photo'] = $group->getFirstMediaUrl('photo');
+        } 
+
+        $merged = $collections->merge($orgs)->merge($groups);
+
+        $results = $merged->sortBy('distance');
             
         return response()->json($results, 200);
     }
@@ -136,13 +186,15 @@ class OrganizationController extends Controller
                 $org->save();
 
                 if ($request->category) {
-                    foreach($request->category as $value) {
-                        $hasCategory = OrganizationHasCategory::make([
-                                'organization_category_id' => $value
-                            ]);
+                    // Check 
+                    $org->categories()->sync($request->category);
+                    // foreach($request->category as $value) {
+                    //     $hasCategory = OrganizationHasCategory::make([
+                    //             'organization_category_id' => $value
+                    //         ]);
                             
-                        $org->categories()->save($hasCategory);
-                    }
+                    //     $org->categories()->save($hasCategory);
+                    // }
                 }
 
                 if ($request->secretKey && $request->publishableKey) {
@@ -246,15 +298,17 @@ class OrganizationController extends Controller
             ]));
             
         if (gettype($request->category) === 'array') {
-            $organization->categories()->delete();
 
-            foreach($request->category as $value) {
-                $hasCategory = OrganizationHasCategory::make([
-                        'organization_category_id' => $value
-                    ]);
+            $organization->categories()->sync($request->category);
 
-                $organization->categories()->save($hasCategory);
-            }
+            // $organization->categories()->delete();
+            // foreach($request->category as $value) {
+            //     $hasCategory = OrganizationHasCategory::make([
+            //             'organization_category_id' => $value
+            //         ]);
+
+            //     $organization->categories()->save($hasCategory);
+            // }
         }
 
         if ($request->secretKey && $request->publishableKey) {

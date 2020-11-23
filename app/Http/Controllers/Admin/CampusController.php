@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\CampusResource;
 
 use App\Campus;
+use DB;
 
 class CampusController extends Controller
 {
@@ -17,7 +18,7 @@ class CampusController extends Controller
      */
     public function index()
     {
-        $campus = Campus::latest()->get();
+        $campus = Campus::withCount('organizations')->latest()->get();
 
         return CampusResource::collection($campus);
     }
@@ -40,7 +41,27 @@ class CampusController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'description'=> 'required',
+            'location' => 'required',
+            'lng' => 'required',
+            'lat' => 'required',
+            // 'photo' => 
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $campus = Campus::create( $request->only('name', 'location', 'lng', 'lat') ); //add description here
+            //add photo here
+
+            DB::commit();
+            return new CampusResource($campus);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['errors'=>$e->getMessage()], 400);
+        }
+
     }
 
     /**
@@ -74,7 +95,28 @@ class CampusController extends Controller
      */
     public function update(Request $request, Campus $campus)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'description'=> 'required',
+            'location' => 'required',
+            'lng' => 'required',
+            'lat' => 'required',
+            // 'photo' => 
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $campus->fill( $request->only('name', 'location', 'lng', 'lat') ); //add description here
+            //add photo here
+            
+            $campus->save();
+            DB::commit();
+            return new CampusResource($campus);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['errors'=>$e->getMessage()], 400);
+        }
+
     }
 
     /**

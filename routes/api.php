@@ -22,27 +22,35 @@ Route::post('register/upload-photo', 'AuthController@registerUploadPhoto');
 Route::post('register/goal', 'GoalController@setUserGoal');
 Route::post('auth/{user}', 'AuthController@authUser');
 Route::get('need/categories', 'NeedsCategoryController@index');
+Route::get('campus', 'CampusController@index');
+Route::post('register/campus/user', 'CampusController@addUser');
 
 Route::group(['middleware' => ['auth:api']], function () {
 
-    Route::group(['prefix'=>'web', 'namespace'=>'Admin'], function() {
+    Route::group(['prefix'=>'web', 'namespace'=>'Admin', 'middleware' => 'datafilter'], function() {
         Route::get('needs/types', 'NeedsController@types');
 
         Route::resource('needs', 'NeedsController');
         Route::post('needs/{need}/approve', 'NeedsController@approve');
         Route::post('needs/{need}/disapprove', 'NeedsController@disapprove');
 
-        Route::resource('organizations', 'OrganizationController');
         Route::get('organizations/async', 'OrganizationController@async');
         Route::get('organizations/{organization}/members', 'OrganizationController@members');
         Route::post('organizations/{organization}/members', 'OrganizationController@membersInvite');
         Route::get('organizations/{organization}/needs', 'OrganizationController@needs');
+        Route::resource('organizations', 'OrganizationController');
 
         Route::resource('offers', 'OffersController');
 
         Route::resource('users', 'UsersController');
 
         Route::resource('campuses', 'CampusController');
+
+        Route::resource('stories', 'StoryController');
+
+        Route::resource('groups', 'GroupController');
+
+        Route::resource('transacts', 'TransactionController');
     });
 
     /** Role resource module */
@@ -58,16 +66,19 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('users', 'UserController');
     
     /** Goal resource module */
-    Route::get('goal/user', 'GoalController@getUserGoal');
+    Route::get('goal/me', 'GoalController@getUserGoal');
     Route::get('goal/group/{groupId}', 'GoalController@getGroupGoal');
     Route::resource('goals', 'GoalController');
+
+    /** Campus resource module */
+    Route::resource('campuses', 'CampusController');
 
     /** Need resource module */
     Route::post('need/lists', 'NeedsController@getNeeds');
     Route::get('need/recent-added', 'NeedsController@getRecentAdded');
     Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsController@nearby');
     Route::get('needs/open/total', 'NeedsController@getTotalNeedsOpen');
-    Route::post('needs/organization/{organization}', 'NeedsController@getOrganizationNeeds');
+    Route::post('needs/organization/{organization}/page/{page}', 'NeedsController@getOrganizationNeeds');
     Route::post('needs/page/{page}', 'NeedsController@index');
     Route::resource('needs', 'NeedsController');
 
@@ -80,7 +91,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     
     /** Needs Met resource module */
     Route::get('needs-mets/group/{group}', 'NeedsMetController@getGroupNeedsMet');
-    Route::get('needs-mets/user', 'NeedsMetController@getUserNeedsMet');
+    Route::get('needs-mets/user/{user}', 'NeedsMetController@getUserNeedsMet');
     Route::get('needs-mets/total', 'NeedsMetController@getTotalNeedsMet');
     Route::resource('needs-met', 'NeedsMetController');
 
@@ -99,15 +110,20 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('story/lists', 'StoryController@getStories');
     Route::get('featured/stories', 'StoryController@featuredStory');
     Route::post('stories/{story}/appreciate', 'StoryController@Appreciate');
-    Route::get('stories/search/{keyword}', 'StoryController@searchStory');
+    Route::get('stories/search/{keyword}/page/{page?}', 'StoryController@searchStory');
     Route::get('stories/{story}/comments', 'StoryController@getComments');
     Route::post('stories/{story}/comments', 'StoryController@addComment');
     Route::get('stories/recommended', 'StoryController@recommended');
+    Route::get('stories/page/{page?}', 'StoryController@index');
     Route::resource('stories', 'StoryController');
 
     /** Group invite resource module */
     Route::get('users-not-in-group/{group}', 'GroupInviteController@getUsersNotInGroup');
     Route::resource('group-invites', 'GroupInviteController');
+    
+    /** Group Participants resource module */
+    Route::get('group/{group}/participants/page/{page?}', 'GroupParticipantController@index');
+    Route::resource('group-participants', 'GroupParticipantController');
 
     /** Group resource module */
     Route::get('group/me', 'GroupController@getMyGroup');
@@ -120,7 +136,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('groups/{group}/join-request', 'GroupController@getJoinRequest');
     Route::get('groups/messages/{group}', 'GroupController@messages');
     Route::post('groups/message/{group}', 'GroupController@addMessage');
-    Route::post('groups/discover', 'GroupController@getDiscoverGroups');
+    Route::get('groups/discover/page/{page?}', 'GroupController@getDiscoverGroups');
     Route::resource('groups', 'GroupController');
 
     /** Orgnization Categories resource module */
@@ -133,9 +149,11 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Orgnization resource module */
     Route::post('organization/lists', 'OrganizationController@getOrganizations');
+    Route::get('organization/featured', 'OrganizationController@getFeaturedOrganizations');
     Route::get('organizations/{organization}/credential', 'OrganizationController@getCredential');
     Route::post('organizations/{organization}/credential', 'OrganizationController@addCredential');
     Route::post('organizations/nearby/{lat}/{lng}', 'OrganizationController@nearby');
+    Route::get('organizations/page/{page?}', 'OrganizationController@index');
     Route::resource('organizations', 'OrganizationController');
 
     /** Payment resource module */

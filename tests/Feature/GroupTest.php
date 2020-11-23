@@ -171,7 +171,7 @@ class GroupTest extends TestCase
         $group = factory(Group::class)->create([
             'user_id' => $this->user->id,
         ]);
-        factory(Goal::class)->make([
+        factory(Goal::class)->create([
             'model_id' => $group->id,
             'model_type' => 'App\Group'
         ]);

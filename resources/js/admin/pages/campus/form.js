@@ -4,7 +4,7 @@ import Camera from '../../../svg/camera';
 
 import Location from '../../../components/Location'
 import { swalError } from '../../../components/helpers/alerts';
-
+import { isValidated } from '../../../components/helpers/validator';
 
 const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
     const [form, setForm] = useState({
@@ -18,6 +18,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
         lng: 0,
     })
     const [errors, setErrors] = useState({})
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(()=>{
         const {name, description}= data;
@@ -42,11 +43,11 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
 
     const validateSubmit = () => {
         const { name, description } = form
-        const set = {
+        const set = isValidated({
             name: name == '' ? "Missing campus name" : null,
             description: description == '' ? "Missing description" : null,
             location: location == '' ? "Missing location" : null,
-        }
+        })
         setErrors({...set})
         return set;
     }
@@ -66,6 +67,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
     const submit = ()=>{
         const set = validateSubmit()
         if(_.isEmpty(set)){
+            setSubmitting(true)
             const params = {
                 ...form,
                 ...location,
@@ -73,11 +75,12 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
             }
             const submitPromise = !data.id ? 
                 api.post(`/api/web/campuses`, params) : 
-                api.update(`/api/web/campuses/${data.id}`, { params })
+                api.patch(`/api/web/campuses/${data.id}`, { ...params })
 
             submitPromise.then(({data})=>{
                 afterSubmit(data.data);
                 handleForm({}, false, false)
+                setSubmitting(false)
             }).catch(({response})=>{
                 if(response){
                     setErrors(response.data)
@@ -145,8 +148,8 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
             </section>
             <footer className="org-form__footer">
                 <div className="flex">
-                    <button className="discard" onClick={reset}>Discard</button>
-                    <button className="next" onClick={submit}>{data.id ? 'Edit' : 'Add'} </button>
+                    <button className="discard" onClick={reset} disabled={submitting}>Discard</button>
+                    <button className="next" onClick={submit} disabled={submitting}>{submitting ? 'Submitting' : ( data.id ? 'Edit' : 'Add' )} </button>
                 </div>
             </footer>
         </section>
