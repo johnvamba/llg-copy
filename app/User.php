@@ -58,6 +58,18 @@ class User extends Authenticatable
         return $this->morphMany('App\OrganizationMember', 'model');
     }
 
+    public function campus()
+    {
+        //Technically if user can be on many campuses this should be hasManyThrough
+        return $this->hasOneThrough(Campus::class, CampusUser::class, 'user_id', 'id', 'id', 'campus_id');
+    }
+
+    public function organization()
+    {
+        //Technically if user can be on many orgs this should be hasManyThrough
+        return $this->hasOneThrough(Organization::class, OrganizationMember::class, 'model_id', 'id', 'id', 'organization_id');
+    }
+
     public function offers()
     {
         return $this->morphMany('App\ServiceOffer', 'model');

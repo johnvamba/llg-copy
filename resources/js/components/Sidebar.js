@@ -156,7 +156,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                     ${(location.pathname == "/stories") ? "text-blue-400" : "text-gray-400"}`}
                                 >
                                     <Link to="/stories">
-                                        Published (9)
+                                        Published
                                     </Link>
                                 </div>
                                 <div
@@ -164,7 +164,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                     ${(location.pathname == "/stories/drafts") ? "text-blue-400" : "text-gray-400"}`}
                                 >
                                     <Link to="/stories/drafts">
-                                        Drafts (0)
+                                        Drafts
                                     </Link>
                                 </div>
                             </div>
@@ -254,31 +254,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                             </div>
                         )
                     }
-                    {roles.name === 'organization admin' &&
-                        (
-                            <div
-                                className={`mt-6 
-                                ${location.pathname == "/users" ? "text-blue-400" : "text-gray-400"}`}
-                            >
-                                <Link to="/users" className="flex items-center">
-                                    <i className="text-xl far fa-key"></i>
-                                    <span className="px-4">API</span>
-                                </Link>
-                            </div>
-                        )
-                    }
                     
-                    {roles.name === 'organization admin' &&
-                        <div
-                            className={`mt-6 
-                            ${location.pathname == "/transactions" ? "text-blue-400" : "text-gray-400"}`}
-                        >
-                            <Link to="/transactions" className="flex items-center">
-                                <i className="text-xl fas fa-retweet"></i>
-                                <span className="px-4">Transactions</span>
-                            </Link>
-                        </div>
-                    }
 
                     {roles.name === 'organization admin' &&
                         (
@@ -309,7 +285,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                         ${(location.pathname == "/payments") ? "text-blue-400" : "text-gray-400"}`}
                                     >
                                         <Link to="/payments">
-                                            Payment List (7)
+                                            Payment List
                                         </Link>
                                     </div>
                                     <div

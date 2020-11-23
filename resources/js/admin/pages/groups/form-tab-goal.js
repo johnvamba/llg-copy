@@ -2,20 +2,10 @@ import React, { useState } from 'react';
 import PlusRounded from '../../../svg/plus-rounded';
 import MinusRounded from '../../../svg/minus-rounded';
 
-const FormTabGoal = () => {
+const FormTabGoal = ({goal = 0, setGoal, goalType = 'month', setGoalType}) => {
 
-    const [activePerMonth, setActivePerMonth] = useState(false);
-    const [activePerYear, setActivePerYear] = useState(true);
-    const [goalVal, setGoalVal] = useState(8);
-
-    const toggleType = () => {
-        if(activePerMonth){
-            setActivePerMonth(false)
-            setActivePerYear(true);
-        }else if(activePerYear){
-            setActivePerMonth(true)
-            setActivePerYear(false);
-        }
+    const setNewGoal = (newGoal = 0) => {
+        setGoal(newGoal < 0 ? 0 : newGoal)
     }
 
 	return(
@@ -26,18 +16,18 @@ const FormTabGoal = () => {
                 <div className="tab__content-body">
                     <label>Goals to meet</label>
                     <div className="actions">
-                        <button onClick={() => setGoalVal(goalVal - 1)}>
+                        <button onClick={() => setNewGoal(goal - 1)}>
                             <MinusRounded />
                         </button>
-                        <span>{goalVal}</span>
-                        <button onClick={() => setGoalVal(goalVal + 1)}>
+                        <span>{goal}</span>
+                        <button onClick={() => setNewGoal(goal + 1)}>
                             <PlusRounded />
                         </button>
                     </div>
                     <div className="type">
-                        <span className={activePerMonth ? 'active' : null} onClick={toggleType}>Per Month</span>
+                        <span className={goalType == 'month' ? 'active' : null} onClick={() => setGoalType('month')}>Per Month</span>
                         <span></span>
-                        <span className={activePerYear ? 'active' : null} onClick={toggleType}>Per year</span>
+                        <span className={goalType != 'month' ? 'active' : null} onClick={() => setGoalType('year')}>Per year</span>
                     </div>
                 </div>
             </section>

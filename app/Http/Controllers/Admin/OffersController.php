@@ -65,7 +65,7 @@ class OffersController extends Controller
 
         DB::beginTransaction();
         try {
-            $category = $request->get('category')[0] ?? null;
+            $category = $request->get('category') ?? null;
 
             $user = auth()->user();
 
@@ -88,6 +88,7 @@ class OffersController extends Controller
             if ($image = $request->get('photo')) {
                 $name = time().'-'.Str::random(20);
                 $extension = explode('/', mime_content_type($image))[1];
+                dd($image,$name,$extension);
                 
                 $offer 
                     ->addMediaFromBase64($image)
@@ -101,7 +102,7 @@ class OffersController extends Controller
             DB::commit();
             return new OfferResource($offer);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error'=>$e->getMessage()], 400);
         }
     }
@@ -155,7 +156,6 @@ class OffersController extends Controller
             $user = auth()->user();
 
             $type = ServiceType::where('name', $category['name'] ?? '')->firstOrFail();
-
             $location = $request->get('location');
 
             $offer->fill(
@@ -187,7 +187,7 @@ class OffersController extends Controller
             DB::commit();
             return new OfferResource($offer);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error'=>$e->getMessage()], 400);
         }
     }

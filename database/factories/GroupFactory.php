@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 $factory->define(Group::class, function (Faker $faker) {
     $privacy = ['public', 'private'];
     return [
-        'name' => $this->faker->text,
+        'name' => $this->faker->words(2, true),
         'description' => $this->faker->text,
         'privacy' => $privacy[random_int(0,1)],
         'location' => $this->faker->address,

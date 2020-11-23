@@ -8,6 +8,7 @@ use App\User;
 use App\UserProfile;
 
 use App\Http\Resources\UserResource;
+use Spatie\Permission\Models\Role;
 use DB;
 
 class UsersController extends Controller
@@ -52,16 +53,29 @@ class UsersController extends Controller
             'age' => 'required',
             'bio' => 'required',
             // 'photo' => 'sometimes|required|image',
-            'type' => 'required'
+            'type' => 'required',
         ]);
 
         DB::beginTransaction();
         try {
+
             $user = User::create([
                 'email' => $request->get('email'),
                 'password' => bcrypt('temp_secret'),
                 'name'  => $request->get('firstName'). ' ' .$request->get('lastName')
             ]);
+
+            if($type = $request->get('type')){
+                $role = Role::where('name', $type['value'] ?? 'user')->first();
+                $user->syncRoles( $role->name );
+            }
+
+            if($organization = $request->get('organization')){
+                $user->organizationMembers()->create([
+                    'organization_id' => $organization['id'] || $organization['value'] || 0,
+                    'status' => 'approved'
+                ]);
+            }
 
             $user->profile()->create(
                 $request->only('age','bio')
@@ -77,7 +91,7 @@ class UsersController extends Controller
             DB::commit();
             return new UserResource($user);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
@@ -133,6 +147,21 @@ class UsersController extends Controller
                 'name'  => $request->get('firstName'). ' ' .$request->get('lastName')
             ]);
 
+            if($type = $request->get('type')){
+                $role = Role::where('name', $type['value'] ?? 'user')->first();
+                $user->assignRole( $role->name );
+            }
+
+            if($organization = $request->get('organization')){
+                //We delete the instances of the user connection to any organization
+                $user->organizationMembers()->delete(); 
+
+                $user->organizationMembers()->create([
+                    'organization_id' => $organization['id'] || $organization['value'] || 0,
+                    'status' => 'approved'
+                ]);
+            }
+
             $user->save();
 
             $user->profile->fill(
@@ -150,7 +179,7 @@ class UsersController extends Controller
             DB::commit();
             return new UserResource($user);
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
@@ -172,7 +201,7 @@ class UsersController extends Controller
             DB::commit();
             return response()->json('Successfully deleted user');
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }

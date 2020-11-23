@@ -78,6 +78,7 @@ const Users = () => {
 
     const handleForm = (form = false, setting = null, data = null)=>{
         //change content of table here
+        console.log('form changed', form, data, setting)
         if(setting == 'discard'){
             //discard Changes here
         }
@@ -86,7 +87,7 @@ const Users = () => {
             loadTable(true)
             //or insert data here
         }
-        showForm(form)
+        setShowForm(form)
     }
 
     return (

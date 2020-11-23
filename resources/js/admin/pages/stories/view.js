@@ -4,7 +4,7 @@ import OffersViewEdit from '../../../svg/offers-view-edit';
 import StoriesStatusPublishIcon from '../../../svg/stories-status-publish';
 import StoriesCatChildrenIcon from '../../../svg/stories-cat-children';
 
-const View = ({ setShowEditStory }) => {
+const View = ({data = {}, handleForm }) => {
     return (
         <>
             <section className="view-story">
@@ -16,7 +16,7 @@ const View = ({ setShowEditStory }) => {
                     <div className="view-story__header-right flex flex-wrap" >
                         <span className="delete">Delete</span>
                         <span className="unpublished">Unpublished</span>
-                        <div onClick={() => setShowEditStory(true)}>
+                        <div onClick={() => handleForm(data, true)}>
                             <OffersViewEdit />
                             <label>Edit</label>
                         </div>

@@ -1,0 +1,138 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Story;
+use App\Organization;
+use Illuminate\Http\Request;
+use App\Http\Resources\StoryResource;
+use DB;
+class StoryController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $stories = Story::latest();
+        $type = '';
+
+        if($type = $request->get('type'))
+            $stories->when($type=='drafts', fn($sub) => $sub->whereNull('posted_at'))
+            ->when($type=='published', fn($sub) => $sub->whereNotNull('posted_at'));
+
+        return StoryResource::collection((clone $stories)->paginate())
+            ->additional([
+                'publishes_count' => $type == 'published' ? $stories->count() : 0,
+                'drafts_count' => $type == 'drafts' ? $stories->count() : 0
+            ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'short_description' => 'required',
+        ]);
+        DB::beginTransaction();
+        try {
+            $org = Organization::inRandomOrder()->first(); //Change me.
+
+            $story = Story::create([
+                'user_id' => (auth()->user())->id, 
+                'organization_id' => optional($org)->id || 1,
+                'posted_at' => $request->get('saveAs') != 'draft' ? now() : null,
+            ] + $request->only('title', 'description', 'short_description') );
+
+            DB::commit();
+            return new StoryResource($story);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Story  $story
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Story $story)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Story  $story
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Story $story)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Story  $story
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Story $story)
+    {
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'short_description' => 'required',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $story = $story->fill([
+                'posted_at' => $request->get('saveAs') != 'draft' ? now() : null,
+            ] + $request->only('title', 'description', 'short_description') );
+
+            $story->save();
+            
+            DB::commit();
+            return new StoryResource($story);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Story  $story
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Story $story)
+    {
+        //
+    }
+}

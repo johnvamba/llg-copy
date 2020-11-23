@@ -3,12 +3,12 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 
 import OffersLocation from '../../../svg/offers-location';
 import Browse from '../../../svg/browse';
+import Location from '../../../components/Location'
 
 
-const FormTabInfo = () => {
+const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPrivacy, handleLocation }) => {
 
     const [privacyOpen, setPrivacyOpen] = useState(false);
-    const [privacyLabel, setPrivacyLabel] = useState('Select Privacy');
 
 	return(
 		<>
@@ -23,46 +23,64 @@ const FormTabInfo = () => {
                 </header>
                 <form className="w-full">
                     <div className="w-full xl:w-full">
-                        <div className="form-group form-input-text">
+                        <div className={`form-group ${fieldErrors.name ? 'form-error' : ''}`}>
                             <label>Group Name</label>
                             <input
-                                className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
+                                className="input-field"
                                 type="text"
                                 placeholder="Enter Group Name"
+                                name="name"
+                                onChange={handleInputChange}
+                                value={fields.name}
                             />
                         </div>
+                        {
+                            (fieldErrors.name || false) && <span className="text-xs pt-1 text-red-500 italic">{fieldErrors.name}</span>
+                        }
                     </div>
                     <div className="w-full xl:w-full">
-                        <div className="form-group form-input-text">
+                        <div className={`form-group ${fieldErrors.description ? 'form-error' : ''}`}>
                             <label>Group Description</label>
                             <input
-                                className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
+                                className="input-field"
                                 type="text"
                                 placeholder="Enter description"
+                                name="description"
+                                onChange={handleInputChange}
+                                value={fields.description}
                             />
                         </div>
+                        {
+                            (fieldErrors.description || false) && <span className="text-xs pt-1 text-red-500 italic">{fieldErrors.description}</span>
+                        }
+                        {/*<span className="input-error-msg">{fieldErrors.description}</span>*/}
                     </div>
-                    <div className="form-group form-input-text form-input-text--location">
-                        <label>Location</label>
-                        <div>
-                            <OffersLocation />
-                            <input className="location appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 leading-tight focus:outline-none" type="text" placeholder="Enter Location" />
-                        </div>
+                    <div className="w-full xl:w-full">
+                        <Location 
+                            className={`${fieldErrors.location && 'form-error'}`}
+                            name={'location'}
+                            placesSelected={handleLocation}
+                            errors={[fieldErrors.location] || []}
+                        />
                     </div>
+                    
                     <div className="w-full sm:w-full md:w-full">
-                        <div className={`form-group form-input-select ${privacyOpen ? 'active' : ''}`}>
+                        <div className={`form-group form-input-select ${privacyOpen ? 'active' : ''} ${(!privacyOpen && fieldErrors.privacy && !fields.privacy) ? 'has-error' : ''}`}>
                             <label>Privacy</label>
                             <Dropdown isOpen={privacyOpen} toggle={() => setPrivacyOpen(prevState => !prevState)}>
                                 <DropdownToggle>
-                                    <span className={(privacyLabel == "Select Privacy") ? 'default' : 'selected'}>{privacyLabel}</span>
+                                    <span className={(!fields.privacy) ? 'default' : 'selected'}>{(!fields.privacy) ? 'Select Organisation Privacy' : fields.privacy}</span>
                                     <i className="fa fa-angle-down" aria-hidden="true"></i>
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem onClick={() => setPrivacyLabel('Private')}>Private</DropdownItem>
-                                    <DropdownItem onClick={() => setPrivacyLabel('Public')}>Public</DropdownItem>
+                                    <DropdownItem onClick={() => handleSelectPrivacy('Private')}>Private</DropdownItem>
+                                    <DropdownItem onClick={() => handleSelectPrivacy('Public')}>Public</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                         </div>
+                        {
+                            (!privacyOpen && fieldErrors.privacy && !fields.privacy) && <span className="input-error-msg">{fieldErrors.privacy}</span>
+                        }
                     </div>
                 </form>
             </section>

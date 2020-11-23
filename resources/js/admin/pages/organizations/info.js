@@ -9,7 +9,7 @@ import TabActiveNeeds from './tab-active-needs';
 import TabPastNeeds from './tab-past-needs';
 
 const MemberItem = ({image = null}) => {
-    <li>
+    return <li>
         <img
         className="rounded-full"
         src={`${image || 'http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp'}`}
@@ -176,7 +176,7 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite }) => {
                     <div className="org-view__members--container">
                         <ul>
                             {
-                                // members.length > 0 && members.map((i, k)=><MemberItem key={k} image={i.image}/>)
+                                members.length > 0 && members.map((i, k)=><MemberItem key={k} image={i.image}/>)
                             }
                         </ul>
                         <button onClick={handleInvite}>
@@ -194,8 +194,8 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite }) => {
                 </div>
                 <div className="offers-create-form__body">
                     { (tab === 'members') && <TabMembers members={members} loading={loadingMembers}/>}
-                    { (tab === 'active-needs') && <TabActiveNeeds needs={actives} loading={loadingNeedActives}/>}
-                    { (tab === 'past-needs') && <TabActiveNeeds needs={pasts} loading={loadingNeedPasts}/>}
+                    { (tab === 'active-needs') && <TabActiveNeeds needs={actives.data} loading={loadingNeedActives}/>}
+                    { (tab === 'past-needs') && <TabActiveNeeds needs={pasts.data} loading={loadingNeedPasts}/>}
                 </div>
             </section>
         </section>

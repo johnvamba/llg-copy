@@ -7,6 +7,7 @@ const Location = ({
     name,
     placesSelected,
     className,
+    cNContainer = '',
     errors,
     ...props
 }) => {
@@ -14,11 +15,12 @@ const Location = ({
     return (
         <div className={`form-group ${className}`} >
             <label>{ label || 'Location'}</label>
-            <div className="input-container">
+            <div className={`input-container ${cNContainer}`}>
                 <i className="icon absolute">
                     <MapPin/>
                 </i>
                 <Autocomplete
+                    apiKey={process.env.MIX_PLACESAUTOCOMPLETE_API_KEY || ''}
                     className={`input-field space-l `}
                     onPlaceSelected={placesSelected}
                     types={['(regions)']}
@@ -28,10 +30,10 @@ const Location = ({
                 {
                     //<input className="" type="text" placeholder="Enter Location" name="usrnm"/>
                 }
-                {errors &&
-                    <p className="text-red-500 text-xs italic">{errors[0]}</p>
-                }
             </div>
+            {errors &&
+                <span className="text-red-500 text-xs italic">{ Array.isArray(errors) ? errors[0] : errors}</span>
+            }
         </div>
     )
 }

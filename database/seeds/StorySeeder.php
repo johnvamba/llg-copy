@@ -15,29 +15,40 @@ class StorySeeder extends Seeder
         DB::transaction(function () {
             $faker = \Faker\Factory::create();
 
-            $orgUser = factory(\App\User::class)->create();
-            $orgUser->assignRole('organization admin');
+            // $orgUser = factory(\App\User::class)->create();
+            // $orgUser->assignRole('organization admin');
 
-            $user = factory(\App\User::class)->create();
-            $user->assignRole('user');
+            // $user = factory(\App\User::class)->create();
+            // $user->assignRole('user');
 
-            $org = factory(\App\Organization::class)->create();
+            $orgUser = \App\User::inRandomOrder()->whereHas('roles', fn($role) => $role->where('name', 'organization admin'))->first();
 
-            $story = factory(\App\Story::class)->create([
-                'user_id' => $orgUser->id, 
-                'organization_id' => $org->id, 
-            ]);
 
-            factory(\App\StoryAppreciate::class)->create([
-                'user_id' => $user->id, 
-                'story_id' => $story->id, 
-            ]);
+            for ($i=0; $i < 3; $i++) { 
+                $org = \App\Organization::inRandomOrder()->first();
+                # code...
+                $story = factory(\App\Story::class)->create([
+                    'user_id' => $orgUser->id, 
+                    'organization_id' => $org->id,
+                    'posted_at' => $faker->boolean(50) ? now() : null
+                ]);
 
-            factory(\App\CommentStory::class)->create([
-                'user_id' => $user->id, 
-                'story_id' => $story->id,
-                'comment' => $faker->text
-            ]);
+                for ($i=0; $i < 5; $i++) { 
+                    $user = \App\User::inRandomOrder()->whereHas('roles', fn($role) => $role->where('name', 'user'))->first();
+                    # code...
+                    factory(\App\StoryAppreciate::class)->create([
+                        'user_id' => $user->id, 
+                        'story_id' => $story->id, 
+                    ]);
+
+                    factory(\App\CommentStory::class)->create([
+                        'user_id' => $user->id, 
+                        'story_id' => $story->id,
+                        'comment' => $faker->text
+                    ]);
+                }
+            }
+
         });
     }
 }

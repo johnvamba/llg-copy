@@ -1,128 +1,182 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import OffersFormCross from '../../../svg/offers-form-cross';
 import FormTabInfo from './form-tab-info';
 import FormTabInvite from './form-tab-invite';
 import FormTabGoal from './form-tab-goal';
+import { swalError } from '../../../components/helpers/alerts';
 
-
-const GroupsForm = ({ showAdd, setState }) => {
-    const [showCategory, setShowCategory] = useState(true);
-    const [showService, setShowService] = useState(false);
-    const [showBusiness, setShowBusiness] = useState(false);
-
+const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
     const [countTab, setCountTab] = useState(1);
     const [activeTab, setActiveTab] = useState('category');
+    const [fieldErrors, setFieldErrors] = useState({});
+    const [goal, setGoal] = useState(1);
+    const [goalType, setGoalType] = useState('month')
+    const [users, setUsers] = useState([]);
+    const [fields, setFields] = useState({
+        name: '',
+        description: '',
+        location: '',
+        privacy: '',
+        lat: null,
+        lng: null
+    });
+    const [submitting, setSubmitting] = useState(false)
 
-    const handleTab = (tab) => {
-        switch(tab) {
-            case 'category':
-                setShowCategory(true);
-                setShowService(false);
-                setShowBusiness(false);
-                return;
-            case 'service':
-                setShowService(true);
-                setShowCategory(false);
-                setShowBusiness(false);
-                return;
-            case 'business':
-                setShowBusiness(true);
-                setShowService(false);
-                setShowCategory(false);
-                return;    
-            default:
-                return;
+    useEffect(()=>{
+        if(data.id) {
+            setFields({...fields, 
+                name: data.name,
+                description: data.description,
+                location: data.location,
+                privacy: data.privacy,
+                lat: data.lat,
+                lng: data.lng
+            })
+            loadExtra()
+        }
+    }, [data])
+
+    const handleTab = (tab = 1) => {
+        if(validateForm()) setCountTab(tab);
+    }
+
+    const fieldErrorMsg = {
+        name: 'Missing Campus Name',
+        description: 'Missing Description',
+        location: 'Missing Location',
+        privacy: 'Need to Select a Privacy'
+    }
+
+    const handleInputChange = (e) => {
+        setFieldErrors({...fieldErrors, [e.target.name] : '' });
+        setFields({...fields, [e.target.name] : e.target.value });
+    }
+
+    const handleLocation = ({formatted_address, geometry}) => {
+        setFields({
+            ...fields,
+            location: formatted_address, 
+            lat: geometry.location.lat(), 
+            lng: geometry.location.lng()
+        })
+        delete fieldErrors.location;
+        setFieldErrors({...fieldErrors});
+    }
+
+    const validateForm = () => {
+        let errors = {};
+        Object.keys(fields).map((keyname, i) => {
+            if(!fields[keyname]) errors[keyname] = fieldErrorMsg[keyname];
+        });
+
+        setFieldErrors(errors);
+        if(Object.keys(errors).length === 0) return true;
+        return false;
+    }
+
+    const handleSelectPrivacy = (option) => {
+        setFields({...fields, privacy : option});
+    }
+
+    const loadExtra = (cacheClear = false) => {
+
+    }
+
+    const attemptSubmit = () => {
+        if(validateForm()){
+            setSubmitting(true)
+            const params = {
+                ...fields,
+                users,
+                goal
+            }
+            const submitPromise = !data.id ? 
+                api.post(`/api/web/groups`, params) : 
+                api.patch(`/api/web/groups/${data.id}`, params)
+
+            submitPromise.then(({data})=>{
+                setSubmitting(false)
+                handleForm({});
+                afterSubmit(data.data)
+            }).catch(err=>{
+                if(err.response){
+                    const { data } = err.response
+                    setFieldErrors(data.errors || [])
+                }
+                setSubmitting(false)
+            })
+        } else {
+            swalError();
         }
     }
 
-    const nextTab = (active) => {
-        switch(active) {
-            case 'category':
-                setShowCategory(false);
-                setShowService(true);
-                setShowBusiness(false);
-                setActiveTab('service');
-                setCountTab(2);
-                return;
-            case 'service':
-                setShowCategory(false);
-                setShowService(false);
-                setShowBusiness(true);
-                setActiveTab('business');
-                setCountTab(3);
-                return;
-            default:
-                return;
-        }
-    }
-
-    const backTab = (active) => {
-        switch(active) {
-            case 'service':
-                setShowCategory(true);
-                setShowService(false);
-                setShowBusiness(false);
-                setActiveTab('category');
-                setCountTab(1);
-                return;
-            case 'business':
-                setShowCategory(false);
-                setShowService(true);
-                setShowBusiness(false);
-                setActiveTab('service');
-                setCountTab(2);
-                return;
-            default:
-                return;
-        }
-    }
 
     return (
         <div className="offers-create-form">
-            <button className="offers-create-form__close" type="button" onClick={()=>setState(false)}>
+            <button className="offers-create-form__close" type="button" disabled={submitting} onClick={()=>handleForm({})}>
                 <OffersFormCross />
             </button>
-            <div className="offers-create-form__header">
-                <h2>{showAdd ? 'Add Group' : 'Edit Group'}</h2>
-                {
-                    showAdd
-                    ? (<>
-                            <div className="relative pt-1">
-                                <div className="w-full bg-gray-400 rounded-full">
-                                    <div className={`bg-blue-400 rounded-full leading-none py-1 text-white tab-${activeTab}`}></div>
-                                </div>
-                            </div>
-                            <p>{countTab} of 3</p>
-                        </>
-                    )
-                    : (<div className="offer-edit__opts">
-                            <ul>
-                                <li className={"offer-edit__opts-item w-1/3 " + (showCategory ? 'offer-edit__opts-item--active' : '')} onClick={()=>handleTab('category')}><h3>Group Information</h3></li>
-                                <li className={"offer-edit__opts-item w-1/3 " + (showService ? 'offer-edit__opts-item--active' : '')} onClick={()=>handleTab('service')}><h3>Invite People</h3></li>
-                                <li className={"offer-edit__opts-item w-1/3 " + (showBusiness ? 'offer-edit__opts-item--active' : '')} onClick={()=>handleTab('business')}><h3>Set your Group Goal</h3></li>
-                            </ul>
-                        </div>)
-                }
-            </div>
+            {
+                !data.id ? 
+                <div className="offers-create-form__header">
+                    <h2>Add Group</h2>
+                    <div className="relative pt-1">
+                        <div className="w-full bg-gray-400 rounded-full">
+                            <div className={`bg-blue-400 rounded-full leading-none py-1 text-white tab-${countTab}`}></div>
+                        </div>
+                    </div>
+                    <p>{countTab} of 3</p>
+                </div> :
+                <div className="offers-create-form__header">
+                    <h2>Edit Group</h2>
+                    <div className="offer-edit__opts">
+                        <ul>
+                            <li className={"offer-edit__opts-item w-1/3 " + (countTab == 1 ? 'offer-edit__opts-item--active' : '')} onClick={()=>handleTab(1)}><h3>Group Information</h3></li>
+                            <li className={"offer-edit__opts-item w-1/3 " + (countTab == 2 ? 'offer-edit__opts-item--active' : '')} onClick={()=>handleTab(2)}><h3>Invite People</h3></li>
+                            <li className={"offer-edit__opts-item w-1/3 " + (countTab == 3 ? 'offer-edit__opts-item--active' : '')} onClick={()=>handleTab(3)}><h3>Set your Group Goal</h3></li>
+                        </ul>
+                    </div>
+                </div>
+
+            }
             
             <div className="offers-create-form__body">
-                { showCategory && <FormTabInfo />}
-                { showService && <FormTabInvite />}
-                { showBusiness && <FormTabGoal />}
+                { countTab == 1 && 
+                    <FormTabInfo
+                        handleInputChange={handleInputChange}
+                        handleLocation={handleLocation}
+                        fieldErrors={fieldErrors}
+                        fields={fields}
+                        handleSelectPrivacy={handleSelectPrivacy}
+                    />
+                }
+                { countTab == 2 && <FormTabInvite users={users} setUsers={setUsers} />}
+                { countTab == 3 && <FormTabGoal goal={goal} setGoal={setGoal} goalType={goalType} setGoalType={setGoalType}/>}
             </div>
 
              <section className="offers-category-opt">
-                <div className="offers-category-opt__container flex">
-                    <button className="discard" onClick={()=>setState(false)}>Discard</button>
-                    <div>
-                        <button className="back" onClick={() => backTab(activeTab)}>Back</button>
-                        {
-                            (activeTab !== "business") 
-                            ? (<button className="next" onClick={() => nextTab(activeTab)}>Next</button>)
-                            : (<button className="next">Create</button>)
-                        }
+                {
+                    submitting ? 
+                    <div className="offers-category-opt__container flex">
+                        <div>
+                            <button className="back" onClick={() => console.log('submitting')} disabled>Submitting</button>
+                        </div>
+                    </div> : 
+                    <div className="offers-category-opt__container flex">
+                        <button className="discard" onClick={()=>handleForm({})} disabled={submitting} >Discard</button>
+                        <div>
+                            {
+                                countTab > 1 &&
+                                <button className="back" onClick={() => handleTab(countTab-1)} disabled={submitting} >Back</button>
+                            }
+                            {
+                                (countTab !== 3) 
+                                ? (<button className="next" onClick={()=>handleTab(countTab+1)} disabled={submitting} >Next</button>)
+                                : (<button className="next" onClick={attemptSubmit} disabled={submitting} >{data.id ? 'Edit' : 'Create'}</button>)
+                            }
+                        </div>
                     </div>
-                </div>
+                }
             </section>
         </div>
     )
