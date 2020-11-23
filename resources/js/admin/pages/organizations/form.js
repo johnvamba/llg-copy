@@ -6,6 +6,7 @@ import PencilIcon from '../../../svg/pencil';
 import CategoryScroll from '../../../components/CategoryScroll'
 import { swalError } from '../../../components/helpers/alerts';
 import { validateEmail, isValidated } from '../../../components/helpers/validator';
+import LoadingScreen from '../../../components/LoadingScreen'
 
 const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
     const [category, setCategory] = useState([]);
@@ -151,6 +152,14 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
 
     return (
         <section className="org-form">
+            {
+                (loading || submitting) &&
+                <LoadingScreen title={
+                    (loading && 'Loading Organisation...') ||
+                    (submitting && (data.id ? 'Updating Organisation' : 'Creating Organisation')) ||
+                    'Please wait'
+                }/>
+            }
             <div className="create-story__header">
                 <h2>{data.id ? "Edit" : "Add"} Organisation</h2>
                 <button type="button" onClick={handleClose}>

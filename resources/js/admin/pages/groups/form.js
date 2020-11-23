@@ -113,6 +113,13 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
 
     return (
         <div className="offers-create-form">
+            {
+                (submitting) &&
+                <LoadingScreen title={
+                    (submitting && (data.id ? 'Updating Group' : 'Creating Group')) ||
+                    'Please wait'
+                }/>
+            }
             <button className="offers-create-form__close" type="button" disabled={submitting} onClick={()=>handleForm({})}>
                 <OffersFormCross />
             </button>

@@ -63,7 +63,7 @@ class NeedsController extends Controller
         }
 
         if($request->get('debug')){
-            dd($need->get(), DB::getQueryLog());
+            dd($need->get(), DB::getQueryLog(),session()->only(['camp_id','org_id']));
         }
 
         $additional = Need::select( 

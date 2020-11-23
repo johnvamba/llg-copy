@@ -19,7 +19,7 @@ import TextEditor from '../../../components/TextEditor'
 import Imagepond from '../../../components/Imagepond'
 import { EditorState, convertFromHTML, ContentState } from 'draft-js';
 import { tryParseJson } from '../../../components/helpers/validator'
-
+import LoadingScreen from '../../../components/LoadingScreen'
 
 const StoriesForm = ({ data={}, handleForm, afterSubmit }) => {
     const [errors, setErrors] = useState({});
@@ -152,6 +152,13 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit }) => {
 
     return (
         <section className="create-story">
+            {
+                (submitting) &&
+                <LoadingScreen title={
+                    (submitting && (data.id ? 'Updating Story' : 'Creating Story')) ||
+                    'Please wait'
+                }/>
+            }
             <section className="create-story__header">
                 <h2>{ !(data.id) ? 'Create' : 'Edit' } Story</h2>
                 <button type="button" onClick={handleClose}>

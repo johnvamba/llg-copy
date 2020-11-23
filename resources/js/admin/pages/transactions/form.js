@@ -4,6 +4,7 @@ import OffersFormCross from '../../../svg/offers-form-cross';
 import { EmailValidator } from '../../../utils/helper';
 import { selectStylePaddingZero, loadOrganization } from '../../../components/helpers/async_options';
 import AsyncSelect from 'react-select/async';
+import LoadingScreen from '../../../components/LoadingScreen'
 
 const TransactionsForm = ({ data = {}, handleForm, afterSubmit }) => {
     const [orgOpen, setOrgOpen] = useState(false);
@@ -96,6 +97,13 @@ const TransactionsForm = ({ data = {}, handleForm, afterSubmit }) => {
 
     return(
         <section className="transactions-form create-form">
+            {
+                (submitting) &&
+                <LoadingScreen title={
+                    (submitting && (data.id ? 'Updating Transaction' : 'Creating Transaction')) ||
+                    'Please wait'
+                }/>
+            }
             <header className="create-story__header">
                 <h2>{data.id ? 'Edit' : 'Add'} Transaction</h2>
                 <button type="button" onClick={() => handleForm()}>

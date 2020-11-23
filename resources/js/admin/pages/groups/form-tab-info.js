@@ -4,9 +4,13 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 import OffersLocation from '../../../svg/offers-location';
 import Browse from '../../../svg/browse';
 import Location from '../../../components/Location'
+import { selectStyle, loadOrganization } from '../../../components/helpers/async_options';
+import { connect } from 'react-redux';
 
 
 const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPrivacy, handleLocation }) => {
+    const { roles } = AuthUserReducer;
+    const [organization, setOrganization] = useState({});
 
     const [privacyOpen, setPrivacyOpen] = useState(false);
 
@@ -38,6 +42,23 @@ const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPriva
                             (fieldErrors.name || false) && <span className="text-xs pt-1 text-red-500 italic">{fieldErrors.name}</span>
                         }
                     </div>
+                    {
+                        //Set user priveledges here.. campus users will need to know what organization is asking for need.
+                        (roles.name == 'admin') && <div className={`form-group w-full ${fieldErrors.organization && 'form-error'}`}>
+                            <label>Organization</label>
+                            <AsyncSelect
+                                styles={selectStyle}
+                                loadOptions={loadOrganization}
+                                defaultOptions
+                                value={organization}
+                                placeholder="Organization"
+                                onChange={setOrganization}
+                                />
+                            {
+                                (fieldErrors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
+                            }
+                        </div>
+                    }
                     <div className="w-full xl:w-full">
                         <div className={`form-group ${fieldErrors.description ? 'form-error' : ''}`}>
                             <label>Group Description</label>
@@ -88,5 +109,14 @@ const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPriva
 	)
 }
 
+export default connect(({AuthUserReducer})=>{
+    return {
+        AuthUserReducer
+    }
+},(dispatch)=>{
+    return {
 
-export default FormTabInfo;
+    }
+})(FormTabInfo);
+
+//export default FormTabInfo;

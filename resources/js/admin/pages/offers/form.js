@@ -6,6 +6,7 @@ import { swalError } from '../../../components/helpers/alerts';
 import FormServiceInfo from './form-service-info';
 import FormBusinessInfo from './form-business-info';
 import CategoryGrid from '../../../components/CategoryGrid'
+import LoadingScreen from '../../../components/LoadingScreen'
 
 const OffersForm = ({setShowForm, data, handleForm}) => {
     const editing = data.id ? true : false;
@@ -194,6 +195,14 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
 
     return (
         <div className="offers-create-form">
+            {
+                (loading || submitting) &&
+                <LoadingScreen title={
+                    (loading && 'Loading offer...') ||
+                    (submitting && (data.id ? 'Updating Offer' : 'Creating Offer')) ||
+                    'Please wait'
+                }/>
+            }
             <div className="offers-create-form__header">
                 <h2>{editing ? 'Edit' : 'Create'} Offer</h2>
                 {

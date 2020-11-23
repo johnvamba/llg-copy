@@ -5,6 +5,7 @@ import Camera from '../../../svg/camera';
 import Location from '../../../components/Location'
 import { swalError } from '../../../components/helpers/alerts';
 import { isValidated } from '../../../components/helpers/validator';
+import LoadingScreen from '../../../components/LoadingScreen'
 
 const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
     const [form, setForm] = useState({
@@ -94,6 +95,13 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
 
     return(
         <section className="campus-form create-form">
+            {
+                (submitting) &&
+                <LoadingScreen title={
+                    (submitting && (data.id ? 'Updating Campus' : 'Creating Campus')) ||
+                    'Please wait'
+                }/>
+            }
             <header className="create-story__header">
                 <h2>{data.id ? 'Edit' : 'Add'} Campus</h2>
                 <button type="button" onClick={()=> handleForm(data, false, false)}>
