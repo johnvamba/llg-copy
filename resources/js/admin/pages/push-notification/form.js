@@ -56,14 +56,14 @@ const PushForm = ({ data={}, activeForm, handleForm }) =>{
     }
 
     return(
-        <section className="push-form create-form">
-            <header className="create-story__header">
-                <h2>{activeForm} Push Notification</h2>
+        <section className="form push-form create-form">
+            <header className="form-title create-story__header">
+                <h3>{activeForm} Push Notification</h3>
                 <button type="button" onClick={handleForm}>
                     <OffersFormCross />
                 </button>
             </header>
-            <section className="push-form__body">
+            <section className="form-body push-form__body">
                 <form>
                     <div className="w-full xl:w-full">
                         <div className={`form-group ${fieldErrors.title ? 'has-error' : ''}`}>
@@ -131,11 +131,9 @@ const PushForm = ({ data={}, activeForm, handleForm }) =>{
                     }
                 </form>
             </section>
-            <footer className="org-form__footer">
-                <div className="flex">
-                    <button className="discard" onClick={onClear}>Discard</button>
-                    <button className="next" onClick={handleSubmit}>Add</button>
-                </div>
+            <footer className="form-footer org-form__footer">
+                <button className="discard" onClick={onClear}>Discard</button>
+                <button className="next" onClick={handleSubmit}>Add</button>
             </footer>
         </section>
     )

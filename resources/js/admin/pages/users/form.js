@@ -291,13 +291,9 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                     </form>
                 </div>
             </div>
-            <footer className="offers-edit-opt">
-                <div className="offers-edit-opt__container flex">
-                    <button className="discard" onClick={reset} disabled={submitting}>Discard</button>
-                    <div>
-                        <button className="next" onClick={attemptSubmit} disabled={submitting}>{submitting ? 'Submitting' : (label == 'Add User' ? 'Add' : 'Update' ) }</button>
-                    </div>
-                </div>
+            <footer className="">
+                <button className="p-2 rounded focus:outline-none px-4 btn btn-secondary" onClick={reset} disabled={submitting}>Discard</button>
+                <button className="p-2 rounded focus:outline-none px-4 btn btn-primary" onClick={attemptSubmit} disabled={submitting}>{submitting ? 'Submitting' : (label == 'Add User' ? 'Add' : 'Update' ) }</button>
             </footer>
         </section>
     )

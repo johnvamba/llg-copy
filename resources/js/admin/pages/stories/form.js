@@ -151,7 +151,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit }) => {
 
 
     return (
-        <section className="create-story">
+        <section className="form create-story">
             {
                 (submitting) &&
                 <LoadingScreen title={
@@ -159,13 +159,13 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit }) => {
                     'Please wait'
                 }/>
             }
-            <section className="create-story__header">
-                <h2>{ !(data.id) ? 'Create' : 'Edit' } Story</h2>
+            <section className="form-title">
+                <h3>{ !(data.id) ? 'Create' : 'Edit' } Story</h3>
                 <button type="button" onClick={handleClose}>
                     <OffersFormCross />
                 </button>
             </section>
-            <section className="create-story__body">
+            <section className="form-body create-story__body">
                 <form onSubmit={handleSubmit}>
                     <CategoryScroll 
                         type={'monetary'}
@@ -192,40 +192,27 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit }) => {
                     <Imagepond photo={photo} imageSelected={setPhoto} errors={errors.photo}/>
                 </form>
             </section>
-            <section className="create-story__footer">
-                {
-                    submitting ? 
-                    <div className="create-story__footer-container">Saving Story..</div> :
-                    <div className="create-story__footer-container">
-                        <button className="discard" onClick={handleClose}>Discard</button>
-                        <div>
-                            <span onClick={toggle}>Preview</span>
-
-                            <ButtonGroup className={'publish-btn'}>
-                                <Button color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
-                                <ButtonDropdown className={'btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
-                                  <DropdownToggle tag="button">
-                                    <StoriesPublishIcon />
-                                  </DropdownToggle>
-                                  <DropdownMenu>
-                                    <DropdownItem onClick={()=>setSaveAs('draft')}>Draft</DropdownItem>
-                                    <DropdownItem onClick={()=>setSaveAs('publish')}>Publish</DropdownItem>
-                                  </DropdownMenu>
-                                </ButtonDropdown>
-                            </ButtonGroup>
-
-                            {/*<button className="publish">
-                                <span>Publish</span>
-                                <StoriesPublishIcon />
-                            </button>*/}
-                        </div>
-                    </div>
-                }
+            <section className="form-footer">
+                <button className="discard" onClick={handleClose}>Discard</button>
+                <div className="flex-grow-1"></div>
+                <button className={'btn'} onClick={toggle}>Preview</button>
+                <ButtonGroup className={'publish-btn'}>
+                    <Button color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
+                    <ButtonDropdown className={'btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
+                      <DropdownToggle tag="button">
+                        <StoriesPublishIcon />
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem onClick={()=>setSaveAs('draft')}>Draft</DropdownItem>
+                        <DropdownItem onClick={()=>setSaveAs('publish')}>Publish</DropdownItem>
+                      </DropdownMenu>
+                    </ButtonDropdown>
+                </ButtonGroup>
             </section>
-        {
-            modal &&
-            <StoriesModal title={form.title} handleChange={handleChange} modal={modal} toggle={toggle} editorState={editorState} setEditorState={setEditorState}/>
-        }
+            {
+                modal &&
+                <StoriesModal title={form.title} handleChange={handleChange} modal={modal} toggle={toggle} editorState={editorState} setEditorState={setEditorState}/>
+            }
         </section>
        
     );

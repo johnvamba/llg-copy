@@ -12,7 +12,7 @@ const GroupsList = ({ data = [], handleForm, handleActionButtons, afterSubmit })
         afterSubmit();
     }
     return (
-        <section className="groups-list">
+        <section className="component-body groups-list">
             <ul>
                 {data.map((obj) => 
                     <li key={obj.id}>

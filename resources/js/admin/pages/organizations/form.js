@@ -151,7 +151,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
     }
 
     return (
-        <section className="org-form">
+        <section className="form org-form">
             {
                 (loading || submitting) &&
                 <LoadingScreen title={
@@ -160,25 +160,25 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
                     'Please wait'
                 }/>
             }
-            <div className="create-story__header">
-                <h2>{data.id ? "Edit" : "Add"} Organisation</h2>
+            <div className="form-title create-story__header">
+                <h3>{data.id ? "Edit" : "Add"} Organisation</h3>
                 <button type="button" onClick={handleClose}>
                     <OffersFormCross />
                 </button>
             </div>
-            <header>
-                <div className="org-form__cover-bg bg-cover bg-center" style={{backgroundImage: "url()"}}>
-                    <button>
-                        <Camera /> 
-                        Add Cover
-                    </button>
-                    <div className="org-form__rounded-img"></div>
-                    <div className="org-form__edit">
-                        <PencilIcon />
+            <section className="form-body org-form__body">
+                <header>
+                    <div className="org-form__cover-bg bg-cover bg-center" style={{backgroundImage: "url()"}}>
+                        <button>
+                            <Camera /> 
+                            Add Cover
+                        </button>
+                        <div className="org-form__rounded-img"></div>
+                        <div className="org-form__edit">
+                            <PencilIcon />
+                        </div>
                     </div>
-                </div>
-            </header>
-            <section className="org-form__body">
+                </header>
                 <form>
                     <CategoryScroll 
                         type={'monetary'}
@@ -263,11 +263,10 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
                     </div>
                 </form>
             </section>
-            <footer className="org-form__footer">
-                <div className="flex">
-                    <button className="discard" onClick={handleDiscard}>Discard</button>
-                    <button className="next" onClick={handleSubmit}>{data.id ? "Edit" : "Add"}</button>
-                </div>
+            <footer className="form-footer org-form__footer">
+                <button className="discard" onClick={handleDiscard}>Discard</button>
+                <div className="flex-grow-1"></div>
+                <button className="next" onClick={handleSubmit}>{data.id ? "Edit" : "Add"}</button>
             </footer>
         </section>
     )

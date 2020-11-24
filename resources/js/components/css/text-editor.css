@@ -1,7 +1,7 @@
 .rdw-editor-wrapper .rdw-editor-main {
 	height: unset;
 	padding: 0px 10px;
-    max-height: 210px;
+    max-height: 310px;
     overflow-y: scroll;
     white-space: nowrap;
     box-sizing: border-box;

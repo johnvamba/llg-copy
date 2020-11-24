@@ -6,9 +6,9 @@ import Browse from '../../../svg/browse';
 import Location from '../../../components/Location'
 import { selectStyle, loadOrganization } from '../../../components/helpers/async_options';
 import { connect } from 'react-redux';
+import AsyncSelect from 'react-select/async';
 
-
-const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPrivacy, handleLocation }) => {
+const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPrivacy, handleLocation, AuthUserReducer }) => {
     const { roles } = AuthUserReducer;
     const [organization, setOrganization] = useState({});
 
@@ -62,6 +62,9 @@ const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPriva
                     <div className="w-full xl:w-full">
                         <div className={`form-group ${fieldErrors.description ? 'form-error' : ''}`}>
                             <label>Group Description</label>
+                            {/*
+                            <textarea className="input-field" placeholder="Enter description" name="description" onChange={handleInputChange} value={fields.description}/>
+                            */}
                             <input
                                 className="input-field"
                                 type="text"

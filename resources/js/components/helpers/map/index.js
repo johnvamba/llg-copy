@@ -17,6 +17,8 @@ const containerStyle = {
 };
 
 const Map = ({markers, lat, lng, ...props}) => {
+    
+    const mks = Array.isArray(markers) ? markers : Object.values(markers);
 
     const handleClick = async(org) => {
         let {data} = await axios.get(`/api/organizations/${org}`);
@@ -32,9 +34,9 @@ const Map = ({markers, lat, lng, ...props}) => {
             center={{lat: lat, lng: lng}}
         >
             {
-                markers.map(org => (
+                mks.map((org, key) => (
                     <Marker
-                        key={org.id}
+                        key={key}
                         position={{ lat: parseFloat(org.lat), lng: parseFloat(org.lng) }}
                         onClick={() => { handleClick(org.id) }}
                     />

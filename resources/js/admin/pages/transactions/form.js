@@ -96,7 +96,7 @@ const TransactionsForm = ({ data = {}, handleForm, afterSubmit }) => {
     }
 
     return(
-        <section className="transactions-form create-form">
+        <section className="form transactions-form create-form">
             {
                 (submitting) &&
                 <LoadingScreen title={
@@ -104,13 +104,13 @@ const TransactionsForm = ({ data = {}, handleForm, afterSubmit }) => {
                     'Please wait'
                 }/>
             }
-            <header className="create-story__header">
-                <h2>{data.id ? 'Edit' : 'Add'} Transaction</h2>
+            <header className="form-title create-story__header">
+                <h3>{data.id ? 'Edit' : 'Add'} Transaction</h3>
                 <button type="button" onClick={() => handleForm()}>
                     <OffersFormCross />
                 </button>
             </header>
-            <section className="transaction-form__body">
+            <section className="form-body transaction-form__body">
                 <form className="flex flex-wrap justify-between -mx-2">
                     <div className="w-full sm:w-full md:w-full px-2">
                         <div className={`form-group ${fieldErrors.organization && 'form-error'}`}>
@@ -199,17 +199,9 @@ const TransactionsForm = ({ data = {}, handleForm, afterSubmit }) => {
                     </div>
                 </form>
             </section>
-            <footer className="org-form__footer">
-                {
-                    submitting ? 
-                    <div className="flex">
-                        <h4>Submitting...</h4>
-                    </div> :
-                    <div className="flex">
-                        <button className="discard" onClick={() => handleForm()}>Discard</button>
-                        <button className="next" onClick={handleSubmit}>{data.id? 'Edit' : 'Create'}</button>
-                    </div>
-                }
+            <footer className="form-footer org-form__footer">
+                <button className="discard" onClick={() => handleForm()}>Discard</button>
+                <button className="next" onClick={handleSubmit}>{data.id? 'Edit' : 'Create'}</button>
             </footer>
         </section>
     )

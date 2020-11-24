@@ -9,7 +9,7 @@ import '../../assets/css/general.css';
 import Filter from '../svg/filter';
 
 import MainFilter from './filter'
-// import RecentActivities from './pages/recent-activities';
+import RecentActivities from './pages/recent-activities';
 
 const Home = () => {
     const [filterElement, setFilterElement] = useState(null);
@@ -17,7 +17,7 @@ const Home = () => {
     const [notifications, setNotifications] = useState([]);
     const [organization, setOrganization] = useState(null);
     const [showSidebarMobile, setShowSidebarMobile] = useState(false);
-    // const [show]
+    const [actPanel,showActPanel] = useState(false);
 
     const windowWidth = window.innerWidth;
 
@@ -101,9 +101,9 @@ const Home = () => {
                                 Admin
                             </button>
                             <div className="admin-notif relative">
-                                <Link className="mr-6 text-lg" to={'/push-notifications'}>
+                                <button className="mr-6 text-lg" onClick={()=>showActPanel(!actPanel)}>
                                     <i className="far fa-bell"></i>
-                                </Link>
+                                </button>
                                 {notifications.length > 0 && 
                                     (
                                         <div className="absolute top-0 right-0 mt-1 mr-6 p-1 rounded-full bg-blue-400"></div>
@@ -121,7 +121,7 @@ const Home = () => {
                             <Content onViewOrganization={handleViewOrganization} />
                         </section>
 
-                        {/* <RecentActivities /> */}
+                        { actPanel && <RecentActivities /> }
 
                         {organization && <div className="absolute z-40 right-0 top-0 md:w-2/5 h-full flex bg-white border-l">
                             <OrganizationView

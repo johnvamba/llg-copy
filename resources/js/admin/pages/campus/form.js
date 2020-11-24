@@ -94,7 +94,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
     }
 
     return(
-        <section className="campus-form create-form">
+        <section className="form campus-form create-form">
             {
                 (submitting) &&
                 <LoadingScreen title={
@@ -102,13 +102,13 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
                     'Please wait'
                 }/>
             }
-            <header className="create-story__header">
-                <h2>{data.id ? 'Edit' : 'Add'} Campus</h2>
+            <header className="form-title create-story__header">
+                <h3>{data.id ? 'Edit' : 'Add'} Campus</h3>
                 <button type="button" onClick={()=> handleForm(data, false, false)}>
                     <OffersFormCross />
                 </button>
             </header>
-            <section className="campus-form__body">
+            <section className="form-body campus-form__body">
                 <div className="flex bg-cover bg-center" style={{backgroundImage: "url()"}}>
                     <button>
                         <Camera /> 
@@ -154,7 +154,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
                     </div>
                 </form>
             </section>
-            <footer className="org-form__footer">
+            <footer className="form-footer org-form__footer">
                 <div className="flex">
                     <button className="discard" onClick={reset} disabled={submitting}>Discard</button>
                     <button className="next" onClick={submit} disabled={submitting}>{submitting ? 'Submitting' : ( data.id ? 'Edit' : 'Add' )} </button>

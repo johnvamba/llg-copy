@@ -315,7 +315,7 @@ td.actions, th.actions{
     width: 100%;
 }
 
-.form .form-footer button {
+.form .form-footer > button {
 	background: rgba(181, 193, 204, 0.12);
 	border-radius: 4px;
 	width: 120px;
@@ -323,11 +323,14 @@ td.actions, th.actions{
 	padding: 15px;
 	color: rgba(181,193,204,1);
 }
-.form .form-footer button.btn-primary {
+.form .form-footer > button.btn-primary {
 	background:#109CF1;
 	color: #fff;
 }
-
+.form {
+	display: flex;
+    flex-direction: column;
+}
 .form .form-group {
 	/*display: block;*/
 }
@@ -659,7 +662,6 @@ p{
     width: 605px;
     height: calc(100vh - 64px);
     background-color: #fff;
-    padding: 30px;
     border: 1px solid #E7EAEF;
     padding-bottom: 0;
     overflow: auto;

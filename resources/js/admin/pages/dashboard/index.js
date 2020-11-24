@@ -73,8 +73,8 @@ const Dashboard = ({ ...props }) => {
                 </div>
                 {
                 // Originally from app.js
+                //<RecentActivities />
                 }
-                <RecentActivities />
             </div>
         </>
     )

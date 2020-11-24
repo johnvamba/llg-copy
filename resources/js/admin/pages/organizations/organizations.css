@@ -74,13 +74,10 @@
     width: 605px;
     height: calc(100vh - 64px);
     background-color: #fff;
-    padding: 30px;
+    /*padding: 30px;*/
     border: 1px solid #E7EAEF;
     padding-bottom: 0;
     overflow: auto;
-}
-.org-form header{
-    margin-top: 22px;
 }
 .org-form__cover-bg{
     width: 100%;
@@ -125,6 +122,9 @@
     fill: #fff;
 }
 .org-form__body{
+    padding: 0 30px;
+}
+.org-form__body form {
     margin-top: 54px;
 }
 .org-form__body ul{

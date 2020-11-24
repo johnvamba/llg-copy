@@ -207,7 +207,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                             >
                                 <Link to="/organizations" className="flex items-center">
                                     <Organisation />
-                                    <span className="px-4">Organizations</span>
+                                    <span className="px-4">Organisations</span>
                                 </Link>
                             </div>
                         )
