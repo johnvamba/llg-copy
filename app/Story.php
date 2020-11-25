@@ -38,6 +38,12 @@ class Story extends Model implements HasMedia
     {
         return $this->hasMany('App\StoryAppreciate');
     }
+    
+    public function comments()
+    {
+        return $this->hasMany('App\CommentStory');
+    }
+
     //Categories
     public function categories()
     {

@@ -31,9 +31,9 @@ class NeedsController extends Controller
         if (!empty($filters)){
             if(count($filters['category']) > 0) {
                 $needIds = Categorizes::whereHasMorph(
-                    'categorize',
-                    ['App\Need'],
-                    function() {}
+                        'categorize',
+                        ['App\Need'],
+                        function() {}
                     )
                     ->whereIn('category_id', $filters['category'])
                     ->groupBy('categorize_id')
@@ -50,8 +50,9 @@ class NeedsController extends Controller
         if (count($needIds) > 0)
             $needs->whereIn('id', $needIds);
 
-        if (!empty($filters)){
-            $needs->where('needs_type_id', $filters['type']);
+        if (!empty($filters)) {
+            if (count($filters['type']) > 0)
+                $needs->whereIn('needs_type_id', $filters['type']);
             
             if ($filters['filterAmount']) 
                 $needs->where('goal', '<=', floatval($filters['amount']));

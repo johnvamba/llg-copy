@@ -14,12 +14,16 @@ class NeedsCategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $type = '')
     {
-        $categories = NeedsCategory::where('status', true)
-            ->get();
+        $categories = NeedsCategory::where('status', true);
 
-        return response()->json($categories);
+        if (!empty($type))
+            $categories->where('type', $type);
+        
+        $results = $categories->get();
+
+        return response()->json($results);
     }
 
     /**

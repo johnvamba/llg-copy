@@ -21,7 +21,7 @@ Route::post('register/location', 'AuthController@registerLocation');
 Route::post('register/upload-photo', 'AuthController@registerUploadPhoto');
 Route::post('register/goal', 'GoalController@setUserGoal');
 Route::post('auth/{user}', 'AuthController@authUser');
-Route::get('need/categories', 'NeedsCategoryController@index');
+Route::get('need/categories/{type?}', 'NeedsCategoryController@index');
 Route::get('campus', 'CampusController@index');
 Route::post('register/campus/user', 'CampusController@addUser');
 
@@ -84,6 +84,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Needs Categories resource module */
     Route::post('needs-category/lists', 'NeedsCategoryController@getCategories');
+    Route::get('needs/{type}/categories', 'NeedsCategoryController@index');
     Route::resource('needs-categories', 'NeedsCategoryController');
 
     /** Needs Types resource module */
