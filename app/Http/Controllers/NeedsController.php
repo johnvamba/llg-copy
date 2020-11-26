@@ -305,6 +305,33 @@ class NeedsController extends Controller
     }
 
     /**
+     * Volunteer to needs
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addVolunteer(Request $request, Need $need)
+    {
+        $result = DB::transaction(function () use ($request, $need) {
+                Need::find($need->id)
+                    ->update([
+                        'raised' => ($need->raised + 1)
+                    ]);
+
+                $makeNeedMet = NeedMet::make([
+                    'need_id' => $request->need_id,
+                    'amount' => $request->amount,
+                ]);
+
+                $needMet = auth()->user()->needsMet()->save($makeNeedMet);
+
+                return $needMet;
+            });
+
+        return response()->json($result);
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id

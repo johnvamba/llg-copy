@@ -79,6 +79,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsController@nearby');
     Route::get('needs/open/total', 'NeedsController@getTotalNeedsOpen');
     Route::post('needs/organization/{organization}/page/{page}', 'NeedsController@getOrganizationNeeds');
+    Route::post('need/{need}/volunteer', 'NeedsController@addVolunteer');
     Route::post('needs/page/{page}', 'NeedsController@index');
     Route::resource('needs', 'NeedsController');
 
@@ -94,6 +95,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('needs-mets/group/{group}', 'NeedsMetController@getGroupNeedsMet');
     Route::get('needs-mets/user/{user}', 'NeedsMetController@getUserNeedsMet');
     Route::get('needs-mets/total', 'NeedsMetController@getTotalNeedsMet');
+    Route::get('needs-mets/{need}/volunteers', 'NeedsMetController@getNeedsVolunteer');
     Route::resource('needs-met', 'NeedsMetController');
 
     /** Service Offered resource module */
