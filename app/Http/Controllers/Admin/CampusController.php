@@ -8,6 +8,7 @@ use App\Http\Resources\CampusResource;
 
 use App\Campus;
 use DB;
+use Str;
 
 class CampusController extends Controller
 {
@@ -18,7 +19,7 @@ class CampusController extends Controller
      */
     public function index()
     {
-        $campus = Campus::withCount('organizations')->latest()->get();
+        $campus = Campus::withCount('organizations')->with('media')->latest()->get();
 
         return CampusResource::collection($campus);
     }
@@ -54,6 +55,21 @@ class CampusController extends Controller
         try {
             $campus = Campus::create( $request->only('name', 'location', 'lng', 'lat') ); //add description here
             //add photo here
+            if ($image = $request->get('photo')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($image))[1];
+                
+                $campus 
+                    ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('photo');
+
+                $campus->getMedia('photo');
+            }
 
             DB::commit();
             return new CampusResource($campus);
@@ -101,14 +117,28 @@ class CampusController extends Controller
             'location' => 'required',
             'lng' => 'required',
             'lat' => 'required',
-            // 'photo' => 
         ]);
 
         DB::beginTransaction();
         try {
             $campus->fill( $request->only('name', 'location', 'lng', 'lat') ); //add description here
             //add photo here
-            
+            if ($image = $request->get('photo')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($image))[1];
+                
+                $campus 
+                    ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('photo');
+
+                $campus->getMedia('photo');
+            }
+
             $campus->save();
             DB::commit();
             return new CampusResource($campus);

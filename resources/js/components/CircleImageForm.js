@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './css/photo-circle.css';
+import PencilIcon from '../svg/pencil';
 
 const CircleImageForm = ({
     className = "",
     src,
     onChangeFile,
-    error = null
+    error = null,
+    ver2 = false
 }) => {
 	const fileInput = useRef(null)
 	const [tempUrl, setTempUrl] = useState(src);
@@ -32,6 +34,17 @@ const CircleImageForm = ({
 	const uploadInit = (e) => {
 		fileInput.current.click();
 	}
+
+	if(ver2)
+		return <div className={`photo-circle org-circle`}>
+			<img 
+				className="rounded-full image"
+	            src={tempUrl || `http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp`}
+			/>
+			<input type="file" ref={fileInput} onChange={imageChange}/>
+			<button className="button-pencil" onClick={uploadInit}><PencilIcon/></button>
+		</div>
+
     return <div className={`photo-circle ${className}`}>
         <img
             className="rounded-full image"

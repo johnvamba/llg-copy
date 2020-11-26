@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\HasMedia;
 
-class Campus extends Model
+
+class Campus extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     protected $guarded = [];
 
     public function organizations(){

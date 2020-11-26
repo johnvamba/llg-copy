@@ -160,6 +160,9 @@ class NeedsController extends Controller
                 
                 $need 
                     ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
                     ->usingName($name)
                     ->usingFileName($name.'.'.$extension)
                     ->toMediaCollection('photo');
@@ -268,6 +271,9 @@ class NeedsController extends Controller
                 $extension = explode('/', mime_content_type($image))[1];
                 
                 $need 
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
                     ->addMediaFromBase64($image)
                     ->usingName($name)
                     ->usingFileName($name.'.'.$extension)

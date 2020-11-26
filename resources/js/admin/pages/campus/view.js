@@ -7,7 +7,7 @@ import TabTeams from './tab-team';
 
 
 const CampusView = ({ data, handleForm }) => {
-    const { name, org_count, team_count, description, location } = data
+    const { name, org_count, team_count, description, location, photo } = data
     const [counts, setCounts] = useState({
         orgs: 0,
         teams: 0
@@ -67,7 +67,7 @@ const CampusView = ({ data, handleForm }) => {
     return(
         <section className="campus-view create-form">
             <header className="campus-view__header">
-                <div className="flex bg-cover bg-center" style={{backgroundImage: "url()"}}>
+                <div className="flex bg-cover bg-center" style={{backgroundImage: `url(${photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} >
                     <button className="org-form__close" onClick={()=> handleForm({}, false, false)}>
                         <OffersFormCross />
                     </button>

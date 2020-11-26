@@ -6,6 +6,7 @@ import Content from './content';
 import OrganizationView from './pages/organizations/view';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../assets/css/general.css';
+
 import Filter from '../svg/filter';
 
 import MainFilter from './filter'
@@ -15,7 +16,6 @@ const Home = () => {
     const [filterElement, setFilterElement] = useState(null);
     const [toggleFilter, showFilter] = useState(false);
     const [notifications, setNotifications] = useState([]);
-    const [organization, setOrganization] = useState(null);
     const [showSidebarMobile, setShowSidebarMobile] = useState(false);
     const [actPanel,showActPanel] = useState(false);
 
@@ -39,10 +39,6 @@ const Home = () => {
             Cookie.set("oToken_org_admin", "")
         }
         window.location = '/login';
-    }
-
-    const handleViewOrganization = value => {
-        setOrganization(value)
     }
 
     const handleHamburgerMenu = () => {
@@ -118,17 +114,12 @@ const Home = () => {
 
                     <div className="relative flex flex-row h-full">
                         <section className="flex w-full">
-                            <Content onViewOrganization={handleViewOrganization} />
+                            <Content/>
                         </section>
 
                         { actPanel && <RecentActivities /> }
 
-                        {organization && <div className="absolute z-40 right-0 top-0 md:w-2/5 h-full flex bg-white border-l">
-                            <OrganizationView
-                                data={organization}
-                                onHandleView={handleViewOrganization}
-                            />
-                        </div>}
+                        
                     </div>
                 </div>
             </div>

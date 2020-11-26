@@ -1,11 +1,11 @@
 import React from 'react';
 
 const ListItem = ({data, handlePanels}) => {
-    const { name, description, active_needs, past_needs } = data
+    const { name, description, active_needs, past_needs, photo, banner } = data
     return (<li onClick={() => handlePanels(data, false, true)}>
         <header>
-            <div className="org-list__cover-bg bg-cover bg-center" style={{backgroundImage: "url()"}}>
-                <div className="org-list__rounded-img"></div>
+            <div className="org-list__cover-bg bg-cover bg-center" style={{backgroundImage: `url(${banner})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} >
+                <div className="org-list__rounded-img" style={{backgroundImage: `url(${photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} ></div>
             </div>
         </header>
         <div className="org-list__body">
