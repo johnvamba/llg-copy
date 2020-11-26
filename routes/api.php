@@ -21,7 +21,7 @@ Route::post('register/location', 'AuthController@registerLocation');
 Route::post('register/upload-photo', 'AuthController@registerUploadPhoto');
 Route::post('register/goal', 'GoalController@setUserGoal');
 Route::post('auth/{user}', 'AuthController@authUser');
-Route::get('need/categories', 'NeedsCategoryController@index');
+Route::get('need/categories/{type?}', 'NeedsCategoryController@index');
 Route::get('campus', 'CampusController@index');
 Route::post('register/campus/user', 'CampusController@addUser');
 
@@ -80,11 +80,13 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsController@nearby');
     Route::get('needs/open/total', 'NeedsController@getTotalNeedsOpen');
     Route::post('needs/organization/{organization}/page/{page}', 'NeedsController@getOrganizationNeeds');
+    Route::post('need/{need}/volunteer', 'NeedsController@addVolunteer');
     Route::post('needs/page/{page}', 'NeedsController@index');
     Route::resource('needs', 'NeedsController');
 
     /** Needs Categories resource module */
     Route::post('needs-category/lists', 'NeedsCategoryController@getCategories');
+    Route::get('needs/{type}/categories', 'NeedsCategoryController@index');
     Route::resource('needs-categories', 'NeedsCategoryController');
 
     /** Needs Types resource module */
@@ -94,6 +96,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('needs-mets/group/{group}', 'NeedsMetController@getGroupNeedsMet');
     Route::get('needs-mets/user/{user}', 'NeedsMetController@getUserNeedsMet');
     Route::get('needs-mets/total', 'NeedsMetController@getTotalNeedsMet');
+    Route::get('needs-mets/{need}/volunteers', 'NeedsMetController@getNeedsVolunteer');
     Route::resource('needs-met', 'NeedsMetController');
 
     /** Service Offered resource module */
@@ -150,6 +153,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Orgnization resource module */
     Route::post('organization/lists', 'OrganizationController@getOrganizations');
+    Route::get('organization/featured', 'OrganizationController@getFeaturedOrganizations');
     Route::get('organizations/{organization}/credential', 'OrganizationController@getCredential');
     Route::post('organizations/{organization}/credential', 'OrganizationController@addCredential');
     Route::post('organizations/nearby/{lat}/{lng}', 'OrganizationController@nearby');

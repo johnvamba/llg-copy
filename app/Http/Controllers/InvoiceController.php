@@ -52,7 +52,7 @@ class InvoiceController extends Controller
      */
     public function getRecentDonors(Request $request)
     {
-        $recentDonors = Invoice::with('user')
+        $recentDonors = Invoice::with('user', 'user.profile')
             ->whereHasMorph(
                 'model',
                 ['App\Need'],

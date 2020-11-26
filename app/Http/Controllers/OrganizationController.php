@@ -69,6 +69,34 @@ class OrganizationController extends Controller
     }
 
     /**
+     * Get featured organizations
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getFeaturedOrganizations(Request $request)
+    {
+        $orgs = Organization::where('featured', true)
+            ->latest()
+            ->get();
+
+        foreach ($orgs as $org) {
+            $org['photo'] = $org->getFirstMediaUrl('photo');
+            $org['cover_photo'] = $org->getFirstMediaUrl('cover_photo');
+                
+            $org['activeNeeds'] = Need::where('organization_id', $org->id)
+                ->whereRaw('raised < goal')
+                ->count();
+
+            $org['pastNeeds'] = Need::where('organization_id', $org->id)
+                ->whereRaw('raised >= goal')
+                ->count();
+        }
+
+        return response()->json($orgs);
+    }
+    
+    /**
      * Get organization credential
      *
      * @param  int  $id

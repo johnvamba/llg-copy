@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(OrganizationCategorySeeder::class); //As CategorySeeder
         // $this->call(NeedsCategorySeeder::class); //As CategorySeeder
         $this->call(NeedsTypeSeeder::class);
-        // $this->call(ServiceTypeSeeder::class); //As CategorySeeder
+        //$this->call(ServiceTypeSeeder::class); //As CategorySeeder
         $this->call(UserSeeder::class);
     }
 }

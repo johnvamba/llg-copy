@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
 {
-	protected $volunteering = [
+    protected $volunteering = [
         [ 'name' => 'Employment', 'icon' => 'Employment.png' ],
         [ 'name' => 'Mechanic', 'icon' => 'Mechanic.png' ],
         [ 'name' => 'Cleaning', 'icon' => 'Cleaning.png' ],

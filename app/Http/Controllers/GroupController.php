@@ -445,7 +445,7 @@ class GroupController extends Controller
             ->where('status', 'in progress')
             ->latest()
             ->first();
-
+        
         $date = Carbon::parse($group['goal']->created_at);
 
         $group->getMedia();
