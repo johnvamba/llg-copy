@@ -88,6 +88,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit }) => {
             ...form,
             saveAs,
             description: content,
+            category,
             short_description: editorState.getCurrentContent().getPlainText('\u0001')
         }
         const submitPromise = !data.id ? 

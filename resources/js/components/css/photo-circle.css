@@ -1,0 +1,42 @@
+.photo-circle {
+	display: flex;
+	align-items: center;
+	margin: 25px 0;
+}
+
+.photo-circle img.rounded-full.image {
+	width: 100%;
+    max-width: 80px;
+    height: 80px;
+    background-color: #D3E9F6;
+    border-radius: 50px;
+    margin-right: 22px;
+}
+.photo-circle div.photo-button {
+
+}
+.photo-circle div.photo-button input[type='file']{
+	display: none;
+}
+.photo-circle div.photo-button button{
+	background: #109CF1;
+    border-radius: 4px;
+    color: #fff;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    text-align: center;
+    letter-spacing: 0.01em;
+    padding: 9px 24px;
+}
+
+.photo-circle div.photo-button p{
+	font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 24px;
+    font-feature-settings: 'liga' off;
+    color: rgba(74, 108, 140, 0.56);
+    margin: 3px 0 0 0;
+}

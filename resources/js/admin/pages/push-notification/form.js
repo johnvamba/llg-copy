@@ -132,8 +132,8 @@ const PushForm = ({ data={}, activeForm, handleForm }) =>{
                 </form>
             </section>
             <footer className="form-footer org-form__footer">
-                <button className="discard" onClick={onClear}>Discard</button>
-                <button className="next" onClick={handleSubmit}>Add</button>
+                <button className="btn btn-secondary" onClick={onClear}>Discard</button>
+                <button className="btn btn-primary" onClick={handleSubmit}>Add</button>
             </footer>
         </section>
     )

@@ -34,7 +34,7 @@ const routes = [
     {
         path: '/',
         exact: true,
-        component: () => <h2>Welcome!</h2>
+        component: (props) => <h2>Welcome!</h2>
     },
     {
         path: '/dashboard',

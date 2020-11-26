@@ -7,8 +7,9 @@ import Location from '../../../components/Location'
 import { selectStyle, loadOrganization } from '../../../components/helpers/async_options';
 import { connect } from 'react-redux';
 import AsyncSelect from 'react-select/async';
+import CircleImageForm from '../../../components/CircleImageForm';
 
-const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPrivacy, handleLocation, AuthUserReducer }) => {
+const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPrivacy, handleLocation, AuthUserReducer, onChangePhoto }) => {
     const { roles } = AuthUserReducer;
     const [organization, setOrganization] = useState({});
 
@@ -18,13 +19,7 @@ const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPriva
 		<>
             <h3>Group Information</h3>
             <section className="tab__content">
-                <header>
-                    <div className="image"></div>
-                    <div>
-                        <button>Upload Photo</button>
-                        <p>Images should be atleast 300 x 300 px in pngo or jpeg file</p>
-                    </div>
-                </header>
+                <CircleImageForm src={fields.photo} onChangeFile={onChangePhoto} error={fieldErrors.photo}/>
                 <form className="w-full">
                     <div className="w-full xl:w-full">
                         <div className={`form-group ${fieldErrors.name ? 'form-error' : ''}`}>

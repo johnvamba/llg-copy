@@ -11,6 +11,7 @@
     margin: 12px;
     position: relative;
     cursor: pointer;
+    width: 300px;
 }
 .org-list__cover-bg{
     width: 100%;
@@ -32,6 +33,7 @@
 .org-list__body{
     margin-top: 43px;
     padding: 0 19px;
+    height: 80px;
 }
 .org-list__body h2{
     font-style: normal;
@@ -41,6 +43,16 @@
     letter-spacing: 0.01em;
     color: #323C47;
     margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.org-list__body p {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .org-list__footer{
     padding: 10px 19px 28px;

@@ -200,8 +200,8 @@ const TransactionsForm = ({ data = {}, handleForm, afterSubmit }) => {
                 </form>
             </section>
             <footer className="form-footer org-form__footer">
-                <button className="discard" onClick={() => handleForm()}>Discard</button>
-                <button className="next" onClick={handleSubmit}>{data.id? 'Edit' : 'Create'}</button>
+                <button className="btn btn-secondary" onClick={() => handleForm()}>Discard</button>
+                <button className="btn btn-primary" onClick={handleSubmit}>{data.id? 'Edit' : 'Create'}</button>
             </footer>
         </section>
     )

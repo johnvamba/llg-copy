@@ -8,10 +8,10 @@ const ListSingleStory = ({ set = [], handleForm }) => {
         <ul>
         {
             set.length > 0 && set.map((i, k)=>
-                <li key={k} onClick={() => handleForm(i, true)}>
+                <li key={k} onClick={() => handleForm(i, false, true)}>
                     <div className="list-single-story__header">
                         <div className="list-single-story__rounded-img"></div>
-                        <div>
+                        <div style={{width: '300px'}}>
                             <h2>{i.title || 'Missing-title'}</h2>
                             <span>{i.date || 'Missing-date'}</span>
                         </div>
@@ -25,15 +25,15 @@ const ListSingleStory = ({ set = [], handleForm }) => {
                                 <ul>
                                     <li>
                                         <StoriesHeartIcon />
-                                        <span>23,783</span>
+                                        <span>{i.appreciates_count}</span>
                                     </li>
                                     <li>
                                         <StoriesCommentIcon />
-                                        <span>21</span>
+                                        <span>{i.comments_count}</span>
                                     </li>
                                     <li>
                                         <StoriesShareIcon />
-                                        <span>14</span>
+                                        <span>{i.shares_count}</span>
                                     </li>
                                 </ul>
                             </div>

@@ -4,6 +4,7 @@ import FormTabInfo from './form-tab-info';
 import FormTabInvite from './form-tab-invite';
 import FormTabGoal from './form-tab-goal';
 import { swalError } from '../../../components/helpers/alerts';
+import LoadingScreen from '../../../components/LoadingScreen';
 
 const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
     const [countTab, setCountTab] = useState(1);
@@ -17,6 +18,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
         description: '',
         location: '',
         privacy: '',
+        photo: null,
         lat: null,
         lng: null
     });
@@ -29,6 +31,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                 description: data.description,
                 location: data.location,
                 privacy: data.privacy,
+                photo: data.photo,
                 lat: data.lat,
                 lng: data.lng
             })
@@ -44,6 +47,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
         name: 'Missing Campus Name',
         description: 'Missing Description',
         location: 'Missing Location',
+        photo: 'Missing photo',
         privacy: 'Need to Select a Privacy'
     }
 
@@ -110,6 +114,14 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
         }
     }
 
+    const onChangePhoto = (file) => {
+        const reader = new FileReader();
+        reader.onload = (e2) => {
+            setFieldErrors({...fieldErrors, photo : '' });
+            setFields({...fields, photo: e2.target.result})
+        }
+        reader.readAsDataURL(file)
+    }
 
     return (
         <div className="offers-create-form">
@@ -154,6 +166,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                         handleLocation={handleLocation}
                         fieldErrors={fieldErrors}
                         fields={fields}
+                        onChangePhoto={onChangePhoto}
                         handleSelectPrivacy={handleSelectPrivacy}
                     />
                 }

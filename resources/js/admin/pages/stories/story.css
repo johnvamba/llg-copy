@@ -23,10 +23,10 @@
     font-size: 14px;
     line-height: 17px;
     letter-spacing: 0.01em;
-    color: #323C47;/*
+    color: #323C47;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;*/
+    text-overflow: ellipsis;
 }
 .list-single-story__header span{
     font-family: "Lato", sans-serif;
@@ -683,7 +683,7 @@
 }
 .view-story__body .content .title{
     display: flex;
-    align-items: center;
+    /*align-items: center;*/
     justify-content: space-between;
 }
 .view-story__body .content .title h2{

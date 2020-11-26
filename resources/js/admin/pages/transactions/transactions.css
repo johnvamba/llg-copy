@@ -5,7 +5,7 @@
     cursor: pointer;
 }
 .transaction-form__body{
-    margin-top: 23px;
+    /*margin-top: 23px;*/
 }
 .transactions-form__amount span{
     font-style: normal;

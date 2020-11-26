@@ -264,9 +264,9 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
                 </form>
             </section>
             <footer className="form-footer org-form__footer">
-                <button className="discard" onClick={handleDiscard}>Discard</button>
+                <button className="btn btn-secondary" onClick={handleDiscard}>Discard</button>
                 <div className="flex-grow-1"></div>
-                <button className="next" onClick={handleSubmit}>{data.id ? "Edit" : "Add"}</button>
+                <button className="btn btn-primary" onClick={handleSubmit}>{data.id ? "Edit" : "Add"}</button>
             </footer>
         </section>
     )

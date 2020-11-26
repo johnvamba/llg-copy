@@ -165,7 +165,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
 
         submitPromise.then(({data})=>{
             setSubmitting(false)
-            handleForm(false, 'submit', data.data);
+            handleForm(data.data, false, 'submit');
         }).catch(err=>{
             // console.log('error', err, err.response)
             if(err.response){
@@ -201,7 +201,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             }
             <div className="form-title">
                 <h3>Create Need</h3>
-                <button type="button" onClick={()=>handleForm(false, 'close')}>
+                <button type="button" onClick={()=>handleForm({}, false, 'close')}>
                     <CrossPlain />
                 </button>
             </div>
@@ -335,7 +335,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 <Imagepond photo={photo} imageSelected={setPhoto} errors={errors.photo}/>
             </div>
             <div className="form-footer">
-                <Button className="btn btn-secondary" onClick={()=>handleForm(false, 'discard')} disabled={submitting}>Discard</Button>
+                <Button className="btn btn-secondary" onClick={()=>handleForm({},false, 'discard')} disabled={submitting}>Discard</Button>
                 <Button className="btn btn-primary" onClick={submit} disabled={submitting}>Create</Button>
             </div>
         </div>
