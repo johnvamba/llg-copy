@@ -39,14 +39,8 @@ class OrganizationSeeder extends Seeder
 	    		]);
 
 	        	$categories = OrganizationCategory::inRandomOrder()->take(rand(1,2))->get();
-	        	//Change this later
-        		$categories->each(function($cat) use ($org){
-        			OrganizationHasCategory::create([
-        				'organization_category_id' => $cat->id,
-        				'model_type' => Organization::class,
-        				'model_id' => $org->id
-        			]);
-        		});
+
+	        	$org->categories()->sync($categories);
 
 	        	for ($u=0; $u < $team; $u++) { 
 	        		if($u == 0){
