@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Story;
-use App\Organization;
 use Illuminate\Http\Request;
 use App\Http\Resources\StoryResource;
+use App\Http\Controllers\Controller;
 use DB;
+
+use App\Story;
+use App\Organization;
+use App\Category;
+
 class StoryController extends Controller
 {
     /**
@@ -17,7 +20,7 @@ class StoryController extends Controller
      */
     public function index(Request $request)
     {
-        $stories = Story::latest();
+        $stories = Story::with(['categories:name', 'media'])->withCount(['appreciates', 'comments'])->latest();
         $type = '';
 
         if($type = $request->get('type'))
@@ -63,6 +66,12 @@ class StoryController extends Controller
                 'organization_id' => optional($org)->id || 1,
                 'posted_at' => $request->get('saveAs') != 'draft' ? now() : null,
             ] + $request->only('title', 'description', 'short_description') );
+
+            if($category = $request->get('category')){
+                $cat_names = array_map(fn($cat) => ($cat['name'] ?? $cat['value'] ?? $cat['slug'] ?? null), $category ?? []);
+                $categories = Category::where('name', $cat_names)->get();
+                $story->categories()->sync($categories);
+            }
 
             DB::commit();
             return new StoryResource($story);
@@ -115,6 +124,12 @@ class StoryController extends Controller
                 'posted_at' => $request->get('saveAs') != 'draft' ? now() : null,
             ] + $request->only('title', 'description', 'short_description') );
 
+            if($category = $request->get('category')){
+                $cat_names = array_map(fn($cat) => ($cat['name'] ?? $cat['value'] ?? $cat['slug'] ?? null), $category ?? []);
+                $categories = Category::where('name', $cat_names)->get();
+                $story->categories()->sync($categories);
+            }
+
             $story->save();
             
             DB::commit();
@@ -133,6 +148,35 @@ class StoryController extends Controller
      */
     public function destroy(Story $story)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $story->delete();
+            DB::commit();
+            return response()->json(['Successfully deleted'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Story  $story
+     * @return \Illuminate\Http\Response
+     */
+    public function toggle(Story $story)
+    {
+        DB::beginTransaction();
+        try {
+            $story->update([
+                'posted_at' => !isset($story->posted_at) ? now() : null
+            ]);
+            DB::commit();
+            return response()->json(['Successfully deleted'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 }

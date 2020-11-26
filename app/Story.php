@@ -20,6 +20,8 @@ class Story extends Model implements HasMedia
 
     protected $appends = ['created'];
 
+    protected $dates = ['posted_at'];
+    
     protected $with = ['tags'];
 
     public function tags()
@@ -50,6 +52,11 @@ class Story extends Model implements HasMedia
     public function categories()
     {
         return $this->morphToMany("App\Category", "categorize", 'categorizes');;
+    }
+
+    public function comments()
+    {
+        return $this->hasMany('App\CommentStory');
     }
 
     /**

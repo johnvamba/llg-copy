@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::resource('campuses', 'CampusController');
 
         Route::resource('stories', 'StoryController');
+        Route::post('stories/{story}/toggle', 'StoryController@toggle');
 
         Route::resource('groups', 'GroupController');
 

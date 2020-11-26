@@ -87,6 +87,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Invoice');
     }
 
+    public function groups_member()
+    {
+        return $this->hasManyThrough('App\Group', 'App\GroupParticipant', 'user_id', 'id', 'id', 'group_id');
+    }
+
     /**
      * Register new user
      */
