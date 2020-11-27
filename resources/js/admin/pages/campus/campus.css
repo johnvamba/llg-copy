@@ -176,6 +176,11 @@
     font-size: 13px;
     line-height: 24px;
     color: #231F20;
+
+    width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .tab-org__details p{
     font-style: normal;
@@ -183,6 +188,11 @@
     font-size: 11px;
     line-height: 140%;
     color: #98999B;
+
+    width: 380px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .tab-org__details button{
     display: flex;

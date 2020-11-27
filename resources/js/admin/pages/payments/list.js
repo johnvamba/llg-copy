@@ -21,7 +21,7 @@ const PaymentList = ({ showEdit, state, checkedAll, handleRowCheckbox, handleRow
                     </thead>
                     <tbody>
                         {
-                            state.data.map((payment, index) => 
+                            state.map((payment, index) => 
                                 <tr key={index} className={showEdit ? payment.active : 'non-active'} >
                                     <td className="checkbox">
                                         <input type='checkbox' onChange={(e) => handleRowCheckbox(payment,e.target.checked)} checked={payment.checked ? payment.checked : false} />
@@ -29,7 +29,7 @@ const PaymentList = ({ showEdit, state, checkedAll, handleRowCheckbox, handleRow
                                     </td>
                                     <td className="title" onClick={() => handleRowActive(payment)}>
                                         <p>
-                                            {payment.need}
+                                            {payment.need_title}
                                         </p>
                                     </td>
                                     <td>

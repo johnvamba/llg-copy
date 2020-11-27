@@ -4,10 +4,11 @@ import OffersFormCross from '../../../svg/offers-form-cross';
 import OffersLocation from '../../../svg/offers-location';
 import TabOrgs from './tab-org';
 import TabTeams from './tab-team';
-
+import LoadingScreen from '../../../components/LoadingScreen'
 
 const CampusView = ({ data, handleForm }) => {
     const { name, org_count, team_count, description, location, photo } = data
+    const [loading, setLoading] = useState(false);
     const [counts, setCounts] = useState({
         orgs: 0,
         teams: 0
@@ -21,7 +22,9 @@ const CampusView = ({ data, handleForm }) => {
     const [tab, setTab] = useState('orgs');
     
     useEffect(()=>{
-
+        setLoading(true)
+        loadTeams()
+        loadOrgs()
     }, [data])
 
     const loadTeams = (clearCache = false) => {
@@ -66,6 +69,12 @@ const CampusView = ({ data, handleForm }) => {
 
     return(
         <section className="campus-view create-form">
+            {
+                (loading) &&
+                <LoadingScreen title={
+                    'Loading contents for campus'
+                }/>
+            }
             <header className="campus-view__header">
                 <div className="flex bg-cover bg-center" style={{backgroundImage: `url(${photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} >
                     <button className="org-form__close" onClick={()=> handleForm({}, false, false)}>
@@ -94,8 +103,8 @@ const CampusView = ({ data, handleForm }) => {
                 </ul>
             </section>
             <section className="offers-create-form__body">
-                { (tab === 'orgs') && <TabOrgs />}
-                { (tab === 'teams') && <TabTeams />}
+                { (tab === 'orgs') && <TabOrgs orgs={orgs || []} />}
+                { (tab === 'teams') && <TabTeams teams={teams || []} />}
             </section>
         </section>
     )

@@ -31,7 +31,7 @@ const TransactionsList = ({ showEdit, set = [], checkedAll, handleRowCheckbox, h
                                 </td>
                                 <td className="title" onClick={() => handleForm(organisation, true)}>
                                     <p>
-                                        {organisation.title}
+                                        {organisation.org_name}
                                     </p>
                                 </td>
                                 <td>
@@ -41,7 +41,7 @@ const TransactionsList = ({ showEdit, set = [], checkedAll, handleRowCheckbox, h
                                     <p>{organisation.email}</p>
                                 </td>
                                 <td>
-                                    <p>{organisation.phoneNumber}</p>
+                                    <p>{organisation.phone_number}</p>
                                 </td>
                                 <td>
                                     <p>

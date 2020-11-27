@@ -16,7 +16,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transacts = Transact::with(['organization:name','user', 'model'])->latest();
+        $transacts = Transact::with(['organization','user'])->latest();
 
         return TransactionResource::collection($transacts->paginate());
     }
