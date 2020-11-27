@@ -50,7 +50,7 @@ const CategoryScroll = ({
     }
 
     return (
-        <div className={`form-group ${errors && 'form-error'}`}>
+        <div className={`form-group ${errors ? 'form-error' : ''}`}>
             <label>Select Category</label>
             <div className="icon-categories"
                 onWheel={categoryWheel}

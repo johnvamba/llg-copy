@@ -23,8 +23,12 @@ class OrganizationSeeder extends Seeder
     		$org_count = rand(1,3);
     		$team = rand(1,3);
 
-			$campus_admin = factory(\App\User::class)->create();
+			$campus_admin = factory(\App\User::class)->create(['email' => 'campus'.$campus->id.'@neuma.test']);
+
 			$campus_admin->assignRole('campus admin');
+
+			\factory(\App\UserProfile::class)->create([ 'user_id' => $campus_admin->id]);
+
 			CampusUser::create([
 				'user_id' => $campus_admin->id,
 				'campus_id' => $campus->id
@@ -39,23 +43,18 @@ class OrganizationSeeder extends Seeder
 	    		]);
 
 	        	$categories = OrganizationCategory::inRandomOrder()->take(rand(1,2))->get();
-	        	//Change this later
-        		$categories->each(function($cat) use ($org){
-        			OrganizationHasCategory::create([
-        				'organization_category_id' => $cat->id,
-        				'model_type' => Organization::class,
-        				'model_id' => $org->id
-        			]);
-        		});
+
+	        	$org->categories()->sync($categories);
 
 	        	for ($u=0; $u < $team; $u++) { 
 	        		if($u == 0){
-			            $orgUser = factory(\App\User::class)->create();
+			            $orgUser = factory(\App\User::class)->create(['email' => 'org'.$u.'-'.$org->id.'@neuma.test']);
 			            $orgUser->assignRole('organization admin');
 	        		} else {
-	        			$orgUser = factory(\App\User::class)->create();
+	        			$orgUser = factory(\App\User::class)->create(['email' => 'org'.$u.'-'.$org->id.'@neuma.test']);;
 			            $orgUser->assignRole('user');
 	        		}
+	        		\factory(\App\UserProfile::class)->create([ 'user_id' => $orgUser->id]);
 	        		OrganizationMember::create([
 	        			'organization_id' => $org->id,
 	        			'model_id' => $orgUser->id,

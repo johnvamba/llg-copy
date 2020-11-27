@@ -54,7 +54,7 @@ const PushList = ({ showEdit, handleForm}) => {
     }
 
     return (
-        <section className="push-list notifs-table offers-table flex flex-col p-8">
+        <section className="component-body push-list notifs-table offers-table flex flex-col p-8">
             <table>
                 <thead className="">
                     <tr>

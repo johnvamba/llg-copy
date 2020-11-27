@@ -5,13 +5,18 @@ import Camera from '../../../svg/camera';
 import Location from '../../../components/Location'
 import { swalError } from '../../../components/helpers/alerts';
 import { isValidated } from '../../../components/helpers/validator';
+import LoadingScreen from '../../../components/LoadingScreen'
+import BannerImage from '../../../components/BannerImage';
+import ImageCropper from '../../../components/ImageCropper'
 
 const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
     const [form, setForm] = useState({
         name: '',
-        description: ''
+        description: '',
     })
-    const [cover, setCover] = useState('')
+    const [cropper, openCropper] = useState(false)
+
+    const [cover, setCover] = useState(null)
     const [location, setLocation] = useState({
         location: '',
         lat: 0,
@@ -39,6 +44,16 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
             lat: geometry.location.lat(), 
             lng: geometry.location.lng()
         })
+    }
+    const handleImages = (file, cropper = false) => {
+        // if(cropper)
+        //     return
+        const reader = new FileReader();
+        reader.onload = (e2) => {
+            openCropper(e2.target.result)
+            // setCover( e2.target.result )
+        }
+        reader.readAsDataURL(file)
     }
 
     const validateSubmit = () => {
@@ -80,33 +95,40 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
             submitPromise.then(({data})=>{
                 afterSubmit(data.data);
                 handleForm({}, false, false)
-                setSubmitting(false)
+                
             }).catch(({response})=>{
                 if(response){
                     setErrors(response.data)
                 }
                 swalError('Errors occured on server.')
-            })
+            }).finally(()=>setSubmitting(false))
         } else {
             swalError('Fields are incorrect or missing')
         }
     }
 
     return(
-        <section className="campus-form create-form">
-            <header className="create-story__header">
-                <h2>{data.id ? 'Edit' : 'Add'} Campus</h2>
+        <section className="form campus-form create-form">
+            {
+                (submitting) &&
+                <LoadingScreen title={
+                    (submitting && (data.id ? 'Updating Campus' : 'Creating Campus')) ||
+                    'Please wait'
+                }/>
+            }
+            {
+                cropper && <ImageCropper aspect={12/5} originalImage={cropper} 
+                    onImageCropped={setCover}
+                    closeCropper={()=>openCropper(null)} />
+            }
+            <header className="form-title create-story__header">
+                <h3>{data.id ? 'Edit' : 'Add'} Campus</h3>
                 <button type="button" onClick={()=> handleForm(data, false, false)}>
                     <OffersFormCross />
                 </button>
             </header>
-            <section className="campus-form__body">
-                <div className="flex bg-cover bg-center" style={{backgroundImage: "url()"}}>
-                    <button>
-                        <Camera /> 
-                        Add Cover
-                    </button>
-                </div>
+            <section className="form-body campus-form__body">
+                <BannerImage src={cover} height={'175px'} onChangeFile={handleImages}/>               
                 <form>
                     <div className="w-full">
                         <div className={`form-group ${errors.name && 'form-error'}`}>
@@ -146,11 +168,9 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
                     </div>
                 </form>
             </section>
-            <footer className="org-form__footer">
-                <div className="flex">
-                    <button className="discard" onClick={reset} disabled={submitting}>Discard</button>
-                    <button className="next" onClick={submit} disabled={submitting}>{submitting ? 'Submitting' : ( data.id ? 'Edit' : 'Add' )} </button>
-                </div>
+            <footer className="form-footer org-form__footer">
+                <button className="discard" onClick={reset} disabled={submitting}>Discard</button>
+                <button className="btn-primary" onClick={submit} disabled={submitting}>{submitting ? 'Submitting' : ( data.id ? 'Edit' : 'Add' )} </button>
             </footer>
         </section>
     )

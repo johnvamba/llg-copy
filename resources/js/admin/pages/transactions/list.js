@@ -5,7 +5,7 @@ import Mail from '../../../svg/mail';
 const TransactionsList = ({ showEdit, set = [], checkedAll, handleRowCheckbox, handleForm, isChecked }) => {
 
     return (
-        <section className="transaction-list users-table offers-table flex flex-col p-8">
+        <section className="component-body transaction-list users-table offers-table flex flex-col p-8">
             <table>
                 <thead className="">
                     <tr>

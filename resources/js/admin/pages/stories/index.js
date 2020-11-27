@@ -143,22 +143,32 @@ const Stories = () => {
     }
 
     const afterSubmit = (data = {}, type = 'draft') => {
-            console.log('afterSubmit',type,data)
-        if(type == 'draft'){
-            loadDrafts(true)
-            // setDrafts([data, ...drafts])
-            // setCounts({
-            //     ...counts,
-            //     drafts: counts.drafts+1
-            // })
-        } else {
-            loadPublished(true)
-            // setPublishes([data, ...publishes])
-            // setCounts({
-            //     ...counts,
-            //     published: counts.published+1
-            // })
-        }
+        // console.log('afterSubmit',type,data)
+        // switch(type){
+        //     case 'draft':
+        //     loadDrafts(true);
+        //     break;
+        //     case 'publish':
+        //     loadPublished(true);
+        //     default:
+        // }
+        loadDrafts(true);
+        loadPublished(true);
+        // if(type == 'draft'){
+        //     loadDrafts(true)
+        //     // setDrafts([data, ...drafts])
+        //     // setCounts({
+        //     //     ...counts,
+        //     //     drafts: counts.drafts+1
+        //     // })
+        // } else {
+        //     loadPublished(true)
+        //     // setPublishes([data, ...publishes])
+        //     // setCounts({
+        //     //     ...counts,
+        //     //     published: counts.published+1
+        //     // })
+        // }
     }
 
     return (
@@ -172,7 +182,7 @@ const Stories = () => {
                 }
             </section>
             { showCreateStory && <StoriesForm data={focus} handleForm={handleForm} afterSubmit={afterSubmit} /> }
-            { showViewStory && <View data={focus} handleForm={handleForm} /> }
+            { showViewStory && <View data={focus} handleForm={handleForm} afterSubmit={afterSubmit} /> }
         </>
     )
 }

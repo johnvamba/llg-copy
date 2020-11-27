@@ -10,7 +10,7 @@ const CampusList = ({ campuses = [], setShowView }) => {
                 {
                     campuses.length > 0 && campuses.map((i, k)=> <li key={k} onClick={()=>setShowView(i, false, true)}>
                         <header>
-                            <div className="flex bg-cover bg-center" style={{backgroundImage: "url()"}} />
+                            <div className="flex bg-cover bg-center" style={{backgroundImage: `url(${i.photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} />
                         </header>
                         <section className="campus-list__body">
                             <h2>{i.name || 'Missing'}</h2>

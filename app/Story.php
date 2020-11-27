@@ -8,15 +8,20 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Carbon\Carbon;
 
+use App\Helper\Traits\StoryPortalTrait;
+
 class Story extends Model implements HasMedia
 {
     use InteractsWithMedia;
     use SoftDeletes;
+    use StoryPortalTrait;
 
     protected $guarded = [];
 
     protected $appends = ['created'];
 
+    protected $dates = ['posted_at'];
+    
     protected $with = ['tags'];
 
     public function tags()
@@ -32,6 +37,11 @@ class Story extends Model implements HasMedia
     public function organization()
     {
         return $this->belongsTo('App\Organization');
+    }
+
+    public function campus()
+    {
+        return $this->belongsTo(Campus::class, CampusOrganization::class, 'organization_id', 'campus_id', 'organization_id', 'campus_id');
     }
 
     public function appreciates()

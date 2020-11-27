@@ -6,6 +6,10 @@ import PencilIcon from '../../../svg/pencil';
 import CategoryScroll from '../../../components/CategoryScroll'
 import { swalError } from '../../../components/helpers/alerts';
 import { validateEmail, isValidated } from '../../../components/helpers/validator';
+import LoadingScreen from '../../../components/LoadingScreen'
+import CircleImageForm from '../../../components/CircleImageForm';
+import BannerImage from '../../../components/BannerImage';
+import ImageCropper from '../../../components/ImageCropper'
 
 const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
     const [category, setCategory] = useState([]);
@@ -16,6 +20,11 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
         phone_number: '',
         description: ''
     })
+    const [images, setImages] = useState({
+        banner: null,
+        photo: null
+    })
+    const [cropper, openCropper] = useState(null)
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const [location, setLocation] = useState({
@@ -28,10 +37,9 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
     //Loading data from table
     useEffect(()=>{
         if(data.id){
-                const { name, email, site, phone_number, description, category } = data
+                const { name, email, site, phone_number, description, category, banner, photo } = data
                 setForm({ ...form, name, email, site, phone_number, description})
-            // if(form.name == ''){
-            // }
+                setImages({banner, photo})
             loadAll()
         }
     }, [data])
@@ -75,15 +83,26 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
         removeError(name)
     }
 
-    const categoryWheel = event => {
-        const { target } = event
-        // target.scrollLeft += (event.deltaY / 10)
-        console.log('onWheel', event.deltaY, target.scrollLeft)
-        // target.scrollX += event.deltaY
+    const handleImages = (file, type = 'photo', cropper = false) => {
+        const reader = new FileReader();
+        reader.onload = (e2) => {
+            if(cropper){
+                openCropper(e2.target.result)
+            } else {
+                openCropper(null);
+            }
+            setImages({
+                ...images,
+                [type]: e2.target.result
+            })
+        }
+        reader.readAsDataURL(file)
     }
-
-    const categoryScroll = event => {
-        console.log('onScroll', event.target.scrollTop, event.target.scrollLeft)
+    const handleBanner = (banner)=>{
+        setImages({
+            ...images,
+            banner
+        })
     }
 
     const handleCategories = (item, truth = false) => {
@@ -114,6 +133,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
             const params = {
                 ...form,
                 ...location,
+                ...images,
                 category,
             }
             const submitPromise = !data.id ? 
@@ -150,26 +170,30 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
     }
 
     return (
-        <section className="org-form">
-            <div className="create-story__header">
-                <h2>{data.id ? "Edit" : "Add"} Organisation</h2>
+        <section className="form org-form">
+            {
+                (loading || submitting) &&
+                <LoadingScreen title={
+                    (loading && 'Loading Organisation...') ||
+                    (submitting && (data.id ? 'Updating Organisation' : 'Creating Organisation')) ||
+                    'Please wait'
+                }/>
+            }
+            {
+                cropper && <ImageCropper aspect={14/5} originalImage={cropper} 
+                    onImageCropped={handleBanner}
+                    closeCropper={()=>openCropper(null)} />
+            }
+            <div className="form-title create-story__header">
+                <h3>{data.id ? "Edit" : "Add"} Organisation</h3>
                 <button type="button" onClick={handleClose}>
                     <OffersFormCross />
                 </button>
             </div>
-            <header>
-                <div className="org-form__cover-bg bg-cover bg-center" style={{backgroundImage: "url()"}}>
-                    <button>
-                        <Camera /> 
-                        Add Cover
-                    </button>
-                    <div className="org-form__rounded-img"></div>
-                    <div className="org-form__edit">
-                        <PencilIcon />
-                    </div>
-                </div>
-            </header>
-            <section className="org-form__body">
+            <section className="form-body org-form__body">
+                <BannerImage src={images.banner} onChangeFile={(file)=>handleImages(file, 'banner', true)}>
+                    <CircleImageForm ver2={true} src={images.photo} onChangeFile={(file)=>handleImages(file, 'photo')}/>
+                </BannerImage>
                 <form>
                     <CategoryScroll 
                         type={'monetary'}
@@ -254,11 +278,10 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
                     </div>
                 </form>
             </section>
-            <footer className="org-form__footer">
-                <div className="flex">
-                    <button className="discard" onClick={handleDiscard}>Discard</button>
-                    <button className="next" onClick={handleSubmit}>{data.id ? "Edit" : "Add"}</button>
-                </div>
+            <footer className="form-footer org-form__footer">
+                <button className="btn btn-secondary" onClick={handleDiscard}>Discard</button>
+                <div className="flex-grow-1"></div>
+                <button className="btn btn-primary" onClick={handleSubmit}>{data.id ? "Edit" : "Add"}</button>
             </footer>
         </section>
     )

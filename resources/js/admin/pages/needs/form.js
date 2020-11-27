@@ -18,6 +18,7 @@ import Calendar from '../../../svg/calendar'
 import Location from '../../../components/Location'
 import CategoryScroll from '../../../components/CategoryScroll'
 import Imagepond from '../../../components/Imagepond'
+import LoadingScreen from '../../../components/LoadingScreen'
 
 import { connect } from 'react-redux';
 
@@ -164,7 +165,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
 
         submitPromise.then(({data})=>{
             setSubmitting(false)
-            handleForm(false, 'submit', data.data);
+            handleForm(data.data, false, 'submit');
         }).catch(err=>{
             // console.log('error', err, err.response)
             if(err.response){
@@ -175,24 +176,32 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         })
     }
 
-    if(loading)
-        return (<div className="form need-form">
-        <div className="form-title">
-            <h3>Loading information of Need</h3>
-            <button type="button" onClick={()=>handleForm(false, 'close')}>
-                <CrossPlain />
-            </button>
-        </div>
-        <div className="form-body">
-            <p className="p-5">Please wait while we load your Need</p>
-        </div>
-    </div>)
+    // if(loading)
+    //     return (<div className="form need-form">
+    //     <div className="form-title">
+    //         <h3>Loading information of Need</h3>
+    //         <button type="button" onClick={()=>handleForm(false, 'close')}>
+    //             <CrossPlain />
+    //         </button>
+    //     </div>
+    //     <div className="form-body">
+    //         <p className="p-5">Please wait while we load your Need</p>
+    //     </div>
+    // </div>)
 
     return (
        <div className="form need-form">
+            {
+                (loading || submitting) &&
+                <LoadingScreen title={
+                    (loading && 'Loading need...') ||
+                    (submitting && (data.id ? 'Updating Need' : 'Creating Need')) ||
+                    'Please wait'
+                }/>
+            }
             <div className="form-title">
                 <h3>Create Need</h3>
-                <button type="button" onClick={()=>handleForm(false, 'close')}>
+                <button type="button" onClick={()=>handleForm({}, false, 'close')}>
                     <CrossPlain />
                 </button>
             </div>
@@ -326,7 +335,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 <Imagepond photo={photo} imageSelected={setPhoto} errors={errors.photo}/>
             </div>
             <div className="form-footer">
-                <Button className="btn btn-secondary" onClick={()=>handleForm(false, 'discard')} disabled={submitting}>Discard</Button>
+                <Button className="btn btn-secondary" onClick={()=>handleForm({},false, 'discard')} disabled={submitting}>Discard</Button>
                 <Button className="btn btn-primary" onClick={submit} disabled={submitting}>Create</Button>
             </div>
         </div>

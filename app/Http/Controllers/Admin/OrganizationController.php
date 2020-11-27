@@ -20,6 +20,7 @@ use App\Http\Resources\Mini\UserResource;
 use App\Http\Resources\Mini\NeedResource;
 
 use DB;
+use Str;
 
 class OrganizationController extends Controller
 {
@@ -30,7 +31,7 @@ class OrganizationController extends Controller
      */
     public function index(Request $request)
     {
-        $mainQuery = Organization::latest(); // Add campus filter here
+        $mainQuery = Organization::with('media')->latest(); // Add campus filter here
 
         $orgs = (clone $mainQuery)->withCount(['needs as active_needs' => function($query){
             $query->whereNotNull('approved_at')->whereRaw('needs.goal > needs.raised');
@@ -106,7 +107,43 @@ class OrganizationController extends Controller
                 ]);
 
             if($catlist = $request->get('category')){
+                $catlist = array_map(fn($i) => $i['id'] ?? $i['name'] ?? null, $catlist);
+                $categories = OrganizationCategory::whereIn('name', $catlist)
+                    ->orWhereIn('id', $catlist)
+                    ->get();
+                $org->categories()->sync($categories);
+            }
 
+            if ($image = $request->get('photo')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($image))[1];
+                
+                $org 
+                    ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('photo');
+
+                $org->getMedia('photo');
+            }
+
+            if ($banner = $request->get('banner')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($banner))[1];
+                
+                $org 
+                    ->addMediaFromBase64($banner)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('banner');
+
+                $org->getMedia('banner');
             }
 
             DB::commit();
@@ -169,8 +206,45 @@ class OrganizationController extends Controller
                 ]);
 
             if($catlist = $request->get('category')){
-
+                $catlist = array_map(fn($i) => $i['id'] ?? $i['name'] ?? null, $catlist);
+                $categories = OrganizationCategory::whereIn('name', $catlist)
+                    ->orWhereIn('id', $catlist)
+                    ->get();
+                $org->categories()->sync($categories);
             }
+            
+            if ($image = $request->get('photo')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($image))[1];
+                
+                $org 
+                    ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('photo');
+
+                $org->getMedia('photo');
+            }
+
+            if ($banner = $request->get('banner')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($banner))[1];
+                
+                $org 
+                    ->addMediaFromBase64($banner)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('banner');
+
+                $org->getMedia('banner');
+            }
+
 
             if($organization->isDirty())
                 $organization->save();

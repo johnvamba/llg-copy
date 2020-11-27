@@ -63,7 +63,7 @@ class NeedsController extends Controller
         }
 
         if($request->get('debug')){
-            dd($need->get(), DB::getQueryLog());
+            dd($need->get(), DB::getQueryLog(),session()->only(['camp_id','org_id']));
         }
 
         $additional = Need::select( 
@@ -151,15 +151,7 @@ class NeedsController extends Controller
                 $categories = NeedsCategory::whereIn('name', $catlist)
                     ->orWhereIn('id', $catlist)
                     ->get();
-                // dd($catlist, $categories);
-                //Technically this is not how you do it.
-                foreach ($categories as $key => $value) {
-                    $hasCategory = NeedHasCategory::make([
-                        'need_id' => $need->id
-                    ]);
-                            
-                    $value->category()->save($hasCategory);
-                }
+                $need->categories()->sync($categories);
             }
             //We can do better pd diri.
             if ($image = $request->get('photo')) {
@@ -168,6 +160,9 @@ class NeedsController extends Controller
                 
                 $need 
                     ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
                     ->usingName($name)
                     ->usingFileName($name.'.'.$extension)
                     ->toMediaCollection('photo');
@@ -267,15 +262,8 @@ class NeedsController extends Controller
                 $categories = NeedsCategory::whereIn('name', $catlist)
                     ->orWhereIn('id', $catlist)
                     ->get();
-                // dd($catlist, $categories);
-                //Technically this is not how you do it.
-                foreach ($categories as $key => $value) {
-                    $hasCategory = NeedHasCategory::make([
-                        'need_id' => $need->id
-                    ]);
-                            
-                    $value->category()->save($hasCategory);
-                }
+               $need->categories()->sync($categories);
+
             }
             //We can do better pd diri.
             if ( ($image = $request->get('photo')) && !preg_match('^http', $image) ) {
@@ -283,6 +271,9 @@ class NeedsController extends Controller
                 $extension = explode('/', mime_content_type($image))[1];
                 
                 $need 
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
                     ->addMediaFromBase64($image)
                     ->usingName($name)
                     ->usingFileName($name.'.'.$extension)

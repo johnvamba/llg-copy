@@ -16,7 +16,7 @@ class GroupSeeder extends Seeder
     public function run()
     {
         Organization::with('members')->get()->each(function($org) {
-        	$rand = random_int(0,2);
+        	$rand = random_int(4,15);
 			$user = $org->members->random();
 
         	\factory(Group::class, $rand)
