@@ -57,7 +57,7 @@ const OfferView = ({ setShowOfferEdit, data = {} }) => {
                 </div>
             </div>
             <div className="view-offer__body">
-                <div className="bg-cover bg-center" style={{backgroundImage: "url(https://www.ratemds.com/blog/wp-content/uploads/2015/09/handshake-shaking-hands-shake-hands-trust.jpg)"}}></div>
+                <div className="bg-cover bg-center" style={{backgroundImage: `url(${photo})`}}></div>
                 <div className="view-offer__body-title flex">
                     <h2>{title}</h2>
                     <label>{date}</label>

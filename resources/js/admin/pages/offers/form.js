@@ -7,6 +7,7 @@ import FormServiceInfo from './form-service-info';
 import FormBusinessInfo from './form-business-info';
 import CategoryGrid from '../../../components/CategoryGrid'
 import LoadingScreen from '../../../components/LoadingScreen'
+import { volunteer } from '../needs/categorylist';
 
 const OffersForm = ({setShowForm, data, handleForm}) => {
     const editing = data.id ? true : false;
@@ -43,6 +44,8 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
                 lat,
                 lng
             })
+            setCategory(volunteer.find(i => i.name == type) || {})
+
         }
     }, [data])
 

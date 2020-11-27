@@ -22,7 +22,7 @@ class StoryResource extends JsonResource
             'categories' => $this->whenLoaded('categories', optional($this->categories)->pluck('name')),
             'comments_count' => $this->when(isset($this->comments_count), $this->comments_count, 0),
             'org_photo' => '',
-            'photo' => '',
+            'photo' => $this->whenLoaded('media', $this->getFirstMediaUrl('photo')),
             'shares_count' => 0,
             'appreciates_count' => $this->when(isset($this->appreciates_count), $this->appreciates_count, 0),
             'date_numb' => optional($this->posted_at)->format('m/d/y'),

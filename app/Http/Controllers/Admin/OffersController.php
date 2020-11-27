@@ -74,7 +74,7 @@ class OffersController extends Controller
             $location = $request->get('location');
 
             $offer = ServiceOffer::create(
-                $request->only('title', 'description', 'business_name', 'business_contact') 
+                $request->only('title', 'description', 'business_name', 'business_site', 'business_contact') 
                 + [
                     'model_type' => User::class,
                     'model_id' => optional($user)->id ?? 1,
@@ -91,6 +91,9 @@ class OffersController extends Controller
                 
                 $offer 
                     ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
                     ->usingName($name)
                     ->usingFileName($name.'.'.$extension)
                     ->toMediaCollection('photo');
@@ -158,7 +161,7 @@ class OffersController extends Controller
             $location = $request->get('location');
 
             $offer->fill(
-                $request->only('title', 'description') 
+                $request->only('title', 'description', 'business_name', 'business_site', 'business_contact') 
                 + [
                     'model_type' => User::class,
                     'model_id' => optional($user)->id ?? 1,
@@ -175,6 +178,9 @@ class OffersController extends Controller
                 
                 $offer 
                     ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
                     ->usingName($name)
                     ->usingFileName($name.'.'.$extension)
                     ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));

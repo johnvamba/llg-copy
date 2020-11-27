@@ -87,6 +87,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit }) => {
         const params = {
             ...form,
             saveAs,
+            photo,
             description: content,
             category,
             short_description: editorState.getCurrentContent().getPlainText('\u0001')

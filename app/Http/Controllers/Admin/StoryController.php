@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\StoryResource;
 use App\Http\Controllers\Controller;
 use DB;
+use Str;
 
 use App\Story;
 use App\Organization;
@@ -20,7 +21,7 @@ class StoryController extends Controller
      */
     public function index(Request $request)
     {
-        $stories = Story::with(['categories:name', 'media'])->withCount(['appreciates', 'comments'])->latest();
+        $stories = Story::with(['categories:name', 'media', 'user.profile'])->withCount(['appreciates', 'comments'])->latest();
         $type = '';
 
         if($type = $request->get('type'))
@@ -71,6 +72,22 @@ class StoryController extends Controller
                 $cat_names = array_map(fn($cat) => ($cat['name'] ?? $cat['value'] ?? $cat['slug'] ?? null), $category ?? []);
                 $categories = Category::where('name', $cat_names)->get();
                 $story->categories()->sync($categories);
+            }
+
+            if ($image = $request->get('photo')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($image))[1];
+                
+                $story 
+                    ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('photo');
+
+                $story->getMedia('photo');
             }
 
             DB::commit();
@@ -128,6 +145,22 @@ class StoryController extends Controller
                 $cat_names = array_map(fn($cat) => ($cat['name'] ?? $cat['value'] ?? $cat['slug'] ?? null), $category ?? []);
                 $categories = Category::where('name', $cat_names)->get();
                 $story->categories()->sync($categories);
+            }
+            
+            if ($image = $request->get('photo')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($image))[1];
+                
+                $campus 
+                    ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('photo');
+
+                $campus->getMedia('photo');
             }
 
             $story->save();

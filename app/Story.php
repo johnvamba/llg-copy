@@ -60,11 +60,6 @@ class Story extends Model implements HasMedia
         return $this->morphToMany("App\Category", "categorize", 'categorizes');;
     }
 
-    public function comments()
-    {
-        return $this->hasMany('App\CommentStory');
-    }
-
     /**
      * Set short description column value
      */

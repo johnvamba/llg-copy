@@ -23,7 +23,7 @@ class NeedSeeder extends Seeder
 
                 $type = \App\NeedsType::get();
 
-                for ($i=0; $i < 5 ; $i++) { 
+                for ($u=0; $u < 5 ; $u++) { 
                     # code...
                     $need = factory(\App\Need::class)->create([
                         'organization_id' => $org->id,

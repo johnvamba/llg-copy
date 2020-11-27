@@ -17,8 +17,7 @@ const ListSingleStory = ({ set = [], handleForm }) => {
                         </div>
                     </div>
                     <div className="list-single-story__body">
-                        {/* <div className="bg-cover bg-center h-100" style={{backgroundImage: "url(https://www.ratemds.com/blog/wp-content/uploads/2015/09/handshake-shaking-hands-shake-hands-trust.jpg)"}}></div> */}
-                        <div className="bg-cover bg-center" style={{backgroundImage: "url()"}}></div>
+                        <div className="bg-cover bg-center"  style={{backgroundImage: `url(${i.photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} ></div>
                         <div className="list-single-story__content">
                             <p>{i.short_description || i.description || ''}</p>
                             <div className="list-single-story__footer">
