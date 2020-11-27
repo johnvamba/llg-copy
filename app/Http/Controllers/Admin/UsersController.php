@@ -20,7 +20,12 @@ class UsersController extends Controller
      */
     public function index()
     {
+        DB::enableQueryLog();
         $users = User::latest()->with('profile');
+
+        if(false){
+            dd($users->get(), auth()->user()->hasRole('campus admin'), DB::getQueryLog(),session()->only(['filterOn','camp_id','org_id']));
+        }
 
         return UserResource::collection($users->paginate())
             ->additional([

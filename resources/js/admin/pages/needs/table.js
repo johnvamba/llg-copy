@@ -7,7 +7,7 @@ import Quill from '../../../svg/quill'
 import { usePopper } from 'react-popper';
 import { swalSuccess, swalError } from '../../../components/helpers/alerts';
 
-const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction}) => {
+const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction, handleForm}) => {
     const { title ="Untitled", type = "Donation", goal = "N/A", status = "achieved", date = "Missing"} = item
     const [approveElement, setApproveElement] = useState(null);
     const [rejectElement, setRejectElement] = useState(null);
@@ -68,7 +68,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
             <td className="actions row-actions">
                 <Button className="flex text-white bg-blue-500 hover:bg-blue-600" 
                     disabled={status !== 'achieved'}
-                    onClick={()=>alert('open form from stories')}>
+                    onClick={()=>handleForm(item, false, 'story', true)}>
                     <Quill/>
                     Write a Story
                 </Button>
@@ -121,7 +121,7 @@ const ButtonPopper = ({buttonElement, actionClosure, btnAction, loading}) => {
 
 // Proper content
 //click on row shows popper
-const NeedTable = ({tab = null, data = [], showInfo, loading = false, loadTable})=> {
+const NeedTable = ({tab = null, data = [], showInfo, loading = false, loadTable, handleForm=()=>{}})=> {
     const [checkAll, setCheckAll] = useState(false)
     const [needs, setNeeds] = useState([])
     const [popped, setPopItem] = useState(null)
@@ -203,6 +203,7 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false, loadTable}
                         item={i} 
                         checkValue={i.checked}
                         checkChange={e=>handleRowCheckbox(i,e.target.checked)}
+                        handleForm={handleForm}
                         onShowInfo={()=>showInfo(i)}
                         popAction={(button, type)=>togglePopItem(i, button, type)}/>
                     ) :

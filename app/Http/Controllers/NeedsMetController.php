@@ -148,6 +148,24 @@ class NeedsMetController extends Controller
     }
 
     /**
+     * Display user needs met.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getNeedsVolunteer(Request $request, Need $need)
+    {
+        $needsMets = NeedMet::where('need_id', $need->id)
+            ->limit(6)
+            ->get();
+        
+        foreach($needsMets as $met) {
+            $met->model->profile;
+        }
+
+        return response()->json($needsMets);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request

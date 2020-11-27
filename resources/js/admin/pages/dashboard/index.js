@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as DonationsActions from '../../../redux/donations/actions';
 import Card from './card';
@@ -12,13 +12,17 @@ import TopDonors from './top-donors';
 import RecentNeeds from './recent-needs';
 import NearbyOrganizations from './nearby-organizations';
 import RecentActivities from '../recent-activities';
+import '../organizations/organizations.css';
+import OrganizationView from '../organizations/view';
 
 const Dashboard = ({ ...props }) => {
     const roles = useSelector(state => state.AuthUserReducer.roles);
 
-    if (roles.name !== 'admin') {
-        window.location = '/admin';
-    }
+    const [organization, setOrganization] = useState(null);
+
+    // if (roles.name !== 'admin') {
+    //     window.location = '/admin';
+    // }
 
     return (
         <>
@@ -33,7 +37,7 @@ const Dashboard = ({ ...props }) => {
                     </button>
                 </div>
             </div>
-            <div className="flex">
+            <div className="component-body flex">
                 
                 <div className="w-full flex flex-col bg-gray-100 px-12 pt-8 pb-8">
                     <div className="flex flex-row space-x-6">
@@ -62,7 +66,7 @@ const Dashboard = ({ ...props }) => {
                     <div className="mt-8 w-full">
                         <div className="flex flex-row">
                             <div className="flex flex-1 mr-4">
-                                <NearbyOrganizations {...props} />
+                                <NearbyOrganizations onViewOrganization={(org)=>setOrganization(org)} {...props} />
                             </div>
 
                             <div className="flex flex-1 ml-4">
@@ -71,11 +75,13 @@ const Dashboard = ({ ...props }) => {
                         </div>
                     </div>
                 </div>
-                {
-                // Originally from app.js
-                }
-                <RecentActivities />
             </div>
+            {
+                //     organization && <OrganizationView
+                //     data={organization}
+                //     closePanel={()=> setOrganization(null)}
+                // />
+            }
         </>
     )
 }

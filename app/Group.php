@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use App\Helper\Traits\GroupPortalTrait;
 
 class Group extends Model implements HasMedia
 {
     use InteractsWithMedia;
     use SoftDeletes;
+    use GroupPortalTrait;
 
     protected $guarded = [];
 
@@ -34,6 +36,11 @@ class Group extends Model implements HasMedia
     public function participants()
     {
         return $this->hasMany('App\GroupParticipant');
+    }
+
+    public function participant_users()
+    {
+        return $this->hasManyThrough('App\User', 'App\GroupParticipant', 'group_id', 'id', 'id', 'user_id');
     }
     
     public function requesting()

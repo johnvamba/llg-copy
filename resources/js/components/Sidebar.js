@@ -115,7 +115,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         }
                     </div>
 
-                    {roles.name === 'admin' &&
+                    {(roles.name === 'admin' || roles.name === 'campus admin') &&
                         (
                             <div
                                 className={`mt-6 
@@ -171,7 +171,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         }
                     </div>
 
-                    {roles.name === 'admin' &&
+                    {(roles.name === 'admin' || roles.name === 'campus admin') &&
                         (
                             <div
                                 className={`mt-6 
@@ -185,7 +185,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         )
                     }
 
-                    {roles.name === 'admin' &&
+                    {(roles.name === 'admin' || roles.name === 'campus admin') &&
                         (
                             <div
                                 className={`mt-6 
@@ -199,7 +199,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         )
                     }
 
-                    {roles.name === 'admin' &&
+                    {(roles.name === 'admin' || roles.name === 'campus admin') &&
                         (
                             <div
                                 className={`mt-6 
@@ -207,13 +207,13 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                             >
                                 <Link to="/organizations" className="flex items-center">
                                     <Organisation />
-                                    <span className="px-4">Organizations</span>
+                                    <span className="px-4">Organisations</span>
                                 </Link>
                             </div>
                         )
                     }
 
-                    {roles.name === 'admin' &&
+                    {(roles.name === 'admin' || roles.name === 'campus admin') &&
                         (
                             <div
                                 className={`mt-6 
@@ -227,7 +227,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         )
                     }
 
-                    {roles.name === 'admin' &&
+                    {(roles.name === 'admin' || roles.name === 'campus admin') &&
                         (
                             <div
                                 className={`mt-6 
@@ -241,7 +241,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         )
                     }
 
-                    {roles.name === 'admin' &&
+                    {(roles.name === 'admin' || roles.name === 'campus admin') &&
                         (
                             <div
                                 className={`mt-6 

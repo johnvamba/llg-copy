@@ -7,12 +7,8 @@ import StoriesNoImageIcon from '../../../svg/preview-no-image';
 import StoriesPublishIcon from '../../../svg/stories-publish';
 import TextEditor from '../../../components/TextEditor'
 import { Editor, EditorState, convertToRaw, convertFromHTML } from "draft-js";
-import draftToHtml from 'draftjs-to-html';
 
 const StoriesModal = ({title, handleChange, modal, toggle, editorState, setEditorState}) => {
-    const markup = editorState ? draftToHtml( convertToRaw(
-          editorState.getCurrentContent()
-        ) ): '';
 
     return (
         <section className="story-preview">

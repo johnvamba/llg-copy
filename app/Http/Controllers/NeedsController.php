@@ -31,9 +31,9 @@ class NeedsController extends Controller
         if (!empty($filters)){
             if(count($filters['category']) > 0) {
                 $needIds = Categorizes::whereHasMorph(
-                    'categorize',
-                    ['App\Need'],
-                    function() {}
+                        'categorize',
+                        ['App\Need'],
+                        function() {}
                     )
                     ->whereIn('category_id', $filters['category'])
                     ->groupBy('categorize_id')
@@ -50,8 +50,9 @@ class NeedsController extends Controller
         if (count($needIds) > 0)
             $needs->whereIn('id', $needIds);
 
-        if (!empty($filters)){
-            $needs->where('needs_type_id', $filters['type']);
+        if (!empty($filters)) {
+            if (count($filters['type']) > 0)
+                $needs->whereIn('needs_type_id', $filters['type']);
             
             if ($filters['filterAmount']) 
                 $needs->where('goal', '<=', floatval($filters['amount']));
@@ -301,6 +302,33 @@ class NeedsController extends Controller
             });
 
         return response()->json($result, 202);
+    }
+
+    /**
+     * Volunteer to needs
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addVolunteer(Request $request, Need $need)
+    {
+        $result = DB::transaction(function () use ($request, $need) {
+                Need::find($need->id)
+                    ->update([
+                        'raised' => ($need->raised + 1)
+                    ]);
+
+                $makeNeedMet = NeedMet::make([
+                    'need_id' => $request->need_id,
+                    'amount' => $request->amount,
+                ]);
+
+                $needMet = auth()->user()->needsMet()->save($makeNeedMet);
+
+                return $needMet;
+            });
+
+        return response()->json($result);
     }
 
     /**

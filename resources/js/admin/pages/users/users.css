@@ -14,10 +14,20 @@
     position: absolute;
     right: 0;
     top: 0;
-    height: auto;
+    height: 100%;
     overflow: auto;
     border: 1px solid #E7EAEF;
     border-top: none;
+    display: flex;
+    flex-direction: column;
+}
+.users-form footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 30px;
+    border-top: 1.5px solid rgba(156,174,185,.2);
+    height: 90px;
+    width: 100%;
 }
 .users-form header{
     display: flex;
@@ -35,6 +45,7 @@
 }
 .users-form__body{
     padding: 30px;
+    flex-grow: 1;
 }
 .users-form__body .content > div{
     display: flex;

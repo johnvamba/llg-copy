@@ -14,6 +14,7 @@ import Pencil from '../../../svg/pencil'
 import { all } from './categorylist'
 //As test icon only
 // import IconTest from '../../../svg/icon-test'
+import LoadingScreen from '../../../components/LoadingScreen'
 
 import './needs.css';
 
@@ -104,6 +105,13 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
 
     return (
         <div className="need-info">
+            {
+                (loading) &&
+                <LoadingScreen title={
+                    (loading && 'Loading need...') ||
+                    'Please wait'
+                }/>
+            }
             <div className="need-header">
             	<i className="circlet"><Circlet /></i>
             	<h4 className="need-status">{switchStatus()}</h4>
@@ -174,10 +182,6 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                 	</div>
                 </div> : 
                 <div className="need-content">
-                    <div className="need-title mt-5">
-                        <h3>{data.title} <span>{data.date}</span> </h3>
-                        <h5>{data.type || 'Donation'}</h5>
-                    </div>
                     <div className="need-title">
                         <p>Loading contents</p>
                     </div>

@@ -22,7 +22,7 @@ class CreateStoriesTable extends Migration
             $table->string('short_description')->nullable();
             $table->date('featured_start_date')->nullable();
             $table->date('featured_end_date')->nullable();
-            $table->date('posted_at')->nullable();
+            $table->datetime('posted_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

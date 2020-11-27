@@ -1,45 +1,93 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import OffersViewStatus from '../../../svg/offers-view-status';
 import OffersViewEdit from '../../../svg/offers-view-edit';
-import StoriesStatusPublishIcon from '../../../svg/stories-status-publish';
+import Circlet from '../../../svg/circlet';
 import StoriesCatChildrenIcon from '../../../svg/stories-cat-children';
+import { Editor, EditorState, ContentState, convertToRaw, convertFromRaw, convertFromHTML } from "draft-js";
+import { tryParseJson } from '../../../components/helpers/validator'
+import LoadingScreen from '../../../components/LoadingScreen'
+import { swalDelete2 } from '../../../components/helpers/alerts';
 
-const View = ({data = {}, handleForm }) => {
+const View = ({data = {}, handleForm, afterSubmit }) => {
+    const { title, description, date_numb } = data
+    const [editorState, setEditorState] = useState( EditorState.createEmpty() );
+
+    const [loading, setLoading] = useState(null);
+
+    useEffect(()=>{
+        if(data.id){
+            if(tryParseJson(description)){
+                setEditorState( EditorState.createWithContent( convertFromRaw( JSON.parse(description) ) ) ); 
+            } else {
+                const block = convertFromHTML(description);
+                const cState = ContentState.createFromBlockArray( block.contentBlocks, block.entityMap)
+                setEditorState( EditorState.createWithContent(cState) );
+            }
+            console.log('called?',description)
+        }
+    }, [data])
+
+    const deleting = () => {
+        if(data.id) {
+            swalDelete2(title)
+            .then(()=> {
+                setLoading('Deleting Story...')
+                api.delete(`/api/web/stories/${data.id}`)
+                .then(()=>{
+                    afterSubmit();
+                }).finally(()=>{
+                    setLoading(null)
+                    handleForm()
+                })
+            })
+        }
+    }
+
+    const togglePublish = () => {
+        setLoading(data.released_at ? 'Unpublishing Story...' : 'Publishing Story...')
+        api.post(`/api/web/stories/${data.id}/toggle`)
+            .then(()=>{
+                afterSubmit();
+                setLoading(null);
+                handleForm()
+            })
+    }
+
     return (
-        <>
-            <section className="view-story">
-                <header className="view-story__header flex flex-wrap">
-                    <div className="view-story__header-left flex flex-wrap">
-                        <StoriesStatusPublishIcon />
-                        <label>Published</label>
+        <section className="view-story">
+            {
+                (loading) &&
+                <LoadingScreen title={loading}/>
+            }
+            <header className="view-story__header flex flex-wrap">
+                <div className="view-story__header-left flex flex-wrap">
+                    <Circlet />
+                    <label>{data.released_at ? 'Published' : 'Draft' }</label>
+                </div>
+                <div className="view-story__header-right flex flex-wrap" >
+                    <span className="delete">Delete</span>
+                    <span className="unpublished">Unpublished</span>
+                    <div onClick={() => handleForm(data, true)}>
+                        <OffersViewEdit />
+                        <label>Edit</label>
                     </div>
-                    <div className="view-story__header-right flex flex-wrap" >
-                        <span className="delete">Delete</span>
-                        <span className="unpublished">Unpublished</span>
-                        <div onClick={() => handleForm(data, true)}>
-                            <OffersViewEdit />
-                            <label>Edit</label>
-                        </div>
+                </div>
+            </header>
+            <article className="view-story__body">
+                <div className="bg-cover bg-center" style={{backgroundImage: "url(https://www.ratemds.com/blog/wp-content/uploads/2015/09/handshake-shaking-hands-shake-hands-trust.jpg)"}}></div>
+                <div className="content">
+                    <div  className="title">
+                        <h2>{title}</h2>
+                        <span>{date_numb || 'missing_date'}</span>
                     </div>
-                </header>
-                <article className="view-story__body">
-                    <div className="bg-cover bg-center" style={{backgroundImage: "url(https://www.ratemds.com/blog/wp-content/uploads/2015/09/handshake-shaking-hands-shake-hands-trust.jpg)"}}></div>
-                    <div className="content">
-                        <div  className="title">
-                            <h2>Sample Title Here</h2>
-                            <span>08/27/20</span>
-                        </div>
-                        <div className="type">
-                            <StoriesCatChildrenIcon />
-                            <label>Children</label>
-                        </div>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Nunc congue nisi vitae suscipit tellus. Senectus et netus et malesuada fames ac. Sit amet justo donec enim diam vulputate. Molestie at elementum eu facilisis sed odio morbi quis. Nibh sit amet commodo nulla facilisi nullam. Ultrices tincidunt arcu non sodales. Sed velit dignissim sodales ut eu sem integer vitae.</p>
-
-                        <p>Semper risus in hendrerit gravida rutrum quisque. Nulla malesuada pellentesque elit eget. Arcu dictum varius duis at consectetur. Tempus quam pellentesque nec nam aliquam. Nibh tellus molestie nunc non blandit massa enim. Urna duis convallis convallis tellus id. Urna duis convallis convallis tellus id interdum velit laoreet id. Velit sed ullamcorper morbi tincidunt ornare massa. Ultrices eros in cursus turpis massa tincidunt dui ut. Vulputate enim nulla aliquet porttitor lacus luctus accumsan tortor. </p>
+                    <div className="type">
+                        <StoriesCatChildrenIcon />
+                        <label>Children</label>
                     </div>
-                </article>
-            </section>
-        </>
+                    <Editor editorState={editorState} readOnly={true} />
+                </div>
+            </article>
+        </section>
     )
 }
 

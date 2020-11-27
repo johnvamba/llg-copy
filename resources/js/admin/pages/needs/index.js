@@ -85,8 +85,9 @@ const Needs = ({NeedsReducer}) => {
         setTab(tab)
     }
 
-    const handleForm = (form = false, setting = null, data = null)=>{
+    const handleForm = (info={}, form = false, setting = null, story = false)=>{
         //change content of table here
+        setInfo(info)
         if(setting == 'discard'){
             //discard Changes here
         }
@@ -95,6 +96,7 @@ const Needs = ({NeedsReducer}) => {
             loadTable(true)
             //or insert data here
         }
+        showStoryForm(story)
         showForm(form)
     }
 
@@ -112,6 +114,10 @@ const Needs = ({NeedsReducer}) => {
         showInfo(false)
     }
 
+    const afterSubmit = ()=>{
+        // loadTable(true)
+    }
+
     return (
         <>
             <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
@@ -127,7 +133,7 @@ const Needs = ({NeedsReducer}) => {
             </div>
 
             <div className="component-body flex p-8">
-                <NeedTable tab={tab} data={arrayNeeds} showInfo={handleInfo} loading={loading}/> 
+                <NeedTable tab={tab} data={arrayNeeds} showInfo={handleInfo} handleForm={handleForm} loading={loading}/> 
             </div>
             {
                 form && 
@@ -139,7 +145,7 @@ const Needs = ({NeedsReducer}) => {
             }
             {
                 story && //Open story here
-                <StoriesForm setState={()=>{}} setShowViewStory={()=>{}}/>
+                <StoriesForm data={{}} handleForm={handleForm} afterSubmit={afterSubmit}/>
             }
         </>
     )

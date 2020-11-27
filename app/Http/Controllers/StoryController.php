@@ -27,7 +27,7 @@ class StoryController extends Controller
                 'user.profile', 
                 'organization', 
             ])
-            ->withCount('appreciates')
+            ->withCount('appreciates', 'comments')
             ->orderBy('created_at', 'desc')
             ->paginate(10, ['*'], 'stories', $page);
 
@@ -57,7 +57,7 @@ class StoryController extends Controller
                 'user.profile', 
                 'organization', 
             ])
-            ->withCount('appreciates')
+            ->withCount('appreciates', 'comments')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -110,7 +110,7 @@ class StoryController extends Controller
      */
     public function featuredStory()
     {
-        $date = Carbon::now()->toDateString();
+        //$date = Carbon::now()->toDateString();
 
         $story = Story::with(
                 'user', 
@@ -118,8 +118,8 @@ class StoryController extends Controller
                 'appreciates',
                 'appreciates.user',
             )
-            ->where('featured_start_date', '<=', $date)
-            ->where('featured_end_date', '>=', $date)
+            //->where('featured_start_date', '<=', $date)
+            //->where('featured_end_date', '>=', $date)
             ->inRandomOrder()
             ->first();
 

@@ -53,6 +53,18 @@ export const swalDelete = async (name) => {
         })
     });
 }
+export const swalDelete2 = (name) => {
+    return new Promise((resolve, reject) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You will delete this ${name}`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it'
+        }).then(resolve).catch(reject)
+    });
+}
 
 export const swalSuccess = async (text = 'Updated', width= '20rem', timer = 2000) => {
     Swal.fire({

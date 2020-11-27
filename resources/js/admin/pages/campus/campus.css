@@ -57,7 +57,7 @@
     color: rgba(74, 108, 140, 0.56);
 }
 .campus-form__body{
-    margin-top: 22px;
+    /*margin-top: 22px;*/
 }
 .campus-form__body .bg-cover{
     width: 100%;
