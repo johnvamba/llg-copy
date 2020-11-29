@@ -18,12 +18,13 @@ class TransactionResource extends JsonResource
         return [
             'id' => $this->id,
             'org_name' => $this->when($this->relationLoaded('organization'), fn() => optional($this->organization)->name),
-            'email' => $this->when($this->relationLoaded('organization'), fn() => optional($this->organization)->email),
-            'phone_number' => $this->when($this->relationLoaded('organization'), fn() => optional($this->organization)->phone_number),
+            'org_id' => $this->when($this->relationLoaded('organization'), fn() => optional($this->organization)->id),
+            'email' => $this->when($this->relationLoaded('user'), fn() => optional($this->user)->email),
+            'phone_number' => $this->when($this->relationLoaded('user'), fn() => optional($this->user)->phone_number),
             'need_title' => $this->when($this->relationLoaded('model'), fn() => (optional($this->model)->title ?? optional($this->model)->name), "Missing need"),
             'amount' => $this->amount,
             'date' => $this->created_at->format('m/d/y'),
-            'giversName' => $this->when($this->relationLoaded('user'), fn()=> optional($this->user)->name, "Missing Giver"),
+            'giversName' => $this->when($this->relationLoaded('user'), fn() => optional($this->user)->name, "Missing Giver"),
         ];
     }
 }

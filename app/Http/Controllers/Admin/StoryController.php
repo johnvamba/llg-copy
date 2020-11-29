@@ -28,11 +28,7 @@ class StoryController extends Controller
             $stories->when($type=='drafts', fn($sub) => $sub->whereNull('posted_at'))
             ->when($type=='published', fn($sub) => $sub->whereNotNull('posted_at'));
 
-        return StoryResource::collection((clone $stories)->paginate())
-            ->additional([
-                'publishes_count' => $type == 'published' ? $stories->count() : 0,
-                'drafts_count' => $type == 'drafts' ? $stories->count() : 0
-            ]);
+        return StoryResource::collection( $stories->paginate() );
     }
 
     /**

@@ -18,6 +18,7 @@ class TransactionController extends Controller
     {
         $transacts = Transact::with(['organization','user'])->latest();
 
+        // dd($transacts->get());
         return TransactionResource::collection($transacts->paginate());
     }
 
@@ -39,7 +40,7 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        dd('halo', $request->all());
+        // dd('halo', $request->all());
     }
 
     /**
@@ -73,7 +74,7 @@ class TransactionController extends Controller
     public function update(Request $request, Transact $transact)
     {
         //
-        dd('update', $request->all());
+        // dd('update', $request->all());
     }
 
     /**
@@ -84,6 +85,6 @@ class TransactionController extends Controller
      */
     public function destroy(Transact $transact)
     {
-        dd('deleting', $request->all());
+        // dd('deleting', $request->all());
     }
 }

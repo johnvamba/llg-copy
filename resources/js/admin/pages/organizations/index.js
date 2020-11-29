@@ -47,7 +47,7 @@ const Organizations = () => {
         }).then(({ data })=>{
             const { org_count } = data
             setOrgs(data.data || [])
-            setCount(org_count || 0)
+            setCount(data.meta ? data.meta.total : 0)
         }).finally(()=>{
             setLoading(false)
         })

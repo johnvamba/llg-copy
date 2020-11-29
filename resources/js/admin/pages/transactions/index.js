@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import TransactionsHeader from './header';
-import TransactionsList from './list';
-import TransactionsForm from './form';
+import TransactionsTable from './table';
+import TransactionsView from './view';
 
 import './transactions.css';
 
 const Transactions = () => {
     const [showForm, setShowForm] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
     const [focus, setFocus] = useState({});
-    const [isChecked, setIsChecked] = useState(false);
     const [page, setPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [transactions, setTransactions] = useState( [ ] )
@@ -16,38 +16,6 @@ const Transactions = () => {
         setLoading(true)
         loadTransactions()
     }, [page])
-
-    const checkedAll = (e) => {
-        setIsChecked(!isChecked);
-        const data = transactions.map(obj => {
-                obj.checked = !isChecked;
-                return obj;
-            }
-        )
-        setTransactions(data);
-    }
-
-    const handleRowCheckbox = (row,input) => {
-        setIsChecked(false);
-        row.checked = input;
-        const data = transactions.map(obj => obj.id == row.id ? row : obj);
-        setTransactions(data);
-    }
-
-    const handleRowActive = (row) => {
-        if (showAdd) setShowAdd(false);
-        setShowEdit(true);
-        row.active = 'active';
-        const data = transactions.map(obj => {
-                if(obj.id == row.id) return row;
-                else{
-                    obj.active = 'non-active'
-                    return obj;
-                }
-            }
-        );
-        setTransactions(data);
-    }
 
     const loadTransactions = (clearCache = false)=>{
         const addFilter = {}; //for redux values
@@ -72,8 +40,9 @@ const Transactions = () => {
         return token; //for useEffect
     }
 
-    const handleForm = (data = {}, showForm = false) => {
+    const handleForm = (data = {}, showInfo, showForm = false) => {
         setFocus(data)
+        setShowInfo(showInfo)
         setShowForm(showForm)
     }
 
@@ -85,17 +54,20 @@ const Transactions = () => {
     return (
         <section>
             <TransactionsHeader handleForm={handleForm} />
-            <TransactionsList
-                set={transactions}
-                checkedAll={checkedAll}
-                handleRowCheckbox={handleRowCheckbox}
-                handleRowActive={handleRowActive}
-                isChecked={isChecked}
-                handleForm={handleForm}
-            />
+            <div className="component-body flex p-8">
+                {
+                    loading && ''
+                }
+                <TransactionsTable
+                    data={transactions}
+                    set={transactions}
+                    loading={loading}
+                    handleForm={handleForm}
+                />
+            </div>
             {
-                showForm &&
-                <TransactionsForm data={focus} afterSubmit={afterSubmit} handleForm={handleForm}/>
+                showInfo &&
+                <TransactionsView data={focus} handleForm={handleForm}/>
             }
         </section>
     )

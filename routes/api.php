@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('organizations/{organization}/members', 'OrganizationController@members');
         Route::post('organizations/{organization}/members', 'OrganizationController@membersInvite');
         Route::get('organizations/{organization}/needs', 'OrganizationController@needs');
+
         Route::resource('organizations', 'OrganizationController');
 
         Route::resource('offers', 'OffersController');
@@ -56,6 +57,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::resource('transacts', 'TransactionController');
         Route::resource('payments', 'PaymentsController');
 
+        Route::get('receipt/template', 'ReceiptTemplateController@show');
+        Route::post('receipt/template', 'ReceiptTemplateController@update');
     });
 
     /** Role resource module */
