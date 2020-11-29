@@ -41,7 +41,7 @@ class OrganizationController extends Controller
                 $query->where('organization_members.status', 'approved');
             }]);
 
-        return OrganizationResource::collection($orgs->paginate());
+        return OrganizationResource::collection($mainQuery->paginate());
     }
 
     /**
