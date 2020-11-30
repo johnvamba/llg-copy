@@ -44,7 +44,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::resource('offers', 'OffersController');
 
         Route::resource('users', 'UsersController');
-        
+
+        Route::get('campuses/async', 'CampusController@async');
         Route::get('campuses/{campus}/orgs', 'CampusController@orgs');
         Route::get('campuses/{campus}/teams', 'CampusController@teams');
         Route::resource('campuses', 'CampusController');

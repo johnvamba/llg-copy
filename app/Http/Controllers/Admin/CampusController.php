@@ -35,18 +35,19 @@ class CampusController extends Controller
      */
     public function async(Request $request)
     {
-        $orgs = Campus::query();
+        DB::enableQueryLog();
+        $campus = Campus::query();
 
         if($request->get('sort_latest')){
-            $orgs->latest();
+            $campus->latest();
         }
         //Add queries here
 
         if($name = $request->get('name')){
-            $orgs->where('name', 'like', '%'.$name.'%');
+            $campus->where('name', 'like', '%'.$name.'%');
         }
 
-        return AsyncResource::collection( $orgs->paginate() );
+        return AsyncResource::collection( $campus->paginate() );
     }
 
     /**
