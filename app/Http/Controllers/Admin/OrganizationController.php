@@ -292,7 +292,7 @@ class OrganizationController extends Controller
             ]);
     }
 
-    public function memberInvite(Request $request)
+    public function memberInvite(Request $request, Organization $organization)
     {
         
     }

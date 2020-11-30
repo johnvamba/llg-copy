@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\GroupResource;
 use App\Group;
+use App\User;;
 
 use DB;
 use Str;
@@ -182,5 +183,22 @@ class GroupController extends Controller
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
+    }
+
+    public function searchUserInvite(Request $request)
+    {
+        $users = User::query();
+
+        if($request->get('suggestion'))
+            $users->inRandomOrder();
+
+        if($group = $request->get('group_id')) {
+
+        }
+    }
+
+    public function initUserInvite(Request $request)
+    {
+        
     }
 }

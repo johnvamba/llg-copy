@@ -39,7 +39,7 @@ const OrgInviteForm = ({ data = {}, handleBackInvite }) => {
         return set;
     }
 
-    onSubmit = ()=>{
+    const onSubmit = ()=>{
 
     }
 
