@@ -3,7 +3,7 @@ import PaymentHeader from './header';
 import PaymentList from './list';
 import PaymentTable from './table';
 import PaymentForm from './form';
-import PaymentView from './View';
+import PaymentView from './view';
 
 
 import './payments.css';
