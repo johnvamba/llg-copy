@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use App\Helper\Traits\StoryPortalTrait;
+use App\Helper\Traits\OrgPortalTrait;
 
 class Organization extends Model implements HasMedia
 {
     use InteractsWithMedia;
     use SoftDeletes;
-    use StoryPortalTrait;
+    use OrgPortalTrait;
 
     protected $guarded = [];
 
@@ -49,6 +49,11 @@ class Organization extends Model implements HasMedia
     public function members()
     {
         return $this->morphedByMany("App\User", "model", 'organization_members');
+    }
+
+    public function template()
+    {
+        return $this->hasOne(\App\ReceiptTemplate::class, 'organization_id');
     }
 
     public function campus(){

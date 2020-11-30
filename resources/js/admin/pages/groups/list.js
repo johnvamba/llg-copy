@@ -17,7 +17,7 @@ const GroupsList = ({ data = [], handleForm, handleActionButtons, afterSubmit })
                 {data.map((obj) => 
                     <li key={obj.id}>
                         <header>
-                            <div></div>
+                            <div style={{backgroundImage: `url(${obj.photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} ></div>
                         </header>
                         <div className="groups-list__body">
                             <h2>{obj.name}</h2>

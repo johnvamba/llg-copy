@@ -8,6 +8,7 @@ use App\Http\Resources\GroupResource;
 use App\Group;
 
 use DB;
+use Str;
 
 class GroupController extends Controller
 {
@@ -64,6 +65,22 @@ class GroupController extends Controller
                     'short_description' => substr($request->description, 0, 100)
                 ]
             );
+            if ($image = $request->get('photo')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($image))[1];
+                
+                $group 
+                    ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('photo');
+
+                $group->getMedia('photo');
+            }
+
             DB::commit();
             return new GroupResource($group);
         } catch (\Exception $e) {
@@ -122,6 +139,22 @@ class GroupController extends Controller
                     'short_description' => substr($request->description, 0, 100)
                 ]
             );
+            //We can do better pd diri.
+            if ($image = $request->get('photo')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($image))[1];
+                
+                $group 
+                    ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('photo');
+
+                $group->getMedia('photo');
+            }
 
             $group->save();
             DB::commit();

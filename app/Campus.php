@@ -23,7 +23,7 @@ class Campus extends Model implements HasMedia
 
     public function users()
     {
-    	return $this->hasManyThrough(\App\User::class, \App\CampusUser::class);
+    	return $this->hasManyThrough(\App\User::class, \App\CampusUser::class, 'campus_id', 'id', 'id', 'user_id');
     }
 
     public function needs() {

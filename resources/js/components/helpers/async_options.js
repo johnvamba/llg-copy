@@ -44,11 +44,27 @@ export const loadOrganization = (name = '', callback, options = {}, catchFunc = 
 			...options
 		},
 		cache: {
-	        exclude: { query: false },
-	    }, 
+        exclude: { query: false },
+    }, 
 	}).then(({data})=>{
 		callback(data.data)
 	}).catch(err=>{
 		catchFunc
 	})
+}
+
+export const loadCampus = (name = '', callback, options = {}, catchFunc = ()=>{}) => {
+  api.get('/api/web/campuses/async', {
+    params: {
+      name,
+      ...options
+    },
+    cache: {
+          exclude: { query: false },
+      }, 
+  }).then(({data})=>{
+    callback(data.data)
+  }).catch(err=>{
+    catchFunc
+  })
 }

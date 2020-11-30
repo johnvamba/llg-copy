@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import OffersFormCross from '../../../svg/offers-form-cross';
 import { EmailValidator } from '../../../utils/helper';
@@ -17,6 +17,15 @@ const TransactionsForm = ({ data = {}, handleForm, afterSubmit }) => {
         phoneNumber: 0,
         amount: 0
     });
+    useEffect(()=>{
+        if(data.org_id && data.org_name){
+            setOrganization({
+                id: data.org_id,
+                value: data.org_id,
+                label: data.org_name
+            })
+        }
+    }, [data])
 
     const [submitting, setSubmitting] = useState(false);
 
