@@ -200,6 +200,7 @@ td.actions, th.actions{
 	padding: 0px 30px;
 	overflow-y: scroll;
     overflow: auto;
+    max-height: calc(100vh - 235px);
     height: 100%;
     flex-grow: 1;
 }

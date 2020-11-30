@@ -52,11 +52,10 @@ const Stories = () => {
             cancelToken: token.token
         }).then((res)=>{
             const { data } = res
-            const { publishes_count } = data
             setPublishes(data.data || [])
             setCounts({
                 ...counts,
-                published: publishes_count || 0
+                published: data.meta ? data.meta.total : 0
             })
             setLoading(false)
         }).finally(()=>{
@@ -79,11 +78,10 @@ const Stories = () => {
             cancelToken: token.token
         }).then((res)=>{
             const { data } = res
-            const { drafts_count } = data
             setDrafts(data.data || [])
             setCounts({
                 ...counts,
-                drafts: drafts_count || 0
+                drafts: data.meta ? data.meta.total : 0
             })
             setLoading(false)
         }).finally(()=>{

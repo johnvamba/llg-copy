@@ -31,20 +31,17 @@ class OrganizationController extends Controller
      */
     public function index(Request $request)
     {
-        $mainQuery = Organization::with('media')->latest(); // Add campus filter here
+        $mainQuery = Organization::with('media')
+            ->latest()
+            ->withCount(['needs as active_needs' => function($query){
+                $query->whereNotNull('approved_at')->whereRaw('needs.goal > needs.raised');
+            }, 'needs as past_needs' => function($query){
+                $query->whereNotNull('approved_at')->whereRaw('needs.goal <= needs.raised');
+            }, 'members as members_count' => function($query){
+                $query->where('organization_members.status', 'approved');
+            }]);
 
-        $orgs = (clone $mainQuery)->withCount(['needs as active_needs' => function($query){
-            $query->whereNotNull('approved_at')->whereRaw('needs.goal > needs.raised');
-        }, 'needs as past_needs' => function($query){
-            $query->whereNotNull('approved_at')->whereRaw('needs.goal <= needs.raised');
-        }, 'members as members_count' => function($query){
-            $query->where('organization_members.status', 'approved');
-        }]);
-
-        return OrganizationResource::collection($orgs->paginate())
-            ->additional([
-                'org_count' => $mainQuery->count()
-            ]);
+        return OrganizationResource::collection($mainQuery->paginate());
     }
 
     /**

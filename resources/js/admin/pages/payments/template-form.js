@@ -1,39 +1,125 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw } from 'draft-js';
+import { Editor as EditorDraft, EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import CircleImageForm from '../../../components/CircleImageForm';
+import LoadingScreen from '../../../components/LoadingScreen'
+import { tryParseJson } from '../../../components/helpers/validator';
 
 const TemplateForm = () => {
+    const [photo, setPhoto] = useState(null);
+    const [loaded, setLoaded] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [submitting, setSubmit] = useState(false);
+    const [orgDetails, setOrgDetails] = useState({
+        org_name: 'Organisation Name',
+        org_location: 'missing-address'
+    });
 
     const [bodyField, setBodyField] = useState({
         editorState: EditorState.createEmpty()
     });
 
+    const [form, setForm] = useState({
+        id: '',
+        subject: '',
+        html_content: '',
+        raw_draft_json: ''
+    })
+
+    useEffect(() => {
+        if(!loaded){
+            setLoading(true)
+            loadTemplate()
+        }
+    }, [loaded])
+
+    useEffect(() => {
+       saveDraft()
+    }, [bodyField])
+
+    const saveDraft = () => {
+        const raw_draft_json = convertToRaw(bodyField.editorState.getCurrentContent());
+        const html_content = draftToHtml(raw_draft_json);
+        setForm({...form, html_content, raw_draft_json })
+    }
+
+    const loadTemplate = (clearCache = false) => {
+        const token = axios.CancelToken.source();
+        api.get(`/api/web/receipt/template`, {
+            cache: {
+                exclude: { query: false },
+            }, 
+            clearCacheEntry: clearCache,
+            cancelToken: token.token
+        }).then(({ data })=>{
+            const { id, subject, html_content, raw_draft_json, org_name, org_location, photo } = data.data
+            setForm({...form, id, subject})
+            setPhoto(photo)
+            setOrgDetails({org_name, org_location})
+            if(tryParseJson(raw_draft_json)){
+                setBodyField({ editorState: EditorState.createWithContent( convertFromRaw( JSON.parse(raw_draft_json) ) )})
+            }
+            setLoading(false)
+        }).finally(()=>{
+            setLoaded(true);
+        })
+        return token; //for useEffect
+    }
+
+    const onChangePhoto = (file) => {
+        const reader = new FileReader();
+        reader.onload = (e2) => {
+            setPhoto(e2.target.result)
+        }
+        reader.readAsDataURL(file)
+    }
+
     const handleOnChangeBody = (editorState) => {
+        console.log('changing?');
         setBodyField({editorState});
+    }
+
+    const submit = () => {
+        setSubmit(true)
+        saveDraft();
+        api.post(`/api/web/receipt/template`, {
+            ...form,
+            photo
+        }).then(({ data })=>{
+            const { id, subject, html_content, raw_draft_json, org_name, org_location, photo } = data.data
+
+        }).finally(()=>{
+            setSubmit(false);
+        })
+        return token; //for useEffect
     }
 
     return(
         <section className="flex">
+        {
+            (loading || submitting) && 
+            <LoadingScreen title={
+                (loading && 'Loading Template...') ||
+                (submitting && 'Updating Template') ||
+                'Please wait...'
+            }/> 
+        }
             <section className="payment-r-template__left tab__content w-1/2">
                 <div>
-                    <header>
-                        <div className="image"></div>
-                        <div>
-                            <button>Upload Photo</button>
-                            <p>Images should be atleast 300 x 300 px in pngo or jpeg file</p>
-                        </div>
-                    </header>
+                    <CircleImageForm src={photo} onChangeFile={onChangePhoto}/>
                     <form>
                         <div className="w-full xl:w-full">
                             <div className="form-group form-input-text">
-                                <label>Surname</label>
+                                <label>Subject</label>
                                 {/* <label>{draftToHtml(convertToRaw(bodyField.editorState.getCurrentContent()))}</label> */}
                                 <input
                                     className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
                                     type="text"
-                                    placeholder="Enter Surname"
+                                    value={form.subject}
+                                    onChange={e => setForm({...form, subject: e.target.value})}
+                                    placeholder="Enter Subject"
                                 />
                             </div>
                             <div className="form-group form-input-text no-border-field">
@@ -62,7 +148,7 @@ const TemplateForm = () => {
                 <footer className="payment__footer org-form__footer">
                     <div className="flex">
                         <button className="discard">Discard</button>
-                        <button className="next">Save</button>
+                        <button className="next" onClick={submit}>Save</button>
                     </div>
                 </footer>
             </section>
@@ -70,11 +156,11 @@ const TemplateForm = () => {
                 <h2>Preview</h2>
                 <article>
                     <header>
-                        <img class="rounded-full" src="http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp" />
+                        <img className="rounded-full" src={photo || 'http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp'} />
                         <div className="payment-r-template__right-headings">
-                            <label>Organisation Name</label>
-                            <address>72-76 Chandos Street</address>
-                            <address>St. Leonards NSW 2065 Australia</address>
+                            <label>{orgDetails.org_name || 'Organisation Name'}</label>
+                            <address>{orgDetails.org_location || 'missing-location'}</address>
+                            {/*<address>St. Leonards NSW 2065 Australia</address>*/}
                         </div>
                     </header>
                     <section className="payment-r-template__right-body">
@@ -82,10 +168,9 @@ const TemplateForm = () => {
                             <p><b>Dear Charles,</b></p>
                         </header>
                         <section className="content">
-                            <p>Thank you for your help! Your donation of $50.00 has successfully been sent to Organisation Name.</p>
+                            <EditorDraft editorState={bodyField.editorState} readOnly={true} />
                         </section>
                         <section>
-                            <p>Warm Regards,</p>
                             <p><b>Organisation Name</b></p>
                         </section>
                         <footer>
@@ -104,9 +189,9 @@ const TemplateForm = () => {
                     </section>
                     <footer>
                         <ul>
-                            <li><i class="fab fa-facebook-f"></i></li>
-                            <li><i class="fab fa-twitter"></i></li>
-                            <li><i class="fab fa-instagram"></i></li>
+                            <li><i className="fab fa-facebook-f"></i></li>
+                            <li><i className="fab fa-twitter"></i></li>
+                            <li><i className="fab fa-instagram"></i></li>
                         </ul>
                         <p>The Music Broadcasting Society of New South Wales Co-operative Limited ABN: 64 739 540 010</p>
                     </footer>
