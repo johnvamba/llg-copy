@@ -56,7 +56,7 @@ const OrgInviteForm = ({ data = {}, handleBackInvite }) => {
                 </header>
                 <section className="org-invite__body">
                     <h2>Invite Members</h2>
-                    <div className="org-invite__share">
+                    {/* <div className="org-invite__share">
                         <label>Share Link</label>
                         <div className="share__container">
                             <div>
@@ -70,7 +70,7 @@ const OrgInviteForm = ({ data = {}, handleBackInvite }) => {
                         <span></span>
                         <span>or</span>
                         <span></span>
-                    </div>
+                    </div>*/}
                     <form className="w-full flex flex-wrap">
                         <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
                             <div className={`form-group ${errors.firstname ? 'form-error' : ''}`}>

@@ -384,4 +384,5 @@ section.invites li div.member-item button.invite-button{
 section.invites li div.member-item button.invite-button.invited{
     background: #41D48F;
     border: 0;
+    color: #fff;
 }

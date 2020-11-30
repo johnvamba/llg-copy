@@ -5,8 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\GroupResource;
+use App\Http\Resources\Mini\UserResource;
+
 use App\Group;
-use App\User;;
+use App\GroupParticipant;
+
+use App\User;
 
 use DB;
 use Str;
@@ -187,18 +191,34 @@ class GroupController extends Controller
 
     public function searchUserInvite(Request $request)
     {
-        $users = User::query();
+        DB::enableQueryLog();
+        $users = User::with('profile')->latest();
 
-        if($request->get('suggestion'))
+        if($request->get('suggest') === true)
             $users->inRandomOrder();
-
-        if($group = $request->get('group_id')) {
-
+        else if($search = $request->get('search')) {
+            $users
+            //Version 1
+            //->where('name', 'like', "%".$search."%");
+            // ->whereHas('profile', fn($profile) => $profile->where('first_name','like', "%".$search."%")->orWhere('last_name', 'like', "%".$search."%"));
+            ->whereHas('profile', fn($profile) => $profile->whereRaw("CONCAT_WS(' ', first_name, last_name) LIKE ?", ['%'.$search.'$']) );
         }
+
+        if($grp_id = $request->get('group_id'))
+        {
+            $users
+            ->withCount(['group_pivots as invite_status' => function($status) use ($grp_id){
+                $status->select('status')->where('group_id', $grp_id);//->selectRaw("(case status is not null then status else 'uninvited')");
+            }]);
+        }
+
+        return UserResource::collection($users->paginate(5));
     }
 
     public function initUserInvite(Request $request)
     {
-        
+        $gp = GroupParticipant::firstOrCreate( $request->only('group_id', 'user_id') );
+
+        return response()->json([ 'invite_status' => ($gp->status ?? 'pending') ], 200);
     }
 }
