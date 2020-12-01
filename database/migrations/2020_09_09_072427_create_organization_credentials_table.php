@@ -15,7 +15,7 @@ class CreateOrganizationCredentialsTable extends Migration
     {
         Schema::create('organization_credentials', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('organization_id')->unsigned();
+            $table->bigInteger('organization_id')->unsigned()->index();
             $table->text('secret_key');
             $table->text('publishable_key');
             $table->timestamps();

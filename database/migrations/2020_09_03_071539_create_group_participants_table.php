@@ -15,10 +15,10 @@ class CreateGroupParticipantsTable extends Migration
     {
         Schema::create('group_participants', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('group_id')->unsigned();
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('group_id')->unsigned()->index();
+            $table->bigInteger('user_id')->unsigned()->index();
             $table->enum('status', ['pending', 'denied', 'approved'])
-                ->default('pending');
+                ->default('pending')->index();
             $table->timestamps();
 
             $table->foreign('group_id')->references('id')->on('groups');

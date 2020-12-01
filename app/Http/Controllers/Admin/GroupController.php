@@ -150,6 +150,7 @@ class GroupController extends Controller
                 $extension = explode('/', mime_content_type($image))[1];
                 
                 $group 
+                    ->clearMediaCollection('photo')
                     ->addMediaFromBase64($image)
                     ->addCustomHeaders([
                         'ACL' => 'public-read'

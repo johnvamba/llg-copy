@@ -161,6 +161,7 @@ class StoryController extends Controller
                 $extension = explode('/', mime_content_type($image))[1];
                 
                 $story 
+                    ->clearMediaCollection('photo')
                     ->addMediaFromBase64($image)
                     ->addCustomHeaders([
                         'ACL' => 'public-read'

@@ -15,7 +15,7 @@ class CreateGroupsTable extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned()->index();
             $table->string('name');
             $table->text('description');
             $table->string('short_description')->nullable();
@@ -24,7 +24,7 @@ class CreateGroupsTable extends Migration
             $table->string('lat');
             $table->string('lng');
             $table->text('link')->nullable();
-            $table->boolean('status')->default(true);
+            $table->boolean('status')->default(true)->index();
             $table->timestamps();
             $table->softDeletes();
 

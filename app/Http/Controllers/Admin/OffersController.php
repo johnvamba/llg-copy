@@ -177,13 +177,14 @@ class OffersController extends Controller
                 $extension = explode('/', mime_content_type($image))[1];
                 
                 $offer 
+                    ->clearMediaCollection('photo')
                     ->addMediaFromBase64($image)
                     ->addCustomHeaders([
                         'ACL' => 'public-read'
                     ])
                     ->usingName($name)
                     ->usingFileName($name.'.'.$extension)
-                    ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
+                    ->toMediaCollection('photo');
 
                 $offer->getMedia();
             }

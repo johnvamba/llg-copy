@@ -200,6 +200,8 @@ class UsersController extends Controller
         DB::beginTransaction();
         try {
             // $user->profile()->delete(); //wala siya deletd at. just delete the user
+            if(auth()->user()->id == $user->id)
+                return response()->json('Could not delete self', 400);
 
             $user->delete();
 

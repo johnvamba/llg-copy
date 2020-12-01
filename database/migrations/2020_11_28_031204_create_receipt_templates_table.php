@@ -15,7 +15,7 @@ class CreateReceiptTemplatesTable extends Migration
     {
         Schema::create('receipt_templates', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('organization_id');
+            $table->unsignedBigInteger('organization_id')->index();
             $table->string('subject');
             $table->text('html_content');
             $table->text('raw_draft_json')->nullable();

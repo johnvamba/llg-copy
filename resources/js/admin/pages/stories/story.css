@@ -877,3 +877,7 @@
 .btn-group.publish-btn .btn.btn-primary {
     padding: 15px;
 }
+
+.form .form-footer > button.preview {
+    color: #109CF1 !important;
+}

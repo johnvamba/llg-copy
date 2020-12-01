@@ -234,6 +234,7 @@ class OrganizationController extends Controller
                 $extension = explode('/', mime_content_type($image))[1];
                 
                 $organization 
+                ->clearMediaCollection('photo')
                     ->addMediaFromBase64($image)
                     ->addCustomHeaders([
                         'ACL' => 'public-read'
@@ -261,6 +262,7 @@ class OrganizationController extends Controller
                 $extension = explode('/', mime_content_type($banner))[1];
                 
                 $organization 
+                ->clearMediaCollection('banner')
                     ->addMediaFromBase64($banner)
                     ->addCustomHeaders([
                         'ACL' => 'public-read'

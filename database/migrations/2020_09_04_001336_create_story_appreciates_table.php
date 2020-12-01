@@ -15,8 +15,8 @@ class CreateStoryAppreciatesTable extends Migration
     {
         Schema::create('story_appreciates', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('story_id')->unsigned();
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('story_id')->unsigned()->index();
+            $table->bigInteger('user_id')->unsigned()->index();
             $table->timestamps();
 
             $table->foreign('story_id')->references('id')->on('stories');
