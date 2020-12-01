@@ -6,6 +6,7 @@ import { selectStylePaddingZero, loadOrganization } from '../../../components/he
 import { validateEmail, isValidated } from '../../../components/helpers/validator';
 import { swalError } from '../../../components/helpers/alerts';
 import CircleImageForm from '../../../components/CircleImageForm';
+import LoadingScreen from '../../../components/LoadingScreen';
 
 import AsyncSelect from 'react-select/async';
 import Select from 'react-select';

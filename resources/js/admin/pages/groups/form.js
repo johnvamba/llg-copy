@@ -170,7 +170,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                         handleSelectPrivacy={handleSelectPrivacy}
                     />
                 }
-                { countTab == 2 && <FormTabInvite users={users} setUsers={setUsers} />}
+                { countTab == 2 && <FormTabInvite data={data} users={users} setUsers={setUsers} />}
                 { countTab == 3 && <FormTabGoal goal={goal} setGoal={setGoal} goalType={goalType} setGoalType={setGoalType}/>}
             </div>
 
