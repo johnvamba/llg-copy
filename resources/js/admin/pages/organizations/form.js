@@ -60,8 +60,9 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             clearCacheEntry: clearCache,
             cancelToken: token.token
         }).then(({ data })=>{
-            const { name, email, site, phone_number, description, category } = data
+            const { name, email, site, phone_number, description, category, campus } = data.data
             // setForm({...form, name, email, site, phone_number, description})
+            setCampus(campus)
             setCategory(category || [])
             setLoading(false)
         }).catch(({response})=>{
@@ -124,7 +125,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         const set = isValidated({
             name: name == '' ? "Missing name" : null,
             email: !validateEmail(email) ? "Missing email" : null,
-            site: site == '' ? "Missing site" : null,
+            // site: site == '' ? "Missing site" : null,
             phone_number: phone_number == '' ? "Missing phone_number" : null,
             description: description == '' ? "Missing description" : null,
             category: category.length == 0 ? "Missing category" : null,
@@ -141,6 +142,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                 ...location,
                 ...images,
                 category,
+                campus
             }
             const submitPromise = !data.id ? 
                 api.post(`/api/web/organizations`, params) : 
@@ -304,7 +306,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             <footer className="form-footer org-form__footer">
                 <button className="btn btn-secondary" onClick={handleDiscard}>Discard</button>
                 <div className="flex-grow-1"></div>
-                <button className="btn btn-primary" onClick={handleSubmit}>{data.id ? "Edit" : "Add"}</button>
+                <button className="btn btn-primary" onClick={handleSubmit}>{data.id ? "Save" : "Add"}</button>
             </footer>
         </section>
     )

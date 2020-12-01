@@ -9,6 +9,7 @@ use App\Organization;
 use App\OrganizationCredential;
 use App\OrganizationHasCategory;
 use App\OrganizationCategory;
+use App\CampusOrganisation;
 
 use App\User;
 use App\Need;
@@ -127,6 +128,16 @@ class OrganizationController extends Controller
                 $org->getMedia('photo');
             }
 
+            if($campus = $request->get('campus')){
+                $camp_id = $campus['id'] ?? $campus['value'] ?? null;
+            } else if(auth()->user()->hasRole('campus admin')) {
+                $camp_id = session('camp_id');
+            }
+
+            if(isset($camp_id)){
+                CampusOrganisation::firstOrCreate(['organization_id' => $org->id, 'campus_id' => $camp_id]);
+            }
+
             if ($banner = $request->get('banner')) {
                 $name = time().'-'.Str::random(20);
                 $extension = explode('/', mime_content_type($banner))[1];
@@ -142,6 +153,9 @@ class OrganizationController extends Controller
 
                 $org->getMedia('banner');
             }
+
+            if(auth()->user()->hasRole('admin'))
+                $org->loadMissing('campus');
 
             DB::commit();
             return new OrganizationResource($org);
@@ -159,6 +173,11 @@ class OrganizationController extends Controller
      */
     public function show(Organization $organization)
     {
+        $organization->loadMissing('categories');
+
+        if(auth()->user()->hasRole('admin'))
+            $organization->loadMissing('campus');
+
         return new OrganizationResource($organization);
     }
 
@@ -207,14 +226,14 @@ class OrganizationController extends Controller
                 $categories = OrganizationCategory::whereIn('name', $catlist)
                     ->orWhereIn('id', $catlist)
                     ->get();
-                $org->categories()->sync($categories);
+                $organization->categories()->sync($categories);
             }
             
             if ($image = $request->get('photo')) {
                 $name = time().'-'.Str::random(20);
                 $extension = explode('/', mime_content_type($image))[1];
                 
-                $org 
+                $organization 
                     ->addMediaFromBase64($image)
                     ->addCustomHeaders([
                         'ACL' => 'public-read'
@@ -223,14 +242,25 @@ class OrganizationController extends Controller
                     ->usingFileName($name.'.'.$extension)
                     ->toMediaCollection('photo');
 
-                $org->getMedia('photo');
+                $organization->getMedia('photo');
+            }
+
+            if($campus = $request->get('campus')){
+                $camp_id = $campus['id'] ?? $campus['value'] ?? null;
+            } else if(auth()->user()->hasRole('campus admin')) {
+                $camp_id = session('camp_id');
+            }
+
+            if(isset($camp_id)){
+                CampusOrganisation::where('organization_id', $organization->id)->delete(); //remove all related
+                CampusOrganisation::firstOrCreate(['organization_id' => $organization->id, 'campus_id' => $camp_id]);
             }
 
             if ($banner = $request->get('banner')) {
                 $name = time().'-'.Str::random(20);
                 $extension = explode('/', mime_content_type($banner))[1];
                 
-                $org 
+                $organization 
                     ->addMediaFromBase64($banner)
                     ->addCustomHeaders([
                         'ACL' => 'public-read'
@@ -239,9 +269,11 @@ class OrganizationController extends Controller
                     ->usingFileName($name.'.'.$extension)
                     ->toMediaCollection('banner');
 
-                $org->getMedia('banner');
+                $organization->getMedia('banner');
             }
 
+            if(auth()->user()->hasRole('admin'))
+                $organization->loadMissing('campus');
 
             if($organization->isDirty())
                 $organization->save();

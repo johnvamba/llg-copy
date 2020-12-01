@@ -18,7 +18,8 @@ class CreateStoriesTable extends Migration
             $table->bigInteger('organization_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
             $table->string('title');
-            $table->text('description'); //We might need to update this
+            $table->text('description'); //now as simple text
+            $table->text('raw_draft_json')->nullable();
             $table->string('short_description')->nullable();
             $table->date('featured_start_date')->nullable();
             $table->date('featured_end_date')->nullable();

@@ -6,7 +6,7 @@ import OffersPlus from '../../../svg/offers-plus';
 
 import TabMembers from './tab-members';
 import TabActiveNeeds from './tab-active-needs';
-import TabPastNeeds from './tab-past-needs';
+import LoadingScreen from '../../../components/LoadingScreen'
 
 const MemberItem = ({image = null}) => {
     return <li>
@@ -17,7 +17,7 @@ const MemberItem = ({image = null}) => {
     </li>
 }
 const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite }) => {
-    const { name, description, active_needs, past_needs, members_count } = data
+    const { name, description, active_needs, past_needs, members_count, banner, photo } = data
     const [ subData, setSubData ] = useState({
         org_link: '',
         org_contact: '',
@@ -133,11 +133,11 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite }) => {
     return (
         <section className="org-view create-form">
             <header>
-                <div className="org-form__cover-bg bg-cover bg-center" style={{backgroundImage: "url()"}}>
+                <div className="org-form__cover-bg bg-cover bg-center"  style={{backgroundImage: `url(${banner})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}}>
                     <button className="org-form__close" onClick={() => closePanel({})}>
                         <OffersFormCross />
                     </button>
-                    <div className="org-form__rounded-img"></div>
+                    <div className="org-form__rounded-img" style={{backgroundImage: `url(${photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}}></div>
                 </div>
                 <div className="org-view__edit">
                     <button onClick={handleEdit}>

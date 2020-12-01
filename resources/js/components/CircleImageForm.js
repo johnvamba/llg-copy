@@ -42,7 +42,7 @@ const CircleImageForm = ({
 	            src={tempUrl || `http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp`}
 			/>
 			<input type="file" ref={fileInput} onChange={imageChange}/>
-			<button className="button-pencil" onClick={uploadInit}><PencilIcon/></button>
+			<button className="button-pencil" onClick={uploadInit}><PencilIcon fill={'#fff'}/></button>
 		</div>
 
     return <div className={`photo-circle ${className}`}>
