@@ -296,7 +296,7 @@ class UserController extends Controller
 
         if (!$key) {
             return response()->json([
-                'message' => "Please check your API keys.",
+                'message' => "Please review your card details.",
             ], 422);
         }
 

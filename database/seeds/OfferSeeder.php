@@ -15,7 +15,7 @@ class OfferSeeder extends Seeder
     {
         $types = ServiceType::all();
 
-        for ($i=0; $i < 15 ; $i++) { 
+        for ($i=0; $i < 20; $i++) { 
         	\factory(ServiceOffer::class)->create([
         		'service_type_id' => $types->random()->id,
         	]);

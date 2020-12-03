@@ -20,8 +20,8 @@ class OrganizationSeeder extends Seeder
     public function run()
     {
     	Campus::all()->each(function($campus){
-    		$org_count = rand(1,3);
-    		$team = rand(1,3);
+    		//$org_count = random_int(1,5);
+    		//$team = random_int(1,5);
 
 			$campus_admin = factory(\App\User::class)->create(['email' => 'campus'.$campus->id.'@neuma.test']);
 
@@ -34,7 +34,7 @@ class OrganizationSeeder extends Seeder
 				'campus_id' => $campus->id
 			]);
 
-	    	for ($i=0; $i < $org_count; $i++) { 
+	    	for ($i=0; $i < 5; $i++) { 
 	        	$org = \factory(Organization::class)->create();
 	        	
 	    		CampusOrganisation::create([
@@ -46,7 +46,7 @@ class OrganizationSeeder extends Seeder
 
 	        	$org->categories()->sync($categories);
 
-	        	for ($u=0; $u < $team; $u++) { 
+	        	for ($u=0; $u < 5; $u++) { 
 	        		if($u == 0){
 			            $orgUser = factory(\App\User::class)->create(['email' => 'org'.$u.'-'.$org->id.'@neuma.test']);
 			            $orgUser->assignRole('organization admin');

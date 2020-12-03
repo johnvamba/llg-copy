@@ -121,6 +121,7 @@ class GoalController extends Controller
                     $date->copy()->toDateString(),
                     $date->copy()->endOfYear()->toDateString()
                 ])
+                ->groupBy('need_id')
                 ->count();
         } else {
             $goal['needs_met_count'] = NeedMet::whereHasMorph(
@@ -134,6 +135,7 @@ class GoalController extends Controller
                     $date->copy()->toDateString(),
                     $date->copy()->endOfMonth()->toDateString()
                 ])
+                ->groupBy('need_id')
                 ->count();
         }
 

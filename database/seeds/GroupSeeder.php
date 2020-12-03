@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 use App\GroupParticipant;
 use App\Organization;
 use App\Group;
+use App\Goal;
 
 class GroupSeeder extends Seeder
 {
@@ -16,8 +17,9 @@ class GroupSeeder extends Seeder
     public function run()
     {
         Organization::with('members')->get()->each(function($org) {
-        	$rand = random_int(4,15);
+        	$rand = random_int(4, 5);
 			$user = $org->members->random();
+
 
         	\factory(Group::class, $rand)
         		->create([
@@ -30,7 +32,14 @@ class GroupSeeder extends Seeder
         					'group_id' => $grp->id,
         					'user_id'=> $otherUser->id,
         					'status' => 'approved'
-        				]);
+						]);
+						
+					$makeGoal = Goal::make([
+							'term' => 'year',
+							'need' =>  8
+						]);
+
+					$grp->goals()->save($makeGoal);
         		});
         });
     }
