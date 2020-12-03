@@ -62,6 +62,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 
         Route::get('receipt/template', 'ReceiptTemplateController@show');
         Route::post('receipt/template', 'ReceiptTemplateController@update');
+
+        Route::get('search', 'GeneralSearch');
     });
 
     /** Role resource module */
