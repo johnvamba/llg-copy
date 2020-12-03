@@ -47,16 +47,18 @@ class NeedsController extends Controller
                 'categories',
             ]);
 
-        if (count($needIds) > 0)
-            $needs->whereIn('id', $needIds);
-
         if (!empty($filters)) {
-            if (count($filters['type']) > 0)
-                $needs->whereIn('needs_type_id', $filters['type']);
+            if (count($filters['type']) > 0) {
+                $needs->whereIn('needs_type_id', $filters['type'])
+                    ->orWhereIn('id', $needIds);
+            }
             
             if ($filters['filterAmount']) 
                 $needs->where('goal', '<=', floatval($filters['amount']));
         }
+
+        // if (count($needIds) > 0)
+        //     $needs->orWhereIn('id', $needIds);
         
         $results = $needs->whereRaw('raised < goal')
             ->latest()
@@ -107,7 +109,7 @@ class NeedsController extends Controller
      */
     public function getOrganizationNeeds(Request $request, Organization $organization, $page = 1)
     {
-        $needs = Need::with('type')
+        $needs = Need::with('type', 'categories')
             ->where('organization_id', $organization->id);
 
         switch($request->type) {
@@ -123,8 +125,26 @@ class NeedsController extends Controller
     
         $results = $needs->paginate(10, ['*'], 'organization_needs', $page);
 
-        foreach($results as $result) {
-           $result['photo'] = $result->getFirstMediaUrl('photo');
+        foreach ($results as $need) {
+            $need->model;
+            $need->getMedia('photo');
+
+            $need->categories = $need->categoriesList; //reset?
+
+            $need['photo'] = $need->organization->getFirstMediaUrl('photo');
+            $need['cover_photo'] = $need->organization->getFirstMediaUrl('cover_photo');
+
+            $need['totalActiveNeeds'] = Need::where(
+                    'organization_id', $need->organization_id
+                )
+                ->whereRaw('raised < goal')
+                ->count();
+            
+            $need['totalPastNeeds'] = Need::where(
+                    'organization_id', $need->organization_id
+                )
+                ->whereRaw('raised >= goal')
+                ->count();
         }
     
         return response()->json($results);

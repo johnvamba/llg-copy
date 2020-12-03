@@ -1,7 +1,6 @@
 .loading-container {
 	position: absolute;
-	background: #FFFFFF;
-	opacity: 0.8;
+	background: #FFFFFFda;
 	height: 100%;
 	width: 100%;
 	display: flex;
@@ -24,27 +23,41 @@
 	height: 4px !important;
 	width: 25px !important;
 	margin-bottom: 4px;
-	-webkit-animation: barfill 1.8s infinite;
-	animation: barfill 1.8s infinite;
 }
 
 .loading-bar .bar.bar1 {
-	/*-webkit-animation-delay: -0.6s;*/
-	/*animation-delay: -0.6s;*/
+	-webkit-animation: barfirst 3s infinite;
+	animation: barfirst 3s infinite;
 }
 .loading-bar .bar.bar2 {
-	-webkit-animation-delay: -0.6s;
-	animation-delay: -0.6s;
+	-webkit-animation: barsecond 3s infinite;
+	animation: barsecond 3s infinite;
 }
 .loading-bar .bar.bar3 {
-	-webkit-animation-delay: -1.2s;
-	animation-delay: -1.2s;
+	-webkit-animation: barthird 3s infinite;
+	animation: barthird 3s infinite;
 }
 
-@keyframes barfill {
-	from {background-color: none;}
-	to {background-color: #109CF1}
+@keyframes barfirst {
+	from {background-color: #fff;}
+	23% {background-color: #fff;}
+	25% { background-color: #109CF1 }
+	to { background-color: #109CF1 }
 }
+
+@keyframes barsecond {
+	from {background-color: #fff;}
+	48% {background-color: #fff;}
+	50% { background-color: #109CF1 }
+	to { background-color: #109CF1 }
+}
+@keyframes barthird {
+	from {background-color: #fff;}
+	73% {background-color: #fff;}
+	75% { background-color: #109CF1 }
+	to { background-color: #109CF1 }
+}
+
 
 .loading-container .loading-screen .loading-title {
 	font-size: 20px;

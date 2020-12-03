@@ -271,6 +271,7 @@ class NeedsController extends Controller
                 $extension = explode('/', mime_content_type($image))[1];
                 
                 $need 
+                    ->clearMediaCollection('photo')
                     ->addCustomHeaders([
                         'ACL' => 'public-read'
                     ])

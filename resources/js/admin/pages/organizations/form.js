@@ -10,8 +10,13 @@ import LoadingScreen from '../../../components/LoadingScreen'
 import CircleImageForm from '../../../components/CircleImageForm';
 import BannerImage from '../../../components/BannerImage';
 import ImageCropper from '../../../components/ImageCropper'
+import AsyncSelect from 'react-select/async';
+import { connect } from 'react-redux';
+import { selectStyle, loadCampus } from '../../../components/helpers/async_options';
 
-const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
+const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer }) => {
+        const { roles } = AuthUserReducer;
+
     const [category, setCategory] = useState([]);
     const [form, setForm] = useState({
         name: '', 
@@ -33,6 +38,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
         lng: 151.207583
     })
     const [loading, setLoading] = useState(false);
+    const [campus, setCampus] = useState({});
 
     //Loading data from table
     useEffect(()=>{
@@ -54,8 +60,9 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
             clearCacheEntry: clearCache,
             cancelToken: token.token
         }).then(({ data })=>{
-            const { name, email, site, phone_number, description, category } = data
+            const { name, email, site, phone_number, description, category, campus } = data.data
             // setForm({...form, name, email, site, phone_number, description})
+            setCampus(campus)
             setCategory(category || [])
             setLoading(false)
         }).catch(({response})=>{
@@ -118,7 +125,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
         const set = isValidated({
             name: name == '' ? "Missing name" : null,
             email: !validateEmail(email) ? "Missing email" : null,
-            site: site == '' ? "Missing site" : null,
+            // site: site == '' ? "Missing site" : null,
             phone_number: phone_number == '' ? "Missing phone_number" : null,
             description: description == '' ? "Missing description" : null,
             category: category.length == 0 ? "Missing category" : null,
@@ -135,6 +142,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
                 ...location,
                 ...images,
                 category,
+                campus
             }
             const submitPromise = !data.id ? 
                 api.post(`/api/web/organizations`, params) : 
@@ -201,6 +209,23 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
                         handleCategories={handleCategories}
                         errors={errors.category}
                     />
+                    {
+                        //Set user priveledges here.. campus users will need to know what organization is asking for need.
+                        (roles.name == 'admin') && <div className={`form-group w-full ${errors.campus && 'form-error'}`}>
+                            <label>Campus</label>
+                            <AsyncSelect
+                                styles={selectStyle}
+                                loadOptions={loadCampus}
+                                defaultOptions
+                                value={campus}
+                                placeholder="Campus"
+                                onChange={setCampus}
+                                />
+                            {
+                                (errors.campus || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
+                            }
+                        </div>
+                    }
                     <div className="flex flex-wrap -mx-2">
                         <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
                             <div className={`form-group ${errors.name && 'form-error'}`}>
@@ -281,9 +306,18 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit }) => {
             <footer className="form-footer org-form__footer">
                 <button className="btn btn-secondary" onClick={handleDiscard}>Discard</button>
                 <div className="flex-grow-1"></div>
-                <button className="btn btn-primary" onClick={handleSubmit}>{data.id ? "Edit" : "Add"}</button>
+                <button className="btn btn-primary" onClick={handleSubmit}>{data.id ? "Save" : "Add"}</button>
             </footer>
         </section>
     )
 }
-export default OrgForm;
+// export default OrgForm;
+export default connect(({AuthUserReducer})=>{
+    return {
+        AuthUserReducer
+    }
+},(dispatch)=>{
+    return {
+
+    }
+})(OrgForm);

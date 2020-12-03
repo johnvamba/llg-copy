@@ -15,14 +15,15 @@ class CreateStoriesTable extends Migration
     {
         Schema::create('stories', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('organization_id')->unsigned();
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('organization_id')->unsigned()->index();
+            $table->bigInteger('user_id')->unsigned()->index();
             $table->string('title');
-            $table->text('description');
+            $table->text('description'); //now as simple text
+            $table->text('raw_draft_json')->nullable();
             $table->string('short_description')->nullable();
             $table->date('featured_start_date')->nullable();
             $table->date('featured_end_date')->nullable();
-            $table->datetime('posted_at')->nullable();
+            $table->datetime('posted_at')->nullable()->index();
             $table->timestamps();
             $table->softDeletes();
 

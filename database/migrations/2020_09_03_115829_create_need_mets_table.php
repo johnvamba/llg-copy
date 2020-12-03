@@ -15,7 +15,7 @@ class CreateNeedMetsTable extends Migration
     {
         Schema::create('need_mets', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('need_id')->unsigned();
+            $table->bigInteger('need_id')->unsigned()->index();
             $table->morphs('model');
             $table->double('amount', 15, 2);
             $table->timestamps();

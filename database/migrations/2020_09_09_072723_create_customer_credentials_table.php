@@ -15,7 +15,7 @@ class CreateCustomerCredentialsTable extends Migration
     {
         Schema::create('customer_credentials', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned()->index();
             $table->morphs('model');
             $table->string('name')->nullable();
             $table->string('card_brand')->nullable();

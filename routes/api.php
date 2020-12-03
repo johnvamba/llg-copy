@@ -38,20 +38,30 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('organizations/{organization}/members', 'OrganizationController@members');
         Route::post('organizations/{organization}/members', 'OrganizationController@membersInvite');
         Route::get('organizations/{organization}/needs', 'OrganizationController@needs');
+
         Route::resource('organizations', 'OrganizationController');
 
         Route::resource('offers', 'OffersController');
 
         Route::resource('users', 'UsersController');
 
+        Route::get('campuses/async', 'CampusController@async');
+        Route::get('campuses/{campus}/orgs', 'CampusController@orgs');
+        Route::get('campuses/{campus}/teams', 'CampusController@teams');
         Route::resource('campuses', 'CampusController');
 
         Route::resource('stories', 'StoryController');
         Route::post('stories/{story}/toggle', 'StoryController@toggle');
 
+        Route::get('groups/invite', 'GroupController@searchUserInvite');
+        Route::post('groups/invite', 'GroupController@initUserInvite');
         Route::resource('groups', 'GroupController');
 
         Route::resource('transacts', 'TransactionController');
+        Route::resource('payments', 'PaymentsController');
+
+        Route::get('receipt/template', 'ReceiptTemplateController@show');
+        Route::post('receipt/template', 'ReceiptTemplateController@update');
     });
 
     /** Role resource module */

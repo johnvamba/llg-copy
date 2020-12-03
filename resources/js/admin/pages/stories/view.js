@@ -7,25 +7,32 @@ import { Editor, EditorState, ContentState, convertToRaw, convertFromRaw, conver
 import { tryParseJson } from '../../../components/helpers/validator'
 import LoadingScreen from '../../../components/LoadingScreen'
 import { swalDelete2 } from '../../../components/helpers/alerts';
+import { monetary } from '../needs/categorylist';
 
 const View = ({data = {}, handleForm, afterSubmit }) => {
-    const { title, description, date_numb } = data
+    const { title, description, date_numb, raw_draft_json, photo } = data
     const [editorState, setEditorState] = useState( EditorState.createEmpty() );
-
+    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(null);
 
     useEffect(()=>{
         if(data.id){
-            if(tryParseJson(description)){
-                setEditorState( EditorState.createWithContent( convertFromRaw( JSON.parse(description) ) ) ); 
-            } else {
-                const block = convertFromHTML(description);
-                const cState = ContentState.createFromBlockArray( block.contentBlocks, block.entityMap)
-                setEditorState( EditorState.createWithContent(cState) );
-            }
-            console.log('called?',description)
+            loadStory(true)
         }
     }, [data])
+
+    const loadStory = (cacheClear = false) => {
+        setLoading("Loading story...")
+        api.get(`/api/web/stories/${data.id}`)
+            .then(({data})=>{
+                const { title, description, categories, raw_draft_json, photo } = data.data
+                if(tryParseJson(raw_draft_json)){
+                    setEditorState( EditorState.createWithContent( convertFromRaw( JSON.parse(raw_draft_json) ) ) ); 
+                }
+                setCategories(monetary.filter(i => categories.includes(i.name)));
+                setLoading(null);
+            })
+    }
 
     const deleting = () => {
         if(data.id) {
@@ -65,8 +72,12 @@ const View = ({data = {}, handleForm, afterSubmit }) => {
                     <label>{data.released_at ? 'Published' : 'Draft' }</label>
                 </div>
                 <div className="view-story__header-right flex flex-wrap" >
-                    <span className="delete">Delete</span>
-                    <span className="unpublished">Unpublished</span>
+                    <span className="delete" onClick={deleting}>Delete</span>
+                    {
+                        data.released_at ? 
+                        <span className="unpublished" onClick={togglePublish}>Unpublish</span> :
+                        <span className="publish" onClick={togglePublish}>Publish</span>
+                    }
                     <div onClick={() => handleForm(data, true)}>
                         <OffersViewEdit />
                         <label>Edit</label>
@@ -74,15 +85,19 @@ const View = ({data = {}, handleForm, afterSubmit }) => {
                 </div>
             </header>
             <article className="view-story__body">
-                <div className="bg-cover bg-center" style={{backgroundImage: "url(https://www.ratemds.com/blog/wp-content/uploads/2015/09/handshake-shaking-hands-shake-hands-trust.jpg)"}}></div>
+                <div className="bg-cover bg-center" style={{backgroundImage: `url(${photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} ></div>
                 <div className="content">
                     <div  className="title">
                         <h2>{title}</h2>
                         <span>{date_numb || 'missing_date'}</span>
                     </div>
-                    <div className="type">
-                        <StoriesCatChildrenIcon />
-                        <label>Children</label>
+                    <div className="category-list">
+                        {
+                            categories.map(i => <div key={i.slug} className="type mr-2">
+                            {<i.svg_class fill={'#109CF1'} className="svg-icon"/>}
+                            <label>{i.name}</label>
+                        </div>)
+                        }
                     </div>
                     <Editor editorState={editorState} readOnly={true} />
                 </div>

@@ -18,7 +18,7 @@ class CreateGoalsTable extends Migration
             $table->morphs('model');
             $table->string('term');
             $table->integer('need');
-            $table->enum('status', ['in progress', 'achieved'])->default('in progress');
+            $table->enum('status', ['in progress', 'achieved'])->default('in progress')->index();
             $table->timestamps();
         });
     }

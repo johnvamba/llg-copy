@@ -17,7 +17,7 @@ class CreateNeedsTypesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('icon')->nullable();
-            $table->boolean('status')->default(true);
+            $table->boolean('status')->default(true)->index();
             $table->timestamps();
         });
     }

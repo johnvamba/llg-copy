@@ -5,9 +5,13 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
+use App\Helper\Traits\InvoicePortalTrait;
+
 class Invoice extends Model
 {
     //
+    use InvoicePortalTrait;
+    
     protected $guarded = [];
 
     protected $appends = ['created'];

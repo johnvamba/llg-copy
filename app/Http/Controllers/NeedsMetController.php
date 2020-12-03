@@ -78,9 +78,26 @@ class NeedsMetController extends Controller
             ->whereIn('id', $needsMet)
             ->get();
 
-        foreach($needs as $need) {
-            $need->getMedia();
-            $need['photo'] = $need->getFirstMediaUrl('photo');
+        foreach ($needs as $need) {
+            $need->model;
+            $need->getMedia('photo');
+
+            $need->categories = $need->categoriesList; //reset?
+
+            $need['photo'] = $need->organization->getFirstMediaUrl('photo');
+            $need['cover_photo'] = $need->organization->getFirstMediaUrl('cover_photo');
+
+            $need['totalActiveNeeds'] = Need::where(
+                    'organization_id', $need->organization_id
+                )
+                ->whereRaw('raised < goal')
+                ->count();
+            
+            $need['totalPastNeeds'] = Need::where(
+                    'organization_id', $need->organization_id
+                )
+                ->whereRaw('raised >= goal')
+                ->count();
         }
 
         return response()->json($needs);
@@ -139,9 +156,26 @@ class NeedsMetController extends Controller
             ->whereIn('id', $needsMet)
             ->get();
 
-        foreach($needs as $need) {
-            $need->getMedia();
-            $need['photo'] = $need->getFirstMediaUrl('photo');
+        foreach ($needs as $need) {
+            $need->model;
+            $need->getMedia('photo');
+
+            $need->categories = $need->categoriesList; //reset?
+
+            $need['photo'] = $need->organization->getFirstMediaUrl('photo');
+            $need['cover_photo'] = $need->organization->getFirstMediaUrl('cover_photo');
+
+            $need['totalActiveNeeds'] = Need::where(
+                    'organization_id', $need->organization_id
+                )
+                ->whereRaw('raised < goal')
+                ->count();
+            
+            $need['totalPastNeeds'] = Need::where(
+                    'organization_id', $need->organization_id
+                )
+                ->whereRaw('raised >= goal')
+                ->count();
         }
 
         return response()->json($needs);

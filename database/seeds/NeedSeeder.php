@@ -15,7 +15,7 @@ class NeedSeeder extends Seeder
         DB::transaction(function () {
             // $org = factory(\App\Organization::class)->create();
             // $category = factory(\App\NeedsCategory::class)->create();
-            for ($i=0; $i < 3; $i++) { 
+            for ($i=0; $i < 4; $i++) { 
                 # code...
                 $org = \App\Organization::inRandomOrder()->first();
                 //Change this

@@ -17,7 +17,7 @@ class StorySeeder extends Seeder
 
             $orgUser = \App\User::inRandomOrder()->whereHas('roles', fn($role) => $role->where('name', 'organization admin'))->first();
 
-            for ($i=0; $i < 3; $i++) { 
+            for ($i=0; $i < 20; $i++) { 
                 $org = \App\Organization::inRandomOrder()->first();
                 # code...
                 $story = factory(\App\Story::class)->create([
@@ -26,7 +26,7 @@ class StorySeeder extends Seeder
                     'posted_at' => $faker->boolean(50) ? now() : null
                 ]);
 
-                for ($i=0; $i < 5; $i++) { 
+                for ($x=0; $x < 5; $x++) { 
                     $user = \App\User::inRandomOrder()->whereHas('roles', fn($role) => $role->where('name', 'user'))->first();
                     # code...
                     factory(\App\StoryAppreciate::class)->create([

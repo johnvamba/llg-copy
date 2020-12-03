@@ -1,118 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PaymentHeader from './header';
 import PaymentList from './list';
+import PaymentTable from './table';
 import PaymentForm from './form';
+import PaymentView from './view';
+
 
 import './payments.css';
 
 const Payment = () => {
+    const [loading, setLoading] = useState(false);
+    const [page, setPage] = useState(1);
+    const [paymentList, setPaymentList] = useState([]);
+    const [count, setCount] = useState(0)
+    const [showForm, setShowForm] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
+    const [focus, setFocus] = useState({});
 
-    const [showAdd, setShowAdd] = useState(false);
-    const [showEdit, setShowEdit] = useState(false);
-    const [isChecked, setIsChecked] = useState(false);
-    const [paymentList, setPaymentList] = useState(
-        {
-            data: [
-                {
-                    id: 1,
-                    need: "Sample Title Here",
-                    giversName: "Jane Doe",
-                    amount: "25.00",
-                    date: "08/27/2020",
+    useEffect(()=>{
+        setLoading(false)
+        loadPayments()
+    }, [page])
+
+
+    const loadPayments = (clearCache = false)=>{
+        const addFilter = {}; //for redux values
+        const token = axios.CancelToken.source();
+        if(!loading){
+            api.get(`/api/web/payments`, {
+                params: {
+                    page, ...addFilter
                 },
-                {
-                    id: 2,
-                    need: "Sample Title Here",
-                    giversName: "Jane Doe",
-                    amount: "2,500.00",
-                    date: "08/27/2020",
-                },
-                {
-                    id: 3,
-                    need: "Sample Title Here",
-                    giversName: "Jane Doe",
-                    amount: "100.00",
-                    date: "08/27/2020",
-                },
-                {
-                    id: 4,
-                    need: "Sample Title Here",
-                    giversName: "Jane Doe",
-                    amount: "100.00",
-                    date: "08/27/2020",
-                },
-                {
-                    id: 5,
-                    need: "Sample Title Here",
-                    giversName: "Jane Doe",
-                    amount: "100.00",
-                    date: "08/27/2020",
-                },
-                {
-                    id: 6,
-                    need: "Sample Title Here",
-                    giversName: "Jane Doe",
-                    amount: "100.00",
-                    date: "08/27/2020",
-                },
-            ]
+                cache: {
+                    exclude: { query: false },
+                }, 
+                clearCacheEntry: clearCache,
+                cancelToken: token.token
+            }).then((res)=>{
+                const { data } = res
+                setPaymentList(data.data)
+                setCount(data.meta ? data.meta.total : 0)
+            }).finally(()=>{
+                setLoading(false)
+            })
         }
-    )
-
-    const checkedAll = (e) => {
-        setIsChecked(!isChecked);
-        const data = paymentList.data.map(obj => {
-                obj.checked = !isChecked;
-                return obj;
-            }
-        )
-        setPaymentList({...paymentList},{data : data});
+        return token; //for useEffect
     }
 
-    const handleRowCheckbox = (row,input) => {
-        setIsChecked(false);
-        row.checked = input;
-        const data = paymentList.data.map(obj => obj.id == row.id ? row : obj);
-        setPaymentList({...paymentList},{data : data});
-    }
-
-    const handleRowActive = (row) => {
-        if (showAdd) setShowAdd(false);
-        setShowEdit(true);
-        row.active = 'active';
-        const data = paymentList.data.map(obj => {
-                if(obj.id == row.id) return row;
-                else{
-                    obj.active = 'non-active'
-                    return obj;
-                }
-            }
-        );
-        setPaymentList({...paymentList},{data : data});
-    }
-
-    const handleCloseForm = () => {
-        setShowAdd(false);
-        setShowEdit(false);
+    const handleForm = (data = {}, showInfo = false, showForm = false) => {
+        setFocus(data)
+        setShowInfo(showInfo)
+        setShowForm(showForm)
     }
 
     return(
-        <>
-            <section>
-                <PaymentHeader setShowAdd={setShowAdd} />
-                <PaymentList
-                    state={paymentList}
-                    checkedAll={checkedAll}
-                    handleRowCheckbox={handleRowCheckbox}
-                    handleRowActive={handleRowActive}
-                    showEdit={showEdit}
-                    isChecked={isChecked}
+        <section>
+            <PaymentHeader count={count} setShowAdd={()=> handleForm({}, false, true)} />
+            <div className="component-body flex p-8">
+                <PaymentTable
+                    data={paymentList}
+                    loading={loading}
+                    handleForm={handleForm}
                 />
-                {
-                    showAdd && <PaymentForm closeForm={handleCloseForm} />
-                }
-            </section>
-        </>
+            </div>
+            {
+                showInfo && <PaymentView data={focus} handleForm={handleForm} />
+            }
+            {
+                //showForm && <PaymentForm closeForm={handleForm} />
+            }
+        </section>
     )
 }
 

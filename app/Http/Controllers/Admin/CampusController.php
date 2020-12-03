@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\CampusResource;
+use App\Http\Resources\Async\CampusResource as AsyncResource;
+use App\Http\Resources\OrganizationResource as OrgResource;
+use App\Http\Resources\Async\UserProfileResource;
 
+use App\UserProfile;
 use App\Campus;
 use DB;
 use Str;
@@ -22,6 +26,28 @@ class CampusController extends Controller
         $campus = Campus::withCount('organizations')->with('media')->latest()->get();
 
         return CampusResource::collection($campus);
+    }
+
+    /**
+     * Display a listing of the resource for async selec.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function async(Request $request)
+    {
+        DB::enableQueryLog();
+        $campus = Campus::query();
+
+        if($request->get('sort_latest')){
+            $campus->latest();
+        }
+        //Add queries here
+
+        if($name = $request->get('name')){
+            $campus->where('name', 'like', '%'.$name.'%');
+        }
+
+        return AsyncResource::collection( $campus->paginate() );
     }
 
     /**
@@ -158,5 +184,22 @@ class CampusController extends Controller
     public function destroy(Campus $campus)
     {
         //
+    }
+
+    public function orgs(Campus $campus)
+    {
+        $orgs = $campus->organizations()
+            ->with('media')->withCount('members');
+
+        return OrgResource::collection( $orgs->paginate() );
+    }
+
+    public function teams(Campus $campus)
+    {
+        $teams = UserProfile::with('user')->whereHas('user', 
+            fn($user) => $user->whereHas('campus', fn($camp) => $camp->where('campuses.id', $campus->id))
+        );
+
+        return UserProfileResource::collection( $teams->paginate() );
     }
 }

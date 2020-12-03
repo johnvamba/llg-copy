@@ -1,10 +1,10 @@
 import React from 'react';
+import LoadingScreen from '../../../components/LoadingScreen'
 
 const TabActiveNeeds = ({ needs = [], loading = false }) => {
     if(loading)
-        return <section className="tab-active-needs">
-            <div>Loading...</div>
-        </section>
+        return <LoadingScreen title={"Loading needs..."}/>
+    
     return (
         <section className="tab-active-needs">
             {

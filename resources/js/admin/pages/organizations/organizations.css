@@ -369,7 +369,9 @@
     display: flex;
     align-items: center;
     width: 70%;
-    justify-content: space-between;
+}
+.org-view__members--container ul li{
+    margin-right: 10px;
 }
 .org-view__members ul li.last-item{
     position: relative;

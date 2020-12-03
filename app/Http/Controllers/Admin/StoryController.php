@@ -28,11 +28,7 @@ class StoryController extends Controller
             $stories->when($type=='drafts', fn($sub) => $sub->whereNull('posted_at'))
             ->when($type=='published', fn($sub) => $sub->whereNotNull('posted_at'));
 
-        return StoryResource::collection((clone $stories)->paginate())
-            ->additional([
-                'publishes_count' => $type == 'published' ? $stories->count() : 0,
-                'drafts_count' => $type == 'drafts' ? $stories->count() : 0
-            ]);
+        return StoryResource::collection( $stories->paginate() );
     }
 
     /**
@@ -60,13 +56,18 @@ class StoryController extends Controller
         ]);
         DB::beginTransaction();
         try {
-            $org = Organization::inRandomOrder()->first(); //Change me.
-
+            // $org = Organization::inRandomOrder()->first(); //Change me.
+            if(auth()->user()->hasRole('organization admin')){
+                $org = Organization::findOrFail(session('org_id'));
+            } else if( $orgForm = $request->get('organization') ) {
+                $id = $orgForm['id'] ?? $orgForm['value'] ?? null;
+                $org = Organization::findOrFail($id);
+            }
             $story = Story::create([
                 'user_id' => (auth()->user())->id, 
-                'organization_id' => optional($org)->id || 1,
+                'organization_id' => optional($org)->id ?? 1,
                 'posted_at' => $request->get('saveAs') != 'draft' ? now() : null,
-            ] + $request->only('title', 'description', 'short_description') );
+            ] + $request->only('title', 'description', 'short_description', 'raw_draft_json') );
 
             if($category = $request->get('category')){
                 $cat_names = array_map(fn($cat) => ($cat['name'] ?? $cat['value'] ?? $cat['slug'] ?? null), $category ?? []);
@@ -91,7 +92,7 @@ class StoryController extends Controller
             }
 
             DB::commit();
-            return new StoryResource($story);
+            return new StoryResource($story, true);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
@@ -106,7 +107,9 @@ class StoryController extends Controller
      */
     public function show(Story $story)
     {
-        //
+        $story->loadMissing(['categories', 'media', 'organization']);
+
+        return new StoryResource($story, true);
     }
 
     /**
@@ -139,19 +142,26 @@ class StoryController extends Controller
         try {
             $story = $story->fill([
                 'posted_at' => $request->get('saveAs') != 'draft' ? now() : null,
-            ] + $request->only('title', 'description', 'short_description') );
+            ] + $request->only('title', 'description', 'short_description', 'raw_draft_json') );
 
             if($category = $request->get('category')){
                 $cat_names = array_map(fn($cat) => ($cat['name'] ?? $cat['value'] ?? $cat['slug'] ?? null), $category ?? []);
                 $categories = Category::where('name', $cat_names)->get();
                 $story->categories()->sync($categories);
             }
+
+            if(auth()->user()->hasRole('organization admin')){
+                $story->organization_id = session('org_id');
+            } else if( $orgForm = $request->get('organization') ) {
+                $story->organization_id = $orgForm['id'] ?? $orgForm['value'] ?? null;
+            }
             
             if ($image = $request->get('photo')) {
                 $name = time().'-'.Str::random(20);
                 $extension = explode('/', mime_content_type($image))[1];
                 
-                $campus 
+                $story 
+                    ->clearMediaCollection('photo')
                     ->addMediaFromBase64($image)
                     ->addCustomHeaders([
                         'ACL' => 'public-read'
@@ -160,13 +170,13 @@ class StoryController extends Controller
                     ->usingFileName($name.'.'.$extension)
                     ->toMediaCollection('photo');
 
-                $campus->getMedia('photo');
+                $story->getMedia('photo');
             }
 
             $story->save();
             
             DB::commit();
-            return new StoryResource($story);
+            return new StoryResource($story, true);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);

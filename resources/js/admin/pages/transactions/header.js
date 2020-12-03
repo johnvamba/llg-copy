@@ -7,12 +7,14 @@ const TransactionsHeader = ({ handleForm }) =>{
             <div className="flex flex-1">
                 <h1>Transactions</h1>
             </div>
+            {/*
             <div className="flex flex-1 justify-end">
-                {/*<button className="flex rounded-sm" onClick={() => handleForm({}, true)}>
+                <button className="flex rounded-sm" onClick={() => handleForm({}, true)}>
                     <OffersPlus />
                     <span>Add Transaction</span>
-                </button>*/}
+                </button>
             </div>
+            */}
         </section>
     )
 }
