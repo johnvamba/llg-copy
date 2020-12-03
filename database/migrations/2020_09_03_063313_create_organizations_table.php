@@ -24,8 +24,8 @@ class CreateOrganizationsTable extends Migration
             $table->text('location');
             $table->string('lat');
             $table->string('lng');
-            $table->boolean('featured')->default(true);
-            $table->boolean('status')->default(true);
+            $table->boolean('featured')->default(true)->index();
+            $table->boolean('status')->default(true)->index();
             $table->timestamps();
             $table->softDeletes();
         });

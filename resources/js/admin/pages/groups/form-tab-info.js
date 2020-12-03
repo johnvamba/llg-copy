@@ -39,20 +39,20 @@ const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPriva
                     </div>
                     {
                         //Set user priveledges here.. campus users will need to know what organization is asking for need.
-                        (roles.name == 'admin') && <div className={`form-group w-full ${fieldErrors.organization && 'form-error'}`}>
-                            <label>Organization</label>
-                            <AsyncSelect
-                                styles={selectStyle}
-                                loadOptions={loadOrganization}
-                                defaultOptions
-                                value={organization}
-                                placeholder="Organization"
-                                onChange={setOrganization}
-                                />
-                            {
-                                (fieldErrors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
-                            }
-                        </div>
+                        // (roles.name == 'admin') && <div className={`form-group w-full ${fieldErrors.organization && 'form-error'}`}>
+                        //     <label>Organization</label>
+                        //     <AsyncSelect
+                        //         styles={selectStyle}
+                        //         loadOptions={loadOrganization}
+                        //         defaultOptions
+                        //         value={organization}
+                        //         placeholder="Organization"
+                        //         onChange={setOrganization}
+                        //         />
+                        //     {
+                        //         (fieldErrors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
+                        //     }
+                        // </div>
                     }
                     <div className="w-full xl:w-full">
                         <div className={`form-group ${fieldErrors.description ? 'form-error' : ''}`}>

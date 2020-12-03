@@ -1,96 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import { UncontrolledDropdown, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button, ButtonGroup } from 'reactstrap';
-import { Link } from 'react-router-dom';
-import TextInput from '../../../components/TextInput';
-import TextArea from '../../../components/TextArea';
-// import Button from '../../../components/Button';
-//import Select from '../../../components/Select';
 import { swalCreate } from '../../../components/helpers/alerts';
 import ReactTagInput from "@pathofdev/react-tag-input";
 import OffersFormCross from '../../../svg/offers-form-cross';
-import StoriesHouseIcon from '../../../svg/stories-house';
-import Browse from '../../../svg/browse';
 import StoriesPublishIcon from '../../../svg/stories-publish';
-import OffersViewEdit from '../../../svg/offers-view-edit';
 import StoriesModal from './modal';
 import "@pathofdev/react-tag-input/build/index.css";
 import CategoryScroll from '../../../components/CategoryScroll'
 import TextEditor from '../../../components/TextEditor'
 import Imagepond from '../../../components/Imagepond'
-import { EditorState, convertFromHTML, ContentState } from 'draft-js';
+import { EditorState, convertFromHTML, ContentState, convertFromRaw, convertToRaw } from 'draft-js';
 import { tryParseJson } from '../../../components/helpers/validator'
 import LoadingScreen from '../../../components/LoadingScreen'
+import { selectStyle, loadOrganization } from '../../../components/helpers/async_options';
+import AsyncSelect from 'react-select/async';
+import { connect } from 'react-redux';
+import { monetary } from '../needs/categorylist';
 
-const StoriesForm = ({ data={}, handleForm, afterSubmit }) => {
+const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
+    const { roles } = AuthUserReducer;
+
     const [errors, setErrors] = useState({});
     const [tags, setTags] = useState([]);
     const [form, setForm] = useState({});
     const [modal, setModal] = useState(false);
     const [category, setCategory] = useState([]);
     const [photo, setPhoto] = useState(null);
-    const [oldContent, setOldContent] = useState('');
+    // const [oldContent, setOldContent] = useState('');
     const [editorState, setEditorState] = useState( EditorState.createEmpty() );
-    const [content, setContent] = useState(''); //new text content
     const [saveAs, setSaveAs] = useState('publish');
     const [togglePub, setTogglePub] = useState(false);
     // temporary has value
     const [hasFeaturedImage, setHasFeaturedImage] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [organization, setOrganization] = useState({});
 
     const toggle = () => setModal(!modal);
 
     useEffect(()=>{
         if(data.id){
-            const { title, description, short_description } = data
+            const { title } = data
             setForm({ title })
-            if(tryParseJson(description)){
-                setOldContent(description)
-            } else {
-                const block = convertFromHTML(description);
-                const cState = ContentState.createFromBlockArray( block.contentBlocks, block.entityMap)
-                setEditorState(EditorState.createWithContent(cState));
-            }
-
+            loadStory()
         }
     }, [data])
-    //Depreciate
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        let formData = new FormData();
 
-        let errors = "";
-
-        try {
-            Object.keys(form).map(key => {
-                formData.append(key, form[key]);
-            });
-
-            formData.append('tags', JSON.stringify(tags));
-            formData.append('description', content)
-            formData.append('short_description', editorState.getCurrentContent().getPlainText('\u0001') );
-            formData.append('saveAs', saveAs);
-
-            let response = await axios.post('/api/web/stories', formData)
-
-            await swalCreate("/admin/stories")
-        } catch (err) {
-            let { data } = err.response;
-
-            errors = data.errors;
-        }
-
-        setErrors(errors || {});
+    const loadStory = () => {
+        setLoading('Loading story...')
+        api.get(`/api/web/stories/${data.id}`)
+            .then(({data})=>{
+                const { title, description, categories, organization, raw_draft_json, photo } = data.data
+                if(tryParseJson(raw_draft_json)){
+                    setEditorState( EditorState.createWithContent( convertFromRaw( JSON.parse(raw_draft_json) ) ) ); 
+                }
+                setOrganization(organization);
+                setCategory( monetary.filter(i => categories.includes(i.name) ) );
+                setLoading(null);
+            })
     }
 
     const attemptSubmit = () => {
         setSubmitting(true)
+        const raw_draft_json = JSON.stringify( convertToRaw(editorState.getCurrentContent()) );
+        const description = editorState.getCurrentContent().getPlainText('\u0001');
         const params = {
             ...form,
             saveAs,
             photo,
-            description: content,
+            description,
+            raw_draft_json,
             category,
-            short_description: editorState.getCurrentContent().getPlainText('\u0001')
+            organization,
+            short_description: description.slice(0, 100)
         }
         const submitPromise = !data.id ? 
             api.post(`/api/web/stories`, params) : 
@@ -155,8 +137,9 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit }) => {
     return (
         <section className="form create-story">
             {
-                (submitting) &&
+                (submitting || loading) &&
                 <LoadingScreen title={
+                    ( loading ) ||
                     (submitting && (data.id ? 'Updating Story' : 'Creating Story')) ||
                     'Please wait'
                 }/>
@@ -168,7 +151,24 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit }) => {
                 </button>
             </section>
             <section className="form-body create-story__body">
-                <form onSubmit={handleSubmit}>
+                <form>
+                    {
+                        //Set user priveledges here.. campus users will need to know what organization is asking for need.
+                        (roles.name == 'admin') && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
+                            <label>Organization</label>
+                            <AsyncSelect
+                                styles={selectStyle}
+                                loadOptions={loadOrganization}
+                                defaultOptions
+                                value={organization}
+                                placeholder="Organization"
+                                onChange={setOrganization}
+                                />
+                            {
+                                (errors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
+                            }
+                        </div>
+                    }
                     <CategoryScroll 
                         type={'monetary'}
                         selectedCategories={category} 
@@ -188,7 +188,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit }) => {
                     </div>
 
                     { !modal &&
-                        <TextEditor className={''} rawBlocks={oldContent} handleUpdate={setContent} editorState={editorState} handleEditorState={setEditorState} />
+                        <TextEditor className={''} editorState={editorState} handleEditorState={setEditorState} />
                     }
                     
                     <Imagepond photo={photo} imageSelected={setPhoto} errors={errors.photo}/>
@@ -219,5 +219,12 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit }) => {
        
     );
 }
+export default connect(({AuthUserReducer})=>{
+    return {
+        AuthUserReducer
+    }
+},(dispatch)=>{
+    return {
 
-export default StoriesForm;
+    }
+})(StoriesForm);

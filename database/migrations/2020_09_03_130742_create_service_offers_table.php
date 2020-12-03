@@ -16,7 +16,7 @@ class CreateServiceOffersTable extends Migration
         Schema::create('service_offers', function (Blueprint $table) {
             $table->id();
             $table->morphs('model');
-            $table->bigInteger('service_type_id')->unsigned();
+            $table->bigInteger('service_type_id')->unsigned()->index();
             $table->string('name')->nullable();
             $table->string('title');
             $table->text('description');
@@ -24,7 +24,7 @@ class CreateServiceOffersTable extends Migration
             $table->text('location');
             $table->string('lat');
             $table->string('lng');
-            $table->enum('status', ['pending', 'denied', 'approved'])->default('pending');
+            $table->enum('status', ['pending', 'denied', 'approved'])->default('pending')->index();
             $table->string('business_name');
             $table->string('business_site')->nullable();
             $table->string('business_contact');

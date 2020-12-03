@@ -47,7 +47,7 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
             } = data.data
             // setTitle(title || '');
             setDescription(description || '');
-            console.log(all.filter(i => category.indexOf(i.name) >= 0), all,category)
+            // console.log(all.filter(i => category.indexOf(i.name) >= 0), all,category)
             setCategory(all.filter(i => category.indexOf(i.name) >= 0));
             setPhoto(photo || '');
             setRatio(ratio || 0);

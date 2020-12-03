@@ -342,3 +342,47 @@
         width: 50%;
     }
 }
+
+section.invites > h5 {
+    font-size: 12px;
+    line-height: 150%;
+    color: #4F6880;
+    padding: 15px 0px;
+}
+section.invites li div.member-item {
+    display: flex;
+    padding: 8px 0px;
+    align-items: center;
+}
+section.invites li div.member-item img{
+    height: 40px !important;
+    width: 40px !important;
+    margin-right: 10px;
+}
+section.invites li div.member-item h4{
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 150%;
+    flex-grow: 1;
+    align-items: center;
+    color: #4F6880;
+}
+section.invites li div.member-item button.invite-button{
+    border: 1.5px solid #109CF1;
+    box-sizing: border-box;
+    border-radius: 4px;
+
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    letter-spacing: 0.01em;
+    padding: 8px 15px;
+    color: #109CF1;
+}
+section.invites li div.member-item button.invite-button.invited{
+    background: #41D48F;
+    border: 0;
+    color: #fff;
+}

@@ -5,6 +5,7 @@ import { swalDelete } from '../../../components/helpers/alerts';
 import { selectStyle, loadOrganization } from '../../../components/helpers/async_options';
 import DatePicker from 'react-datepicker';
 import AsyncSelect from 'react-select/async';
+import { all } from '../needs/categorylist';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -57,7 +58,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 about,
                 bring,
                 type,
-                category,
+                category = [],
                 photo,
                 goal,
                 date,
@@ -68,7 +69,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setAbout(about || description);
             setBring(bring || description);
             setType(type || 'donation');
-            setCategory(category || []);
+            setCategory( all.filter(i => category.includes(i.name) ) );
             setPhoto(photo || null);
             setGoal(goal || 0);
             setDate(date || new Date);
@@ -95,7 +96,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setAbout(about || description || '');
             setBring(bring || description || '');
             setType(type || 'donation');
-            setCategory(category || []);
+            setCategory( all.filter(i => category.includes(i.name) ) );
             setPhoto(photo || null);
             setGoal(goal || 0);
             setDate(date || new Date);

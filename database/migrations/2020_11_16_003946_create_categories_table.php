@@ -18,7 +18,7 @@ class CreateCategoriesTable extends Migration
             $table->string('name');
             $table->string('slug')->nullable()->index(); //used to query as text but optional index
             $table->string('icon')->nullable();
-            $table->boolean('status')->default(true);
+            $table->boolean('status')->default(true)->index();
             $table->string('type')->default('monetary')->index(); //used to group categories. required index
             $table->unsignedBigInteger('parent_id')->nullable()->index();
             $table->timestamps();

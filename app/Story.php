@@ -34,6 +34,11 @@ class Story extends Model implements HasMedia
         return $this->belongsTo('App\User');
     }
 
+    public function user_profile()
+    {
+        return $this->hasOneThrough('App\UserProfile', 'App\User', 'id', 'user_id', 'user_id', 'id');
+    }
+
     public function organization()
     {
         return $this->belongsTo('App\Organization');

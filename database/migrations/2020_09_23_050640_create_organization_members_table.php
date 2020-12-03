@@ -15,9 +15,9 @@ class CreateOrganizationMembersTable extends Migration
     {
         Schema::create('organization_members', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('organization_id')->unsigned();
+            $table->bigInteger('organization_id')->unsigned()->index();
             $table->morphs('model');
-            $table->enum('status', ['pending', 'approved', 'dennied'])->default('pending'); //correct is denied
+            $table->enum('status', ['pending', 'approved', 'denied'])->default('pending')->index(); //correct is denied
 
             $table->foreign('organization_id')->references('id')->on('organizations');
         });

@@ -53,6 +53,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::resource('stories', 'StoryController');
         Route::post('stories/{story}/toggle', 'StoryController@toggle');
 
+        Route::get('groups/invite', 'GroupController@searchUserInvite');
+        Route::post('groups/invite', 'GroupController@initUserInvite');
         Route::resource('groups', 'GroupController');
 
         Route::resource('transacts', 'TransactionController');

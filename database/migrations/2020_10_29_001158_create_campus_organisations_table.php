@@ -15,8 +15,8 @@ class CreateCampusOrganisationsTable extends Migration
     {
         Schema::create('campus_organisations', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('campus_id')->unsigned();
-            $table->bigInteger('organization_id')->unsigned();
+            $table->bigInteger('campus_id')->unsigned()->index();
+            $table->bigInteger('organization_id')->unsigned()->index();
             $table->timestamps();
 
             $table->foreign('campus_id')->references('id')->on('campuses');

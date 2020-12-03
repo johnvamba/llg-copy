@@ -15,8 +15,8 @@ class CreateCommentStoriesTable extends Migration
     {
         Schema::create('comment_stories', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('story_id')->unsigned();
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('story_id')->unsigned()->index();
+            $table->bigInteger('user_id')->unsigned()->index();
             $table->text('comment')->nullable();
             $table->timestamps();
 

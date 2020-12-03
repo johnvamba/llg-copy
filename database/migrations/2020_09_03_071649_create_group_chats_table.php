@@ -15,8 +15,8 @@ class CreateGroupChatsTable extends Migration
     {
         Schema::create('group_chats', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('group_id')->unsigned();
-            $table->bigInteger('sender')->unsigned();
+            $table->bigInteger('group_id')->unsigned()->index();
+            $table->bigInteger('sender')->unsigned()->index();
             $table->text("message")->nullable();
             $table->timestamps();
 

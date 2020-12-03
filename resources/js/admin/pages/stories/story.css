@@ -646,15 +646,21 @@
     line-height: 24px;
     color: #EB5757;
 }
-.view-story__header-right .unpublished{
+.view-story__header-right .unpublished, .view-story__header-right .publish{
     font-family: "Lato", sans-serif;
     margin: 0 33px;
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
     line-height: 24px;
+}
+.view-story__header-right .unpublished{
     color: #91A5B7;
 }
+.view-story__header-right .publish{
+    color: #109CF1;
+}
+
 .view-story__header-right > div{
     display: flex;
     align-items: center;
@@ -703,15 +709,19 @@
     line-height: 24px;
     color: rgba(74, 108, 140, 0.56);
 }
-.view-story__body .content .type{
+.view-story__body .content .category-list {
     display: flex;
-    align-items: center;
     margin-bottom: 23px;
 }
-.view-story__body .content .type svg path{
-    fill: #109CF1;
+.view-story__body .content .category-list .type{
+    display: flex;
+    align-items: center;
 }
-.view-story__body .content .type label{
+.view-story__body .content .category-list .type svg.svg-icon{
+    width: 20px;
+    height: 20px;
+}
+.view-story__body .content .category-list .type label{
     font-family: "Lato", sans-serif;
     font-style: normal;
     font-weight: 500;
@@ -866,4 +876,8 @@
 
 .btn-group.publish-btn .btn.btn-primary {
     padding: 15px;
+}
+
+.form .form-footer > button.preview {
+    color: #109CF1 !important;
 }
