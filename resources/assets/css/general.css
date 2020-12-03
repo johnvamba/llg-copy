@@ -114,7 +114,7 @@ input[type="time"]::-webkit-datetime-edit-ampm-field {
 	display: none;
 }
 
-header .filter-header .filter-content{
+header .filter-header .filter-content, .search-header .search-content {
 	background: #FFFFFF;
 	border: 1px solid #E7EBF3;
 	box-sizing: border-box;
@@ -163,7 +163,7 @@ td.checkbox, th.checkbox{
 td.actions, th.actions{
 	flex:0.8 !important;
 }
-.filter-arrow, .filter-arrow::before{
+.filter-arrow, .filter-arrow::before, .search-arrow, .search-arrow::before{
 	width: 15px;
     height: 15px;
     position: absolute;
@@ -171,7 +171,8 @@ td.actions, th.actions{
     top: -4px; 
     left: 25px;
 }
-.filter-arrow::before{
+.filter-arrow::before, 
+.search-arrow::before{
 	content: '';
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
@@ -179,8 +180,6 @@ td.actions, th.actions{
     background: #fff;
     border-top: 1px solid #E7EBF3;
     border-left: 1px solid #E7EBF3;
-/*    top: 0;
-    left: 0;*/
 }
 
 
@@ -803,4 +802,64 @@ input[type=checkbox]{
 }
 .form-group-textarea{
 	border-bottom: 1px solid #D7DEE3;
+}
+
+header .search-content{
+	min-height: 200px;
+	width: 560px;
+	height: auto;
+	display: flex;
+	flex-direction: column;
+}
+
+header .search-content .search-listing {
+	padding: 1rem;
+	position: relative;
+}
+
+.results-item {
+
+}
+
+.results-item .result-group {
+	padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+	border-bottom: 1px solid #e2e8f0;
+}
+.results-item .result-group:last-child {
+	border: 0;
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+
+.result-group .item {
+
+}
+
+.result-group .item h3 {
+    font-weight: 500;
+    color: rgba(60,90,119,1);
+    font-size: 18px;
+}
+.result-group .item .item-results li {
+	display: flex;
+	padding: 10px 0px;
+	margin: 0px 20px;
+	align-items: center;
+	border-bottom: 1px solid #e2e8f0;
+}
+.result-group .item .item-results li:last-child {
+	border: 0;
+}
+
+.result-group .item .item-results h5{
+	font-weight: 400;
+    color: rgba(60,90,119,1);
+    font-size: 16px;
+}
+
+.result-group .item .item-results i{
+	color: #63b3ed;
+	margin-right: 5px;
 }

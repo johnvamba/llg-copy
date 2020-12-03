@@ -91,7 +91,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         if(data.id) {
             collectData(data.id)
         } else {
-            const { title, about, description, bring, type, category, photo, goal, date, time } = data || {}
+            const { title, about, description, bring, type, category = [], photo, goal, date, time } = data || {}
             setTitle(title || '');
             setAbout(about || description || '');
             setBring(bring || description || '');
