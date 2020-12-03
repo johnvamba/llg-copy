@@ -46,7 +46,7 @@ class Story extends Model implements HasMedia
 
     public function campus()
     {
-        return $this->belongsTo(Campus::class, CampusOrganization::class, 'organization_id', 'campus_id', 'organization_id', 'campus_id');
+        return $this->hasOneThrough(Campus::class, CampusOrganisation::class, 'organization_id', 'id', 'organization_id', 'campus_id');
     }
 
     public function appreciates()

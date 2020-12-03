@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { UncontrolledDropdown, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button, ButtonGroup } from 'reactstrap';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button, ButtonGroup } from 'reactstrap';
 import { swalCreate } from '../../../components/helpers/alerts';
 import ReactTagInput from "@pathofdev/react-tag-input";
 import OffersFormCross from '../../../svg/offers-form-cross';
@@ -62,6 +62,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
 
     const attemptSubmit = () => {
         setSubmitting(true)
+        setModal(false)
         const raw_draft_json = JSON.stringify( convertToRaw(editorState.getCurrentContent()) );
         const description = editorState.getCurrentContent().getPlainText('\u0001');
         const params = {
@@ -197,9 +198,9 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
             <section className="form-footer">
                 <button className="discard" onClick={handleClose}>Discard</button>
                 <div className="flex-grow-1"></div>
-                <button className={'btn'} onClick={toggle}>Preview</button>
+                <button className={'preview'} onClick={toggle}>Preview</button>
                 <ButtonGroup className={'publish-btn'}>
-                    <Button color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
+                    <Button className='actual-btn' color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
                     <ButtonDropdown className={'btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
                       <DropdownToggle tag="button">
                         <StoriesPublishIcon />
@@ -213,7 +214,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
             </section>
             {
                 modal &&
-                <StoriesModal title={form.title} handleChange={handleChange} modal={modal} toggle={toggle} editorState={editorState} setEditorState={setEditorState}/>
+                <StoriesModal setSaveAs={setSaveAs} attemptSubmit={attemptSubmit} setTogglePub={setTogglePub} togglePub={togglePub} saveAs={saveAs} title={form.title} photo={photo} handleChange={handleChange} modal={modal} toggle={toggle} editorState={editorState} setEditorState={setEditorState}/>
             }
         </section>
        

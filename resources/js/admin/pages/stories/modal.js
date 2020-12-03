@@ -1,5 +1,7 @@
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, ButtonGroup } from 'reactstrap';
 import StoriesHeartIcon from '../../../svg/stories-heart';
 import StoriesCommentIcon from '../../../svg/stories-comment';
 import StoriesShareIcon from '../../../svg/stories-share';
@@ -8,8 +10,10 @@ import StoriesPublishIcon from '../../../svg/stories-publish';
 import TextEditor from '../../../components/TextEditor'
 import { Editor, EditorState, convertToRaw, convertFromHTML } from "draft-js";
 
-const StoriesModal = ({title, handleChange, modal, toggle, editorState, setEditorState}) => {
-
+const StoriesModal = ({title, handleChange, photo, modal, toggle, editorState, setEditorState, setSaveAs, attemptSubmit, setTogglePub, togglePub, saveAs}) => {
+    const profile = useSelector(
+        state => state.AuthUserReducer.profile
+    );
     return (
         <section className="story-preview">
             <Modal isOpen={modal} toggle={toggle} className="story-preview__modal">
@@ -27,10 +31,18 @@ const StoriesModal = ({title, handleChange, modal, toggle, editorState, setEdito
                             </form>
                             <section className="story-preview__modal-footer">
                                 <div className="story-preview__modal-footer-container">
-                                    <button className="publish">
-                                        <span>Publish</span>
-                                        <StoriesPublishIcon />
-                                    </button>
+                                    <ButtonGroup className={'publish-btn'}>
+                                        <Button className='actual-btn' color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
+                                        <ButtonDropdown className={'btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
+                                          <DropdownToggle tag="button">
+                                            <StoriesPublishIcon />
+                                          </DropdownToggle>
+                                          <DropdownMenu>
+                                            <DropdownItem onClick={()=>setSaveAs('draft')}>Draft</DropdownItem>
+                                            <DropdownItem onClick={()=>setSaveAs('publish')}>Publish</DropdownItem>
+                                          </DropdownMenu>
+                                        </ButtonDropdown>
+                                    </ButtonGroup>
                                     <div>
                                         <button className="discard" onClick={toggle}>
                                             Close Preview
@@ -40,37 +52,40 @@ const StoriesModal = ({title, handleChange, modal, toggle, editorState, setEdito
                             </section>
                         </section>
                         <section className="w-1/2 story-preview__modal-right">
-                            <div>
-                                <StoriesNoImageIcon />
-                                <div className="content">
-                                    <div className="tags">
-                                        <span>#tagging</span>
-                                        <span>#tag</span>
-                                    </div>
-                                    <h2>{title || 'Sample Title'}</h2>
-                                    <div className="under-title">
-                                        <div>
-                                            <StoriesHeartIcon />
-                                            <span>Just now</span>
-                                        </div>
-                                        <span>.</span>
-                                        <div>
-                                            <StoriesHeartIcon />
-                                            <span>0 Appreciates</span>
-                                        </div>
-                                    </div>
-                                    <div className="author">
-                                        <div className="left">D</div>
-                                        <div className="right">
-                                            <span>written by</span>
-                                            <label>Dwight Navarro</label>
-                                        </div>
-                                    </div>
-                                    <div>
+                            <div className="mobile-mockup">
+                                <div className="mockup-body">
+                                    <div className="mock-image" style={{backgroundImage: photo || 'none'}}>
                                         {
-                                        <Editor editorState={editorState} readOnly={true} />
-                                        // { markup() }
+                                            photo ? <img src={photo}/> :
+                                            <StoriesNoImageIcon />
                                         }
+                                    </div>
+                                    <div className="content">
+                                        <h2>{title || 'Sample Title'}</h2>
+                                        <div className="under-title">
+                                            <div>
+                                                <StoriesHeartIcon />
+                                                <span>Just now</span>
+                                            </div>
+                                            <span>.</span>
+                                            <div>
+                                                <StoriesHeartIcon />
+                                                <span>0 Appreciates</span>
+                                            </div>
+                                        </div>
+                                        <div className="author">
+                                            <div className="left">D</div>
+                                            <div className="right">
+                                                <span>written by</span>
+                                                <label>{profile.name}</label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            {
+                                            <Editor editorState={editorState} readOnly={true} />
+                                            // { markup() }
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="footer">
