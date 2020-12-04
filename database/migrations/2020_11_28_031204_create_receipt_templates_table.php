@@ -18,6 +18,10 @@ class CreateReceiptTemplatesTable extends Migration
             $table->unsignedBigInteger('organization_id')->index();
             $table->string('subject');
             $table->text('html_content');
+            $table->string('facebook')->nullable();
+            $table->string('twitter')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('text')->nullable();
             $table->text('raw_draft_json')->nullable();
             $table->timestamps();
         });
