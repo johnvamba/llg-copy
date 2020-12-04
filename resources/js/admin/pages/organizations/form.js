@@ -13,6 +13,7 @@ import ImageCropper from '../../../components/ImageCropper'
 import AsyncSelect from 'react-select/async';
 import { connect } from 'react-redux';
 import { selectStyle, loadCampus } from '../../../components/helpers/async_options';
+import { all } from '../needs/categorylist';
 
 const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer }) => {
         const { roles } = AuthUserReducer;
@@ -60,10 +61,10 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             clearCacheEntry: clearCache,
             cancelToken: token.token
         }).then(({ data })=>{
-            const { name, email, site, phone_number, description, category, campus } = data.data
+            const { name, email, site, phone_number, description, category = [], campus } = data.data
             // setForm({...form, name, email, site, phone_number, description})
             setCampus(campus)
-            setCategory(category || [])
+            setCategory( all.filter(i => category.includes(i.name) ) );
             setLoading(false)
         }).catch(({response})=>{
             if(response){
