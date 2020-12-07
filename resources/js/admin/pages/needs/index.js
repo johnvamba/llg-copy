@@ -87,6 +87,7 @@ const Needs = ({NeedsReducer}) => {
 
     const handleForm = (info={}, form = false, setting = null, story = false)=>{
         //change content of table here
+        console.log('something');
         setInfo(info)
         if(setting == 'discard'){
             //discard Changes here

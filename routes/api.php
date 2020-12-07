@@ -26,6 +26,7 @@ Route::get('campus', 'CampusController@index');
 Route::post('register/campus/user', 'CampusController@addUser');
 
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::get('checkemail', 'CheckEmail');
 
     Route::group(['prefix'=>'web', 'namespace'=>'Admin', 'middleware' => 'datafilter'], function() {
         Route::get('needs/types', 'NeedsController@types');

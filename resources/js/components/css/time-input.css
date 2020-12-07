@@ -1,0 +1,11 @@
+.input-container.time-input {
+
+}
+.input-container.time-input .time-group {
+	display: flex;
+}
+
+
+.input-container.time-input .time-group input{
+	width: 2ch;
+}

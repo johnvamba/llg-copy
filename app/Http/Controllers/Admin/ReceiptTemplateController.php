@@ -41,7 +41,7 @@ class ReceiptTemplateController extends Controller
         if($org = session('org_id')){
             $template = ReceiptTemplate::with('organization')->firstOrNew(['organization_id' => $org]);
 
-            $template->fill( $request->only('subject', 'html_content') + [
+            $template->fill( $request->only('subject', 'html_content', 'facebook', 'twitter', 'instagram', 'text') + [
                 'raw_draft_json' => json_encode($request->get('raw_draft_json'))
             ] );
 

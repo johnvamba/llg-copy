@@ -35,16 +35,16 @@ const CategoryScroll = ({
     const categoryWheel = event => {
         const { target } = event
         // target.scrollLeft += (event.deltaY / 10)
-        console.log('onWheel', event.deltaY, target.scrollLeft)
+        // console.log('onWheel', event.deltaY, target.scrollLeft)
         // target.scrollX += event.deltaY
     }
 
     const categoryScroll = event => {
         const { target } = event
-        if(target.offsetWidth + target.scrollLeft >= target.scrollWidth)
-            console.log('final', target.offsetWidth, target.scrollLeft, target.scrollWidth);
-        else
-            console.log('scrolling',target.offsetWidth, target.scrollLeft, target.scrollWidth);
+        // if(target.offsetWidth + target.scrollLeft >= target.scrollWidth)
+        //     console.log('final', target.offsetWidth, target.scrollLeft, target.scrollWidth);
+        // else
+        //     console.log('scrolling',target.offsetWidth, target.scrollLeft, target.scrollWidth);
 
         setScrollLeft(event.target.scrollLeft)
     }

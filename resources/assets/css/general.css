@@ -863,3 +863,16 @@ header .search-content .search-listing {
 	color: #63b3ed;
 	margin-right: 5px;
 }
+
+.time-input.input-container {
+	border-bottom: 1px solid #D7DEE3;
+}
+.time-input.input-container .react-time-picker .react-time-picker__wrapper  {
+	border: 0;
+}
+.time-input.input-container .react-time-picker__wrapper .react-time-picker__inputGroup {
+
+}
+.time-input.input-container .react-time-picker__inputGroup__input.react-time-picker__inputGroup__amPm {
+	display: none;
+}
