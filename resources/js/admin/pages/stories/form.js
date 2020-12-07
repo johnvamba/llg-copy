@@ -161,6 +161,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                                 styles={selectStyle}
                                 loadOptions={loadOrganization}
                                 defaultOptions
+                                cacheOptions
                                 value={organization}
                                 placeholder="Organization"
                                 onChange={setOrganization}
