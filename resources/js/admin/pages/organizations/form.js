@@ -12,7 +12,7 @@ import BannerImage from '../../../components/BannerImage';
 import ImageCropper from '../../../components/ImageCropper'
 import AsyncSelect from 'react-select/async';
 import { connect } from 'react-redux';
-import { selectStyle, loadCampus } from '../../../components/helpers/async_options';
+import { selectStyle, loadCampus, checkEmail } from '../../../components/helpers/async_options';
 import { all } from '../needs/categorylist';
 
 const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer }) => {
@@ -89,6 +89,21 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             [name]: value
         })
         removeError(name)
+    }
+
+    const handleEmail = (email) => {
+        setForm({ ...form, email })
+        if(validateEmail(email)){
+            checkEmail(email, {type: 'organization'})
+            .then(({data})=>{
+                if(email == data.email){
+                    if(data.status == 'free')
+                        removeError('email')
+                    else
+                        setErrors({...errors, email: 'Email already existed'})                    
+                }
+            })
+        }
     }
 
     const handleImages = (file, type = 'photo', cropper = false) => {
@@ -218,6 +233,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                 styles={selectStyle}
                                 loadOptions={loadCampus}
                                 defaultOptions
+                                cacheOptions
                                 value={campus}
                                 placeholder="Campus"
                                 onChange={setCampus}
@@ -250,11 +266,11 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                     type="text"
                                     value={form.email}
                                     name="email"
-                                    onChange={handleInput}
+                                    onChange={e=>handleEmail(e.target.value)}
                                     placeholder="Enter Email Address"
                                 />
                                 {
-                                    (errors.email || false) && <span className="text-xs pt-1 text-red-500 italic">Missing email</span>
+                                    (errors.email || false) && <span className="text-xs pt-1 text-red-500 italic">{errors.email}</span>
                                 }
                             </div>
                         </div>

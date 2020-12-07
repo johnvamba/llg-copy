@@ -291,6 +291,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                                    <AsyncSelect
                                         styles={selectStylePaddingZero}
                                         loadOptions={loadOrganization}
+                                        cacheOptions
                                         defaultOptions
                                         value={organization}
                                         placeholder="Organization"

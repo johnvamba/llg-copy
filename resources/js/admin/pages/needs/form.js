@@ -20,6 +20,7 @@ import Location from '../../../components/Location'
 import CategoryScroll from '../../../components/CategoryScroll'
 import Imagepond from '../../../components/Imagepond'
 import LoadingScreen from '../../../components/LoadingScreen'
+import TimeInput from '../../../components/TimeInput'
 
 import { connect } from 'react-redux';
 
@@ -36,14 +37,13 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     const [goal, setGoal] = useState(0);
     const [date, setDate] = useState(new Date());
     const [openDate, setOpenDate] = useState(false);
-    const [time, setTime] = useState('');
+    const [time, setTime] = useState('09:00 AM');
     const [errors, setErrors] = useState({});
     const [location, setLocation] = useState({
         formatted_address: '',
         lat: null,
         lng: null,
     })
-    const [meridiem, setMeridiem] = useState('am');
     const [organization, setOrganization] = useState({});
 
     const [submitting, setSubmitting] = useState(false);
@@ -57,8 +57,11 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 title,
                 about,
                 bring,
+                description,
                 type,
+                lctype,
                 category = [],
+                organization,
                 photo,
                 goal,
                 date,
@@ -66,15 +69,16 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 location,
             } = data.data
             setTitle(title || '');
-            setAbout(about || description);
-            setBring(bring || description);
-            setType(type || 'donation');
+            setAbout(about || description || '');
+            setBring(bring || description || '');
+            setType(lctype || 'donation');
             setCategory( all.filter(i => category.includes(i.name) ) );
             setPhoto(photo || null);
             setGoal(goal || 0);
-            setDate(date || new Date);
+            setDate(date ? new Date(date) :  new Date);
             setTime(time || '');
             setLocation(location || {});
+            setOrganization(organization || {});
         })
         .catch(err => {
             // if(err.response){
@@ -177,19 +181,6 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         })
     }
 
-    // if(loading)
-    //     return (<div className="form need-form">
-    //     <div className="form-title">
-    //         <h3>Loading information of Need</h3>
-    //         <button type="button" onClick={()=>handleForm(false, 'close')}>
-    //             <CrossPlain />
-    //         </button>
-    //     </div>
-    //     <div className="form-body">
-    //         <p className="p-5">Please wait while we load your Need</p>
-    //     </div>
-    // </div>)
-
     return (
        <div className="form need-form">
             {
@@ -223,6 +214,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                             styles={selectStyle}
                             loadOptions={loadOrganization}
                             defaultOptions
+                            cacheOptions
                             value={organization}
                             placeholder="Organization"
                             onChange={setOrganization}
@@ -274,7 +266,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 {
                     type == 'volunteer' && 
                     <div className="flex-content">
-                        <div className={`form-group short-width ${errors.date && 'form-error'}`}>
+                        <div className={`form-group short-width ${errors.date ? 'form-error' : ''}`}>
                             <label>Date Needed</label>
                             <div className="input-container">
                                 <DatePicker 
@@ -285,6 +277,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                                     className="input-field"
                                     onChange={(date)=>setDate(date)}
                                     onClickOutside={()=>setOpenDate(false)}
+                                    onFocus={()=>setOpenDate(true)}
                                     open={openDate}
                                 />
                                 <i className="icon right-0 absolute" onClick={e=>setOpenDate(!openDate)}>
@@ -297,12 +290,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                         </div>
                         <div className={`form-group short-width ${errors.time && 'form-error'}`}>
                             <label>Time</label>
-                            <div className="input-container">
-                                <input className="input-field time-field" type="text" pattern="[0-9]{2}:[0-9]{2}" placeholder="00:00" name="time" value={time} 
-                                onChange={(e)=>setTime(e.target.value)} />
-                                <span className={`time-toggle time-am ${meridiem =='am' ? 'active':''}`} onClick={()=>setMeridiem('am')}>AM</span>
-                                <span className={`time-toggle time-pm ${meridiem =='pm' ? 'active':''}`} onClick={()=>setMeridiem('pm')}>PM</span>
-                            </div>
+                            <TimeInput value={time} onChange={setTime}/>
                             {
                                 (errors.time || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Time of Need</span>
                             }

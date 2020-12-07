@@ -24,20 +24,20 @@ class NeedResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'type' => $this->whenLoaded('type', optional($this->type)->name),
+            'lctype' => $this->whenLoaded('type', strtolower(optional($this->type)->name)),
             'goal' => $this->goal,
             'status' => $this->setStatus(),
-            'date' => $this->created_at->format('m/d/Y'),//'08/27/2020'
-            'time' => $this->created_at->format('h:i A'),
+            'date' => optional($this->scheduled_at)->format('m/d/Y'),//'08/27/2020'
+            'time' => strtolower(optional($this->scheduled_at)->format('h:i A')),
             'organization' => $this->whenLoaded('organization', $this->parseOrg()),
             'lat' => (float) $this->lat,
             'lng' => (float) $this->lng,
-            'category' => $this->whenLoaded('categoriesList', $this->categoriesList->pluck('name'))
-        ] + ($this->complete ? [
+            'category' => $this->whenLoaded('categories', $this->categories->pluck('name')),
             'photo' => $this->getFirstMediaUrl('photo'),
             'ratio' => $this->getRatio(),
             'description' => $this->description,
-            'raised' => $this->raised,
-        ] : []);
+            'raised' => $this->raised
+        ];
     }
 
     protected function parseOrg()

@@ -128,6 +128,7 @@ const TransactionsForm = ({ data = {}, handleForm, afterSubmit }) => {
                                     styles={selectStylePaddingZero}
                                     loadOptions={loadOrganization}
                                     defaultOptions
+                                    cacheOptions
                                     value={organization}
                                     placeholder="Organization"
                                     onChange={handleOrganization}

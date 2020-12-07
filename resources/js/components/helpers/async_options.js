@@ -37,34 +37,45 @@ export const selectStylePaddingZero = {
   })
 }
 
-export const loadOrganization = (name = '', callback, options = {}, catchFunc = ()=>{}) => {
+export const loadOrganization = (name = '', callback, options = {}, catchFunc = (err)=>{}) => {
 	api.get('/api/web/organizations/async', {
 		params: {
 			name,
 			...options
 		},
 		cache: {
-        exclude: { query: false },
+      clearCache: true,
+      exclude: { query: false },
     }, 
 	}).then(({data})=>{
 		callback(data.data)
-	}).catch(err=>{
-		catchFunc
-	})
+	}).catch(catchFunc)
 }
 
-export const loadCampus = (name = '', callback, options = {}, catchFunc = ()=>{}) => {
+export const loadCampus = (name = '', callback, options = {}, catchFunc = (err)=>{}) => {
   api.get('/api/web/campuses/async', {
     params: {
       name,
       ...options
     },
     cache: {
-          exclude: { query: false },
+        clearCache: true,
+        exclude: { query: false },
       }, 
   }).then(({data})=>{
     callback(data.data)
-  }).catch(err=>{
-    catchFunc
+  }).catch(catchFunc)
+}
+
+export const checkEmail = (email = '', options = {}) => {
+  return new api.get('/api/checkemail', {
+    params: {
+      email,
+      ...options
+    },
+    cache: {
+      clearCache: true,
+      exclude: { query: false },
+    }, 
   })
 }
