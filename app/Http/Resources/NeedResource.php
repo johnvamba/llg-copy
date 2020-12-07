@@ -32,6 +32,7 @@ class NeedResource extends JsonResource
             'organization' => $this->whenLoaded('organization', $this->parseOrg()),
             'lat' => (float) $this->lat,
             'lng' => (float) $this->lng,
+            'location' => $this->location,
             'category' => $this->whenLoaded('categories', $this->categories->pluck('name')),
             'photo' => $this->getFirstMediaUrl('photo'),
             'ratio' => $this->getRatio(),

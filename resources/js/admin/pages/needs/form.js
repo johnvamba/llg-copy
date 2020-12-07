@@ -67,6 +67,8 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 date,
                 time,
                 location,
+                lng,
+                lat
             } = data.data
             setTitle(title || '');
             setAbout(about || description || '');
@@ -77,7 +79,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setGoal(goal || 0);
             setDate(date ? new Date(date) :  new Date);
             setTime(time || '');
-            setLocation(location || {});
+            setLocation({formatted_address: location, lng, lat});
             setOrganization(organization || {});
         })
         .catch(err => {
@@ -192,7 +194,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 }/>
             }
             <div className="form-title">
-                <h3>Create Need</h3>
+                <h3>{data.id ? 'Edit' : 'Create'} Need</h3>
                 <button type="button" onClick={()=>handleForm({}, false, 'close')}>
                     <CrossPlain />
                 </button>
@@ -298,6 +300,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                         <Location 
                             className={`short-width ${errors.location && 'form-error'}`}
                             name={'location'}
+                            defaultValue={location.formatted_address}
                             placesSelected={handleLocation}
                             errors={errors.location || []}
                         />

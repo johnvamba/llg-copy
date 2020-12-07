@@ -140,7 +140,7 @@ class NeedsController extends Controller
                 //dynamic details
                 [
                     'short_description' => $request->get('description') ?? 'No description',
-                    'location' =>$location['formatted_address'] ?? null,
+                    'location' => $location['formatted_address'] ?? null,
                     'lat' => $location['lat'] ?? null,
                     'lng' => $location['lng'] ?? null,
                 ]

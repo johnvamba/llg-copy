@@ -13,7 +13,7 @@ const TimeInput = ({value, onChange}) => {
     		const regex = /([0-9]{2}):([0-9]{2})\W(AM|PM)/g;
     		const check = [...value.matchAll(regex)];
     		if(!init) {
-    			console.log('check??', check);
+    			// console.log('check??', check);
     			setHour(check[0] ? check[0][1] : '00')
     			setMinute(check[0] ? check[0][2] : '00')
     			setMeridiem(check[0] ? check[0][3] : 'AM')
