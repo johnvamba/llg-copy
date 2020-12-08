@@ -123,7 +123,7 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                 (!loading) ? 
                 <div className="need-content">
                 	<div className="need-title">
-    	            	<img className="need-img" src={photo} />
+    	            	<div className="need-img" style={{backgroundImage: `url(${photo})`}} />
                         <h3>{data.title} <span>{data.date}</span> </h3>
     	            	<h5>{data.type || 'Donation'}</h5>
                 	</div>

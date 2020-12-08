@@ -25,7 +25,6 @@ const Needs = ({NeedsReducer}) => {
     const [tabCount, setTabCount] = useState(0);
     const [form, showForm] = useState(false); //false
     const [story, showStoryForm] = useState(false); //false
-
     const [bolInfo, showInfo] = useState(false);
     const [info, setInfo] = useState(null);
 
@@ -95,8 +94,11 @@ const Needs = ({NeedsReducer}) => {
         setTab(tab)
     }
 
-    const handleForm = (form = false, setting = null, data = null)=>{
+    const handleForm = (info={}, form = false, setting = 'close', data = null)=>{
         //change content of table here
+        setInfo(info)
+        showForm(form)
+        showStoryForm(story)
         if(setting == 'discard'){
             //discard Changes here
         }
@@ -105,7 +107,6 @@ const Needs = ({NeedsReducer}) => {
             loadTable(true)
             //or insert data here
         }
-        showForm(form)
     }
 
     const handleInfo = (item) => {

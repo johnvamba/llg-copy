@@ -743,6 +743,9 @@ div.view-map div.google-map{
 	border-radius: 4px;
 	/*border: 1px solid #109CF1;*/
 }
+.group-content .content-category {
+	display: flex;
+}
 .group-content .content-category span.category {
 	height: 25px;
 	background: rgba(16, 156, 241, 0.12);
@@ -751,6 +754,7 @@ div.view-map div.google-map{
 	font-size: 11px;
 	line-height: 24px;
 	padding: 0px 10px;
+	margin-right: 5px;
 	display: flex;
     align-items: center;
     width: fit-content;

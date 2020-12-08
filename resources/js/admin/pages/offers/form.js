@@ -45,7 +45,15 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
                 lng
             })
             setCategory(volunteer.find(i => i.name == type) || {})
-
+        } else {
+            setTitle('')
+            setDesc('')
+            setImage(null)
+            setBusName('')
+            setBusSite('')
+            setBusContact('')
+            setLocation({})
+            setCategory({})
         }
     }, [data])
 
@@ -217,7 +225,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
                         <p>{countTab} of 3</p>
                     </div>
                 }
-                <button className="offers-create-form__close" type="button" onClick={()=>setShowForm(false)}>
+                <button className="offers-create-form__close" type="button" onClick={()=>handleForm(false)}>
                     <OffersFormCross />
                 </button>
             </div>
@@ -240,9 +248,9 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
 
              <section className="offers-category-opt">
                 <div className="offers-category-opt__container flex">
-                    <button className="discard" onClick={()=>setShowForm(false)}>Discard</button>
+                    <button className="discard" onClick={()=>handleForm(true, 'discard', {})}>Discard</button>
                     {
-                        editing ? <button className="next" disabled={submitting} onClick={()=>setShowForm(false)}>{submitting? 'Submitting...' :'Submit'}</button> 
+                        editing ? <button className="next" disabled={submitting} onClick={submit}>{submitting? 'Submitting...' :'Submit'}</button> 
                         : <div>
                             {
                                 countTab > 1 &&
