@@ -16,7 +16,7 @@ import { selectStyle, loadCampus, checkEmail } from '../../../components/helpers
 import { all } from '../needs/categorylist';
 
 const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer }) => {
-        const { roles } = AuthUserReducer;
+    const { roles } = AuthUserReducer;
 
     const [category, setCategory] = useState([]);
     const [form, setForm] = useState({
@@ -50,7 +50,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             loadAll()
         } else {
             setForm({name: '', email: '',site: '', phone_number: '',description: ''})
-            useState({ banner: null, photo: null })
+            setImages({ banner: null, photo: null })
             setCampus({})
             setLoading(false)
             setSubmitting(false)
