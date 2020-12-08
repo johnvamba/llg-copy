@@ -25,7 +25,7 @@ class StoryResource extends JsonResource
             'title' => $this->title,
             'short_description' => $this->short_description,
             'comments_count' => $this->when(isset($this->comments_count), $this->comments_count, 0),
-            'user_photo' => $this->when($this->relationLoaded('user'), ''),
+            'org_photo' => $this->when($this->relationLoaded('organization'), fn() => optional($this->organization)->getFirstMediaUrl('photo')),
             'photo' => $this->whenLoaded('media', $this->getFirstMediaUrl('photo')),
             'shares_count' => 0,
             'appreciates_count' => $this->when(isset($this->appreciates_count), $this->appreciates_count, 0),

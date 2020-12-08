@@ -21,7 +21,7 @@ class StoryController extends Controller
      */
     public function index(Request $request)
     {
-        $stories = Story::with(['categories:name', 'media', 'user.profile'])->withCount(['appreciates', 'comments'])->latest();
+        $stories = Story::with(['categories:name', 'media', 'organization.media'])->withCount(['appreciates', 'comments'])->latest();
         $type = '';
 
         if($type = $request->get('type'))
