@@ -30,11 +30,11 @@ const SearchBar = () => {
     const [popperElement, setPopperElement] = useState(null);
     const [arrowElement, setArrowElement] = useState(null);
     const [results, setResults] = useState({
-    	needs: [],
-		stories: [],
-		offers: [],
-		organisations: [],
-		groups: []
+  //   	needs: [],
+		// stories: [],
+		// offers: [],
+		// organisations: [],
+		// groups: []
     });
     const wrapperRef = useRef(null);
     const {styles, attributes} = usePopper(referElement, popperElement, {
@@ -93,10 +93,24 @@ const SearchBar = () => {
         	(search != '' && searchActive) && 
 	        <div ref={setPopperElement} className="search-content" style={{...styles.popper, top:'20px', left: '-25px', zIndex: 1}} {...attributes.popper}>
 	            <div ref={setArrowElement} className='search-arrow' style={{...styles.arrow}} />
-	            <div ref={wrapperRef} className="search-listing">
+	            <div ref={wrapperRef} className={`search-listing ${loading ? 'searching' : ''}`}>
 	            	{
 	            		loading ? <LoadingScreen title={loading && `Looking for ${search}...`} /> :
 	            		<ul className="results-item">
+	            			{
+	            				_.isEmpty(results) &&
+	            				<li className="result-group">
+		            				<div className="item">
+		            					<h3>No results found for {search}</h3>
+		            					<ul className="item-results">
+		            						<li>
+		            							<i className="fa fa-search"></i>
+		            							<h5>Maybe look for other keywords</h5>
+		            						</li>
+		            					</ul>
+		            				</div>
+		            			</li>
+	            			}
 	            			{
 	            				(results.needs && results.needs.length > 0) &&
 		            			<li className="result-group">
