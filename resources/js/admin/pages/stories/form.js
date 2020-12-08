@@ -31,7 +31,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
     const [saveAs, setSaveAs] = useState('publish');
     const [togglePub, setTogglePub] = useState(false);
     // temporary has value
-    const [hasFeaturedImage, setHasFeaturedImage] = useState(true);
+    // const [hasFeaturedImage, setHasFeaturedImage] = useState(true);
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [organization, setOrganization] = useState({});
@@ -43,6 +43,20 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
             const { title } = data
             setForm({ title })
             loadStory()
+        } else {
+            setErrors({})
+            setTags([])
+            setForm({})
+            setModal(false)
+            setCategory([])
+            setPhoto(null)
+            setEditorState( EditorState.createEmpty() )
+            setSaveAs('publish')
+            setTogglePub(false)
+            // setHasFeaturedImage( )
+            setLoading(false)
+            setSubmitting(false)
+            setOrganization({})
         }
     }, [data])
 
@@ -54,6 +68,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                 if(tryParseJson(raw_draft_json)){
                     setEditorState( EditorState.createWithContent( convertFromRaw( JSON.parse(raw_draft_json) ) ) ); 
                 }
+                setPhoto(photo)
                 setOrganization(organization);
                 setCategory( monetary.filter(i => categories.includes(i.name) ) );
                 setLoading(null);
@@ -147,7 +162,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
             }
             <section className="form-title">
                 <h3>{ !(data.id) ? 'Create' : 'Edit' } Story</h3>
-                <button type="button" onClick={handleClose}>
+                <button type="button" onClick={()=>handleForm({})}>
                     <OffersFormCross />
                 </button>
             </section>
@@ -183,7 +198,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                             className="input-field"
                             type="text"
                             placeholder="Enter Title"
-                            value={form.title}
+                            value={form.title || ''}
                             name="title"
                             onChange={handleChange}
                         />
@@ -197,7 +212,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                 </form>
             </section>
             <section className="form-footer">
-                <button className="discard" onClick={handleClose}>Discard</button>
+                <button className="discard" onClick={()=> handleForm({}, true)}>Discard</button>
                 <div className="flex-grow-1"></div>
                 <button className={'preview'} onClick={toggle}>Preview</button>
                 <ButtonGroup className={'publish-btn'}>
