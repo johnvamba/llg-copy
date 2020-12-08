@@ -127,6 +127,26 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite }) => {
                 // c.cancel('Resetting');
                 // d.cancel('Resetting');
             }
+        } else {
+            setSubData({
+                org_link: '',
+                org_contact: '',
+                org_email: '',
+            })
+            setMembers([])
+            setActives({
+                data: [],
+                meta: {}
+            })
+            setPasts({
+                data: [],
+                meta: {}
+            })
+            setTab('active-needs')
+            setLoading(false)
+            setLoadingMembers(false)
+            setLoadingNeedActives(false)
+            setLoadingNeedPasts(false)
         }
     }, [data])
 

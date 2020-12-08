@@ -23,7 +23,7 @@ class ServiceOffer extends Model implements HasMedia
 
     public function model()
     {
-        return $this->morphTo();
+        return $this->morphTo(); //I am user
     }
 
     public function tags()
@@ -41,10 +41,10 @@ class ServiceOffer extends Model implements HasMedia
         return $this->belongsTo('App\ServiceType');
     }
 
-    public function organization()
-    {
-        return $this->belongsTo('App\Organization');
-    }
+    // public function organization() //Nothing herrre.
+    // {
+    //     return $this->belongsTo('App\Organization');
+    // }
 
     /**
      * Set short description column value

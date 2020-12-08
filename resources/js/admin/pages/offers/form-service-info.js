@@ -41,6 +41,7 @@ const FormServiceInfo = ({service, updateService, errors, fileList}) => {
                 <Location 
                     className={`short-width ${errors.location && 'form-error'}`}
                     name={'location'}
+                    defaultValue={service.location ? service.location.location : null}
                     placesSelected={handleLocation}
                     errors={errors.location || []}
                 />

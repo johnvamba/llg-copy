@@ -117,7 +117,9 @@ class OffersController extends Controller
      */
     public function show(ServiceOffer $offer)
     {
-        //
+        $offer->loadMissing(['serviceType']);
+
+        return new OfferResource($offer);
     }
 
     /**

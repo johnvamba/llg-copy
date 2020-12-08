@@ -32,19 +32,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
     useEffect(()=>{
         //change form fields here
         if(data.id) {
-            const { title, type, photo, description, location, lat, lng, business_name, business_site, business_contact} = data
-            setTitle(title)
-            setDesc(description)
-            setImage(photo)
-            setBusName(business_name)
-            setBusSite(business_site)
-            setBusContact(business_contact)
-            setLocation({
-                location,
-                lat,
-                lng
-            })
-            setCategory(volunteer.find(i => i.name == type) || {})
+            loadOffer()            
         } else {
             setTitle('')
             setDesc('')
@@ -52,10 +40,33 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
             setBusName('')
             setBusSite('')
             setBusContact('')
+            setFiles([])
             setLocation({})
             setCategory({})
+            setSubmitting(false)
+            setLoading(false)
         }
     }, [data])
+
+    const loadOffer = (clearCoche = false) => {
+        setLoading(true)
+        api.get(`/api/web/offers/${data.id}`)
+        .then(({ data })=>{
+            const { title, type, photo, description, location, lat, lng, business_name, business_site, business_contact} = data.data
+            console.log('data?', data.data)
+            setTitle(title || '')
+            setDesc(description || '')
+            setImage(photo || null)
+            setBusName(business_name || '')
+            setBusSite(business_site || '')
+            setBusContact(business_contact || '')
+            setLocation(location ? { location, lat, lng} : {})
+            setCategory(type ? volunteer.find(i => i.name == type) : {})
+            setErrors({})
+            setLoading(false)
+            console.log('reached');
+        })
+    }
 
     const handleCategories = (item, truth = false) => {0
         setCategory(item);

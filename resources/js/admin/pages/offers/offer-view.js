@@ -1,4 +1,4 @@
-import React, { useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import OffersEmployment from '../../../svg/offers-employment';
 import Circlet from '../../../svg/circlet';
 
@@ -11,6 +11,25 @@ import { volunteer } from '../needs/categorylist';
 import { Other } from '../needs/categories'
 
 const OfferView = ({ setShowOfferEdit, data = {} }) => {
+    // const [ title, setTitle ] = useState('')
+    // const [ type, setType ] = useState('')
+    // const [ location, setLocation ] = useState('')
+    // const [ business_name, setBusiness_name ] = useState('')
+    // const [ status, setStatus ] = useState('')
+    // const [ business_site, setBusiness_site ] = useState('')
+    // const [ business_contact, setBusiness_contact ] = useState('')
+    // const [ photo, setPhoto ] = useState('')
+    // const [ description, setDescription ] = useState('')
+    // const [ date, setDate ] = useState('')
+
+    // const [ loading, setLoading ] = useState(false);
+
+    // useEffect(() => {
+    //     if(data.id){
+
+    //     }
+    // }, [data])
+
     const { title, type, location, business_name, status, business_site, business_contact, photo, description, date, lng, lat } = data
     const catIcon = volunteer.find(i=>i.name == type);
 
@@ -25,6 +44,7 @@ const OfferView = ({ setShowOfferEdit, data = {} }) => {
             return <label>Approved</label>;
             case 'pending':
             return <label>Pending</label>;
+            case 'denied':
             case 'dennied':
             return <label>Denied</label>;
             default:
