@@ -193,7 +193,7 @@ class GroupController extends Controller
     public function searchUserInvite(Request $request)
     {
         DB::enableQueryLog();
-        $users = User::with('profile')->latest();
+        $users = User::unfilter()->with('profile')->latest();
 
         if($request->get('suggest') === true)
             $users->inRandomOrder();
@@ -202,7 +202,8 @@ class GroupController extends Controller
             //Version 1
             //->where('name', 'like', "%".$search."%");
             // ->whereHas('profile', fn($profile) => $profile->where('first_name','like', "%".$search."%")->orWhere('last_name', 'like', "%".$search."%"));
-            ->whereHas('profile', fn($profile) => $profile->whereRaw("CONCAT_WS(' ', first_name, last_name) LIKE ?", ['%'.$search.'$']) );
+            ->whereHas('profile', fn($profile) => $profile
+                ->whereRaw("CONCAT_WS(' ', first_name, last_name) LIKE ?", ['%'.$search.'%']) );
         }
 
         if($grp_id = $request->get('group_id'))

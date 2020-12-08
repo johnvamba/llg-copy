@@ -173,8 +173,8 @@ const UsersForm = ({ data, showItem, handleForm }) => {
             {
                 (submitting || loading) &&
                 <LoadingScreen title={
-                    (loading && 'Loading need...') ||
-                    (submitting && (data.id ? 'Updating Transaction' : 'Creating Transaction')) ||
+                    (loading && 'Loading User...') ||
+                    (submitting && (data.id ? 'Updating User' : 'Creating User')) ||
                     'Please wait'
                 }/>
             }
