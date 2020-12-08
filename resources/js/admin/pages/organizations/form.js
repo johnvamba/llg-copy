@@ -48,6 +48,18 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                 setForm({ ...form, name, email, site, phone_number, description})
                 setImages({banner, photo})
             loadAll()
+        } else {
+            setForm({name: '', email: '',site: '', phone_number: '',description: ''})
+            useState({ banner: null, photo: null })
+            setCampus({})
+            setLoading(false)
+            setSubmitting(false)
+            setErrors({})
+            setLocation({
+                location: 'Sydney, Australia',
+                lat: -33.868782, 
+                lng: 151.207583
+            })
         }
     }, [data])
 
