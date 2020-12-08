@@ -78,6 +78,7 @@ const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPriva
                         <Location 
                             className={`${fieldErrors.location && 'form-error'}`}
                             name={'location'}
+                            defaultValue={fields.location}
                             placesSelected={handleLocation}
                             errors={[fieldErrors.location] || []}
                         />

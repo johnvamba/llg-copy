@@ -26,7 +26,7 @@ const GroupsList = ({ data = [], handleForm, handleActionButtons, afterSubmit })
                                 <span>.</span>
                                 <span>{`${obj.participants_count || '0'} members`}</span>
                             </div>
-                            <p>{obj.short_description}</p>
+                            <p>{obj.short_description || 'Description not found'}</p>
                             <div className="groups-list__progress-bar">
                                 <label>{obj.goal_ratio || 0} Goals</label>
                                 <div className="relative pt-1">
