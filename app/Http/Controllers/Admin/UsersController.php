@@ -109,7 +109,7 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
-        $user->loadMissing(['profile', 'roles']);
+        $user->loadMissing(['profile', 'roles', 'organization']);
 
         return new UserResource($user);
     }

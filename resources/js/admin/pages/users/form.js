@@ -38,6 +38,20 @@ const UsersForm = ({ data, showItem, handleForm }) => {
     useEffect(()=>{
         if(data.id) {
             loadData()
+        } else {
+            setForm({
+                firstName: '',
+                lastName: '',
+                email: '',
+                age: 0,
+                bio: '',
+            })
+            setLoading(false)
+            setPhoto(null)
+            setType({ value: 'user', label: 'App User'})
+            setOrganization({})
+            setErrors({})
+            setSubmitting(false)
         }
     }, [data])
 
@@ -142,16 +156,16 @@ const UsersForm = ({ data, showItem, handleForm }) => {
 
     const reset = () => {
         showItem({}, true)
-        setForm({
-            firstName: '',
-            lastName: '',
-            email: '',
-            age: 0,
-            bio: '',
-        })
-        setErrors({})
-        setType({ value: 'app user', label: 'App User'})
-        setOrganization({})
+        // setForm({
+        //     firstName: '',
+        //     lastName: '',
+        //     email: '',
+        //     age: 0,
+        //     bio: '',
+        // })
+        // setErrors({})
+        // setType({ value: 'app user', label: 'App User'})
+        // setOrganization({})
     }
 
     return (
