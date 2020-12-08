@@ -805,7 +805,6 @@ input[type=checkbox]{
 }
 
 header .search-content{
-	min-height: 200px;
 	width: 560px;
 	height: auto;
 	display: flex;
@@ -815,6 +814,10 @@ header .search-content{
 header .search-content .search-listing {
 	padding: 1rem;
 	position: relative;
+}
+header .search-content .search-listing.searching {
+	padding: 0;
+	min-height: 200px;
 }
 
 .results-item {

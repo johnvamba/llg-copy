@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Carbon\Carbon;
+use App\Helper\Traits\OfferPortalTrait;
 
 class ServiceOffer extends Model implements HasMedia
 {
     use InteractsWithMedia;
     use SoftDeletes;
+    // use OfferPortalTrait;
 
     protected $guarded = [];
 
