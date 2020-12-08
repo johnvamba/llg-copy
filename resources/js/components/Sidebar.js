@@ -72,48 +72,62 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         </Link>
                     </div>
 
-                    <div className="mt-6 text-gray-400">
-                        <button
-                            onClick={() => handleOpen('need')}
-                            className={`relative w-full flex items-center focus:outline-none
-                            ${(location.pathname == "/needs") || (location.pathname == "/needs/requests") ? "text-blue-400" : "text-gray-400"}`}
-                        >
-                            <i className="text-xl fab fa-gratipay"></i>
-                            <span className="px-4">Needs</span>
+                    {
+                        (roles.name === 'admin' || roles.name === 'campus admin') ? 
+                        <div className="mt-6 text-gray-400">
+                            <button
+                                onClick={() => handleOpen('need')}
+                                className={`relative w-full flex items-center focus:outline-none
+                                ${(location.pathname == "/needs") || (location.pathname == "/needs/requests") ? "text-blue-400" : "text-gray-400"}`}
+                            >
+                                <i className="text-xl fab fa-gratipay"></i>
+                                <span className="px-4">Needs</span>
 
-                            <div className="absolute inset-y-0 right-0 text-gray-400">
-                                <svg
-                                    className="fill-current h-6 w-6"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                                </svg>
-                            </div>
-                        </button>
+                                <div className="absolute inset-y-0 right-0 text-gray-400">
+                                    <svg
+                                        className="fill-current h-6 w-6"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                    </svg>
+                                </div>
+                            </button>
 
-                        {show.need &&
-                            <div className={`ml-8`}>
-                                <div
+                            {show.need &&
+                                <div className={`ml-8`}>
+                                    <div
+                                        className={`mt-4 
+                                        ${location.pathname == "/needs" ? "text-blue-400" : "text-gray-400"}`}
+                                    >
+                                        <Link to="/needs">
+                                            Approved
+                                        </Link>
+                                    </div>
+
+                                    <div
                                     className={`mt-4 
-                                    ${location.pathname == "/needs" ? "text-blue-400" : "text-gray-400"}`}
-                                >
-                                    <Link to="/needs">
-                                        Approved
-                                    </Link>
+                                        ${location.pathname == "/needs/requests" ? "text-blue-400" : "text-gray-400"}`}
+                                    >
+                                        <Link to="/needs/requests">
+                                            Requests
+                                        </Link>
+                                    </div>
                                 </div>
+                            }
+                        </div>
+                        : <div
+                            className={`mt-6 
+                                ${(location.pathname == "/needs") ? "text-blue-400" : "text-gray-400"}`}
+                        >
+                            <Link to="/needs" className="flex items-center">
+                                <i className="text-xl fab fa-gratipay"></i>
+                                <span className="px-4">Needs</span>
+                            </Link>
+                        </div>
+                    }
 
-                                <div
-                                className={`mt-4 
-                                    ${location.pathname == "/needs/requests" ? "text-blue-400" : "text-gray-400"}`}
-                                >
-                                    <Link to="/needs/requests">
-                                        Requests
-                                    </Link>
-                                </div>
-                            </div>
-                        }
-                    </div>
+                    
 
                     {(roles.name === 'admin' || roles.name === 'campus admin') &&
                         (

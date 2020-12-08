@@ -85,10 +85,11 @@ const Needs = ({NeedsReducer}) => {
         setTab(tab)
     }
 
-    const handleForm = (info={}, form = false, setting = null, story = false)=>{
+    const handleForm = (info={}, form = false, setting = 'close', story = false)=>{
         //change content of table here
-        console.log('something');
         setInfo(info)
+        showForm(form)
+        showStoryForm(story)
         if(setting == 'discard'){
             //discard Changes here
         }
@@ -97,8 +98,6 @@ const Needs = ({NeedsReducer}) => {
             loadTable(true)
             //or insert data here
         }
-        showStoryForm(story)
-        showForm(form)
     }
 
     const handleInfo = (item) => {
