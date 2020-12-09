@@ -17,7 +17,7 @@ const Location = ({
         <div className={`form-group ${className}`} >
             <label>{ label || 'Location'}</label>
             <div className={`input-container ${cNContainer}`}>
-                <i className="icon absolute">
+                <i className="icon absolute map-pin">
                     <MapPin/>
                 </i>
                 <Autocomplete

@@ -98,7 +98,7 @@
 }
 .action-content{
 	width: 171px;
-	height: 100px;
+	height: auto;
 	right: 0px;
 
 	background: #FFFFFF;
@@ -121,6 +121,17 @@ header .filter-header .filter-need {
 
 .filter-need .input-container .react-datepicker-wrapper:first-child {
 	margin-right: 8px;
+}
+
+.action-content .button-container p {
+	font-family: InterMedium;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 12px;
+	line-height: 150%;
+	text-align: center;
+	color: #231F20;
+	text-align: center;
 }
 /*
 .icon-circle .icon-png {

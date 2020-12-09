@@ -16,11 +16,11 @@ const FormTabGoal = ({goal = 0, setGoal, goalType = 'month', setGoalType}) => {
                 <div className="tab__content-body">
                     <label>Goals to meet</label>
                     <div className="actions">
-                        <button onClick={() => setNewGoal(goal - 1)}>
+                        <button className="left" onClick={() => setNewGoal(goal - 1)}>
                             <MinusRounded />
                         </button>
                         <span>{goal}</span>
-                        <button onClick={() => setNewGoal(goal + 1)}>
+                        <button className="right" onClick={() => setNewGoal(goal + 1)}>
                             <PlusRounded />
                         </button>
                     </div>

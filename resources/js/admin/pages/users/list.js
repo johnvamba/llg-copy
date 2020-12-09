@@ -113,12 +113,12 @@ const UsersList = ({ setShowEditUser }) => {
                             <th className="checkbox">
                                 <input type='checkbox' onChange={checkedAll} checked={isChecked} />
                             </th>
-                            <th>Title</th>
-                            <th>Email</th>
-                            <th>Age</th>
-                            <th>Bio</th>
-                            <th>Date Added</th>
-                            <th>Actions</th>
+                            <th><p>Title</p></th>
+                            <th><p>Email</p></th>
+                            <th><p>Age</p></th>
+                            <th><p>Bio</p></th>
+                            <th><p>Date Added</p></th>
+                            <th><p>Actions</p></th>
                         </tr>
                     </thead>
                     <tbody>

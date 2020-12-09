@@ -82,7 +82,7 @@ const Offers = () => {
                 <div className="flex flex-1">
                     <h1>Offers { count > 0 ? `(${count})` : ''}</h1>
                 </div>
-                <button className="flex justify-end rounded-sm" onClick={()=>showItem({}, false, true)}>
+                <button className="primary-btn flex justify-end rounded-sm" onClick={()=>showItem({}, false, true)}>
                     <OffersPlus />
                     <span>Create Offer</span>
                 </button>

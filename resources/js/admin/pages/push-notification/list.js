@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import UsersActionsEdit from '../../../svg/users-actions-edit';
 import UsersActionsDelete from '../../../svg/users-actions-delete';
 
+
 const PushList = ({ showEdit, handleForm}) => {
     const [isChecked, setIsChecked] = useState(false);
+    const [approveElement, setApproveElement] = useState(null);
+    const [rejectElement, setRejectElement] = useState(null);
+
     const [notifs, setNotifs] = useState(
         [
             {
@@ -53,9 +57,76 @@ const PushList = ({ showEdit, handleForm}) => {
         setNotifs(data);
     }
 
+    const switchStatus=(status)=>{
+        switch(status){
+            case 'scheduled':
+            case 'Scheduled':
+            return <span className="label label-scheduled">Scheduled</span>;
+            case 'sent':
+            case 'Sent':
+            return <span className="label label-sent">Sent</span>;
+            default:
+            return <span className="label label-secondary">Unknown</span>;
+        }
+    }
+
     return (
         <section className="component-body push-list notifs-table offers-table flex flex-col p-8">
-            <table>
+            <table className="table">
+                <thead className="bg-white tb-head">
+                    <tr>
+                        <th className="checkbox">
+                            <input type='checkbox' onChange={checkedAll} checked={isChecked}/>
+                        </th>
+                        <th className="title">Title</th>
+                        <th>Schedule Date</th>
+                        <th>Schedule Time</th>
+                        <th>Status</th>
+                        <th className="actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                    notifs.map((notif, index) => 
+                        <tr key={index}>
+                            <td className="checkbox">
+                                <input type='checkbox' onChange={(e) => handleChange(notif,e.target.checked)} checked={notif.checked ? notif.checked : false} />
+                            </td>
+                            <td className="title" onClick={() => handleRowActive(notif)}>
+                                <div className="flex">
+                                    <img className="title-img circle" src="http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp" />
+                                    <p>
+                                        { notif.title }
+                                    </p>
+                                </div>
+                            </td>
+                            <td>
+                                <p>{ notif.scheduleDate }</p>
+                            </td>
+                            <td>
+                                <p>{ notif.scheduleTime }</p>
+                            </td>
+                            <td>
+                                { switchStatus(notif.status) }
+                            </td>
+                            <td className="actions row-actions">
+                                <button onClick={() => handleRowActive(notif)}>
+                                    <i ref={setApproveElement}>
+                                    <UsersActionsEdit />
+                                    </i>
+                                </button>
+                                <button onClick={()=>popAction(rejectElement, 'remove')}>
+                                    <i ref={setRejectElement}>
+                                    <UsersActionsDelete />
+                                    </i>
+                                </button>
+                            </td>
+                        </tr>
+                    )
+                }
+                </tbody>
+            </table>
+            {/* <table>
                 <thead className="">
                     <tr>
                         <th className="checkbox">
@@ -105,7 +176,7 @@ const PushList = ({ showEdit, handleForm}) => {
                         )
                     }
                 </tbody>
-            </table>
+            </table> */}
         </section>
     )
 }

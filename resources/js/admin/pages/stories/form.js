@@ -12,7 +12,7 @@ import Imagepond from '../../../components/Imagepond'
 import { EditorState, convertFromHTML, ContentState, convertFromRaw, convertToRaw } from 'draft-js';
 import { tryParseJson } from '../../../components/helpers/validator'
 import LoadingScreen from '../../../components/LoadingScreen'
-import { selectStyle, loadOrganization } from '../../../components/helpers/async_options';
+import { selectStyle, selectStylePaddingZero, loadOrganization } from '../../../components/helpers/async_options';
 import AsyncSelect from 'react-select/async';
 import { connect } from 'react-redux';
 import { monetary } from '../needs/categorylist';
@@ -173,7 +173,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                         (roles.name == 'admin') && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
                             <label>Organization</label>
                             <AsyncSelect
-                                styles={selectStyle}
+                                styles={selectStylePaddingZero}
                                 loadOptions={loadOrganization}
                                 defaultOptions
                                 cacheOptions
@@ -216,8 +216,8 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                 <div className="flex-grow-1"></div>
                 <button className={'preview'} onClick={toggle}>Preview</button>
                 <ButtonGroup className={'publish-btn'}>
-                    <Button className='actual-btn' color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
-                    <ButtonDropdown className={'btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
+                    <Button className='primary-btn actual-btn' color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
+                    <ButtonDropdown className={'primary-btn btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
                       <DropdownToggle tag="button">
                         <StoriesPublishIcon />
                       </DropdownToggle>

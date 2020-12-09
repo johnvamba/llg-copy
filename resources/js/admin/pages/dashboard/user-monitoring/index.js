@@ -14,8 +14,8 @@ const UserMonitoring = ({ title, total }) => {
     }, []);
 
     return (
-        <div className="bg-white p-4 mb-6 rounded-lg border">
-            <p className="pt-2 pb-4 text-sm">Users</p>
+        <div className="user-monitoring bg-white p-4 mb-6 rounded-lg border">
+            <h2 className="pt-2 pb-4 text-sm">Users</h2>
 
             {
                 Object.keys(monitor).map((stats, index) => (

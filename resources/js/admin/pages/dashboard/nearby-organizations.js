@@ -65,9 +65,9 @@ const NearbyOrganizations = ({...props}) => {
         <div className="w-full bg-white rounded-lg border">
             <div className="flex flex-row px-4 py-4">
                 <div className="flex flex-1 items-center">
-                    <p className="text-sm">
+                    <h2>
                         Nearby Organisations
-                    </p>
+                    </h2>
                 </div>
 
                 <div className="flex flex-1 justify-end items-center">
