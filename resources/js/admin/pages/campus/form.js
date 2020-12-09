@@ -170,7 +170,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
             </section>
             <footer className="form-footer org-form__footer">
                 <button className="discard" onClick={reset} disabled={submitting}>Discard</button>
-                <button className="btn-primary" onClick={submit} disabled={submitting}>{submitting ? 'Submitting' : ( data.id ? 'Edit' : 'Add' )} </button>
+                <button className="primary-btn" onClick={submit} disabled={submitting}>{submitting ? 'Submitting' : ( data.id ? 'Edit' : 'Add' )} </button>
             </footer>
         </section>
     )

@@ -24,7 +24,7 @@ const TopDonors = () => {
     return (
         <div className="flex flex-col w-full p-4 border bg-white rounded-lg">
             <div className="pb-4 text-sm">
-                <p>Top Donors</p>
+                <h2>Top Donors</h2>
             </div>
 
             <div className="mx-4">

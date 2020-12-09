@@ -59,7 +59,7 @@ const ApiForm = ({ activeForm, handleCloseForm }) => {
                 <footer className="org-form__footer">
                     <div className="flex">
                         <button className="discard" onClick={() => handleCloseForm(false)}>Discard</button>
-                        <button className="next">Create</button>
+                        <button className="primary-btn next">Create</button>
                     </div>
                 </footer>
             </section>

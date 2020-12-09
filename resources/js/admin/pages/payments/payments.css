@@ -99,35 +99,35 @@ table .active .table-column-amount span{
     height: 80px;
 }
 .payment-r-template__right-headings label{
-    font-family: Lato;
+    font-family: InterMedium;
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
     line-height: 22px;
     text-align: right;
     letter-spacing: 0.01em;
-    color: #334D6E;
+    color: #231F20;
 }
 .payment-r-template__right-headings address{
-    font-family: Lato;
+    font-family: InterMedium;
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
     line-height: 150%;
     text-align: right;
     letter-spacing: 0.01em;
-    color: #A5B0BF;
+    color: #98999B;
     margin: 0;
 }
 .payment-r-template__right-body p{
-    font-family: Lato;
+    font-family: InterMedium;
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
     line-height: 150%;
     text-align: center;
     letter-spacing: 0.01em;
-    color: #334D6E;
+    color: #231F20;
     text-align: left;
 }
 .payment-r-template__right-body .content p{
@@ -139,17 +139,17 @@ table .active .table-column-amount span{
     margin-top: 25px;
 }
 .payment-r-template__right-body footer label{
-    font-family: Lato;
+    font-family: InterRegular;
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
     line-height: 150%;
     text-align: left;
     letter-spacing: 0.01em;
-    color: #334D6E;
+    color: #231F20;
 }
 .payment-r-template__right-body footer ul{
-    background: #F5F6F8;
+    background: #F3F3F3;
     border-radius: 4px;
     margin-top: 16px;
     margin-bottom: 37px;
@@ -168,17 +168,17 @@ table .active .table-column-amount span{
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 .payment-r-template__right-body footer ul li p{
-    font-family: Lato;
+    font-family: InterRegular;
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
     line-height: 160%;
     letter-spacing: 0.01em;
-    color: #334D6E;
+    color: #231F20;
     opacity: 0.8;
 }
 .payment-r-template__right-body footer ul li span{
-    font-family: Lato;
+    font-family: InterRegular;
     font-style: normal;
     font-weight: normal;
     font-size: 14px;

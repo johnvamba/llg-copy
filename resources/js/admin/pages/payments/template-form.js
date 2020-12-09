@@ -148,7 +148,7 @@ const TemplateForm = () => {
                 <footer className="payment__footer org-form__footer">
                     <div className="flex">
                         <button className="discard">Discard</button>
-                        <button className="next" onClick={submit}>Save</button>
+                        <button className="primary-btn next" onClick={submit}>Save</button>
                     </div>
                 </footer>
             </section>
@@ -181,7 +181,7 @@ const TemplateForm = () => {
                                     <span>$50.00</span>
                                 </li>
                                 <li>
-                                    <p>Amount Paid</p>
+                                    <p><strong>Amount Paid</strong></p>
                                     <span>$50.00</span>
                                 </li>
                             </ul>

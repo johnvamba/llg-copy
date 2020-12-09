@@ -8,7 +8,7 @@ const CampusHeader = ({ setShowAdd, campus_count = 0 }) => {
                 <h1>Campus{campus_count > 0 ? ` (${campus_count})` : ''}</h1>
             </div>
             <div className="flex flex-1 justify-end">
-                <button className="flex rounded-sm" onClick={() => setShowAdd(true)}>
+                <button className="primary-btn flex rounded-sm" onClick={() => setShowAdd(true)}>
                     <OffersPlus />
                     <span>Add Campus</span>
                 </button>

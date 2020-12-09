@@ -87,20 +87,7 @@
     /*border-bottom: 1px solid #D7DEE3;*/
     /*padding: 9px 0;*/
 }
-.users-form__body form .form-group label{
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 24px;
-    color: rgba(74, 108, 140, 0.56);
-}
-.users-form__body form label{
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 24px;
-    color: rgba(74, 108, 140, 0.56);
-}
+
 .users-form__body form .form-group input::-webkit-input-placeholder,
 .users-form__body form .form-group input::-moz-placeholder,
 .users-form__body form .form-group input:-ms-input-placeholder,

@@ -32,8 +32,8 @@ const StoriesModal = ({title, handleChange, photo, modal, toggle, editorState, s
                             <section className="story-preview__modal-footer">
                                 <div className="story-preview__modal-footer-container">
                                     <ButtonGroup className={'publish-btn'}>
-                                        <Button className='actual-btn' color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
-                                        <ButtonDropdown className={'btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
+                                        <Button className='primary-btn actual-btn' color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
+                                        <ButtonDropdown className={'primary-btn btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
                                           <DropdownToggle tag="button">
                                             <StoriesPublishIcon />
                                           </DropdownToggle>

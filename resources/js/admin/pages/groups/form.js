@@ -168,6 +168,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                         fields={fields}
                         onChangePhoto={onChangePhoto}
                         handleSelectPrivacy={handleSelectPrivacy}
+                        data={data}
                     />
                 }
                 { countTab == 2 && <FormTabInvite data={data} users={users} setUsers={setUsers} />}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from '../../../components/Button'
 import { NavLink } from 'react-router-dom';
 import { swalDelete } from '../../../components/helpers/alerts';
-import { selectStyle, loadOrganization } from '../../../components/helpers/async_options';
+import { selectStyle, selectStylePaddingZero, loadOrganization } from '../../../components/helpers/async_options';
 import DatePicker from 'react-datepicker';
 import AsyncSelect from 'react-select/async';
 import { all } from '../needs/categorylist';
@@ -220,7 +220,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                     (roles.name == 'admin') && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
                         <label>Organization</label>
                         <AsyncSelect
-                            styles={selectStyle}
+                            styles={selectStylePaddingZero}
                             loadOptions={loadOrganization}
                             defaultOptions
                             value={organization}
@@ -337,7 +337,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             </div>
             <div className="form-footer">
                 <Button className="btn btn-secondary" onClick={()=>handleForm({},false, 'discard')} disabled={submitting}>Discard</Button>
-                <Button className="btn btn-primary" onClick={submit} disabled={submitting}>Create</Button>
+                <Button className="primary-btn" onClick={submit} disabled={submitting}>Create</Button>
             </div>
         </div>
     )

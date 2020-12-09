@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './css/photo-circle.css';
 import PencilIcon from '../svg/pencil';
+import EmptyImg from '../svg/empty-img';
 
 const CircleImageForm = ({
     className = "",
     src,
     onChangeFile,
     error = null,
-    ver2 = false
+	ver2 = false,
+	editForm
 }) => {
 	const fileInput = useRef(null)
 	const [tempUrl, setTempUrl] = useState(src);
@@ -36,22 +38,66 @@ const CircleImageForm = ({
 	}
 
 	if(ver2)
-		return <div className={`photo-circle org-circle`}>
+		return <>
+		{/* <div className={`photo-circle org-circle`}>
 			<img 
 				className="rounded-full image"
 	            src={tempUrl || `http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp`}
 			/>
 			<input type="file" ref={fileInput} onChange={imageChange}/>
-			<button className="button-pencil" onClick={uploadInit}><PencilIcon fill={'#fff'}/></button>
-		</div>
+			<button className="button-pencil" onClick={uploadInit}><PencilIcon fill={'#CF995F'}/></button>
+			</div> */}
+			{
+				tempUrl 
+					?
+					<div className={`photo-circle org-circle`}>
+						<img 
+							className="rounded-full image"
+							src={tempUrl}
+						/>
+						<input type="file" ref={fileInput} onChange={imageChange}/>
+						<button className="button-pencil" onClick={uploadInit}><PencilIcon fill={'#fff'}/></button>
+					</div>
+					:
+					<div className="photo-circle__empty-img photo-circle__empty-img--inside-banner">
+						<EmptyImg />
+						<input type="file" ref={fileInput} onChange={imageChange}/>
+						<button className="button-pencil" onClick={uploadInit}><PencilIcon fill={'#fff'}/></button>
+					</div>
+			}
+		</>
+
+			
+			
+		
+
+		
 
     return <div className={`photo-circle ${className}`}>
-        <img
+		{
+			tempUrl 
+				? 
+				<img
+					className="rounded-full image"
+					src={ tempUrl }
+				/>
+				:
+				<div className="photo-circle__empty-img">
+					<EmptyImg />
+				</div>
+		}
+        {/* <img
             className="rounded-full image"
             src={tempUrl || `http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp`}
-        />
+        /> */}
         <div className="photo-button">
-            <button onClick={uploadInit}>Upload Photo</button>
+			<div>
+				<button className="primary-btn" onClick={uploadInit}>Upload Photo</button>
+				{
+					editForm &&
+						<button className="primary-btn remove-btn">remove</button>
+				}
+			</div>
             <input type="file" ref={fileInput} onChange={imageChange}/>
             <p>Images should be atleast 300 x 300 px in png or jpeg file</p>
         </div>

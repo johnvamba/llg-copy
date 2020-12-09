@@ -25,8 +25,8 @@ const ListItem = ({
 
                 <div className="ml-4 flex flex-col justify-center">
                     <>
-                        <p className={`mr-2 text-xs`}>
-                            <span className={`${titleStyle}`}>{title}</span>
+                        <p className={` mr-2`}>
+                            <span className={`recent-added-needs-title ${titleStyle}`}>{title}</span>
 
                             {description && 
                                 <span className={`text-gray-800 font-thin`}> {description} 
@@ -38,7 +38,7 @@ const ListItem = ({
                     </>
 
                     {status &&
-                        <p className={`text-gray-500 capitalize text-xs ${statusStyle}`}>
+                        <p className={`recent-added-needs-status capitalize`}>
                             {status}
                         </p>
                     }

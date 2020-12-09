@@ -250,7 +250,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
                             }
                             {
                                 (countTab < 3) 
-                                ? (<button className="next" disabled={submitting} onClick={() => validateTab(countTab+1)}>Next</button>)
+                                ? (<button className="primary-btn next" disabled={submitting} onClick={() => validateTab(countTab+1)}>Next</button>)
                                 : (<button className="next" disabled={submitting} onClick={submit}>{submitting? 'Submitting...': 'Create'}</button>)
                             }
                         </div>

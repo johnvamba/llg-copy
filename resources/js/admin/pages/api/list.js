@@ -46,7 +46,7 @@ const ApiList = ({ handleEditForm }) => {
                                     </div>
                                     <CopyToClipboard text={keyLink.value}
                                         onCopy={() => setKeyLink({...keyLink, copied: true})}>
-                                        <button id="share-link">Copy</button>
+                                        <button className="primary-btn" id="share-link">Copy</button>
                                     </CopyToClipboard>
                                 </div>
                                 <p>Created on 12 Sept 2020, 19:37</p>

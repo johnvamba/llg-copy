@@ -8,7 +8,7 @@ const Card = ({
 
     return (
         <div 
-            className={`flex flex-1 flex-col justify-center bg-white px-4 py-8 w-20 border rounded-lg`}
+            className={`top-cards flex flex-1 flex-col justify-center bg-white px-4 py-8 w-20 border rounded-lg`}
         >
             <p className="flex items-center">
                 {amount}

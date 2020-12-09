@@ -19,6 +19,7 @@ const ListSingleStory = ({ set = [], handleForm }) => {
                     <div className="list-single-story__body">
                         <div className="bg-cover bg-center"  style={{backgroundImage: `url(${i.photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} ></div>
                         <div className="list-single-story__content">
+                            <h3>Story Title Here</h3>
                             <p>{i.short_description || i.description || ''}</p>
                             <div className="list-single-story__footer">
                                 <ul>
