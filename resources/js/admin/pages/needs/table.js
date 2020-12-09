@@ -8,7 +8,7 @@ import { usePopper } from 'react-popper';
 import { swalSuccess, swalError } from '../../../components/helpers/alerts';
 
 const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction, handleForm}) => {
-    const { title ="Untitled", type = "Donation", goal = "N/A", status = "achieved", date = "Missing", photo=null} = item
+    const { title ="Untitled", type = "Donation", goal = "N/A", status = "achieved", date = "Missing", date_added, photo=null} = item
     const [approveElement, setApproveElement] = useState(null);
     const [rejectElement, setRejectElement] = useState(null);
 
@@ -53,7 +53,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
             { switchStatus() }
         </td>
         <td>
-            <p>{ date }</p>
+            <p>{ date_added || date }</p>
         </td>
         {
             status == 'pending' ?

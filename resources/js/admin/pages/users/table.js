@@ -20,7 +20,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         </td>
         <td className="title" onClick={onShowInfo}>
             <div className="flex">
-                <img className="title-img circle" src={photo || "http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp"}/> :
+                <img className="title-img circle" src={photo || "http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp"}/>
                 <p>
                     { title }
                 </p>

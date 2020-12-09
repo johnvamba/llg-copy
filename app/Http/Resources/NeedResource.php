@@ -29,6 +29,7 @@ class NeedResource extends JsonResource
             'status' => $this->setStatus(),
             'date' => optional($this->scheduled_at)->format('m/d/Y'),//'08/27/2020'
             'time' => strtolower(optional($this->scheduled_at)->format('h:i A')),
+            'date_added' => optional($this->created_at)->format('m/d/Y'),
             'organization' => $this->whenLoaded('organization', $this->parseOrg()),
             'lat' => (float) $this->lat,
             'lng' => (float) $this->lng,
