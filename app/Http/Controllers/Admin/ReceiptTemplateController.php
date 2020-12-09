@@ -20,9 +20,9 @@ class ReceiptTemplateController extends Controller
     public function show()
     {
         if($org = session('org_id')){
-            $template = ReceiptTemplate::with('organization')->firstOrNew(['organization_id' => $org]);
+            $template = ReceiptTemplate::with(['organization.media', 'media'])->firstOrNew(['organization_id' => $org]);
 
-            $template->loadMissing(['organization', 'media']);
+            // $template->loadMissing(['organization', 'media']);
             return new ReceiptTemplateResource($template);
         }
         
@@ -52,6 +52,7 @@ class ReceiptTemplateController extends Controller
                 $extension = explode('/', mime_content_type($image))[1];
                 
                 $template 
+                    ->clearMediaCollection('photo')
                     ->addMediaFromBase64($image)
                     ->addCustomHeaders([
                         'ACL' => 'public-read'
