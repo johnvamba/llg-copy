@@ -3,13 +3,25 @@ import GroupsActionsIcon from '../../../svg/groups-actions';
 import GroupsTriangle from '../../../svg/group-triangle';
 import UsersActionsEdit from '../../../svg/users-actions-edit';
 import UsersActionsDelete from '../../../svg/users-actions-delete';
+import { swalDelete2 } from '../../../components/helpers/alerts';
 
 import './groups.css';
 
 const GroupsList = ({ data = [], handleForm, handleActionButtons, afterSubmit }) => {
-    const removeGroup = ()=>{
+    const removeGroup = (obj = {})=>{
+        if(obj.id)
+        swalDelete2(obj.name)
+            .then(()=> {
+                // setLoading('Deleting Group...')
+                api.delete(`/api/web/groups/${obj.id}`)
+                .then(()=>{
+                    afterSubmit();
+                }).finally(()=>{
+                    // setLoading(null)
+                    handleForm()
+                })
+            })
         //add api here
-        afterSubmit();
     }
     return (
         <section className="component-body groups-list">
@@ -50,7 +62,7 @@ const GroupsList = ({ data = [], handleForm, handleActionButtons, afterSubmit })
                                                 <UsersActionsEdit />
                                                 <span>Edit</span>
                                             </div>
-                                            <div onClick={removeGroup}>
+                                            <div onClick={()=>removeGroup(obj)}>
                                                 <UsersActionsDelete />
                                                 <span>Delete</span>
                                             </div>
