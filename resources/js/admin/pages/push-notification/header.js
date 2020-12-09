@@ -21,7 +21,7 @@ const PushHeader = ({ tab = 'all', handleTab, handleForm, counts = {} }) =>{
                 </li>
             </ul>*/}
             <div className="flex flex-1 justify-end">
-                <button className="flex rounded-sm" onClick={() => handleForm({}, true)}>
+                <button className="primary-btn flex rounded-sm" onClick={() => handleForm({}, true)}>
                     <OffersPlus />
                     <span>Add Notification</span>
                 </button>

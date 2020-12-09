@@ -52,22 +52,22 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
             {
                 cat && <div className="tos flex items-center">
                     <cat.svg_class />
-                    <span className="ml-2">{type}</span>
+                    <p className="ml-2">{type}</p>
                 </div>
             }
         </td>
         <td className="location">
             <div>
-                <span>
+                <p>
                 { location }
-                </span>
+                </p>
             </div>
         </td>
         <td>
             { switchStatus() }
         </td>
         <td>
-            { date }
+            <p>{ date }</p>
         </td>
     </tr>
 }

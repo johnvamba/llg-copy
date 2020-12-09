@@ -185,7 +185,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                 </button>
             </header>
             <div className="form-body users-form__body content">
-                <CircleImageForm src={photo} onChangeFile={onChangePhoto} error={errors.photo}/>
+                <CircleImageForm src={photo} onChangeFile={onChangePhoto} error={errors.photo} editForm={label == 'Edit User' ? true : false} />
                 {/*<div className="photo-circle">
                     <img
                         className="rounded-full image"
@@ -323,7 +323,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
 
             <footer className="form-footer">
                 <button className="btn-secondary" onClick={reset} disabled={submitting}>Discard</button>
-                <button className="btn-primary" onClick={attemptSubmit} disabled={submitting}>{submitting ? 'Submitting' : (label == 'Add User' ? 'Add' : 'Update' ) }</button>
+                <button className="primary-btn" onClick={attemptSubmit} disabled={submitting}>{submitting ? 'Submitting' : (label == 'Add User' ? 'Add' : 'Update' ) }</button>
             </footer>
         </section>
     )

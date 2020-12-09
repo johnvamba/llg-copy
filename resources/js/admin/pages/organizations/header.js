@@ -8,7 +8,7 @@ const OrgHeader = ({ handlePanels, count = 0 }) => {
                 <h1>Organisations{count ? ` (${count})` : ''}</h1>
             </div>
             <div className="flex flex-1 justify-end">
-                <button className="flex rounded-sm" onClick={() => handlePanels({}, true)}>
+                <button className="primary-btn flex rounded-sm" onClick={() => handlePanels({}, true)}>
                     <OffersPlus />
                     <span>Add Organisation</span>
                 </button>

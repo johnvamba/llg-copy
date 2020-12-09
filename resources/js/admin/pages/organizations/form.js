@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import OffersFormCross from '../../../svg/offers-form-cross';
+import EmptyImg from '../../../svg/empty-img';
 import Camera from '../../../svg/camera';
 import StoriesHouseIcon from '../../../svg/stories-house';
 import PencilIcon from '../../../svg/pencil';
@@ -12,7 +13,7 @@ import BannerImage from '../../../components/BannerImage';
 import ImageCropper from '../../../components/ImageCropper'
 import AsyncSelect from 'react-select/async';
 import { connect } from 'react-redux';
-import { selectStyle, loadCampus, checkEmail } from '../../../components/helpers/async_options';
+import { selectStyle, selectStylePaddingZero, loadCampus, checkEmail } from '../../../components/helpers/async_options';
 import { all } from '../needs/categorylist';
 
 const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer }) => {
@@ -228,6 +229,9 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             </div>
             <section className="form-body org-form__body">
                 <BannerImage src={images.banner} onChangeFile={(file)=>handleImages(file, 'banner', true)}>
+                    {
+                        !images.banner && <EmptyImg />
+                    }
                     <CircleImageForm ver2={true} src={images.photo} onChangeFile={(file)=>handleImages(file, 'photo')}/>
                 </BannerImage>
                 <form>
@@ -242,7 +246,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                         (roles.name == 'admin') && <div className={`form-group w-full ${errors.campus && 'form-error'}`}>
                             <label>Campus</label>
                             <AsyncSelect
-                                styles={selectStyle}
+                                styles={selectStylePaddingZero}
                                 loadOptions={loadCampus}
                                 defaultOptions
                                 cacheOptions
@@ -335,7 +339,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             <footer className="form-footer org-form__footer">
                 <button className="btn btn-secondary" onClick={handleDiscard}>Discard</button>
                 <div className="flex-grow-1"></div>
-                <button className="btn btn-primary" onClick={handleSubmit}>{data.id ? "Save" : "Add"}</button>
+                <button className="primary-btn" onClick={handleSubmit}>{data.id ? "Save" : "Add"}</button>
             </footer>
         </section>
     )

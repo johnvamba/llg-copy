@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './css/photo-circle.css';
 import Camera from '../svg/camera';
+import EmptyImg from '../svg/empty-img';
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 const BannerImage = ({
@@ -39,7 +40,10 @@ const BannerImage = ({
 		fileInput.current.click();
 	}
 
-    return <div className={`banner-photo ${className}`} style={{height, width, backgroundImage: `url(${tempUrl || ''})`}}>
+    return <div className={`banner-photo ${className} ${!tempUrl ? 'banner-photo--empty' : ''}`} style={{height, width, backgroundImage: `url(${tempUrl || ''})`}}>
+		{
+			!props.children && <EmptyImg />
+		}
         <button className={`banner-button`} onClick={uploadInit}>
         	<Camera />
         	Add Cover

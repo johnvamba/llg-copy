@@ -147,7 +147,7 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                             <div className="progress-bar" style={{width: `${ratio}%`}}></div>
                         </div>
                     </div>
-                    <div className="flex">
+                    {/* <div className="flex">
                     	<div className="group-content flex-1">
                     		<label>Date Needed</label>
                             <p>{data.date || 'N/A'}</p>
@@ -156,14 +156,14 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                     		<label>Time</label>
                             <p>{data.time || 'N/A'}</p>
                     	</div>
-                    </div>
-                	<div className="group-content view-map">
+                    </div> */}
+                	{/* <div className="group-content view-map">
                 		<label>Location</label>
                 		<div className="google-map">
                             <MapMini lat={data.lat} lng={data.lng}/>
                         </div>
-                	</div>
-                    {
+                	</div> */}
+                    {/* {
                         data.type == 'Volunteer' ? 
                         <div className="group-content">
                             <label>Number of People Needed</label> 
@@ -173,7 +173,7 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                             <label>Goal</label>
                             <p>$ {data.goal}</p>
                         </div>
-                    }
+                    } */}
                 	<div className="group-content">
                         {
                             data.type == 'Volunteer' ? <label>What to bring</label> : <label>About</label>

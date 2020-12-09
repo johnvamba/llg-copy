@@ -15,7 +15,7 @@ const RecentNeeds = () => {
 
     return (
         <div className="bg-white p-4 mb-4 rounded-lg border">
-            <p className="pt-2 pb-2 text-sm">Recently Added Needs</p>
+            <h2 className="pt-2 pb-2 text-sm">Recently Added Needs</h2>
 
             {
                 needs.map((need, index) => (

@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import AsyncSelect from 'react-select/async';
 import CircleImageForm from '../../../components/CircleImageForm';
 
-const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPrivacy, handleLocation, AuthUserReducer, onChangePhoto }) => {
+const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPrivacy, handleLocation, AuthUserReducer, onChangePhoto, data }) => {
     const { roles } = AuthUserReducer;
     const [organization, setOrganization] = useState({});
 
@@ -19,7 +19,7 @@ const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPriva
 		<>
             <h3>Group Information</h3>
             <section className="tab__content">
-                <CircleImageForm src={fields.photo} onChangeFile={onChangePhoto} error={fieldErrors.photo}/>
+                <CircleImageForm src={fields.photo} onChangeFile={onChangePhoto} error={fieldErrors.photo} editForm={ data.id ? true : false } />
                 <form className="w-full">
                     <div className="w-full xl:w-full">
                         <div className={`form-group ${fieldErrors.name ? 'form-error' : ''}`}>

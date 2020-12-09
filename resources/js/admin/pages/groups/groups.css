@@ -1,3 +1,7 @@
+.map-pin svg path {
+    fill: #CF995F;
+}
+
 .groups-list ul{
     padding: 28px;
     display: flex;
@@ -11,9 +15,10 @@
     flex: 0 1 calc(25% - 25px);
     margin: 12px;
     position: relative;
+    min-height: 255px;
 }
 .groups-list ul li header div{
-    background: #D3E9F6;
+    background: #CF995F;
     border: 2px solid #FFFFFF;
     width: 50px;
     height: 50px;
@@ -21,7 +26,7 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
 }
 .groups-list ul li header div{
-    background: #D3E9F6;
+    background: #CF995F;
     border: 2px solid #FFFFFF;
     width: 50px;
     height: 50px;
@@ -29,20 +34,21 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
 }
 .groups-list ul li .groups-list__body h2{
+    font-family: BrownStdBold;
     font-style: normal;
-    font-weight: 500;
+    font-weight: bold;
     font-size: 14px;
-    line-height: 17px;
-    letter-spacing: 0.01em;
-    color: #323C47;
+    line-height: 150%;
+    color: #587B7F;
     margin-top: 18px;
 }
 .groups-list ul li .groups-list__body span{
+    font-family: InterMedium;
     font-style: normal;
     font-weight: 500;
     font-size: 9px;
     line-height: 24px;
-    color: #C2CFE0;
+    color: #98999B;
     text-transform: uppercase;
 }
 .groups-list ul li .groups-list__body > div span:nth-child(2){
@@ -51,11 +57,12 @@
     top: -3px;
 }
 .groups-list ul li .groups-list__body p{
+    font-family: InterRegular;
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
     line-height: 150%;
-    color: #4F6880;
+    color: #231F20;
 }
 .groups-list__progress-bar{
     font-style: normal;
@@ -66,22 +73,23 @@
     margin-top: 14px;
 }
 .groups-list__progress-bar label{
+    font-family: InterMedium;
     font-style: normal;
     font-weight: 500;
     font-size: 10px;
     line-height: 12px;
     letter-spacing: 0.01em;
-    color: #41D48F;
+    color: #587B7F;
 }
 .groups-list__progress-bar > div{
     margin-top: 9px;
 }
 .groups-list__progress-bar > div > div{
     height: 3px;
-    background: #C2CFE0;
+    background: #DBDEE1;
 }
 .groups-list__progress-bar > div > div > div{
-    background: #41D48F;
+    background: #587B7F;
 }
 .groups-list ul li .actions{
     position: absolute;
@@ -184,11 +192,12 @@
     margin-top: 77px;
 }
 .tab__content-body > label{
+    font-family: InterSemibold;
     font-style: normal;
     font-weight: 600;
     font-size: 18px;
     line-height: 22px;
-    color: #4F6880;
+    color: #98999B;
 }
 .tab__content-body .actions{
     display: flex;
@@ -198,6 +207,9 @@
 }
 .tab__content-body .actions svg{
     cursor: pointer;
+}
+.tab__content-body .actions .right svg circle {
+    fill: #CF995F;;
 }
 .tab__content-body .actions > span{
     margin: 0 52px;
@@ -222,6 +234,7 @@
     margin-top: 32px;
 }
 .tab__content-body .type span{
+    font-family: InterRegular;
     font-style: normal;
     font-weight: normal;
     font-size: 15px;
@@ -236,13 +249,11 @@
     line-height: 27px;
 }
 .tab__content-body .type span.active{
+    font-family: InterSemibold;
     font-style: normal;
     font-weight: 600;
     font-size: 15px;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    color: #109CF1;
+    color: #CF995F;
 }
 .tab__content footer label{
     font-style: normal;
@@ -369,17 +380,17 @@ section.invites li div.member-item h4{
     color: #4F6880;
 }
 section.invites li div.member-item button.invite-button{
-    border: 1.5px solid #109CF1;
+    border: 1.5px solid #CF995F;
     box-sizing: border-box;
     border-radius: 4px;
-
+    font-family: InterMedium;
     font-weight: 500;
     font-size: 14px;
     line-height: 17px;
     text-align: center;
     letter-spacing: 0.01em;
     padding: 8px 15px;
-    color: #109CF1;
+    color: #CF995F;
 }
 section.invites li div.member-item button.invite-button.invited{
     background: #41D48F;

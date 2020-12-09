@@ -64,7 +64,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                 <nav className="mx-6 text-sm">
                     <div
                         className={`mt-6 
-                        ${location.pathname == "/dashboard" ? "text-blue-400" : "text-gray-400"}`}
+                        ${location.pathname == "/dashboard" ? "text-yellow-400" : "text-gray-400"}`}
                     >
                         <Link to="/dashboard" className="flex items-center">
                             <i className="text-xl fa fa-th-large" aria-hidden="true"></i>
@@ -127,13 +127,11 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         </div>
                     }
 
-                    
-
                     {(roles.name === 'admin' || roles.name === 'campus admin') &&
                         (
                             <div
                                 className={`mt-6 
-                                ${location.pathname == "/offers" ? "text-blue-400" : "text-gray-400"}`}
+                                ${location.pathname == "/offers" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/offers" className="flex items-center">
                                     <i className="text-xl fas fa-hand-holding-heart"></i>
@@ -147,7 +145,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         <button
                             onClick={() => handleOpen('story')}
                             className={`relative flex items-center focus:outline-none w-full
-                            ${(location.pathname == "/stories") ? "text-blue-400" : "text-gray-400"}`}
+                            ${(location.pathname == "/stories") ? "text-yellow-400" : "text-gray-400"}`}
                         >
                             <i className="text-xl fas fa-leaf"></i>
                             <span className="px-4">Stories</span>
@@ -167,7 +165,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                             <div className={`ml-8`}>
                                 <div
                                     className={`mt-4
-                                    ${(location.pathname == "/stories") ? "text-blue-400" : "text-gray-400"}`}
+                                    ${(location.pathname == "/stories") ? "text-yellow-400" : "text-gray-400"}`}
                                 >
                                     <Link to="/stories">
                                         Published
@@ -175,7 +173,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                 </div>
                                 <div
                                     className={`mt-4
-                                    ${(location.pathname == "/stories/drafts") ? "text-blue-400" : "text-gray-400"}`}
+                                    ${(location.pathname == "/stories/drafts") ? "text-yellow-400" : "text-gray-400"}`}
                                 >
                                     <Link to="/stories/drafts">
                                         Drafts
@@ -189,7 +187,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         (
                             <div
                                 className={`mt-6 
-                                ${location.pathname == "/users" ? "text-blue-400" : "text-gray-400"}`}
+                                ${location.pathname == "/users" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/users" className="flex items-center">
                                     <i className="text-xl far fa-user"></i>
@@ -203,7 +201,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         (
                             <div
                                 className={`mt-6 
-                        ${location.pathname == "/groups" ? "text-blue-400" : "text-gray-400"}`}
+                        ${location.pathname == "/groups" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/groups" className="flex items-center">
                                     <i className="text-xl fas fa-user-friends"></i>
@@ -217,7 +215,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         (
                             <div
                                 className={`mt-6 
-                                ${location.pathname == "/organizations" ? "text-blue-400" : "text-gray-400"}`}
+                                ${location.pathname == "/organizations" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/organizations" className="flex items-center">
                                     <Organisation />
@@ -231,7 +229,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         (
                             <div
                                 className={`mt-6 
-                                ${location.pathname == "/campus" ? "text-blue-400" : "text-gray-400"}`}
+                                ${location.pathname == "/campus" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/campus" className="flex items-center">
                                     <SidebarCampus />
@@ -245,7 +243,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         (
                             <div
                                 className={`mt-6 
-                                ${location.pathname == "/push-notifications" ? "text-blue-400" : "text-gray-400"}`}
+                                ${location.pathname == "/push-notifications" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/push-notifications" className="flex items-center">
                                     <i className="text-xl far fa-bell"></i>
@@ -259,7 +257,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         (
                             <div
                                 className={`mt-6 
-                                ${location.pathname == "/transactions" ? "text-blue-400" : "text-gray-400"}`}
+                                ${location.pathname == "/transactions" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/transactions" className="flex items-center">
                                     <i className="text-xl fas fa-retweet"></i>
@@ -276,7 +274,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                             <button
                                 onClick={() => handleOpen('payment')}
                                 className={`relative flex items-center focus:outline-none w-full
-                                ${(location.pathname == "/payments") ? "text-blue-400" : "text-gray-400"}`}
+                                ${(location.pathname == "/payments") ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <i className="text-xl fas fa-leaf"></i>
                                 <span className="px-4">Payments</span>
@@ -296,7 +294,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                 <div className={`ml-8`}>
                                     <div
                                         className={`mt-4
-                                        ${(location.pathname == "/payments") ? "text-blue-400" : "text-gray-400"}`}
+                                        ${(location.pathname == "/payments") ? "text-yellow-400" : "text-gray-400"}`}
                                     >
                                         <Link to="/payments">
                                             Payment List
@@ -304,7 +302,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                     </div>
                                     <div
                                         className={`mt-4
-                                        ${(location.pathname == "/payments/receipt-templates") ? "text-blue-400" : "text-gray-400"}`}
+                                        ${(location.pathname == "/payments/receipt-templates") ? "text-yellow-400" : "text-gray-400"}`}
                                     >
                                         <Link to="/payments/receipt-templates">
                                             Receipt Template
@@ -318,7 +316,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                     {roles.name === 'organization admin' &&
                         <div
                             className={`mt-6 
-                            ${location.pathname == "/api" ? "text-blue-400" : "text-gray-400"}`}
+                            ${location.pathname == "/api" ? "text-yellow-400" : "text-gray-400"}`}
                         >
                             <Link to="/api" className="flex items-center">
                                 <i className="text-xl fas fa-hand-holding-heart"></i>
