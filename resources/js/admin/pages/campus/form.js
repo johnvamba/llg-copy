@@ -150,6 +150,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
                         <Location 
                             className={`form-group ${errors.location && 'form-error'}`}
                             name={'location'}
+                            defaultValue={location.location || ''}
                             placesSelected={handleLocation}
                             errors={errors.location || []}/>
                     </div>

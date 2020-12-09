@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\ServiceType;
 use App\ServiceOffer;
+use App\User;
 
 class OfferSeeder extends Seeder
 {
@@ -15,10 +16,19 @@ class OfferSeeder extends Seeder
     {
         $types = ServiceType::all();
 
-        for ($i=0; $i < 20; $i++) { 
-        	\factory(ServiceOffer::class)->create([
-        		'service_type_id' => $types->random()->id,
-        	]);
-        }
+        $users = User::where('email', 'like', 'org%')->get();
+
+        $users->each(function($user) use ($types){
+            \factory(ServiceOffer::class)->create([
+                'model_type' => User::class,
+                'model_id' => $user->id,
+                'service_type_id' => $types->random()->id,
+            ]);
+        });
+        // for ($i=0; $i < 20; $i++) { 
+        // 	\factory(ServiceOffer::class)->create([
+        // 		'service_type_id' => $types->random()->id,
+        // 	]);
+        // }
     }
 }
