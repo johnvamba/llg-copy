@@ -13,7 +13,7 @@ class ServiceOffer extends Model implements HasMedia
 {
     use InteractsWithMedia;
     use SoftDeletes;
-    // use OfferPortalTrait;
+    use OfferPortalTrait;
 
     protected $guarded = [];
 
@@ -23,14 +23,14 @@ class ServiceOffer extends Model implements HasMedia
 
     public function model()
     {
-        return $this->morphTo(); //I am user
+        return $this->morphTo(); //I am user or group or campus or anything
     }
 
     public function tags()
     {
         return $this->morphMany('App\Tag', 'model');
     }
-
+    //Depreciated
     public function user()
     {
         return $this->belongsTo('App\User');

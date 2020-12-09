@@ -77,6 +77,11 @@
     color: rgba(74, 108, 140, 0.56);
     margin: 3px 0 0 0;
 }
+.photo-circle div.photo-button p.error {
+    --text-opacity: 1;
+    color: #fc8181;
+    color: rgba(252, 129, 129, var(--text-opacity));
+}
 
 .banner-photo {
     width: 100%;

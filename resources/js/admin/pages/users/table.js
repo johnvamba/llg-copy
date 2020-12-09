@@ -10,7 +10,7 @@ import UsersActionsEdit from '../../../svg/users-actions-edit';
 import UsersActionsDelete from '../../../svg/users-actions-delete';
 
 const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction}) => {
-    const { title ="Untitled", email = 'N/A', age = 'N/A', bio = '', date = "Missing"} = item
+    const { title ="Untitled", email = 'N/A', age = 'N/A', bio = '', date = "Missing", photo = null} = item
     const [approveElement, setApproveElement] = useState(null);
     const [rejectElement, setRejectElement] = useState(null);
 
@@ -20,7 +20,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         </td>
         <td className="title" onClick={onShowInfo}>
             <div className="flex">
-                <img className="title-img circle" src="http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp" />
+                <img className="title-img circle" src={photo || "http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp"}/> :
                 <p>
                     { title }
                 </p>

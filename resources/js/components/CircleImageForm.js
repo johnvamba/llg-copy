@@ -99,7 +99,7 @@ const CircleImageForm = ({
 				}
 			</div>
             <input type="file" ref={fileInput} onChange={imageChange}/>
-            <p>Images should be atleast 300 x 300 px in png or jpeg file</p>
+            <p className={error ? 'error' : ''}>{error ? error : 'Images should be atleast 300 x 300 px in png or jpeg file'}</p>
         </div>
     </div>
 }

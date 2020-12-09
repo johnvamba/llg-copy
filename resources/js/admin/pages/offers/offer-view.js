@@ -77,7 +77,10 @@ const OfferView = ({ setShowOfferEdit, data = {} }) => {
                 </div>
             </div>
             <div className="view-offer__body">
-                <div className="bg-cover bg-center" style={{backgroundImage: `url(${photo})`}}></div>
+                {
+                    photo &&
+                    <div className="bg-cover bg-center" style={{backgroundImage: `url(${photo})`}}></div>
+                }
                 <div className="view-offer__body-title flex">
                     <h2>{title}</h2>
                     <label>{date}</label>
