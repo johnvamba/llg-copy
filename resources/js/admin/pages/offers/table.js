@@ -38,7 +38,11 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         </td>
         <td className="title">
             <div className="flex"> 
-                <img className="title-img" src={photo}/>
+                {
+                    photo ?
+                    <img className="title-img" src={photo}/> :
+                    <img className="title-img"/>
+                }
                 <span onClick={onShowInfo}>
                     { title }
                 </span>
