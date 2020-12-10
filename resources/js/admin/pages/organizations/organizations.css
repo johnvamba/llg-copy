@@ -657,6 +657,14 @@
 .org-invite__body form{
     justify-content: space-between;
 }
+.org-invite__body > h2 {
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 150%;
+    color: #587B7F;
+}
 /* .org-invite__body form > div{
     flex: 0 1 calc(50% - 16px);
 } */
@@ -799,4 +807,18 @@
     .org-invite__upload .right .upload{
         margin-bottom: 10px;
     }
+}
+.org-invite {
+    display: flex;
+    flex-direction: column;
+}
+.org-invite .org-view-header, .org-invite .org-invite__footer {
+    flex-shrink: 1;
+    flex-grow: 0;
+}
+.org-invite .org-invite__body {
+    flex-grow: 1;
+    flex-shrink: 0;
+    overflow-y: scroll;
+    height: calc(100vh - 205px);
 }

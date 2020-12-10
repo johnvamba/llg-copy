@@ -328,7 +328,20 @@ class OrganizationController extends Controller
 
     public function memberInvite(Request $request, Organization $organization)
     {
-        
+        $request->validate(['users' => 'required']);
+
+        DB::beginTransaction();
+        try {
+            if($users = $request->get('users')){
+                
+            }
+
+            DB::commit();
+            return response()->json(['Email Invitations Sent'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 
     public function needs(Request $request, Organization $organization)
