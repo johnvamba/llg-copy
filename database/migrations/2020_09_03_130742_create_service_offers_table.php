@@ -28,6 +28,7 @@ class CreateServiceOffersTable extends Migration
             $table->string('business_name');
             $table->string('business_site')->nullable();
             $table->string('business_contact');
+            $table->date('end_date');
             $table->timestamps();
             $table->softDeletes();
             //Transfer to categories table

@@ -62,6 +62,7 @@ class ServiceOfferTest extends TestCase
                 'businessName' => $this->faker->text,
                 'businessSite' => 'www.example.com',
                 'contactNumber' => $this->faker->tollFreePhoneNumber,
+                'end_date' => $this->faker->date
             ]);
 
         $response->assertStatus(202);
@@ -84,7 +85,8 @@ class ServiceOfferTest extends TestCase
                 'tags' => json_encode($this->faker->words),
                 'businessName' => $this->faker->text,
                 'businessSite' => 'www.example.com',
-                'contactNumber' => $this->faker->tollFreePhoneNumber
+                'contactNumber' => $this->faker->tollFreePhoneNumber,
+                'end_date' => $this->faker->date
             ]);
 
         $response->assertStatus(202);
@@ -112,7 +114,8 @@ class ServiceOfferTest extends TestCase
                 'businessName' => $this->faker->text,
                 'businessSite' => 'www.example.com',
                 'contactNumber' => $this->faker->tollFreePhoneNumber,
-                'media' => $file
+                'media' => $file,
+                'end_date' => $this->faker->date
             ]);
 
         $response->assertStatus(202);
@@ -210,7 +213,7 @@ class ServiceOfferTest extends TestCase
         $offer = $services[0];
 
         $response = $this->patch("api/service-offer/{$offer->id}", [
-                'title' => $this->faker->text
+                'title' => $this->faker->text,
             ]);
 
         $response->assertStatus(202);

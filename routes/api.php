@@ -140,6 +140,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     
     /** Group Participants resource module */
     Route::get('group/{group}/participants/page/{page?}', 'GroupParticipantController@index');
+    Route::post('group-participants/{groupId}/cancel-request', 'GroupParticipantController@cancelRequest');
     Route::resource('group-participants', 'GroupParticipantController');
 
     /** Group resource module */

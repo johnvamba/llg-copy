@@ -287,7 +287,10 @@ class NeedsController extends Controller
 
                 if ($request->category) {
                     //assuming that request->category are array of ids from categories. then just sync. we dont need to query each one if existed.
-                    $need->categoriesList()->sync($request->category);
+                    $need->categories()->sync($request->category);
+                    
+                    //$need->categoriesList()->sync($request->category); -> undefined method categoriesList()
+                    
                     // foreach($request->category as $value) {
                     //     $fetchCategory = NeedsCategory::find($value);
 
