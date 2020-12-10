@@ -9,6 +9,7 @@ const Location = ({
     className,
     cNContainer = '',
     errors,
+    defaultValue,
     ...props
 }) => {
 
@@ -22,6 +23,7 @@ const Location = ({
                 <Autocomplete
                     apiKey={process.env.MIX_PLACESAUTOCOMPLETE_API_KEY || ''}
                     className={`input-field space-l `}
+                    defaultValue={defaultValue}
                     onPlaceSelected={placesSelected}
                     types={['(regions)']}
                     componentRestrictions={{ country: "au" }}

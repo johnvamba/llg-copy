@@ -343,6 +343,14 @@ class GroupController extends Controller
      */
     public function addParticipant(Request $request, Group $group)
     {
+        $hasRequest = GroupParticipant::where('user_id', $request->user_id)->first();
+
+        if ($hasRequest) {
+            return response()->json([
+                'message' => 'You have already requested in other group.'
+            ], 409);
+        }
+
         $participant = GroupParticipant::create([
                 'group_id' => $group->id,
                 'user_id' => $request->user_id

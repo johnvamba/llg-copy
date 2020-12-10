@@ -20,6 +20,8 @@ class Need extends Model implements HasMedia
 
     protected $appends = ['created'];
 
+    protected $dates = ['scheduled_at'];
+
     protected $with = ['tags'];
 
     public function tags()
@@ -40,7 +42,7 @@ class Need extends Model implements HasMedia
     public function categories()
     {
         //
-        return $this->categoriesList();
+        return $this->morphToMany("App\Category", "categorize", 'categorizes');
     }
 
     public function contribution()
@@ -64,11 +66,6 @@ class Need extends Model implements HasMedia
     public function type()
     {
         return $this->belongsTo('App\NeedsType', 'needs_type_id');
-    }
-
-    public function categoriesList()
-    {
-        return $this->morphToMany("App\Category", "categorize", 'categorizes');
     }
 
     /**

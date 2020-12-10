@@ -29,7 +29,7 @@ class NeedsController extends Controller
     public function index(Request $request)
     {
         DB::enableQueryLog();
-        $need = Need::with(['type', 'media', 'categoriesList'])
+        $need = Need::with(['type', 'media', 'categories'])
             ->latest();
 
         if($user = auth()->user()){
@@ -140,11 +140,21 @@ class NeedsController extends Controller
                 //dynamic details
                 [
                     'short_description' => $request->get('description') ?? 'No description',
-                    'location' =>$location['formatted_address'] ?? null,
+                    'location' => $location['formatted_address'] ?? null,
                     'lat' => $location['lat'] ?? null,
                     'lng' => $location['lng'] ?? null,
                 ]
             );
+
+            if($request->has('date', 'time')){
+                $date = Carbon::parse($request->get('date'));
+                $time = Carbon::parse($request->get('time')); 
+                $need->scheduled_at = $date->setTime($time->hour, $time->minute);
+            } else {
+                $need->scheduled_at = now();
+            }
+
+            $need->save();
 
             if($catlist = $request->get('category')){
                 $catlist = array_map(fn($i) => $i['id'] ?? $i['name'] ?? null, $catlist);
@@ -187,9 +197,9 @@ class NeedsController extends Controller
      */
     public function show(Need $need)
     {
-        $need->loadMissing('media', 'type', 'organization');
-        // dd($need->getMedia('photo'));
-        return new NeedResource($need, true);
+        $need->loadMissing('media', 'type', 'organization', 'categories');
+
+        return new NeedResource($need);
     }
 
     /**
@@ -264,6 +274,12 @@ class NeedsController extends Controller
                     ->get();
                $need->categories()->sync($categories);
 
+            }
+
+            if($request->has('date', 'time')){
+                $date = Carbon::parse($request->get('date'));
+                $time = Carbon::parse($request->get('time')); 
+                $need->scheduled_at = $date->setTime($time->hour, $time->minute);
             }
             //We can do better pd diri.
             if ( ($image = $request->get('photo')) && !preg_match('^http', $image) ) {

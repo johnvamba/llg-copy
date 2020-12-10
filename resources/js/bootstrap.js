@@ -32,7 +32,8 @@ let token = Cookie.get('oToken_admin') || Cookie.get('oToken_org_admin');
 window.cache = setupCache({
     maxAge: 15 * 60 * 1000, //15 minutes
     invalidate: async (config, request) => {
-      if (request.clearCacheEntry) {
+        // console.log("Attempt invalidate", config, request)
+      if (request.clearCacheEntry || request.method != 'get') {
         await config.store.removeItem(config.uuid)
       }
     }

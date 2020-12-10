@@ -51,6 +51,9 @@ table .active .table-column-amount span{
 .r-template__body .DraftEditor-root{
     height: 184px;
 }
+.r-template__body .content > .DraftEditor-root{
+    height: auto !important;
+}
 .form-input-text.no-border-field{
     border: none;
 }
@@ -366,4 +369,7 @@ table .active .table-column-amount span{
     .template-list__details span{
         font-size: 11px;
     }
+}
+.form-textarea {
+    border: 1px solid;
 }

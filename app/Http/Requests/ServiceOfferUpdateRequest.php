@@ -25,13 +25,17 @@ class ServiceOfferUpdateRequest extends FormRequest
     {
         return [
             'service_type_id' => 'sometimes|required',
-            'organization_id' => 'sometimes|required',
-            'title' => 'sometimes|required',
             'name' => 'sometimes|required',
+            'title' => 'sometimes|required',
             'description' => 'sometimes|required',
+            'end_date' => 'sometimes|required',
             'location' => 'sometimes|required',
             'lat' => 'sometimes|required',
-            'lng' => 'sometimes|required'
+            'lng' => 'sometimes|required',
+            'tags' => 'sometimes|required',
+            'media' => 'sometimes|required',
+            'business_name' => 'required',
+            'business_contact' => 'required',
         ];
     }
 }

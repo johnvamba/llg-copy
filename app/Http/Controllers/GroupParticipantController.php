@@ -73,7 +73,31 @@ class GroupParticipantController extends Controller
             $groupParticipant->delete();
             
             return response()->json([
-                    'message' => 'User successfully removed.'
+                    'message' => 'Request successfully removed.'
+                ], 204);
+        } catch (\Exception $e) {
+            return response()->json([
+                    'message' => 'An error occurred. Please try again.'
+                ], 500);
+        }
+    }
+    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelRequest(Request $request, $id)
+    {
+        try {
+            GroupParticipant::where([
+                ['group_id', $id],
+                ['user_id', auth()->user()->id]
+            ])->delete();
+
+            return response()->json([
+                    'message' => 'Request successfully removed.'
                 ], 204);
         } catch (\Exception $e) {
             return response()->json([

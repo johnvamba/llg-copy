@@ -26,6 +26,7 @@ Route::get('campus', 'CampusController@index');
 Route::post('register/campus/user', 'CampusController@addUser');
 
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::get('checkemail', 'CheckEmail');
 
     Route::group(['prefix'=>'web', 'namespace'=>'Admin', 'middleware' => 'datafilter'], function() {
         Route::get('needs/types', 'NeedsController@types');
@@ -62,6 +63,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 
         Route::get('receipt/template', 'ReceiptTemplateController@show');
         Route::post('receipt/template', 'ReceiptTemplateController@update');
+
+        Route::get('search', 'GeneralSearch');
     });
 
     /** Role resource module */
@@ -137,6 +140,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     
     /** Group Participants resource module */
     Route::get('group/{group}/participants/page/{page?}', 'GroupParticipantController@index');
+    Route::post('group-participants/{groupId}/cancel-request', 'GroupParticipantController@cancelRequest');
     Route::resource('group-participants', 'GroupParticipantController');
 
     /** Group resource module */

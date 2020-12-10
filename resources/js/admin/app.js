@@ -10,6 +10,8 @@ import '../../assets/css/general.css';
 import Filter from '../svg/filter';
 
 import MainFilter from './filter'
+import SearchBar from '../components/SearchBar'
+
 import RecentActivities from './pages/recent-activities';
 
 const Home = () => {
@@ -76,16 +78,7 @@ const Home = () => {
                                     }
                                 </div>
                         }/>
-                        <div className="flex flex-1 items-center pl-12">
-                            <button className="text-gray-500 mr-4 focus:outline-none">
-                                <i className="fa fa-search" aria-hidden="true"></i>
-                            </button>
-                            <input
-                                name="search"
-                                placeholder="Search..."
-                                className="w-64 focus:outline-none"
-                            />
-                        </div>
+                        <SearchBar />
 
                         <div className="flex flex-1 justify-end items-center">
                             <Link className="admin-mobile" to="/">

@@ -16,6 +16,12 @@ const TemplateForm = () => {
         org_name: 'Organisation Name',
         org_location: 'missing-address'
     });
+    const [links, setLinks] = useState({
+        facebook: '',
+        twitter: '',
+        instagram: '',
+        text: ''
+    });
 
     const [bodyField, setBodyField] = useState({
         editorState: EditorState.createEmpty()
@@ -38,6 +44,11 @@ const TemplateForm = () => {
     useEffect(() => {
        saveDraft()
     }, [bodyField])
+
+    const addHttp = (i) => {
+        let newLink = encodeURI(i);
+        return newLink.search(/^(http|https)/) >= 0 ? newLink : 'http://' + newLink; 
+    }
 
     const saveDraft = () => {
         const raw_draft_json = convertToRaw(bodyField.editorState.getCurrentContent());
@@ -77,8 +88,14 @@ const TemplateForm = () => {
     }
 
     const handleOnChangeBody = (editorState) => {
-        console.log('changing?');
         setBodyField({editorState});
+    }
+
+    const updateLinks = ({target}) => {
+        setLinks({
+            ...links,
+            [target.name] : target.value
+        })
     }
 
     const submit = () => {
@@ -86,6 +103,7 @@ const TemplateForm = () => {
         saveDraft();
         api.post(`/api/web/receipt/template`, {
             ...form,
+            ...links,
             photo
         }).then(({ data })=>{
             const { id, subject, html_content, raw_draft_json, org_name, org_location, photo } = data.data
@@ -117,7 +135,7 @@ const TemplateForm = () => {
                                 <input
                                     className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 leading-tight focus:outline-none"
                                     type="text"
-                                    value={form.subject}
+                                    value={form.subject || ''}
                                     onChange={e => setForm({...form, subject: e.target.value})}
                                     placeholder="Enter Subject"
                                 />
@@ -140,7 +158,41 @@ const TemplateForm = () => {
                             </div>
                             <div className="form-group form-input-text no-border-field">
                                 <label>Footer</label>
-                                <div className="payment-footer__field"></div>
+                                <input
+                                    className="input-field"
+                                    type="text"
+                                    name="facebook"
+                                    value={links.facebook || ''}
+                                    onChange={updateLinks}
+                                    placeholder="Enter Facebook Link"
+                                />
+                                <input
+                                    className="input-field"
+                                    type="text"
+                                    name="twitter"
+                                    value={links.twitter || ''}
+                                    onChange={updateLinks}
+                                    placeholder="Enter Twitter Link"
+                                />
+                                <input
+                                    className="input-field"
+                                    type="text"
+                                    name="instagram"
+                                    value={links.instagram || ''}
+                                    onChange={updateLinks}
+                                    placeholder="Enter Instagram Link"
+                                />
+                            </div>
+                            <div className="form-group form-input-text no-border-field">
+                                <label>Footer Text</label>
+                                <textarea
+                                    className="w-full form-textarea border-gray-300"
+                                    type="text"
+                                    name="text"
+                                    value={links.text || ''}
+                                    onChange={updateLinks}
+                                    placeholder="Enter Footer Text"
+                                />
                             </div>
                         </div> 
                     </form>
@@ -189,11 +241,17 @@ const TemplateForm = () => {
                     </section>
                     <footer>
                         <ul>
-                            <li><i className="fab fa-facebook-f"></i></li>
-                            <li><i className="fab fa-twitter"></i></li>
-                            <li><i className="fab fa-instagram"></i></li>
+                            {
+                                links.facebook && <li><a target="_blank" href={addHttp(links.facebook)} ><i className="fab fa-facebook-f"></i></a></li>
+                            }
+                            {
+                                links.twitter && <li><a target="_blank" href={addHttp(links.twitter)} ><i className="fab fa-twitter"></i></a></li>
+                            }
+                            {
+                                links.instagram && <li><a target="_blank" href={addHttp(links.instagram)} ><i className="fab fa-instagram"></i></a></li>
+                            }
                         </ul>
-                        <p>The Music Broadcasting Society of New South Wales Co-operative Limited ABN: 64 739 540 010</p>
+                        <p>{ links.text || 'Add contents here'}</p>
                     </footer>
                 </article>
             </section>
