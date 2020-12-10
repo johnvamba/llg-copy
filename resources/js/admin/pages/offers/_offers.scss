@@ -1,11 +1,11 @@
 .offers-create{
 	h1{
-		font-family: "Lato", sans-serif;
+		font-family: BrownStdBold;
 		font-style: normal;
-		font-weight: 500;
-		font-size: 16px;
-		line-height: 19px;
-		color: #192A3E;
+		font-weight: bold;
+		font-size: 18px;
+		line-height: 150%;
+		color: #587B7F;
 	}
 	button{
 		display: flex;
@@ -101,6 +101,18 @@
 	.tos{
 		display: flex;
 		align-items: center;
+		> span {
+			font-family: InterRegular;
+			font-style: normal;
+			font-weight: normal;
+			font-size: 13px;
+			line-height: 16px;
+			letter-spacing: 0.01em;
+			color: #231F20;
+		}
+		> svg path {
+			fill: #CF995F;
+		}
 	}
 	.tos p{
 		margin-left: 11px;
@@ -171,23 +183,27 @@
 		}
 		.tab-1{
 			width: 33.333%;
+			background: #587B7F;
 		}
 		.tab-2{
 			width: 60%;
+			background: #587B7F;
 		}
 		.tab-3{
 			width: 100%;
+			background: #587B7F;
 		}
 	}
 	&__body{
 		margin-top: 15px;
 		h3{
-			font-family: "Lato", sans-serif;
+			font-family: InterMedium;
 			font-style: normal;
-			font-weight: normal;
-			font-size: 18px;
-			line-height: 24px;
-			color: rgba(74, 108, 140, 0.56);
+			font-weight: 500;
+			font-size: 17px;
+			line-height: 21px;
+			letter-spacing: 0.01em;
+			color: #98999B;
 		    margin: 10px 0;
 		}
 	}
@@ -236,10 +252,10 @@
 				    top: 30%;
 			    }
 			    &.active{
-			    	border: 1px solid  #109CF1;
-			    	color: #109CF1;
+			    	border: 1px solid  #CF995F;
+			    	color: #CF995F;
 			    	span{
-			    		color:#109CF1;
+			    		color:#CF995F;
 			    	}
 			    }
 			}
@@ -282,15 +298,16 @@
 			}
 			.form-group{
 				label{
-					font-family: "Lato", sans-serif;
+					font-family: InterMedium;
 					font-style: normal;
-					font-weight: normal;
+					font-weight: 500;
 					font-size: 12px;
-					line-height: 24px;
-					color: rgba(74, 108, 140, 0.56);
+					line-height: 15px;
+					letter-spacing: 0.01em;
+					color: #98999B;
 				}
 				input{
-					font-family: "Lato", sans-serif;
+					font-family: InterRegular;
 					font-style: normal;
 					font-weight: normal;
 					font-size: 14px;
@@ -299,6 +316,9 @@
 				}
 				.location{
 					padding-left: 20px; 
+				}
+				svg path {
+					fill: #CF995F;
 				}
 			}
 		}
@@ -334,9 +354,9 @@
 	}
 	.back{
 		padding: 15px 42px;
-	    border: 2px solid #109CF1;
+	    border: 2px solid #CF995F;
 		box-sizing: border-box;
-		font-family: "Lato", sans-serif;
+		font-family: InterMedium;
 	    border-radius: 4px;
 	    font-style: normal;
 	    font-weight: 500;
@@ -344,14 +364,14 @@
 	    line-height: 19px;
 	    text-align: center;
 	    letter-spacing: 0.01em;
-		color: #109CF1;
+		color: #CF995F;
 		margin-right: 14px;
 		outline: none;
 	}
 	.next{
 		padding: 15px 42px;
 		box-sizing: border-box;
-		font-family: "Lato", sans-serif;
+		font-family: InterMedium;
 	    border-radius: 4px;
 	    font-style: normal;
 	    font-weight: 500;
@@ -359,7 +379,7 @@
 	    line-height: 19px;
 	    text-align: center;
 	    letter-spacing: 0.01em;
-		background: #109CF1;
+		background: #CF995F;
 		color: #fff;
 		outline: none;
 	}
@@ -397,14 +417,17 @@
 			cursor: pointer;
 			svg{
 				margin-right: 5px;
+				path {
+					fill: #CF995F;
+				}
 			}
 			label{
-				font-family: "Lato", sans-serif;
+				font-family: InterRegular;
 				font-style: normal;
 				font-weight: normal;
 				font-size: 14px;
 				line-height: 24px;
-				color: #2DA9F3;
+				color: #CF995F;
 				cursor: pointer;
 			}
 		}
@@ -417,17 +440,18 @@
 		.bg-cover{
 			border-radius: 5px;
 			height: 186px;
+			background: #CF995F;
 		}
 		&-title{
 			justify-content: space-between;
 			margin-top: 25px;
 			h2{
-				font-family: "Lato", sans-serif;
+				font-family: BrownStdBold;
 				font-style: normal;
-				font-weight: 500;
+				font-weight: bold;
 				font-size: 18px;
-				line-height: 24px;
-				color: #4F6880;
+				line-height: 150%;
+				color: #587B7F;
 			}
 			label{
 				font-family: "Lato", sans-serif;
@@ -442,12 +466,12 @@
 			margin-top: 10px;
 			align-items: center;
 			label{
-				font-family: "Lato", sans-serif;
+				font-family: InterRegular;
 				font-style: normal;
 				font-weight: normal;
 				font-size: 14px;
 				line-height: 24px;
-				color: #109CF1;
+				color: #CF995F;
 				margin-left: 10px;
 			}
 		}
@@ -497,35 +521,39 @@
 		> div{
 			align-items: center;
 			> label {
-				font-family: "Lato", sans-serif;
+				font-family: InterMedium;
 				font-style: normal;
-				font-weight: normal;
+				font-weight: 500;
 				font-size: 12px;
-				line-height: 24px;
-				color: rgba(74, 108, 140, 0.56);
+				line-height: 15px;
+				letter-spacing: 0.01em;
+				color: #98999B;
 			}
 			h3{
-				font-family: "Lato", sans-serif;
+				font-family: BrownStdBold;
 				font-style: normal;
-				font-weight: normal;
+				font-weight: bold;
 				font-size: 13px;
 				line-height: 24px;
-				color: #4F6880;
+				color: #231F20;
 			}
 			div{
 				align-items: center;
+				svg path {
+					fill: #CF995F;
+				}
 				a.link{
-					font-family: "Lato", sans-serif;
+					font-family: InterRegular;
 					font-style: normal;
 					font-weight: normal;
 					font-size: 12px;
 					line-height: 24px;
-					color: #109CF1;
+					color: #231F20;
 					margin-left: 9px;
 				}
 			}
 			a.button{
-				border: 1px solid #109CF1;
+				border: 1px solid #CF995F;
 				box-sizing: border-box;
 				border-radius: 4px;
 				font-family: "Lato", sans-serif;
@@ -533,7 +561,7 @@
 				font-weight: 500;
 				font-size: 11px;
 				line-height: 24px;
-				color: #109CF1;
+				color: #CF995F;
 				padding: 6px 14px;
 				margin-top: 5px;
 				outline: none;
@@ -574,25 +602,23 @@
 			padding-bottom: 14px;
 			cursor: pointer;
 			h3{
-				font-family: "Lato", sans-serif;
+				font-family: InterRegular;
 				font-style: normal;
 				font-weight: normal;
 				font-size: 12px;
 				line-height: 100%;
 				text-align: center;
-				color: #9AADBF;
+				color: #98999B;
 			}
 			&--active{
-				border-bottom: 3px solid #109CF1;
+				border-bottom: 3px solid #CF995F;
 				h3{
-					font-family: "Lato", sans-serif;
+					font-family: InterSemibold;
 					font-style: normal;
 					font-weight: 600;
 					font-size: 12px;
-					line-height: 14px;
-					align-items: center;
-					text-align: center;
-					color: #109CF1;
+					line-height: 15px;
+					color: #CF995F;
 				}
 			}
 			

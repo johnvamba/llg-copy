@@ -9,7 +9,7 @@ const UsersHeader = ({ setShowAddUser }) => {
                     <h1>Users (7)</h1>
                 </div>
                 <div className="flex flex-1 justify-end">
-                    <button className="flex rounded-sm" onClick={() => setShowAddUser(true)}>
+                    <button className="primary-btn flex rounded-sm" onClick={() => setShowAddUser(true)}>
                         <OffersPlus />
                         <span>Add User</span>
                     </button>

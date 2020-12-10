@@ -1,0 +1,439 @@
+@font-face {
+    font-family: InterRegular;
+    src: url('../fonts/Inter/Inter-Regular-slnt=0.ttf');
+}
+
+@font-face {
+    font-family: InterMedium;
+    src: url('../fonts/Inter/Inter-Medium-slnt=0.ttf');
+}
+
+@font-face {
+    font-family: InterSemibold;
+    src: url('../fonts/Inter/Inter-SemiBold-slnt=0.ttf');
+}
+
+@font-face {
+    font-family: BrownStdRegular;
+    src: url('../fonts/BrownStd/BrownStd-Regular.otf');
+}
+
+@font-face {
+    font-family: BrownStdBold;
+    src: url('../fonts/BrownStd/BrownStd-Bold.otf');
+}
+
+p {
+    font-family: InterRegular;
+    font-size: 13px;
+    color: #231F20;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 16px;
+    letter-spacing: 0.01em;
+    color: #231F20;
+}
+
+.text-gray-400 {
+    color: #98999B !important;
+}
+
+.text-yellow-400 {
+    color: #CF995F !important;
+}
+
+.sidebar .text-yellow-400 {
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0.01em;
+}
+
+.sidebar a > span {
+    font-family: BrownStdRegular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0.01em;
+}
+
+.sidebar button > span {
+    font-family: BrownStdRegular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0.01em;
+}
+
+.primary-btn {
+    background: #CF995F !important;
+    color: #fff !important;
+    border: none;
+    font-family: InterMedium;
+    font-size: 14px;
+}
+
+.primary-btn > span {
+    font-family: InterMedium !important;
+    color: #fff !important;
+    font-size: 14px !important;
+}
+
+.api-form__body {
+    padding: 0 30px;
+}
+
+.api-form__radio.active {
+    background: rgba(207, 153, 95, 0.05);
+    border: 1px solid #CF995F;
+}
+
+input[type=radio].form-radio {
+    color: #CF995F;
+}
+
+.header-title h1 {
+    font-family: BrownStdBold !important;
+    font-style: normal !important;
+    font-weight: bold !important;
+    font-size: 18px !important;
+    line-height: 150% !important;
+    color: #587B7F !important;
+}
+
+.top-cards > p:first-child {
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 17px;
+    color: #231F20;
+}
+
+.top-cards > p:last-child {
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 12px;
+    letter-spacing: 0.01em;
+    color: #98999B;
+}
+
+.apexcharts-title-text {
+    font-family: BrownStdBold !important;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 150%;
+    color: #587B7F;
+}
+
+.dashboard-body h2 {
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 150%;
+    color: #587B7F;
+}
+
+.user-monitoring__text {
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 13px;
+    color: #231F20;
+}
+
+.user-monitoring__val {
+    font-family: InterSemibold;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 13px;
+    color: #231F20;
+}
+
+.recent-added-needs-title {
+    font-family: InterMedium;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 13px;
+    color: #231F20;
+}
+
+.recent-added-needs-status {
+    font-family: InterMedium;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 9px;
+    line-height: 11px;
+    color: #CF995F;
+}
+
+.apexcharts-legend .apexcharts-legend-series:first-child .apexcharts-legend-marker {
+    background: #AA6E2D !important;
+}
+
+.apexcharts-legend .apexcharts-legend-series:nth-of-type(2) .apexcharts-legend-marker {
+    background: #CF995F !important;
+}
+
+.apexcharts-legend .apexcharts-legend-series:last-child .apexcharts-legend-marker {
+    background: #EBC69F !important;
+}
+
+.apexcharts-legend-text {
+    font-family: InterMedium !important;
+    font-style: normal;
+    font-weight: 500 !important;
+    font-size: 11px !important;
+    line-height: 13px;
+    color: #231F20 !important;
+    margin: 0 13px;
+}
+
+button.admin-desktop {
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    letter-spacing: 0.01em;
+    color: #587B7F;
+    background: rgba(88, 123, 127, 0.12);
+}
+
+.bg-gray-100 {
+    background-color: #f5f6f8 !important;
+}
+
+.list-single-story__header h2 {
+    font-family: InterMedium;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: 0.01em;
+    color: #231F20;
+}
+
+.list-single-story__header span {
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: 0.01em;
+    color: #98999B;
+}
+
+.list-single-story__content h3 {
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 19px;
+    letter-spacing: 0.01em;
+    color: #587B7F;
+}
+
+.list-single-story__content p {
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 150%;
+    color: #231F20;
+}
+
+.list-single-story__footer span {
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    line-height: 12px;
+    letter-spacing: 0.01em;
+    color: #231F20;
+}
+
+.list-single-story__footer {
+    margin-top: 20px;
+}
+
+/* need to overwrite this classes */
+.form-group .button-group button {
+    background: rgba(152, 153, 155, 0.05);
+    border: 1px solid rgba(152, 153, 155, 0.4);
+    box-sizing: border-box;
+    border-radius: 4px;
+    color: #98999B;
+}
+
+button.rounded.active {
+    background: rgba(207, 153, 95, 0.05);
+    border: 1px solid #CF995F !important;
+    box-sizing: border-box;
+    border-radius: 4px !important;
+    color: #CF995F !important;
+}
+
+ul.nav-tab > li.nav-tab-item {
+    font-family: BrownStdBold !important;
+    font-style: normal !important;
+    font-weight: bold !important;
+    font-size: 18px !important;
+    line-height: 150% !important;
+    color: #587B7F;
+    cursor: pointer;
+}
+
+ul.nav-tab > li.nav-tab-item.active {
+    color: #CF995F;
+}
+
+.form .form-footer > button.primary-btn.btn-primary {
+    background: #CF995F !important;
+    color: #fff !important;
+    border-color: transparent;
+}
+
+table.table td.row-actions .primary-btn {
+    font-family: InterRegular !important;
+    font-size: 12px !important;
+}
+
+span.currency {
+    color: #CF995F;
+}
+
+table.table tbody td.title div span {
+    font-family: InterMedium;
+    font-size: 15px;
+    line-height: 18px;
+    color: #231F20;
+}
+
+table.table tbody td.title div p {
+    font-family: InterMedium;
+    font-size: 15px;
+    line-height: 18px;
+    color: #231F20;
+}
+
+.table thead th {
+    border-bottom: 1px solid #dee2e6;
+}
+
+table.table tr {
+    border: none;
+}
+
+table.table > tbody > tr > td {
+    border-bottom: 1px solid #dee2e6;
+}
+
+table.table > thead.tb-head > tr > th {
+    font-size: 13px !important;
+    line-height: 16px;
+    letter-spacing: 0.01em;
+    color: #98999B !important;
+}
+
+table.table td span.label {
+    font-family: InterRegular;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0.01em;
+}
+
+.icon-categories .icon-category.active .icon-circle {
+    background: rgba(207, 153, 95, 0.05);
+    border: 1px solid #CF995F;
+    box-sizing: border-box;
+}
+
+.icon-categories .icon-category.active svg.svg-check > circle,
+.icon-categories .icon-category.active .icon-circle svg.svg-icon > path {
+    fill: #CF995F;
+}
+
+.icon-categories .icon-category {
+    cursor: pointer;
+}
+
+.icon-categories .icon-category.active {
+    color: #CF995F;
+}
+
+.form-group > label {
+    font-family: InterMedium;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: 0.01em;
+    color: #98999B;
+}
+
+.form .form-title h3 {
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 150%;
+    color: #587B7F;
+}
+
+.form .form-footer > button {
+    border: none;
+}
+
+.input-container button.numberButton.plus {
+    background: #CF995F;
+    color: #fff;
+}
+
+.time-toggle.active {
+    color: #CF995F;
+}
+
+.api-list li header h2 {
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 150%;
+    color: #587B7F;
+}
+
+.share__container > div span {
+    font-family: InterMedium;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: 0.01em;
+    color: #98999B;
+}
+
+.share > p {
+    font-family: InterMedium;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0.01em;
+    color: #98999B;
+}
+
+.form .form-footer > button.preview {
+    color: #CF995F !important;
+}

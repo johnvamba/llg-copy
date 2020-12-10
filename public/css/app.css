@@ -28628,12 +28628,12 @@ video {
 /** Fontawesome */
 
 .offers-create h1 {
-  font-family: "Lato", sans-serif;
+  font-family: BrownStdBold;
   font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 19px;
-  color: #192A3E;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 150%;
+  color: #587B7F;
 }
 
 .offers-create button {
@@ -28738,6 +28738,20 @@ video {
   align-items: center;
 }
 
+.offers-table .tos > span {
+  font-family: InterRegular;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 16px;
+  letter-spacing: 0.01em;
+  color: #231F20;
+}
+
+.offers-table .tos > svg path {
+  fill: #CF995F;
+}
+
 .offers-table .tos p {
   margin-left: 11px;
 }
@@ -28813,14 +28827,17 @@ video {
 
 .offers-create-form__header .tab-1 {
   width: 33.333%;
+  background: #587B7F;
 }
 
 .offers-create-form__header .tab-2 {
   width: 60%;
+  background: #587B7F;
 }
 
 .offers-create-form__header .tab-3 {
   width: 100%;
+  background: #587B7F;
 }
 
 .offers-create-form__body {
@@ -28828,12 +28845,13 @@ video {
 }
 
 .offers-create-form__body h3 {
-  font-family: "Lato", sans-serif;
+  font-family: InterMedium;
   font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 24px;
-  color: rgba(74, 108, 140, 0.56);
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 21px;
+  letter-spacing: 0.01em;
+  color: #98999B;
   margin: 10px 0;
 }
 
@@ -28885,12 +28903,12 @@ video {
 }
 
 .offers-create-form__body .offers-category__item.active {
-  border: 1px solid #109CF1;
-  color: #109CF1;
+  border: 1px solid #CF995F;
+  color: #CF995F;
 }
 
 .offers-create-form__body .offers-category__item.active span {
-  color: #109CF1;
+  color: #CF995F;
 }
 
 .offers-create-form__body .offers-service__featured > div {
@@ -28928,16 +28946,17 @@ video {
 }
 
 .offers-create-form__body .offers-service .form-group label {
-  font-family: "Lato", sans-serif;
+  font-family: InterMedium;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 500;
   font-size: 12px;
-  line-height: 24px;
-  color: rgba(74, 108, 140, 0.56);
+  line-height: 15px;
+  letter-spacing: 0.01em;
+  color: #98999B;
 }
 
 .offers-create-form__body .offers-service .form-group input {
-  font-family: "Lato", sans-serif;
+  font-family: InterRegular;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
@@ -28947,6 +28966,10 @@ video {
 
 .offers-create-form__body .offers-service .form-group .location {
   padding-left: 20px;
+}
+
+.offers-create-form__body .offers-service .form-group svg path {
+  fill: #CF995F;
 }
 
 .offers-category-opt {
@@ -28983,9 +29006,9 @@ video {
 
 .offers-category-opt .back {
   padding: 15px 42px;
-  border: 2px solid #109CF1;
+  border: 2px solid #CF995F;
   box-sizing: border-box;
-  font-family: "Lato", sans-serif;
+  font-family: InterMedium;
   border-radius: 4px;
   font-style: normal;
   font-weight: 500;
@@ -28993,7 +29016,7 @@ video {
   line-height: 19px;
   text-align: center;
   letter-spacing: 0.01em;
-  color: #109CF1;
+  color: #CF995F;
   margin-right: 14px;
   outline: none;
 }
@@ -29001,7 +29024,7 @@ video {
 .offers-category-opt .next {
   padding: 15px 42px;
   box-sizing: border-box;
-  font-family: "Lato", sans-serif;
+  font-family: InterMedium;
   border-radius: 4px;
   font-style: normal;
   font-weight: 500;
@@ -29009,7 +29032,7 @@ video {
   line-height: 19px;
   text-align: center;
   letter-spacing: 0.01em;
-  background: #109CF1;
+  background: #CF995F;
   color: #fff;
   outline: none;
 }
@@ -29054,13 +29077,17 @@ video {
   margin-right: 5px;
 }
 
+.view-offer__header-right svg path {
+  fill: #CF995F;
+}
+
 .view-offer__header-right label {
-  font-family: "Lato", sans-serif;
+  font-family: InterRegular;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
   line-height: 24px;
-  color: #2DA9F3;
+  color: #CF995F;
   cursor: pointer;
 }
 
@@ -29075,6 +29102,7 @@ video {
 .view-offer__body .bg-cover {
   border-radius: 5px;
   height: 186px;
+  background: #CF995F;
 }
 
 .view-offer__body-title {
@@ -29083,12 +29111,12 @@ video {
 }
 
 .view-offer__body-title h2 {
-  font-family: "Lato", sans-serif;
+  font-family: BrownStdBold;
   font-style: normal;
-  font-weight: 500;
+  font-weight: bold;
   font-size: 18px;
-  line-height: 24px;
-  color: #4F6880;
+  line-height: 150%;
+  color: #587B7F;
 }
 
 .view-offer__body-title label {
@@ -29106,12 +29134,12 @@ video {
 }
 
 .view-offer__body .under-title label {
-  font-family: "Lato", sans-serif;
+  font-family: InterRegular;
   font-style: normal;
   font-weight: normal;
   font-size: 14px;
   line-height: 24px;
-  color: #109CF1;
+  color: #CF995F;
   margin-left: 10px;
 }
 
@@ -29169,39 +29197,44 @@ video {
 }
 
 .view-offer__bottom > div > label {
-  font-family: "Lato", sans-serif;
+  font-family: InterMedium;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 500;
   font-size: 12px;
-  line-height: 24px;
-  color: rgba(74, 108, 140, 0.56);
+  line-height: 15px;
+  letter-spacing: 0.01em;
+  color: #98999B;
 }
 
 .view-offer__bottom > div h3 {
-  font-family: "Lato", sans-serif;
+  font-family: BrownStdBold;
   font-style: normal;
-  font-weight: normal;
+  font-weight: bold;
   font-size: 13px;
   line-height: 24px;
-  color: #4F6880;
+  color: #231F20;
 }
 
 .view-offer__bottom > div div {
   align-items: center;
 }
 
+.view-offer__bottom > div div svg path {
+  fill: #CF995F;
+}
+
 .view-offer__bottom > div div a.link {
-  font-family: "Lato", sans-serif;
+  font-family: InterRegular;
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
   line-height: 24px;
-  color: #109CF1;
+  color: #231F20;
   margin-left: 9px;
 }
 
 .view-offer__bottom > div a.button {
-  border: 1px solid #109CF1;
+  border: 1px solid #CF995F;
   box-sizing: border-box;
   border-radius: 4px;
   font-family: "Lato", sans-serif;
@@ -29209,7 +29242,7 @@ video {
   font-weight: 500;
   font-size: 11px;
   line-height: 24px;
-  color: #109CF1;
+  color: #CF995F;
   padding: 6px 14px;
   margin-top: 5px;
   outline: none;
@@ -29255,28 +29288,26 @@ video {
 }
 
 .offer-edit__opts-item h3 {
-  font-family: "Lato", sans-serif;
+  font-family: InterRegular;
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
   line-height: 100%;
   text-align: center;
-  color: #9AADBF;
+  color: #98999B;
 }
 
 .offer-edit__opts-item--active {
-  border-bottom: 3px solid #109CF1;
+  border-bottom: 3px solid #CF995F;
 }
 
 .offer-edit__opts-item--active h3 {
-  font-family: "Lato", sans-serif;
+  font-family: InterSemibold;
   font-style: normal;
   font-weight: 600;
   font-size: 12px;
-  line-height: 14px;
-  align-items: center;
-  text-align: center;
-  color: #109CF1;
+  line-height: 15px;
+  color: #CF995F;
 }
 
 .offers-edit__category {

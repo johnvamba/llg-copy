@@ -22,11 +22,8 @@ class OffersController extends Controller
      */
     public function index(Request $request)
     {
+        // DB::enableQueryLog();
         $offers = ServiceOffer::latest()->with('serviceType');
-
-        if($user = auth()->user()){
-            //filter by user here
-        }
 
         return OfferResource::collection($offers->paginate())
             ->additional([
@@ -117,7 +114,9 @@ class OffersController extends Controller
      */
     public function show(ServiceOffer $offer)
     {
-        //
+        $offer->loadMissing(['serviceType']);
+
+        return new OfferResource($offer);
     }
 
     /**

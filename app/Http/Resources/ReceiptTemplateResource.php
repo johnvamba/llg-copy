@@ -28,7 +28,7 @@ class ReceiptTemplateResource extends JsonResource
             'twitter' => $this->twitter, 
             'instagram' => $this->instagram, 
             'text' => $this->text,
-            'photo' => $this->when($this->relationLoaded('media'), fn() => $this->getFirstMediaUrl('photo'))
+            'photo' => $this->when($this->relationLoaded('media') || $this->relationLoaded('organization'), fn() => $this->getFirstMediaUrl('photo') ? $this->getFirstMediaUrl('photo') : optional($this->organization)->getFirstMediaUrl('photo'))
         ];
     }
 }

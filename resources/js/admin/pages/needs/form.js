@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Button from '../../../components/Button'
 import { NavLink } from 'react-router-dom';
 import { swalDelete } from '../../../components/helpers/alerts';
-import { selectStyle, loadOrganization } from '../../../components/helpers/async_options';
+import { selectStyle, selectStylePaddingZero, loadOrganization } from '../../../components/helpers/async_options';
 import DatePicker from 'react-datepicker';
 import AsyncSelect from 'react-select/async';
 import { all } from '../needs/categorylist';
@@ -45,7 +45,6 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         lng: null,
     })
     const [organization, setOrganization] = useState({});
-
     const [submitting, setSubmitting] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -97,18 +96,26 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         if(data.id) {
             collectData(data.id)
         } else {
-            const { title, about, description, bring, type, category = [], photo, goal, date, time } = data || {}
-            setTitle(title || '');
-            setAbout(about || description || '');
-            setBring(bring || description || '');
-            setType(type || 'donation');
-            setCategory( all.filter(i => category.includes(i.name) ) );
-            setPhoto(photo || null);
-            setGoal(goal || 0);
-            setDate(date || new Date);
-            setTime(time || '');
-            setLocation(location || {});
+            setTitle('')
+            setAbout('')
+            setBring('')
+            setCategory([])
+            setPhoto(null)
+            setGoal(0)
+            setDate(new Date)
+            setOpenDate(false)
+            setTime('09:00 AM')
+            setErrors({})
+            setLocation({
+                formatted_address: '',
+                lat: null,
+                lng: null,
+            })
+            setOrganization({})
+            setSubmitting(false)
+            setLoading(false)
         }
+        console.log('trigger data', data);
     }, [data])
 
     const updateGoal = (value)=>{
@@ -140,17 +147,6 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         })
     }
 
-    const categoryWheel = event => {
-        const { target } = event
-        // target.scrollLeft += (event.deltaY / 10)
-        console.log('onWheel', event.deltaY, target.scrollLeft)
-        // target.scrollX += event.deltaY
-    }
-
-    const categoryScroll = event => {
-        console.log('onScroll', event.target.scrollTop, event.target.scrollLeft)
-    }
-
     const removePhoto = () => {
 
     }
@@ -160,12 +156,12 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         setSubmitting(true)
         const submitPromise = !data.id ? 
             api.post(`/api/web/needs`, {
-                title, type, category, goal, date, openDate, time, location, organization,
+                title, type, category, goal, date, time, location, organization,
                 photo,//files.length > 0 ? photo : null,
                 description: about || bring || ''
             }) : 
             api.patch(`/api/web/needs/${data.id}`, { 
-                title, type, category, goal, date, openDate, time, location, organization,
+                title, type, category, goal, date, time, location, organization,
                 photo,//files.length > 0 ? photo : null,
                 description: about || bring || ''
             })
@@ -182,7 +178,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setSubmitting(false)
         })
     }
-
+    // console.log('handle form???', handleForm)
     return (
        <div className="form need-form">
             {
@@ -195,7 +191,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             }
             <div className="form-title">
                 <h3>{data.id ? 'Edit' : 'Create'} Need</h3>
-                <button type="button" onClick={()=>handleForm({}, false, 'close')}>
+                <button type="button" onClick={()=>handleForm()}>
                     <CrossPlain />
                 </button>
             </div>
@@ -213,7 +209,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                     (roles.name == 'admin') && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
                         <label>Organization</label>
                         <AsyncSelect
-                            styles={selectStyle}
+                            styles={selectStylePaddingZero}
                             loadOptions={loadOrganization}
                             defaultOptions
                             cacheOptions
@@ -327,8 +323,8 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 <Imagepond photo={photo} imageSelected={setPhoto} errors={errors.photo}/>
             </div>
             <div className="form-footer">
-                <Button className="btn btn-secondary" onClick={()=>handleForm({},false, 'discard')} disabled={submitting}>Discard</Button>
-                <Button className="btn btn-primary" onClick={submit} disabled={submitting}>Create</Button>
+                <Button className="btn btn-secondary" onClick={()=>handleForm({}, true, 'discard')} disabled={submitting}>Discard</Button>
+                <Button className="btn btn-primary" onClick={submit} disabled={submitting}>{data.id ? 'Save' :'Create'}</Button>
             </div>
         </div>
     )

@@ -58,7 +58,7 @@ const Offers = () => {
         setPage(parseInt(page));
     }
 
-    const handleForm = (form = false, setting = null, data = null)=>{
+    const handleForm = (form = false, setting = null, data = {})=>{
         //change content of table here
         if(setting == 'submit'){
             //reload table
@@ -66,6 +66,7 @@ const Offers = () => {
             //or insert data here
         }
         setShowForm(form)
+        setFocus(data)
     }
 
     const showItem = (data, showView = true, showForm=false) => {
@@ -81,7 +82,7 @@ const Offers = () => {
                 <div className="flex flex-1">
                     <h1>Offers { count > 0 ? `(${count})` : ''}</h1>
                 </div>
-                <button className="flex justify-end rounded-sm" onClick={()=>showItem({}, false, true)}>
+                <button className="primary-btn flex justify-end rounded-sm" onClick={()=>showItem({}, false, true)}>
                     <OffersPlus />
                     <span>Create Offer</span>
                 </button>

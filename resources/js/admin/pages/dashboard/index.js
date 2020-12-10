@@ -26,18 +26,15 @@ const Dashboard = ({ ...props }) => {
 
     return (
         <>
-            <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
-                <div className="flex flex-1">
+            <div className="h-16 flex flex-row justify-between items-center border-b bg-white px-12">
+                <div className="header-title flex flex-1">
                     <h1>Dashboard</h1>
                 </div>
-
-                <div className="flex flex-1 justify-end">
-                    <button className="bg-blue-400 text-white px-4 py-2 rounded-sm">
-                        Generate Report
-                    </button>
-                </div>
+                <button className="primary-btn page-header-btn flex rounded-sm">
+                    <span>Generate Report</span>
+                </button>
             </div>
-            <div className="component-body flex">
+            <div className="component-body flex dashboard-body">
                 
                 <div className="w-full flex flex-col bg-gray-100 px-12 pt-8 pb-8">
                     <div className="flex flex-row space-x-6">
@@ -63,7 +60,7 @@ const Dashboard = ({ ...props }) => {
                         </div>
                     </div>
 
-                    <div className="mt-8 w-full">
+                    <div className="mt-8 pb-8 w-full">
                         <div className="flex flex-row">
                             <div className="flex flex-1 mr-4">
                                 <NearbyOrganizations onViewOrganization={(org)=>setOrganization(org)} {...props} />

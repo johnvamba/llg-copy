@@ -8,7 +8,7 @@ import { usePopper } from 'react-popper';
 import { swalSuccess, swalError } from '../../../components/helpers/alerts';
 
 const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction, handleForm}) => {
-    const { title ="Untitled", type = "Donation", goal = "N/A", status = "achieved", date = "Missing"} = item
+    const { title ="Untitled", type = "Donation", goal = "N/A", status = "achieved", date = "Missing", date_added, photo=null} = item
     const [approveElement, setApproveElement] = useState(null);
     const [rejectElement, setRejectElement] = useState(null);
 
@@ -31,14 +31,18 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         </td>
         <td className="title">
             <div className="flex"> 
-                <img className="title-img" />
+                {
+                    photo ?
+                    <img className="title-img" src={photo}/> :
+                    <img className="title-img" />
+                }
                 <span onClick={onShowInfo}>
                     { title }
                 </span>
             </div>
         </td>
         <td>
-            { type }
+            <p>{ type }</p>
         </td>
         <td className="col-currency">
             {
@@ -49,7 +53,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
             { switchStatus() }
         </td>
         <td>
-            { date }
+            <p>{ date_added || date }</p>
         </td>
         {
             status == 'pending' ?
@@ -66,7 +70,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
                 </button>
             </td> :
             <td className="actions row-actions">
-                <Button className="flex text-white bg-blue-500 hover:bg-blue-600" 
+                <Button className="primary-btn flex text-white bg-blue-500 hover:bg-blue-600" 
                     disabled={status !== 'achieved'}
                     onClick={()=>handleForm(item, false, 'story', true)}>
                     <Quill/>
@@ -107,10 +111,10 @@ const ButtonPopper = ({buttonElement, actionClosure, btnAction, loading}) => {
                     : <p className="text-center mb-2 text-red-400">Are you sure you want to reject this request?</p>
                 }
                 <div className="flex justify-between">
-                    <Button className="text-white bg-gray-300 hover:bg-gray-500" onClick={()=>actionClosure(false)}>
-                        Cancel
+                    <Button onClick={()=>actionClosure(false)}>
+                        No, Cancel
                     </Button>
-                    <Button className="text-white bg-blue-500 hover:bg-blue-600" onClick={()=>actionClosure(true)}>
+                    <Button onClick={()=>actionClosure(true)}>
                         Yes
                     </Button>
                 </div>

@@ -9,6 +9,8 @@ import Cross from '../../../svg/cross'
 import Quill from '../../../svg/quill'
 //As test icon only
 // import IconTest from '../../../svg/icon-test'
+import OffersPlus from '../../../svg/offers-plus';
+
 
 import './needs.css';
 
@@ -25,7 +27,6 @@ const Needs = ({NeedsReducer}) => {
     const [tabCount, setTabCount] = useState(0);
     const [form, showForm] = useState(false); //false
     const [story, showStoryForm] = useState(false); //false
-
     const [bolInfo, showInfo] = useState(false);
     const [info, setInfo] = useState(null);
 
@@ -95,8 +96,11 @@ const Needs = ({NeedsReducer}) => {
         setTab(tab)
     }
 
-    const handleForm = (form = false, setting = null, data = null)=>{
+    const handleForm = (info={}, form = false, setting = 'close', data = null)=>{
         //change content of table here
+        setInfo(info)
+        showForm(form)
+        showStoryForm(story)
         if(setting == 'discard'){
             //discard Changes here
         }
@@ -105,7 +109,6 @@ const Needs = ({NeedsReducer}) => {
             loadTable(true)
             //or insert data here
         }
-        showForm(form)
     }
 
     const handleInfo = (item) => {
@@ -124,14 +127,16 @@ const Needs = ({NeedsReducer}) => {
 
     return (
         <>
-            <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
-                <ul className="nav-tab">
-                    <li className={`nav-tab-item ${tab=='request' ? 'active' : ''}`} onClick={()=>handleTab('request')}>Request ({ tabCount || 0 })</li>
-                </ul>
-                <Button className="ml-auto text-white bg-blue-500 hover:bg-blue-600" onClick={(e)=>openForm(e, true)}>
-                    <i className="fas fa-plus pr-2"></i>
-                    <span>Create Need</span>
-                </Button>
+            <div className="h-16 flex flex-row justify-between items-center border-b bg-white px-12">
+                <div className="header-title flex flex-1">
+                    <h1 className={`nav-tab-item ${tab=='request' ? 'active' : ''}`} onClick={()=>handleTab('request')}>Request ({ tabCount || 0 })</h1>
+                </div>
+                <div className="flex flex-1 justify-end">
+                    <button className="primary-btn page-header-btn flex rounded-sm" onClick={(e)=>openForm(e, true)}>
+                        <OffersPlus />
+                        <span className="page-header-btn__text">Create Need</span>
+                    </button>
+                </div>
             </div>
 
             <div className="component-body flex p-8">

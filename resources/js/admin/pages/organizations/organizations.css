@@ -16,11 +16,11 @@
 .org-list__cover-bg{
     width: 100%;
     height: 99px;
-    background-color: #D3E9F6;
+    background-color: #CF995F;
     position: relative;
 }
 .org-list__rounded-img{
-    background: #D3E9F6;
+    background: #CF995F;
     border: 2px solid #FFFFFF;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
     width: 50px;
@@ -36,18 +36,25 @@
     height: 80px;
 }
 .org-list__body h2{
+    font-family: BrownStdBold;
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
     line-height: 17px;
     letter-spacing: 0.01em;
-    color: #323C47;
+    color: #587B7F;
     margin-bottom: 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .org-list__body p {
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 150%;
+    color: #4F6880;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -58,20 +65,22 @@
     padding: 10px 19px 28px;
 }
 .org-list__footer .active{
+    font-family: InterMedium;
     font-style: normal;
     font-weight: 500;
     font-size: 10px;
     line-height: 12px;
     letter-spacing: 0.01em;
-    color: #41D48F;
+    color: #CF995F;
 }
 .org-list__footer .past{
+    font-family: InterMedium;
     font-style: normal;
     font-weight: 500;
     font-size: 10px;
     line-height: 12px;
     letter-spacing: 0.01em;
-    color: #C2CFE0;
+    color: #98999B;
 }
 .org-list__footer .middle{
     color: #C2CFE0;
@@ -94,11 +103,11 @@
 .org-form__cover-bg{
     width: 100%;
     height: 146px;
-    background-color: #D3E9F6;
+    background: #CF995F;
     position: relative;
 }
 .org-form__rounded-img{
-    background: #D3E9F6;
+    background: #CF995F;
     border: 2px solid #FFFFFF;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
     width: 80px;
@@ -190,14 +199,7 @@
     margin-top: 8px;
     word-break: break-word;
 }
-.org-form__body .form-group > label{
-    font-family: "Lato", sans-serif;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 24px;
-    color: rgba(74, 108, 140, 0.56);
-}
+
 .form-group-textarea textarea {
     width: 100%;
     font-family: "Lato", sans-serif;
@@ -302,9 +304,13 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    color: #CF995F;
 }
 .org-view__edit svg{
     margin-right: 10px;
+}
+.org-view__edit svg path{
+    fill: #CF995F;
 }
 .org-view.create-form{
     padding: 0;
@@ -340,17 +346,23 @@
     font-size: 16px;
     line-height: 19px;
     letter-spacing: 0.01em;
-    color: #323C47;
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 150%;
+    color: #587B7F;
 }
 .org-view__info-with-icon--two .org-view__info-with-icon{
     margin-right: 24px;
 }
 .org-view__details p{
+    font-family: InterRegular;
     font-style: normal;
     font-weight: normal;
     font-size: 13px;
     line-height: 24px;
-    color: #4F6880;
+    color: #231F20;
 }
 .org-view__members{
     padding: 0 30px;
@@ -394,7 +406,7 @@
 .org-view__members--container button{
     display: flex;
     align-items: center;
-    border: 1.5px solid #109CF1;
+    border: 1.5px solid #CF995F;
     box-sizing: border-box;
     border-radius: 4px;
     font-style: normal;
@@ -403,14 +415,14 @@
     line-height: 17px;
     text-align: center;
     letter-spacing: 0.01em;
-    color: #109CF1;
+    color: #CF995F;
     padding: 8px 26px;
 }
 .org-view__members--container svg{
     margin-right: 8px;
 }
 .org-view__members--container svg path{
-    stroke: #109CF1;
+    stroke:#CF995F;
 }
 .org-view__members ul li img{
     width: 33px;
@@ -554,20 +566,22 @@
     margin-left: 16px;
 }
 .tab-members__item-details label{
+    font-family: InterRegular;
     font-style: normal;
     font-weight: normal;
     font-size: 13px;
     line-height: 150%;
-    color: #4F6880;
+    color: #231F20;
     margin-bottom: 4px;
 }
 .tab-members__item-details p{
+    font-family: InterRegular;
     font-style: normal;
     font-weight: normal;
     font-size: 10px;
     line-height: 12px;
     letter-spacing: 0.01em;
-    color: #4F6880;
+    color: #231F20;
     opacity: 0.5;
     margin-bottom: 4px;
 }

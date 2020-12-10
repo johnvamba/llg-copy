@@ -38,6 +38,20 @@ const UsersForm = ({ data, showItem, handleForm }) => {
     useEffect(()=>{
         if(data.id) {
             loadData()
+        } else {
+            setForm({
+                firstName: '',
+                lastName: '',
+                email: '',
+                age: 0,
+                bio: '',
+            })
+            setLoading(false)
+            setPhoto(null)
+            setType({ value: 'user', label: 'App User'})
+            setOrganization({})
+            setErrors({})
+            setSubmitting(false)
         }
     }, [data])
 
@@ -142,16 +156,16 @@ const UsersForm = ({ data, showItem, handleForm }) => {
 
     const reset = () => {
         showItem({}, true)
-        setForm({
-            firstName: '',
-            lastName: '',
-            email: '',
-            age: 0,
-            bio: '',
-        })
-        setErrors({})
-        setType({ value: 'app user', label: 'App User'})
-        setOrganization({})
+        // setForm({
+        //     firstName: '',
+        //     lastName: '',
+        //     email: '',
+        //     age: 0,
+        //     bio: '',
+        // })
+        // setErrors({})
+        // setType({ value: 'app user', label: 'App User'})
+        // setOrganization({})
     }
 
     return (
@@ -159,8 +173,8 @@ const UsersForm = ({ data, showItem, handleForm }) => {
             {
                 (submitting || loading) &&
                 <LoadingScreen title={
-                    (loading && 'Loading need...') ||
-                    (submitting && (data.id ? 'Updating Transaction' : 'Creating Transaction')) ||
+                    (loading && 'Loading User...') ||
+                    (submitting && (data.id ? 'Updating User' : 'Creating User')) ||
                     'Please wait'
                 }/>
             }
@@ -171,7 +185,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                 </button>
             </header>
             <div className="form-body users-form__body content">
-                <CircleImageForm src={photo} onChangeFile={onChangePhoto} error={errors.photo}/>
+                <CircleImageForm src={photo} onChangeFile={onChangePhoto} error={errors.photo} editForm={label == 'Edit User' ? true : false} />
                 {/*<div className="photo-circle">
                     <img
                         className="rounded-full image"
@@ -309,7 +323,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
 
             <footer className="form-footer">
                 <button className="btn-secondary" onClick={reset} disabled={submitting}>Discard</button>
-                <button className="btn-primary" onClick={attemptSubmit} disabled={submitting}>{submitting ? 'Submitting' : (label == 'Add User' ? 'Add' : 'Update' ) }</button>
+                <button className="primary-btn" onClick={attemptSubmit} disabled={submitting}>{submitting ? 'Submitting' : (label == 'Add User' ? 'Add' : 'Update' ) }</button>
             </footer>
         </section>
     )

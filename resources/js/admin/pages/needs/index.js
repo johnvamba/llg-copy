@@ -16,6 +16,7 @@ import NeedForm from './form'
 import NeedTable from './table'
 import NeedInfo from './info'
 import StoriesForm from '../stories/form'
+import OffersPlus from '../../../svg/offers-plus';
 import { CancelToken } from 'axios'
 
 const Needs = ({NeedsReducer}) => {
@@ -85,10 +86,11 @@ const Needs = ({NeedsReducer}) => {
         setTab(tab)
     }
 
-    const handleForm = (info={}, form = false, setting = null, story = false)=>{
+    const handleForm = (info={}, form = false, setting = 'close', story = false)=>{
         //change content of table here
-        console.log('something');
         setInfo(info)
+        showForm(form)
+        showStoryForm(story)
         if(setting == 'discard'){
             //discard Changes here
         }
@@ -97,8 +99,6 @@ const Needs = ({NeedsReducer}) => {
             loadTable(true)
             //or insert data here
         }
-        showStoryForm(story)
-        showForm(form)
     }
 
     const handleInfo = (item) => {
@@ -121,16 +121,16 @@ const Needs = ({NeedsReducer}) => {
 
     return (
         <>
-            <div className="h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
+            <div className="h-16 flex flex-row justify-between items-center border-b bg-white px-12">
                 <ul className="nav-tab">
                     <li className={`nav-tab-item ${tab=='all' ? 'active' : ''}`} onClick={()=>handleTab('all')}>All ({ tabCounts.aggregate || 0 })</li>
                     <li className={`nav-tab-item ${tab=='current' ? 'active' : ''}`} onClick={()=>handleTab('current')}>Current ({ tabCounts.current || 0 })</li>
                     <li className={`nav-tab-item ${tab=='past' ? 'active' : ''}`} onClick={()=>handleTab('past')}>Past ({ tabCounts.past || 0 })</li>
                 </ul>
-                <Button className="ml-auto text-white bg-blue-500 hover:bg-blue-600" onClick={(e)=>openForm(e, true)}>
-                    <i className="fas fa-plus pr-2"></i>
-                    <span>Create Need</span>
-                </Button>
+                <button className="primary-btn page-header-btn flex rounded-sm" onClick={(e)=>openForm(e, true)}>
+                    <OffersPlus />
+                    <span className="page-header-btn__text">Create Need</span>
+                </button>
             </div>
 
             <div className="component-body flex p-8">

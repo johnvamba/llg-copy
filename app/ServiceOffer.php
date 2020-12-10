@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Carbon\Carbon;
+use App\Helper\Traits\OfferPortalTrait;
 
 class ServiceOffer extends Model implements HasMedia
 {
     use InteractsWithMedia;
     use SoftDeletes;
+    use OfferPortalTrait;
 
     protected $guarded = [];
 
@@ -21,14 +23,14 @@ class ServiceOffer extends Model implements HasMedia
 
     public function model()
     {
-        return $this->morphTo();
+        return $this->morphTo(); //I am user or group or campus or anything
     }
 
     public function tags()
     {
         return $this->morphMany('App\Tag', 'model');
     }
-
+    //Depreciated
     public function user()
     {
         return $this->belongsTo('App\User');
@@ -39,10 +41,10 @@ class ServiceOffer extends Model implements HasMedia
         return $this->belongsTo('App\ServiceType');
     }
 
-    public function organization()
-    {
-        return $this->belongsTo('App\Organization');
-    }
+    // public function organization() //Nothing herrre.
+    // {
+    //     return $this->belongsTo('App\Organization');
+    // }
 
     /**
      * Set short description column value

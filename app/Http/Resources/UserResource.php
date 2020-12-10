@@ -30,8 +30,20 @@ class UserResource extends JsonResource
             'bio' => $this->when($this->relationLoaded('profile'), optional($this->profile)->bio),
 
             'type' => $this->when($this->relationLoaded('roles'), optional($this->getRoleNames())->first()),
-            'organization' => $this->when(false, 'something'),
+            'organization' => $this->when($this->relationLoaded('organization'), $this->parseOrg()),
         ];
     }
 
+    protected function parseOrg()
+    {
+        if(!$org = $this->organization)
+            return null;
+
+        return [
+            'id' => $org->id,
+            'value' => $org->id,
+            'label' => $org->name,
+            'name'  => $org->name
+        ];
+    }
 }

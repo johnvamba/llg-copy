@@ -8,7 +8,7 @@ const GroupsHeader = ({ count=0, setShowAdd }) => {
                 <h1>Groups ({count})</h1>
             </div>
             <div className="flex flex-1 justify-end">
-                <button className="flex rounded-sm" onClick={() => setShowAdd(true)}>
+                <button className="primary-btn flex rounded-sm" onClick={() => setShowAdd(true)}>
                     <OffersPlus />
                     <span>Add Group</span>
                 </button>

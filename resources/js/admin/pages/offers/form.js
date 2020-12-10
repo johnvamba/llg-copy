@@ -32,22 +32,41 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
     useEffect(()=>{
         //change form fields here
         if(data.id) {
-            const { title, type, photo, description, location, lat, lng, business_name, business_site, business_contact} = data
-            setTitle(title)
-            setDesc(description)
-            setImage(photo)
-            setBusName(business_name)
-            setBusSite(business_site)
-            setBusContact(business_contact)
-            setLocation({
-                location,
-                lat,
-                lng
-            })
-            setCategory(volunteer.find(i => i.name == type) || {})
-
+            loadOffer()            
+        } else {
+            setTitle('')
+            setDesc('')
+            setImage(null)
+            setBusName('')
+            setBusSite('')
+            setBusContact('')
+            setFiles([])
+            setLocation({})
+            setCategory({})
+            setSubmitting(false)
+            setLoading(false)
         }
     }, [data])
+
+    const loadOffer = (clearCoche = false) => {
+        setLoading(true)
+        api.get(`/api/web/offers/${data.id}`)
+        .then(({ data })=>{
+            const { title, type, photo, description, location, lat, lng, business_name, business_site, business_contact} = data.data
+            console.log('data?', data.data)
+            setTitle(title || '')
+            setDesc(description || '')
+            setImage(photo || null)
+            setBusName(business_name || '')
+            setBusSite(business_site || '')
+            setBusContact(business_contact || '')
+            setLocation(location ? { location, lat, lng} : {})
+            setCategory(type ? volunteer.find(i => i.name == type) : {})
+            setErrors({})
+            setLoading(false)
+            console.log('reached');
+        })
+    }
 
     const handleCategories = (item, truth = false) => {0
         setCategory(item);
@@ -217,7 +236,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
                         <p>{countTab} of 3</p>
                     </div>
                 }
-                <button className="offers-create-form__close" type="button" onClick={()=>setShowForm(false)}>
+                <button className="offers-create-form__close" type="button" onClick={()=>handleForm(false)}>
                     <OffersFormCross />
                 </button>
             </div>
@@ -240,9 +259,9 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
 
              <section className="offers-category-opt">
                 <div className="offers-category-opt__container flex">
-                    <button className="discard" onClick={()=>setShowForm(false)}>Discard</button>
+                    <button className="discard" onClick={()=>handleForm(true, 'discard', {})}>Discard</button>
                     {
-                        editing ? <button className="next" disabled={submitting} onClick={()=>setShowForm(false)}>{submitting? 'Submitting...' :'Submit'}</button> 
+                        editing ? <button className="next" disabled={submitting} onClick={submit}>{submitting? 'Submitting...' :'Submit'}</button> 
                         : <div>
                             {
                                 countTab > 1 &&
@@ -250,7 +269,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
                             }
                             {
                                 (countTab < 3) 
-                                ? (<button className="next" disabled={submitting} onClick={() => validateTab(countTab+1)}>Next</button>)
+                                ? (<button className="primary-btn next" disabled={submitting} onClick={() => validateTab(countTab+1)}>Next</button>)
                                 : (<button className="next" disabled={submitting} onClick={submit}>{submitting? 'Submitting...': 'Create'}</button>)
                             }
                         </div>

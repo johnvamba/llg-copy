@@ -11,7 +11,7 @@ import { volunteer } from '../needs/categorylist';
 const findCategory = (title = 'Employment') => volunteer.find(i=>i.name == title);
 
 const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction}) => {
-    const { title ="Untitled", type = "Employment", location = "N/A", status = "achieved", date = "Missing"} = item
+    const { title ="Untitled", type = "Employment", location = "N/A", status = "achieved", date = "Missing", photo = null} = item
     const cat = findCategory(type);
     const [approveElement, setApproveElement] = useState(null);
     const [rejectElement, setRejectElement] = useState(null);
@@ -38,7 +38,11 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         </td>
         <td className="title">
             <div className="flex"> 
-                <img className="title-img" />
+                {
+                    photo ?
+                    <img className="title-img" src={photo}/> :
+                    <img className="title-img"/>
+                }
                 <span onClick={onShowInfo}>
                     { title }
                 </span>
@@ -48,22 +52,22 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
             {
                 cat && <div className="tos flex items-center">
                     <cat.svg_class />
-                    <span className="ml-2">{type}</span>
+                    <p className="ml-2">{type}</p>
                 </div>
             }
         </td>
         <td className="location">
             <div>
-                <span>
+                <p>
                 { location }
-                </span>
+                </p>
             </div>
         </td>
         <td>
             { switchStatus() }
         </td>
         <td>
-            { date }
+            <p>{ date }</p>
         </td>
     </tr>
 }

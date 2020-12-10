@@ -97,7 +97,7 @@ const Users = () => {
                     <h1>Users { count > 0 ? `(${count})` : ''}</h1>
                 </div>
                 <div className="flex flex-1 justify-end">
-                    <button className="flex rounded-sm" onClick={() => setShowForm(true)}>
+                    <button className="primary-btn flex rounded-sm" onClick={() => setShowForm(true)}>
                         <OffersPlus />
                         <span>Add User</span>
                     </button>

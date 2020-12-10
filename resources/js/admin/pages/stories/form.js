@@ -12,7 +12,7 @@ import Imagepond from '../../../components/Imagepond'
 import { EditorState, convertFromHTML, ContentState, convertFromRaw, convertToRaw } from 'draft-js';
 import { tryParseJson } from '../../../components/helpers/validator'
 import LoadingScreen from '../../../components/LoadingScreen'
-import { selectStyle, loadOrganization } from '../../../components/helpers/async_options';
+import { selectStyle, selectStylePaddingZero, loadOrganization } from '../../../components/helpers/async_options';
 import AsyncSelect from 'react-select/async';
 import { connect } from 'react-redux';
 import { monetary } from '../needs/categorylist';
@@ -31,7 +31,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
     const [saveAs, setSaveAs] = useState('publish');
     const [togglePub, setTogglePub] = useState(false);
     // temporary has value
-    const [hasFeaturedImage, setHasFeaturedImage] = useState(true);
+    // const [hasFeaturedImage, setHasFeaturedImage] = useState(true);
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [organization, setOrganization] = useState({});
@@ -43,6 +43,20 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
             const { title } = data
             setForm({ title })
             loadStory()
+        } else {
+            setErrors({})
+            setTags([])
+            setForm({})
+            setModal(false)
+            setCategory([])
+            setPhoto(null)
+            setEditorState( EditorState.createEmpty() )
+            setSaveAs('publish')
+            setTogglePub(false)
+            // setHasFeaturedImage( )
+            setLoading(false)
+            setSubmitting(false)
+            setOrganization({})
         }
     }, [data])
 
@@ -54,6 +68,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                 if(tryParseJson(raw_draft_json)){
                     setEditorState( EditorState.createWithContent( convertFromRaw( JSON.parse(raw_draft_json) ) ) ); 
                 }
+                setPhoto(photo)
                 setOrganization(organization);
                 setCategory( monetary.filter(i => categories.includes(i.name) ) );
                 setLoading(null);
@@ -147,7 +162,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
             }
             <section className="form-title">
                 <h3>{ !(data.id) ? 'Create' : 'Edit' } Story</h3>
-                <button type="button" onClick={handleClose}>
+                <button type="button" onClick={()=>handleForm({})}>
                     <OffersFormCross />
                 </button>
             </section>
@@ -158,7 +173,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                         (roles.name == 'admin') && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
                             <label>Organization</label>
                             <AsyncSelect
-                                styles={selectStyle}
+                                styles={selectStylePaddingZero}
                                 loadOptions={loadOrganization}
                                 defaultOptions
                                 cacheOptions
@@ -183,7 +198,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                             className="input-field"
                             type="text"
                             placeholder="Enter Title"
-                            value={form.title}
+                            value={form.title || ''}
                             name="title"
                             onChange={handleChange}
                         />
@@ -197,12 +212,12 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                 </form>
             </section>
             <section className="form-footer">
-                <button className="discard" onClick={handleClose}>Discard</button>
+                <button className="discard" onClick={()=> handleForm({}, true)}>Discard</button>
                 <div className="flex-grow-1"></div>
                 <button className={'preview'} onClick={toggle}>Preview</button>
                 <ButtonGroup className={'publish-btn'}>
-                    <Button className='actual-btn' color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
-                    <ButtonDropdown className={'btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
+                    <Button className='primary-btn actual-btn' color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
+                    <ButtonDropdown className={'primary-btn btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
                       <DropdownToggle tag="button">
                         <StoriesPublishIcon />
                       </DropdownToggle>

@@ -36,6 +36,16 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                 lng: data.lng
             })
             loadExtra()
+        } else {
+            setFields({
+                name: '',
+                description: '',
+                location: '',
+                privacy: '',
+                photo: null,
+                lat: null,
+                lng: null
+            })
         }
     }, [data])
 
@@ -168,6 +178,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                         fields={fields}
                         onChangePhoto={onChangePhoto}
                         handleSelectPrivacy={handleSelectPrivacy}
+                        data={data}
                     />
                 }
                 { countTab == 2 && <FormTabInvite data={data} users={users} setUsers={setUsers} />}
@@ -183,7 +194,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                         </div>
                     </div> : 
                     <div className="offers-category-opt__container flex">
-                        <button className="discard" onClick={()=>handleForm({})} disabled={submitting} >Discard</button>
+                        <button className="discard" onClick={()=>handleForm({}, true)} disabled={submitting} >Discard</button>
                         <div>
                             {
                                 countTab > 1 &&

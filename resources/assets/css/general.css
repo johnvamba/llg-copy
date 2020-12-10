@@ -60,8 +60,11 @@ table.table > tbody > tr > td.title img.title-img{
 	height: 26px;
     margin-right: 15px;
     width: 26px;
-    border-radius: 4px;
+    border-radius: 5px;
     background-color: #D3E9F6;
+}
+table.table > tbody > tr > td.title img.title-img.circle {
+	border-radius: 25px;
 }
 
 table.table tr {
@@ -85,7 +88,7 @@ span.currency {
 	margin-right: 13px;
 	font-weight: 600;
 	font-size: 15px;
-	color: rgba(16,156,241,1);
+	color: #CF995F;
 }
 table.table td span.label {
 	padding: 0.5rem 1rem;
@@ -102,6 +105,14 @@ table.table td span.label.label-pending {
 table.table td span.label.label-success {
 	background-color: rgba(82,204,138, 0.12);
 	color:  rgba(82, 204, 138, 1);
+}
+table.table td span.label.label-scheduled {
+	color: #E2B324;
+    background: rgba(242, 201, 76, 0.12);
+}
+table.table td span.label.label-sent {
+	color: #52CC8A;
+    background: rgba(82, 204, 138, 0.12);
 }
 button.rounded.active {
 	color: #109CF1 !important;
@@ -492,8 +503,8 @@ input[type=time]::-webkit-calendar-picker-indicator {
 
 /*Action buttons*/
 .action-content {
-	width: 171px;
-	height: 100px;
+	width: 200px;
+	height: auto;
 
 	background: #FFFFFF;
 	border: 1px solid #E7EBF3;
@@ -506,8 +517,23 @@ input[type=time]::-webkit-calendar-picker-indicator {
 	font-size: 12px;
 	color: #334D6E;
 }
-.button-container .flex.justify-between button{
-	min-width: 65px;
+
+.action-content .button-container > div > button {
+	font-family: InterMedium;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 10px;
+	line-height: 150%;
+	text-align: center;
+	color: #98999B;
+	border-radius: 4px;
+	background: rgba(152, 153, 155, 0.12);
+}
+
+.action-content .button-container > div > button:last-child {
+	background: #CF995F;
+	border-radius: 4px;
+	color: #fff;
 }
 /* Form */
 .form-input-text{
@@ -728,12 +754,13 @@ div.view-map {
 }
 
 div.view-map label{
-	font-family: "Lato", sans-serif;
-	font-style: normal;
-	font-weight: normal;
-	font-size: 12px;
-	line-height: 24px;
-	color: rgba(74, 108, 140, 0.56);
+	font-family: InterMedium;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: 0.01em;
+    color: #98999B;
 }
 div.view-map div.google-map{
 	width: 100%;
@@ -743,14 +770,18 @@ div.view-map div.google-map{
 	border-radius: 4px;
 	/*border: 1px solid #109CF1;*/
 }
+.group-content .content-category {
+	display: flex;
+}
 .group-content .content-category span.category {
 	height: 25px;
-	background: rgba(16, 156, 241, 0.12);
+	background: rgba(207, 153, 95, 0.12);
 	border-radius: 50px;
-	color: #2EA9F3;
+	color: #CF995F;
 	font-size: 11px;
 	line-height: 24px;
 	padding: 0px 10px;
+	margin-right: 5px;
 	display: flex;
     align-items: center;
     width: fit-content;
@@ -805,7 +836,6 @@ input[type=checkbox]{
 }
 
 header .search-content{
-	min-height: 200px;
 	width: 560px;
 	height: auto;
 	display: flex;
@@ -815,6 +845,10 @@ header .search-content{
 header .search-content .search-listing {
 	padding: 1rem;
 	position: relative;
+}
+header .search-content .search-listing.searching {
+	padding: 0;
+	min-height: 200px;
 }
 
 .results-item {
@@ -863,7 +897,6 @@ header .search-content .search-listing {
 	color: #63b3ed;
 	margin-right: 5px;
 }
-
 .time-input.input-container {
 	border-bottom: 1px solid #D7DEE3;
 }
@@ -875,4 +908,16 @@ header .search-content .search-listing {
 }
 .time-input.input-container .react-time-picker__inputGroup__input.react-time-picker__inputGroup__amPm {
 	display: none;
+}
+.filepond--drop-label.filepond--drop-label label {
+	font-family: InterRegular;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	line-height: 24px;
+	color: #98999B;
+}
+
+.filepond--drop-label.filepond--drop-label label span {
+	outline: none;
 }
