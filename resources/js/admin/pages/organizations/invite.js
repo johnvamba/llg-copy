@@ -2,7 +2,7 @@ import React, { useState} from 'react';
 import Attachment from '../../../svg/attachment';
 import CrossPlain from '../../../svg/offers-plus';
 import { validateEmail, isValidated } from '../../../components/helpers/validator';
-import { swalDiscard } from '../../../components/helpers/alerts';
+import { swalDiscard, swalSuccess } from '../../../components/helpers/alerts';
 import { checkEmail } from '../../../components/helpers/async_options';
 import LoadingScreen from '../../../components/LoadingScreen'
 
@@ -144,6 +144,7 @@ const OrgInviteForm = ({ data = {}, handleBackInvite }) => {
             api.post(`/api/web/organizations/${data.id}/members`, {
                 users: userSet
             }).then(i=>{
+                swalSuccess('Users invited');
                 setSubmit(false)
             }).catch(i=>{
                 setSubmit(false)
@@ -168,6 +169,7 @@ const OrgInviteForm = ({ data = {}, handleBackInvite }) => {
                 </header>
                 <section className="org-invite__body">
                     <h2 className="mb-4">Invite Members</h2>
+
                     {/* <div className="org-invite__share">
                         <label>Share Link</label>
                         <div className="share__container">
@@ -183,6 +185,7 @@ const OrgInviteForm = ({ data = {}, handleBackInvite }) => {
                         <span>or</span>
                         <span></span>
                     </div>*/}
+
                     <div className="w-full">
                         {
                             userSet.length > 0 && userSet.map(i => <List key={i.email} data={i}/> )

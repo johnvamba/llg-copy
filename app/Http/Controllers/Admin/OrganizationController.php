@@ -9,10 +9,13 @@ use App\Organization;
 use App\OrganizationCredential;
 use App\OrganizationHasCategory;
 use App\OrganizationCategory;
+use App\OrganizationMember;
 use App\CampusOrganisation;
 
 use App\User;
+use App\UserProfile;
 use App\Need;
+use App\Mail\OrgInvitation;
 
 use App\Http\Resources\OrganizationResource;
 use App\Http\Resources\Async\OrganizationResource as AsyncResource;
@@ -332,8 +335,33 @@ class OrganizationController extends Controller
 
         DB::beginTransaction();
         try {
-            if($users = $request->get('users')){
-                
+            foreach ($request->get('users') as $key => $value) {
+                $user = User::firstOrCreate([
+                    'email' => $request->get('email'),
+                    'password' => bcrypt('temp_secret'),
+                    'name'  => $value['firstname']. ' ' .$value['lastname']
+                ]);
+
+                $profile = UserProfile::create([
+                    'age' => 18,
+                    'bio' => '',
+                    'location' => $organization->location ?? 'Sydney, Australia',
+                    'lat' => $organization->lat,
+                    'lng' => $organization->lng,
+                    'user_id' => $user->id,
+                    'first_name' =>$value['firstname'],
+                    'last_name' =>$value['lastname']
+                ]);
+
+                $user->syncRoles('user');
+
+                OrganizationMember::firstOrCreate([
+                    'model_type' => User::class,
+                    'model_id' => $user->id,
+                    'organization_id' => $organization->id
+                ]);
+
+                // dispatch(fn() => $user-> );
             }
 
             DB::commit();
