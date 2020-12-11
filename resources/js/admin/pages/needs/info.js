@@ -123,10 +123,27 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                 (!loading) ? 
                 <div className="need-content">
                 	<div className="need-title">
-    	            	<img className="need-img" src={photo} />
+    	            	{/* <img className="need-img" src={photo} /> */}
+                        {
+                            photo ?
+                                <img className="need-img" src={photo} />
+                            : <div className="need-img-container"></div>
+                        }
                         <h3>{data.title} <span>{data.date}</span> </h3>
     	            	<h5>{data.type || 'Donation'}</h5>
                 	</div>
+                    <div className="group-content">
+                        <div className="progress">
+                            {/* <div className="progress-bar" style={{width: `${ratio}%`}}></div> */}
+                            <div className="w-full bg-gray-400 rounded-full">
+                                <div className={`bg-blue-400 rounded-full leading-none py-1 text-white bar`} style={{width: `${ratio}%`}}></div>
+                            </div>
+                        </div>
+                        <div className="money flex items-center justify-between pt-2">
+                            <span>Raised: $2000.00</span>
+                            <span>Goal: $2500.00</span>                            
+                        </div>
+                    </div>
                     {
                         category.length > 0 &&
                     	<div className="group-content">
@@ -142,38 +159,38 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                             </div>
                     	</div>
                     }
-                    <div className="group-content">
-                        <div className="progress">
-                            <div className="progress-bar" style={{width: `${ratio}%`}}></div>
-                        </div>
-                    </div>
-                    {/* <div className="flex">
-                    	<div className="group-content flex-1">
-                    		<label>Date Needed</label>
-                            <p>{data.date || 'N/A'}</p>
-                    	</div>
-                    	<div className="group-content flex-1">
-                    		<label>Time</label>
-                            <p>{data.time || 'N/A'}</p>
-                    	</div>
-                    </div> */}
-                	{/* <div className="group-content view-map">
-                		<label>Location</label>
-                		<div className="google-map">
-                            <MapMini lat={data.lat} lng={data.lng}/>
-                        </div>
-                	</div> */}
-                    {/* {
-                        data.type == 'Volunteer' ? 
+                    {
+                        data.type == 'Volunteer' &&
+                            <>
+                                <div className="flex">
+                                    <div className="group-content flex-1">
+                                        <label>Date Needed</label>
+                                        <p>{data.date || 'N/A'}</p>
+                                    </div>
+                                    <div className="group-content flex-1">
+                                        <label>Time</label>
+                                        <p>{data.time || 'N/A'}</p>
+                                    </div>
+                                </div>
+                                <div className="group-content view-map">
+                                    <label>Location</label>
+                                    <div className="google-map">
+                                        <MapMini lat={data.lat} lng={data.lng}/>
+                                    </div>
+                                </div>
+                            </>
+                    }
+                    {
+                        data.type == 'Volunteer' &&
                         <div className="group-content">
                             <label>Number of People Needed</label> 
                             <p>{data.goal}</p>
-                        </div> : 
-                        <div className="group-content">
-                            <label>Goal</label>
-                            <p>$ {data.goal}</p>
                         </div>
-                    } */}
+                        // <div className="group-content">
+                        //     <label>Goal</label>
+                        //     <p>$ {data.goal}</p>
+                        // </div>
+                    }
                 	<div className="group-content">
                         {
                             data.type == 'Volunteer' ? <label>What to bring</label> : <label>About</label>
@@ -188,14 +205,14 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                 </div>
             }
             {
-                ratio >= 100 &&
-                <div className="need-footer">
-                    <Button className="flex text-white bg-blue-500 hover:bg-blue-600" 
-                        onClick={()=>alert('something')}>
-                        <Quill/>
-                        Write a Story
-                    </Button>
-                </div>
+                (switchStatus() == 'Achieved' && (ratio >= 100)) &&
+                    <div className="need-footer">
+                        <Button className="primary-btn flex items-center" 
+                            onClick={()=>alert('something')}>
+                            <Quill/>
+                            Write a Story
+                        </Button>
+                    </div>
             }
         </div>
     )

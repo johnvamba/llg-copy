@@ -7,6 +7,22 @@ import Organisation from '../svg/organisation';
 import SidebarCampus from '../svg/sidebar-campus';
 import './css/sidebar.css';
 
+import {	
+    Dashboard,
+    Needs,
+    Offers,
+    Stories,
+    Users,
+    Groups,
+    Organisations,
+    Campus,
+    PushNotifications,
+    Transactions,
+    Payments,
+    Api
+} from './helpers/sidebarIcons';
+
+
 const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
     const location = useLocation();
     const profile = useSelector(
@@ -67,7 +83,8 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         ${location.pathname == "/dashboard" ? "text-yellow-400" : "text-gray-400"}`}
                     >
                         <Link to="/dashboard" className="flex items-center">
-                            <i className="text-xl fa fa-th-large" aria-hidden="true"></i>
+                            {/* <i className="text-xl fa fa-th-large" aria-hidden="true"></i> */}
+                            <Dashboard active={location.pathname == "/dashboard" ? true : false} />
                             <span className="px-4">Dashboard</span>
                         </Link>
                     </div>
@@ -78,7 +95,8 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                             className={`relative w-full flex items-center focus:outline-none
                             ${(location.pathname == "/needs") || (location.pathname == "/needs/requests") ? "text-yellow-400" : "text-gray-400"}`}
                         >
-                            <i className="text-xl fab fa-gratipay"></i>
+                            {/* <i className="text-xl fab fa-gratipay"></i> */}
+                            <Needs active={location.pathname == "/needs" ? true : false} />
                             <span className="px-4">Needs</span>
 
                             <div className="absolute inset-y-0 right-0 text-gray-400">
@@ -122,7 +140,8 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                 ${location.pathname == "/offers" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/offers" className="flex items-center">
-                                    <i className="text-xl fas fa-hand-holding-heart"></i>
+                                    {/* <i className="text-xl fas fa-hand-holding-heart"></i> */}
+                                    <Offers active={location.pathname == "/offers" ? true : false} />
                                     <span className="px-4">Offers</span>
                                 </Link>
                             </div>
@@ -135,7 +154,8 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                             className={`relative flex items-center focus:outline-none w-full
                             ${(location.pathname == "/stories") ? "text-yellow-400" : "text-gray-400"}`}
                         >
-                            <i className="text-xl fas fa-leaf"></i>
+                            {/* <i className="text-xl fas fa-leaf"></i> */}
+                            <Stories active={location.pathname == "/stories" ? true : false} />
                             <span className="px-4">Stories</span>
 
                             <div className="absolute inset-y-0 right-0 text-gray-400">
@@ -178,7 +198,8 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                 ${location.pathname == "/users" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/users" className="flex items-center">
-                                    <i className="text-xl far fa-user"></i>
+                                    {/* <i className="text-xl far fa-user"></i> */}
+                                    <Users active={location.pathname == "/users" ? true : false} />
                                     <span className="px-4">Users</span>
                                 </Link>
                             </div>
@@ -192,7 +213,8 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         ${location.pathname == "/groups" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/groups" className="flex items-center">
-                                    <i className="text-xl fas fa-user-friends"></i>
+                                    {/* <i className="text-xl fas fa-user-friends"></i> */}
+                                    <Groups active={location.pathname == "/groups" ? true : false} />
                                     <span className="px-4">Groups</span>
                                 </Link>
                             </div>
@@ -206,7 +228,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                 ${location.pathname == "/organizations" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/organizations" className="flex items-center">
-                                    <Organisation />
+                                    <Organisations active={location.pathname == "/organizations" ? true : false} />
                                     <span className="px-4">Organisations</span>
                                 </Link>
                             </div>
@@ -220,7 +242,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                 ${location.pathname == "/campus" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/campus" className="flex items-center">
-                                    <SidebarCampus />
+                                    <Campus active={location.pathname == "/campus" ? true : false} />
                                     <span className="px-4">Campus</span>
                                 </Link>
                             </div>
@@ -234,7 +256,8 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                 ${location.pathname == "/push-notifications" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/push-notifications" className="flex items-center">
-                                    <i className="text-xl far fa-bell"></i>
+                                    {/* <i className="text-xl far fa-bell"></i> */}
+                                    <PushNotifications active={location.pathname == "/push-notifications" ? true : false} />
                                     <span className="px-4">Push Notifications</span>
                                 </Link>
                             </div>
@@ -248,7 +271,8 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                 ${location.pathname == "/transactions" ? "text-yellow-400" : "text-gray-400"}`}
                             >
                                 <Link to="/transactions" className="flex items-center">
-                                    <i className="text-xl fas fa-retweet"></i>
+                                    {/* <i className="text-xl fas fa-retweet"></i> */}
+                                    <Transactions active={location.pathname == "/transactions" ? true : false} />
                                     <span className="px-4">Transactions</span>
                                 </Link>
                             </div>
@@ -264,7 +288,8 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                 className={`relative flex items-center focus:outline-none w-full
                                 ${(location.pathname == "/payments") ? "text-yellow-400" : "text-gray-400"}`}
                             >
-                                <i className="text-xl fas fa-leaf"></i>
+                                {/* <i className="text-xl fas fa-leaf"></i> */}
+                                <Payments active={location.pathname == "/payments" ? true : false} />
                                 <span className="px-4">Payments</span>
 
                                 <div className="absolute inset-y-0 right-0 text-gray-400">
@@ -307,7 +332,8 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                             ${location.pathname == "/api" ? "text-yellow-400" : "text-gray-400"}`}
                         >
                             <Link to="/api" className="flex items-center">
-                                <i className="text-xl fas fa-hand-holding-heart"></i>
+                                {/* <i className="text-xl fas fa-hand-holding-heart"></i> */}
+                                <Api active={location.pathname == "/api" ? true : false} />
                                 <span className="px-4">API</span>
                             </Link>
                         </div>
