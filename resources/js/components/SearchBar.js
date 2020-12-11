@@ -2,26 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { usePopper } from 'react-popper';
 import LoadingScreen from './LoadingScreen';
 
-// const Items = ({title = 'Miscellaneous', items = [], linkTo = '', callBack}) => <li className="result-group">
-// 	<div className="item">
-// 		<h3>Needs</h3>
-// 		<ul className="item-results">
-// 			<li>
-// 				<i className="fa fa-angle-right"></i>
-// 				<h5>Title or name</h5>
-// 			</li>
-// 			<li>
-// 				<i className="fa fa-angle-right"></i>
-// 				<h5>Title or name</h5>
-// 			</li>
-// 			<li>
-// 				<i className="fa fa-angle-right"></i>
-// 				<h5>Title or name</h5>
-// 			</li>
-// 		</ul>
-// 	</div>
-// </li>
-
 const SearchBar = () => {
 	const [ search, setSearch ] = useState('');
     const [loading, setLoading ] = useState(false);
@@ -68,7 +48,7 @@ const SearchBar = () => {
 
 	    			setLoading(false)
 	    			setResults({...data.data})
-	    			console.log('response', data);
+	    			// console.log('response', data);
 	    		})
     	}
     	searchSet();
@@ -96,102 +76,108 @@ const SearchBar = () => {
 	            <div ref={wrapperRef} className={`search-listing ${loading ? 'searching' : ''}`}>
 	            	{
 	            		loading ? <LoadingScreen title={loading && `Looking for ${search}...`} /> :
-	            		<ul className="results-item">
-	            			{
-	            				_.isEmpty(results) &&
-	            				<li className="result-group">
-		            				<div className="item">
-		            					<h3>No results found for {search}</h3>
-		            					<ul className="item-results">
-		            						<li>
-		            							<i className="fa fa-search"></i>
-		            							<h5>Maybe look for other keywords</h5>
-		            						</li>
-		            					</ul>
-		            				</div>
-		            			</li>
-	            			}
+	            		<div className="results-item">
+	            		{
+	            			/*
+	            			<div className="result-header">
+	            				<i className="fa fa-search"></i>
+		            			<h5>Maybe look for other keywords</h5>
+	            			</div>
+	            			*/
+	            		}
+	            			<div className="result-groups">
 	            			{
 	            				(results.needs && results.needs.length > 0) &&
-		            			<li className="result-group">
-		            				<div className="item">
-		            					<h3>Needs</h3>
-		            					<ul className="item-results">
-		            						{
-		            							results.needs.map((i, k) => <li key={"need"+k}>
-			            							<i className="fa fa-angle-right"></i>
-			            							<h5>{i.title || i.name || 'missing-name'}</h5>
-			            						</li>)
-		            						}
-		            					</ul>
+		            			<div className="result-group">
+		            				<h4>Needs</h4>
+		            				<div className="item-results">
+		            					{
+	            							results.needs.map((i, k) =><div className="item" key={'need'+i.id}>
+			            						<span className="item-image" style={{backgroundImage: `url(${i.photo})`}}/>
+			            						<h5>{i.title || i.name || 'missing-name'}</h5>
+			            						{ i.subtitle && <span className="subtitle">{i.subtitle}</span>}
+			            					</div>)
+		            					// <div className="more-item">
+		            					// 	<h6 className="show-more">Show More Needs</h6>
+		            					// </div>
+	            						}
 		            				</div>
-		            			</li>
+		            			</div>
 	            			}
 	            			{
 	            				(results.stories && results.stories.length > 0) &&
-		            			<li className="result-group">
-		            				<div className="item">
-		            					<h3>Stories</h3>
-		            					<ul className="item-results">
-		            						{
-		            							results.stories.map((i, k) => <li key={"stories"+k}>
-			            							<i className="fa fa-angle-right"></i>
-			            							<h5>{i.title || i.name || 'missing-name'}</h5>
-			            						</li>)
-		            						}
-		            					</ul>
+		            			<div className="result-group">
+		            				<h4>Stories</h4>
+		            				<div className="item-results">
+		            					{
+	            							results.stories.map((i, k) =><div className="item" key={'story'+i.id}>
+			            						<span className="item-image" style={{backgroundImage: `url(${i.photo})`}}/>
+			            						<h5>{i.title || i.name || 'missing-name'}</h5>
+			            						{ i.subtitle && <span className="subtitle">{i.subtitle}</span>}
+			            					</div>)
+		            					// <div className="more-item">
+		            					// 	<h6 className="show-more">Show More Stories</h6>
+		            					// </div>
+	            						}
 		            				</div>
-		            			</li>
+		            			</div>
 	            			}
-	            			{
-	            				(results.offers && results.offers.length > 0) &&
-		            			<li className="result-group">
-		            				<div className="item">
-		            					<h3>Offers</h3>
-		            					<ul className="item-results">
-		            						{
-		            							results.offers.map((i, k) => <li key={"offers"+k}>
-			            							<i className="fa fa-angle-right"></i>
-			            							<h5>{i.title || i.name || 'missing-name'}</h5>
-			            						</li>)
-		            						}
-		            					</ul>
-		            				</div>
-		            			</li>
-	            			}
-	            			{
+							{
+								(results.offers && results.offers.length > 0) &&
+								<div className="result-group">
+									<h4>Offers</h4>
+									<div className="item-results">
+										{
+											results.offers.map((i, k) =><div className="item" key={'need'+i.id}>
+												<span className="item-image" style={{backgroundImage: `url(${i.photo})`}}/>
+												<h5>{i.title || i.name || 'missing-name'}</h5>
+			            						{ i.subtitle && <span className="subtitle">{i.subtitle}</span>}
+											</div>)
+										// <div className="more-item">
+										// 	<h6 className="show-more">Show More Offers</h6>
+										// </div>
+										}
+									</div>
+								</div>
+							}
+							{
 	            				(results.organisations && results.organisations.length > 0) &&
-		            			<li className="result-group">
-		            				<div className="item">
-		            					<h3>Organisations</h3>
-		            					<ul className="item-results">
-		            						{
-		            							results.organisations.map((i, k) => <li key={"organisations"+k}>
-			            							<i className="fa fa-angle-right"></i>
-			            							<h5>{i.title || i.name || 'missing-name'}</h5>
-			            						</li>)
-		            						}
-		            					</ul>
+		            			<div className="result-group">
+		            				<h4>Organizations</h4>
+		            				<div className="item-results">
+		            					{
+	            							results.organisations.map((i, k) =><div className="item" key={'need'+i.id}>
+			            						<span className="item-image" style={{backgroundImage: `url(${i.photo})`}}/>
+			            						<h5>{i.title || i.name || 'missing-name'}</h5>
+			            						{ i.subtitle && <span className="subtitle">{i.subtitle}</span>}
+			            					</div>)
+		            					// <div className="more-item">
+		            					// 	<h6 className="show-more">Show More Organizations</h6>
+		            					// </div>
+	            						}
 		            				</div>
-		            			</li>
+		            			</div>
 	            			}
 	            			{
 	            				(results.groups && results.groups.length > 0) &&
-		            			<li className="result-group">
-		            				<div className="item">
-		            					<h3>Groups</h3>
-		            					<ul className="item-results">
-		            						{
-		            							results.groups.map((i, k) => <li key={"groups"+k}>
-			            							<i className="fa fa-angle-right"></i>
-			            							<h5>{i.title || i.name || 'missing-name'}</h5>
-			            						</li>)
-		            						}
-		            					</ul>
+		            			<div className="result-group">
+		            				<h4>Groups</h4>
+		            				<div className="item-results">
+		            					{
+	            							results.groups.map((i, k) =><div className="item" key={'need'+i.id}>
+			            						<span className="item-image" style={{backgroundImage: `url(${i.photo})`}}/>
+			            						<h5>{i.title || i.name || 'missing-name'}</h5>
+			            						{ i.subtitle && <span className="subtitle">{i.subtitle}</span>}
+			            					</div>)
+		            					// <div className="more-item">
+		            					// 	<h6 className="show-more">Show More Groups</h6>
+		            					// </div>
+	            						}
 		            				</div>
-		            			</li>
+		            			</div>
 	            			}
-	            		</ul>
+	            			</div>
+	            		</div>
 	            	}
 	            </div>
 	        </div>
