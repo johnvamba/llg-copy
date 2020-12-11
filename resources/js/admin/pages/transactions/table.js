@@ -15,6 +15,9 @@ const RowTable = ({organisation, checkValue = false, checkChange, writeStory = (
         <td className="checkbox">
             <input type='checkbox' checked={checkValue} onChange={checkChange}/>
         </td>
+        <td>
+            <p>{organisation.id}</p>
+        </td>
         <td className="title" onClick={onShowInfo}>
             <p>
                 {organisation.org_name}
@@ -25,9 +28,6 @@ const RowTable = ({organisation, checkValue = false, checkChange, writeStory = (
         </td>
         <td>
             <p>{organisation.email}</p>
-        </td>
-        <td>
-            <p>{organisation.phone_number}</p>
         </td>
         <td>
             <p>
@@ -45,11 +45,13 @@ const RowTable = ({organisation, checkValue = false, checkChange, writeStory = (
                 <Mail />
                 </i>
             </button>
+        {/*
             <button onClick={onShowInfo}>
                 <i ref={setRejectElement}>
                 <UsersActionsEdit />
                 </i>
             </button>
+        */}
         </td>
     </tr>
 }
@@ -151,10 +153,10 @@ const TransactionTable = ({tab = null, data = [], handleForm, loading = false, l
                 <th className="checkbox">
                     <input type='checkbox' checked={checkAll} onChange={e=>handleCheckAll(e.target.checked)}/>
                 </th>
+                <th className="">Transaction ID</th>
                 <th className="title">Organisation</th>
                 <th className="">Givers Name</th>
                 <th className="">Email</th>
-                <th className="">Phone Number</th>
                 <th className="">Amount</th>
                 <th className="">Date</th>
                 <th className="actions">Actions</th>

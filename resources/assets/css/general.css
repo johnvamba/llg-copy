@@ -707,7 +707,7 @@ input, button{
 button:focus{
 	outline: none !important;
 }
-.group-content .progress {
+.progress {
 	height: 5px !important;
 }
 
