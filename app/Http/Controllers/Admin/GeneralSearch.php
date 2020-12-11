@@ -25,27 +25,27 @@ class GeneralSearch extends Controller
     public function __invoke(Request $request)
     {
         if($string = $request->get('search')){
-            $needResults = Need::latest()
+            $needResults = Need::latest()->with(['media', 'type'])
                 ->where('title', 'like', '%'.$string.'%')->take(5);
 
-            $storyResults = Story::latest()
+            $storyResults = Story::latest()->with(['media'])
                 ->where('title', 'like', '%'.$string.'%')->take(5);
 
-            $offersResults = Offer::latest()
+            $offersResults = Offer::latest()->with(['media', 'serviceType'])
                 ->where('title', 'like', '%'.$string.'%')->take(5);
 
-            $groupResults = Group::latest()
+            $groupResults = Group::latest()->with(['media'])
                 ->where('name', 'like', '%'.$string.'%')->take(5);
 
-            $orgResults = Organization::latest()
-                ->where('name', 'like', '%'.$string.'%')->take(5);
+            // $orgResults = Organization::latest()->with(['media'])
+            //     ->where('name', 'like', '%'.$string.'%')->take(5);
 
             $resultCollection = collect([
                 'needResults' => $needResults->get(),
                 'storyResults' => $storyResults->get(),
                 'offersResults' => $offersResults->get(),
                 'groupResults' => $groupResults->get(),
-                'orgResults' => $orgResults->get(),
+                // 'orgResults' => $orgResults->get(),
             ]);
             
             return new SearchCollection($resultCollection);

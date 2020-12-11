@@ -18,7 +18,7 @@ class SearchCollection extends JsonResource
             'needs' => $this->when($this->get('needResults')->isNotEmpty(), $this->transformNeeds()),
             'stories' => $this->when($this->get('storyResults')->isNotEmpty(), $this->transformStories()),
             'offers' => $this->when($this->get('offersResults')->isNotEmpty(), $this->transformOffers()),
-            'organisations' => $this->when($this->get('orgResults')->isNotEmpty(), $this->transformOrgs()),
+            // 'organisations' => $this->when($this->get('orgResults')->isNotEmpty(), $this->transformOrgs()),
             'groups' => $this->when($this->get('groupResults')->isNotEmpty(), $this->transformGroups())
         ];
     }
@@ -26,19 +26,24 @@ class SearchCollection extends JsonResource
     protected function transformNeeds() 
     {
         return optional($this->get('needResults'))
-            ->map(fn($need) => $need->only(['id', 'title']) ) ?? [];
+            ->map(fn($need) => $need->only(['id', 'title']) 
+                + ($need->relationLoaded('type') ? ['subtitle' => optional($need->type)->name ] : [])
+                + ($need->relationLoaded('media') ? ['photo' => $need->getFirstMediaUrl('photo') ] : []) ) ?? [];
     }
 
     protected function transformStories() 
     {
         return optional($this->get('storyResults'))
-            ->map(fn($story) => $story->only(['id', 'title']) ) ?? [];
+            ->map(fn($story) => $story->only(['id', 'title'])
+                + ($story->relationLoaded('media') ? ['photo' => $story->getFirstMediaUrl('photo') ] : []) ) ?? [];
     }
 
     protected function transformOffers() 
     {
         return optional($this->get('offerResults'))
-            ->map(fn($offer) => $offer->only(['id', 'title']) ) ?? [];
+            ->map(fn($offer) => $offer->only(['id', 'title']) 
+                + ($offer->relationLoaded('serviceType') ? ['subtitle' => optional($offer->serviceType)->name ] : []) 
+                + ($offer->relationLoaded('media') ? ['photo' => $offer->getFirstMediaUrl('photo') ] : []) ) ?? [];
     }
 
     protected function transformOrgs() 
@@ -50,6 +55,7 @@ class SearchCollection extends JsonResource
     protected function transformGroups() 
     {
         return optional($this->get('groupResults'))
-            ->map(fn($group) => $group->only(['id', 'name']) ) ?? [];
+            ->map(fn($group) => $group->only(['id', 'name'])
+            + ($group->relationLoaded('media') ? ['photo' => $group->getFirstMediaUrl('photo') ] : []) ) ?? [];
     }
 }
