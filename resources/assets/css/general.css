@@ -1,3 +1,7 @@
+textarea {
+	outline: none;
+}
+
 ul.nav-tab {
 	display: flex;
 }
@@ -53,6 +57,7 @@ table.table tr > th:first-child, table.table tr > td:first-child {
 table.table > tbody > tr > td.title {
 	color: rgba(50,60,71,1) !important;
 	font-weight: 500;
+	cursor: pointer;
 	/*display: inline-flex;*/
 }
 
@@ -222,6 +227,16 @@ td.actions, th.actions{
 	display: grid;
 	margin-bottom: 20px;
 }
+
+.form-body .form-group textarea {
+    font-size: 14px;
+    line-height: 24px;
+    padding: 10px 0px;
+    width: 100%;
+    display: block;
+    outline: none;
+}
+
 .form-group > label {
 	font-size: 12px;
 	line-height: 24px;

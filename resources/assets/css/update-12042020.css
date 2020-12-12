@@ -76,6 +76,12 @@ p {
     font-size: 14px;
 }
 
+.primary-btn--transparent {
+    background-color: transparent;
+    color: #CF995F;
+    border: 2px solid #CF995F;
+}
+
 .primary-btn > span {
     font-family: InterMedium !important;
     color: #fff !important;
@@ -341,6 +347,9 @@ table.table > tbody > tr > td {
 }
 
 table.table > thead.tb-head > tr > th {
+    font-family: InterMedium;
+    font-style: normal;
+    font-weight: 500;
     font-size: 13px !important;
     line-height: 16px;
     letter-spacing: 0.01em;
