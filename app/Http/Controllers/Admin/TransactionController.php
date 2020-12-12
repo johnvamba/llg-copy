@@ -51,7 +51,10 @@ class TransactionController extends Controller
      */
     public function show(Transact $transact)
     {
-        //
+        $transact->loadMissing(['organization', 'model', 'user']);
+
+        // dd($transacts->get());
+        return new TransactionResource($transact);
     }
 
     /**

@@ -41,26 +41,45 @@
 	background-position: center center;
 }
 .need-info .need-title h3{
-	font-weight: 500;
+	font-family: BrownStdBold;
+	font-style: normal;
+	font-weight: bold;
 	font-size: 18px;
-	line-height: 24px;
-	color: #4F6880;
+	line-height: 150%;
+	color: #587B7F;
+	display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
 }
 .need-info .need-title h3 span{
-	float: right;
-	color: rgba(74, 108, 140, 0.56);
+	font-family: InterMedium;
+	font-style: normal;
+	font-weight: 500;
 	font-size: 12px;
+	line-height: 15px;
+	letter-spacing: 0.01em;
+	color: #98999B;
+	margin-top: 5px;
 }
 .need-info .need-title h5{
+	font-family: InterRegular;
+	font-style: normal;
+	font-weight: normal;
 	font-size: 14px;
 	line-height: 24px;
-	color: #109CF1;
+	color: #CF995F;
 }
 .need-info .need-header .circlet{
 	margin-right:20px;
 }
 .need-info .need-header button{
-	color: #2DA9F3;
+	color: #CF995F;
+}
+.need-info .need-header button i {
+	margin-right: 5px;
+}
+.need-info .need-header button svg path {
+	fill: #CF995F;
 }
 .need-info .need-header h4.need-status{
 	flex:2 ;
@@ -76,13 +95,20 @@
     width: auto;
     padding: 20px;
 }
+.need-info .need-footer svg {
+	margin-right: 5px;
+}
 .need-content .group-content {
 	margin-bottom: 16px;
 }
 .need-content .group-content label{
+	font-family: InterMedium;
+	font-style: normal;
+	font-weight: 500;
 	font-size: 12px;
-	line-height: 24px;
-	color: rgba(74, 108, 140, 0.56);
+	line-height: 15px;
+	letter-spacing: 0.01em;
+	color: #98999B;
 }
 .need-content .group-content p{
 	font-size: 13px;
@@ -132,6 +158,56 @@ header .filter-header .filter-need {
 	text-align: center;
 	color: #231F20;
 	text-align: center;
+}
+
+.need-info .need-content .group-content .content-category {
+	display: flex;
+    align-items: center;
+	flex-wrap: wrap;
+	margin-top: 13px;
+}
+
+.need-info .need-content .group-content .content-category span.category {
+	margin: 0 4px 8px 0;
+}
+
+.need-info .group-content .progress {
+	display: block;
+	margin-top: 21px;
+}
+
+.need-info .group-content .progress .bar {
+	background: #587B7F;
+	padding: 0 !important;
+    height: 5.5px;
+}
+
+.need-info .group-content .progress > div {
+	background: #EDF1F4;
+}
+
+.need-info .group-content .money span:first-child {
+	font-family: InterMedium;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 24px;
+	color: #587B7F;
+}
+
+.need-info .group-content .money span:last-child {
+	font-family: InterMedium;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 24px;
+	color: #231F20;
+}
+
+.need-img-container {
+	margin: 20px 0px;
+	height: 150px;
+	background-color: #CF995F;
 }
 /*
 .icon-circle .icon-png {

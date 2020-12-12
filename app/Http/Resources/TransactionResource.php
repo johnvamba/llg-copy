@@ -19,12 +19,20 @@ class TransactionResource extends JsonResource
             'id' => $this->id,
             'org_name' => $this->when($this->relationLoaded('organization'), fn() => optional($this->organization)->name),
             'org_id' => $this->when($this->relationLoaded('organization'), fn() => optional($this->organization)->id),
+            'org_photo' => $this->when($this->relationLoaded('organization'), fn() => optional($this->organization)->getFirstMediaUrl('photo')),
+
             'email' => $this->when($this->relationLoaded('user'), fn() => optional($this->user)->email),
             'phone_number' => $this->when($this->relationLoaded('user'), fn() => optional($this->user)->phone_number),
-            'need_title' => $this->when($this->relationLoaded('model'), fn() => (optional($this->model)->title ?? optional($this->model)->name), "Missing need"),
-            'amount' => $this->amount,
-            'date' => $this->created_at->format('m/d/y'),
             'giversName' => $this->when($this->relationLoaded('user'), fn() => optional($this->user)->name, "Missing Giver"),
+
+            'need_title' => $this->when($this->relationLoaded('model'), fn() => (optional($this->model)->title ?? optional($this->model)->name)),
+            'need_desc' => $this->when($this->relationLoaded('model'), fn() => (optional($this->model)->description ?? optional($this->model)->description)),
+            'need_photo' => $this->when($this->relationLoaded('model'), fn() => optional($this->model)->getFirstMediaUrl('photo')),
+            'need_raised' => $this->when($this->relationLoaded('model'), fn() => optional($this->model)->raised),
+            'need_goal' => $this->when($this->relationLoaded('model'), fn() => optional($this->model)->goal),
+
+            'amount' => $this->amount,
+            'date' => $this->created_at->format('m/d/Y'),
         ];
     }
 }

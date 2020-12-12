@@ -1,0 +1,243 @@
+.login {
+    width: 100%;
+    height: 100vh;
+    background: #587B7F;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.login::before {
+    content: '';
+    background: #587B7F;
+    opacity: 0.9;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.login__container {
+    border-radius: 20px;
+    width: 100%;
+    max-width: 1160px;
+    min-height: 656px;
+    padding: 25px 102px 70px;
+    background: #FFFFFF;
+    z-index: 3;
+    position: relative;
+    overflow: hidden;
+}
+
+.login__container > img {
+    position: absolute;
+    width: 100%;
+    max-width: 745px;
+    right: -70px;
+    top: -70px;
+    height: auto;
+}
+
+.login__container::before {
+    content: '';
+    background: linear-gradient(270deg, #BECFCF -30.04%, rgba(255, 255, 255, 0) 102.63%);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.login__container .left {
+    position: relative;
+    z-index: 4;
+    width: 35%;
+}
+
+.login__container .left form {
+    margin-top: 30px;
+}
+
+.login__container .left img {
+    margin-bottom: 37px;
+}
+
+.login__container .left form .primary-btn {
+    padding: 13px !important;
+    margin-top: 14px;
+}
+
+.forgot-pass .login__container .left form {
+    margin-top: 0;
+}
+
+.login__container .form-group {
+    position: relative;
+}
+
+.login__container .form-group > label {
+    margin: 0;
+}
+
+.login__container .form-group > input {
+    border-bottom: 2px solid #D7DEE3;
+    line-height: 24px;
+    padding: 10px 0px;
+    width: 100%;
+    display: block;
+    outline: none;
+    background: transparent;
+    font-family: InterMedium;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    color: #231F20;
+}
+
+.login__container .left svg {
+    position: relative;
+    left: -39px;
+}
+
+.login__container .right {
+    width: 65%;
+}
+
+.login__container h1 {
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 36px;
+    line-height: 150%;
+    color: #231F20;
+}
+
+.forgot-pass {
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 100%;
+    color: #CF995F;
+}
+
+.remember-me {
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 100%;
+    color: #98999B;
+}
+
+.forgot-pass__h2 {
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 24px;
+    color: #587B7F;
+}
+
+.forgot-pass__p {
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
+    text-align: center;
+    color: #231F20;
+}
+
+.forgot-pass__p--gray {
+    color: #98999B;
+    margin-top: 26px;
+}
+
+.forgot-pass__link {
+    font-family: InterSemibold;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 150%;
+    color: #CF995F;
+}
+
+.forgot-pass__back {
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 100%;
+    color: #98999B;
+}
+
+.forgot-pass__i {
+    color: #98999B;
+}
+
+@media (max-width: 1024px) {
+
+    .login__container {
+        padding: 25px 40px 70px;
+    }
+
+    .login__container > img {
+        max-width: none;
+        width: 60%;
+        top: 10px;
+    }
+
+}
+
+@media (max-width: 1023px) {
+
+    .login__container::before {
+        background: #fff;
+    }
+
+    .login__container > img {
+        width: 100%;
+        opacity: 0.1;
+        top: -33px;
+        z-index: 3;
+    }
+
+    .login__container .left {
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 767px) {
+
+    .login__container > img {
+        display: none;
+    }
+
+    .login {
+        padding: 0;
+    }
+
+    .login__container {
+        padding: 25px 10px 70px;
+        height: 100%;
+        border-radius: 0;
+    }
+
+    .login__container h1 {
+        font-family: BrownStdBold;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 28px;
+        line-height: 110%;
+        color: #231F20;
+    }
+
+}
