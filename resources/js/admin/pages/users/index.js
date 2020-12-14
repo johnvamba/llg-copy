@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as UsersActions from '../../../redux/users/actions';
+import Paginator from '../../../components/Paginator';
 
 import UsersActionsEdit from '../../../svg/users-actions-edit';
 import UsersActionsDelete from '../../../svg/users-actions-delete';
@@ -13,7 +14,8 @@ import './users.css';
 
 const Users = () => {
     const [page, setPage] = useState(1); 
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(15);
+    const [meta, setMeta] = useState({});
 
     const [showForm, setShowForm] = useState(false);
     const [focus, setFocus] = useState({});
@@ -37,7 +39,8 @@ const Users = () => {
         const token = axios.CancelToken.source();
         api.get(`/api/web/users`, {
             params: {
-                page, ...addFilter
+                page, ...addFilter,
+                per_page: limit
             },
             cache: {
                 exclude: { query: false },
@@ -49,6 +52,7 @@ const Users = () => {
             const { users_count } = data
             setUsers(data.data || [])
             setCount(users_count || 0)
+            setMeta(data.meta)
         }).finally(()=>{
             setLoading(false)
         })
@@ -62,7 +66,7 @@ const Users = () => {
             //cancel api here
             ct.cancel('Resetting');
         }
-    }, []);
+    }, [page, limit]);
     const handleLimitChange = (limit) => {
         setLimit(parseInt(limit));
     }
@@ -103,8 +107,9 @@ const Users = () => {
                     </button>
                 </div>
             </section>
-            <div className="component-body flex p-8">
+            <div className="component-body flex flex-col p-8">
                 <UserTable data={users} showInfo={showItem} loading={loading}/>
+                <Paginator setLimit={setLimit} {...meta} clickedPage={setPage}/>
             </div>
             {
                 showForm && 

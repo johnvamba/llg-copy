@@ -25,7 +25,7 @@ class OffersController extends Controller
         // DB::enableQueryLog();
         $offers = ServiceOffer::latest()->with('serviceType');
 
-        return OfferResource::collection($offers->paginate())
+        return OfferResource::collection($offers->paginate($request->get('per_page') ?? 15))
             ->additional([
                 'offers_count' => ServiceOffer::count()
             ]);

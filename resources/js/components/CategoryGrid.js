@@ -5,7 +5,6 @@ import { volunteer } from '../admin/pages/needs/categorylist';
 import Check from '../svg/check'
 
 const CatComponent = ({cat, onSelect, truth = false}) => {
-    console.log(cat.svg_class)
     return <div className={`offers-category__item ${truth ? 'active':''}`} onClick={()=>onSelect(cat, truth)}>
             <cat.svg_class className="svg-icon" active={truth} />
             <span>

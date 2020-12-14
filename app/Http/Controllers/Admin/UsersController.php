@@ -18,7 +18,7 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         DB::enableQueryLog();
         $users = User::latest()->with('profile');
@@ -27,7 +27,7 @@ class UsersController extends Controller
             dd($users->get(), auth()->user()->hasRole('campus admin'), DB::getQueryLog(),session()->only(['filterOn','camp_id','org_id']));
         }
 
-        return UserResource::collection($users->paginate())
+        return UserResource::collection($users->paginate($request->get('per_page')))
             ->additional([
                 'users_count' => User::count()
             ]);

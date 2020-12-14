@@ -3,6 +3,8 @@ import { useSelector, useDispatch, connect } from 'react-redux';
 import * as NeedsActions from '../../../redux/needs/actions';
 // import DataTable from '../../../components/layout/DataTable';
 import Button from '../../../components/Button';
+import Paginator from '../../../components/Paginator';
+
 import Check from '../../../svg/check'
 import Cross from '../../../svg/cross'
 // import CrossPlain from '../../../svg/cross-plain'
@@ -21,13 +23,14 @@ import { CancelToken } from 'axios'
 
 const Needs = ({NeedsReducer}) => {
     const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(15);
     const [tab, setTab] = useState('all'); //current or past
     const [tabCounts, setTabCounts] = useState({
         aggregate: 0,
         current: 0,
         past: 0,
     })
+    const [meta, setMeta] = useState({});
     const [form, showForm] = useState(false); //false
     const [story, showStoryForm] = useState(false); //false
 
@@ -49,14 +52,15 @@ const Needs = ({NeedsReducer}) => {
             //cancel api here
             ct.cancel('Resetting');
         }
-    }, [ tab, page, needs, type, startdate, enddate, min, max, dateType ]);
+    }, [ tab, page, needs, type, startdate, enddate, min, max, dateType, limit ]);
 
     const loadTable = (clearCache = false) => {
         const addFilter = filter ? { type, startdate, enddate, min, max } : {};
         const token = axios.CancelToken.source();
         api.get(`/api/web/needs`, {
             params: {
-                tab, page, ...addFilter
+                tab, page, ...addFilter,
+                per_page: limit || 15
             },
             cache: {
                 exclude: { query: false },
@@ -67,6 +71,7 @@ const Needs = ({NeedsReducer}) => {
             const { data } = res
             const { aggregate, current, past} = data
             setNeeds(data.data)
+            setMeta(data.meta)
             setTabCounts({ aggregate, current, past})
         }).finally(()=>{
             setLoading(false)
@@ -133,8 +138,9 @@ const Needs = ({NeedsReducer}) => {
                 </button>
             </div>
 
-            <div className="component-body flex p-8">
+            <div className="component-body flex flex-col p-8">
                 <NeedTable tab={tab} data={arrayNeeds} showInfo={handleInfo} handleForm={handleForm} loading={loading}/> 
+                <Paginator setLimit={setLimit} {...meta} clickedPage={setPage}/>
             </div>
             {
                 form && 
