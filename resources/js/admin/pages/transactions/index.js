@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TransactionsHeader from './header';
 import TransactionsTable from './table';
 import TransactionsView from './view';
+import Paginator from '../../../components/Paginator';
 
 import './transactions.css';
 
@@ -10,20 +11,23 @@ const Transactions = () => {
     const [showInfo, setShowInfo] = useState(false);
     const [focus, setFocus] = useState({});
     const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(15);
+    const [meta, setMeta] = useState({});
     const [loading, setLoading] = useState(false);
     const [transactions, setTransactions] = useState( [ ] )
     useEffect(() => {
-        setLoading(true)
         loadTransactions()
-    }, [page])
+    }, [page, limit])
 
     const loadTransactions = (clearCache = false)=>{
         const addFilter = {}; //for redux values
         const token = axios.CancelToken.source();
+        setLoading(true)
         if(!loading){
             api.get(`/api/web/transacts`, {
                 params: {
-                    page, ...addFilter
+                    page, ...addFilter,
+                    per_page: limit
                 },
                 cache: {
                     exclude: { query: false },
@@ -33,6 +37,7 @@ const Transactions = () => {
             }).then((res)=>{
                 const { data } = res
                 setTransactions(data.data)
+                setMeta(data.meta)
             }).finally(()=>{
                 setLoading(false)
             })
@@ -54,7 +59,7 @@ const Transactions = () => {
     return (
         <section>
             <TransactionsHeader handleForm={handleForm} />
-            <div className="component-body flex p-8">
+            <div className="component-body flex flex-col p-8">
                 {
                     loading && ''
                 }
@@ -64,6 +69,7 @@ const Transactions = () => {
                     loading={loading}
                     handleForm={handleForm}
                 />
+                <Paginator setLimit={setLimit} {...meta} clickedPage={setPage}/>
             </div>
             {
                 showInfo &&

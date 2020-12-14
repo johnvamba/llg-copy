@@ -15,11 +15,11 @@ class PaymentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $transacts = Payment::with(['user'=>fn($user) => $user->withoutGlobalScopes(), 'model'])->hasMorph('model', ['App\Need'])->latest();
 
-        return TransactionResource::collection($transacts->paginate());
+        return TransactionResource::collection($transacts->paginate($request->get('per_page') ?? 15 ));
     }
 
     /**

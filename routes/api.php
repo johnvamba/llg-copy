@@ -25,6 +25,8 @@ Route::get('need/categories/{type?}', 'NeedsCategoryController@index');
 Route::get('campus', 'CampusController@index');
 Route::post('register/campus/user', 'CampusController@addUser');
 
+Route::post('org-create', 'Admin\OrganizationController@openCreate');
+
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('checkemail', 'CheckEmail');
 

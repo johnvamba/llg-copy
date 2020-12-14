@@ -13,103 +13,84 @@ import './org-pub.css';
 import 'pretty-checkbox';
 
 const OrgInfoTab = ({ orgData, handleOrgInfo, errors }) => {
-
-    // const [errors, setErrors] = useState({});
-    
-    const validateSubmit = () => {
-        const { name, email, site, phone_number, description } = form
-        const set = isValidated({
-            name: name == '' ? "Missing name" : null,
-            email: !validateEmail(email) ? "Missing email" : null,
-            // site: site == '' ? "Missing site" : null,
-            phone_number: phone_number == '' ? "Missing phone_number" : null,
-            description: description == '' ? "Missing description" : null,
-            category: category.length == 0 ? "Missing category" : null,
-        })
-        setErrors(set)
-        return set;
-    }
-
     return (
-        <>
-            <form>
-                <div className="flex flex-wrap -mx-2">
-                    <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
-                        <div className={`form-group ${errors.name && 'form-error'}`}>
-                            <label>Organisation Name</label>
-                            <input
-                                className="input-field"
-                                type="text"
-                                value={orgData.name}
-                                name="name"
-                                onChange={handleOrgInfo}
-                                placeholder="Enter Organisation Name"
-                            />
-                            {
-                                (errors.name || false) && <span className="text-xs pt-1 text-red-500 italic">Missing name</span>
-                            }
-                        </div>
-                        <div className={`form-group ${errors.email && 'form-error'}`}>
-                            <label>Email</label>
-                            <input
-                                className="input-field"
-                                type="text"
-                                value={orgData.email}
-                                name="email"
-                                onChange={handleOrgInfo}
-                                placeholder="Enter Email Address"
-                            />
-                            {
-                                (errors.email || false) && <span className="text-xs pt-1 text-red-500 italic">Missing email</span>
-                            }
-                        </div>
+        <form>
+            <div className="flex flex-wrap -mx-2">
+                <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
+                    <div className={`form-group ${errors.name && 'form-error'}`}>
+                        <label>Organisation Name</label>
+                        <input
+                            className="input-field"
+                            type="text"
+                            value={orgData.name}
+                            name="name"
+                            onChange={handleOrgInfo}
+                            placeholder="Enter Organisation Name"
+                        />
+                        {
+                            (errors.name || false) && <span className="text-xs pt-1 text-red-500 italic">Missing name</span>
+                        }
                     </div>
-                    <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
-                        <div className={`form-group ${errors.site && 'form-error'}`}>
-                            <label>Website</label>
-                            <input
-                                className="input-field"
-                                type="text"
-                                value={orgData.site}
-                                name="site"
-                                onChange={handleOrgInfo}
-                                placeholder="eg. www.website.com"
-                            />
-                            {
-                                (errors.site || false) && <span className="text-xs pt-1 text-red-500 italic">Missing site</span>
-                            }
-                        </div>
-                        <div className={`form-group ${errors.phone_number && 'form-error'}`}>
-                            <label>Phone Number</label>
-                            <input
-                                className="input-field"
-                                type="text"
-                                value={orgData.phone_number}
-                                name="phone_number"
-                                onChange={handleOrgInfo}
-                                placeholder="Enter Phone Number"
-                            />
-                            {
-                                (errors.phone_number || false) && <span className="text-xs pt-1 text-red-500 italic">Missing phone number</span>
-                            }
-                        </div>
-                    </div>
-                    <div className="w-full xl:w-full px-2">
-                        <div className={`form-group form-group-textarea ${errors.description && 'form-error'}`}>
-                            <label>About</label>
-                            <textarea type="text" placeholder="Say something about this need" rows="3"
-                                value={orgData.description}
-                                name="description"
-                                onChange={handleOrgInfo}
-                            ></textarea>
-                            {
-                                (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing about description</span>
-                            }
-                        </div>
+                    <div className={`form-group ${errors.email && 'form-error'}`}>
+                        <label>Email</label>
+                        <input
+                            className="input-field"
+                            type="text"
+                            value={orgData.email}
+                            name="email"
+                            onChange={handleOrgInfo}
+                            placeholder="Enter Email Address"
+                        />
+                        {
+                            (errors.email || false) && <span className="text-xs pt-1 text-red-500 italic">Missing email</span>
+                        }
                     </div>
                 </div>
-            </form>
-        </>
+                <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
+                    <div className={`form-group ${errors.site && 'form-error'}`}>
+                        <label>Website</label>
+                        <input
+                            className="input-field"
+                            type="text"
+                            value={orgData.site}
+                            name="site"
+                            onChange={handleOrgInfo}
+                            placeholder="eg. www.website.com"
+                        />
+                        {
+                            (errors.site || false) && <span className="text-xs pt-1 text-red-500 italic">Missing site</span>
+                        }
+                    </div>
+                    <div className={`form-group ${errors.phone_number && 'form-error'}`}>
+                        <label>Phone Number</label>
+                        <input
+                            className="input-field"
+                            type="text"
+                            value={orgData.phone_number}
+                            name="phone_number"
+                            onChange={handleOrgInfo}
+                            placeholder="Enter Phone Number"
+                        />
+                        {
+                            (errors.phone_number || false) && <span className="text-xs pt-1 text-red-500 italic">Missing phone number</span>
+                        }
+                    </div>
+                </div>
+                <div className="w-full xl:w-full px-2">
+                    <div className={`form-group form-group-textarea ${errors.description && 'form-error'}`}>
+                        <label>About</label>
+                        <textarea type="text" placeholder="Say something about this organisation" rows="3"
+                            value={orgData.description}
+                            name="description"
+                            onChange={handleOrgInfo}
+                        ></textarea>
+                        {
+                            (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing about description</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </form>
     )
 
 }

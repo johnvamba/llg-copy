@@ -10,7 +10,7 @@ import Quill from '../../../svg/quill'
 //As test icon only
 // import IconTest from '../../../svg/icon-test'
 import OffersPlus from '../../../svg/offers-plus';
-
+import Paginator from '../../../components/Paginator';
 
 import './needs.css';
 
@@ -22,7 +22,8 @@ import { CancelToken } from 'axios'
 
 const Needs = ({NeedsReducer}) => {
     const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(15);
+    const [meta, setMeta] = useState({});
     const [tab, setTab] = useState('request'); //current or past
     const [tabCount, setTabCount] = useState(0);
     const [form, showForm] = useState(false); //false
@@ -45,14 +46,15 @@ const Needs = ({NeedsReducer}) => {
             //cancel api here
             ct.cancel('Resetting');
         }
-    }, [ tab, page, needs, type, startdate, enddate, min, max, dateType ]);
+    }, [ tab, page, needs, type, startdate, enddate, min, max, dateType, limit ]);
 
     const loadTable = (clearCache = false) => {
         const addFilter = filter ? { type, startdate, enddate, min, max } : {};
         const token = axios.CancelToken.source();
         api.get(`/api/web/needs`, {
             params: {
-                tab, page, ...addFilter
+                tab, page, ...addFilter,
+                per_page: limit || 15
             },
             cache: {
                 exclude: { query: false },
@@ -65,6 +67,7 @@ const Needs = ({NeedsReducer}) => {
             if(clearCache){
                 console.log('clearCache true')
             }
+            setMeta(data.meta)
             setTabCount(data.requests || 0);
         }).finally(()=>{
             setLoading(false)
@@ -139,8 +142,9 @@ const Needs = ({NeedsReducer}) => {
                 </div>
             </div>
 
-            <div className="component-body flex p-8">
+            <div className="component-body flex flex-col p-8">
                 <NeedTable tab={tab} data={arrayNeeds} showInfo={handleInfo} loading={loading} loadTable={loadTable}/> 
+                <Paginator setLimit={setLimit} {...meta} clickedPage={setPage}/>
             </div>
             {
                 form && 

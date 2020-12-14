@@ -383,4 +383,61 @@ class OrganizationController extends Controller
 
         return NeedResource::collection($needs->paginate());
     }
+
+    public function openCreate(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:organizations',
+            'site' => 'required',
+            'phone_number' => 'required',
+            'description' => 'required',
+            'category' => 'required',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $org = Organization::create( 
+                    $request->only('name', 'email', 'phone_number', 'site', 'description') 
+                    + [
+                        'short_description' => substr($request->get('description'), 0, 100),
+                        'location' => 'Sydney, Australia',
+                        'lat' => -33.868782, 
+                        'lng' => 151.207583
+                    ]);
+
+            if($catlist = $request->get('category')){
+                $catlist = array_map(fn($i) => $i['id'] ?? $i['name'] ?? null, $catlist);
+                $categories = OrganizationCategory::whereIn('name', $catlist)
+                    ->orWhereIn('id', $catlist)
+                    ->get();
+                $org->categories()->sync($categories);
+            }
+
+            $users = $request->get('users') ?? [];
+
+            // $queryUsers = User::whereIn('email', array_map(fn($item) => $item['email'] ?? '', $users))->get();
+            // $queryUsers
+            foreach ($users as $key => $user) {
+                $insUser = User::where('email', $user['email'] ?? '')->first();
+                if($insUser) {
+                    OrganizationMember::firstOrCreate([
+                        'model_type' => User::class,
+                        'model_id' => $insUser->id,
+                        'organization_id' => $organization->id
+                    ]);
+                } else {
+                    //send invitation by email
+                }
+            }
+
+            DB::commit();
+            return response()->json(['message'=>"Success", 'count' => count($users)], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json('Error occured: '+$e->getMessage(), 400);
+        }
+
+    }
 }

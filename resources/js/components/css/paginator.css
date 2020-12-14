@@ -1,0 +1,54 @@
+.paginator {
+	display: flex;
+	justify-content: space-between;
+	padding: 10px 20px;
+	border-radius: 4px;
+}
+
+.paginator .per-page {
+	display: flex;
+	align-items: center;
+}
+
+.paginator .per-page span {
+	font-family: InterRegular;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	line-height: 15px;
+	letter-spacing: 0.01em;
+	color: #231F20;
+	margin-right: 15px;
+}
+
+.paginator .per-page select{ 
+	background: #FFFFFF;
+	border: 1px solid #DFE3E8;
+	box-sizing: border-box;
+	border-radius: 4px;
+}
+.paginator .paginate-btns button {
+	font-family: InterRegular;
+	font-style: normal;
+	font-weight: normal;
+	background: #FFFFFF;
+	border: 1px solid #DFE3E8;
+	box-sizing: border-box;
+	border-radius: 4px;
+	font-size: 12px;
+	line-height: 20px;
+    margin-left: 5px;
+    padding: 3px 9px;
+	text-align: center;
+	color: #231F20;
+}
+.paginator .paginate-btns button[disabled] {
+	opacity: 0.4;
+	cursor: not-allowed;
+}
+
+.paginator .paginate-btns button.active {
+	border: none;
+	color: #fff;
+	background-color: #CF995F;
+}

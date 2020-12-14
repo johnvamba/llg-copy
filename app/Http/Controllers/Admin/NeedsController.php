@@ -73,7 +73,7 @@ class NeedsController extends Controller
             DB::raw('sum(case when needs.approved_at is not null and goal <= raised then 1 else 0 end) as past') )
             ->first();
         return NeedResource::collection( 
-            $need->paginate()
+            $need->paginate($request->get('per_page') ?? 15)
                 // ->appends($request->except('page')) //Doenst need 
         )->additional([
             'requests' => $additional->requests ?? 0,

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import * as OffersAction from '../../../redux/offers/actions';
 import OffersEmployment from '../../../svg/offers-employment';
 import OffersPlus from '../../../svg/offers-plus';
+import Paginator from '../../../components/Paginator';
 
 //As test icon only
 import OfferForm from './form';
@@ -12,6 +13,8 @@ import OfferTable from './table'
 const Offers = () => {
     const dispatch = useDispatch();
     const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(15);
+    const [meta, setMeta] = useState({})
     const [showForm, setShowForm] = useState(false);
     const [showView, setShowView] = useState(false);
     const [focus, setFocus] = useState({});
@@ -27,7 +30,8 @@ const Offers = () => {
         setLoading(true)
         api.get(`/api/web/offers`, {
             params: {
-                page, ...addFilter
+                page, ...addFilter,
+                per_page: limit
             },
             cache: {
                 exclude: { query: false },
@@ -39,6 +43,7 @@ const Offers = () => {
             const { offers_count } = data
             setOffers(data.data || [])
             setCount(offers_count || 0)
+            setMeta(data.meta)
         }).finally(()=>{
             setLoading(false)
         })
@@ -52,7 +57,7 @@ const Offers = () => {
             //cancel api here
             ct.cancel('Resetting');
         }
-    }, []);
+    }, [page, limit]);
 
     const handleChangePage = (page) => {
         setPage(parseInt(page));
@@ -88,8 +93,9 @@ const Offers = () => {
                 </button>
             </div>
             
-            <div className="component-body flex p-8">
+            <div className="component-body flex flex-col p-8">
                 <OfferTable data={offers} showInfo={showItem} loading={loading}/>
+                <Paginator setLimit={setLimit} {...meta} clickedPage={setPage}/>
             </div>
             {
                 showForm && 

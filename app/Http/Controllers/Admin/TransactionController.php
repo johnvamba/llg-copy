@@ -14,12 +14,12 @@ class TransactionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $transacts = Transact::with(['organization','user'])->latest();
 
         // dd($transacts->get());
-        return TransactionResource::collection($transacts->paginate());
+        return TransactionResource::collection($transacts->paginate($request->get('per_page') ?? 15));
     }
 
     /**
