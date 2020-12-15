@@ -4,13 +4,15 @@ import PaymentList from './list';
 import PaymentTable from './table';
 import PaymentForm from './form';
 import PaymentView from './view';
-
+import Paginator from '../../../components/Paginator';
 
 import './payments.css';
 
 const Payment = () => {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(15);
+    const [meta, setMeta] = useState({});
     const [paymentList, setPaymentList] = useState([]);
     const [count, setCount] = useState(0)
     const [showForm, setShowForm] = useState(false);
@@ -20,7 +22,7 @@ const Payment = () => {
     useEffect(()=>{
         setLoading(false)
         loadPayments()
-    }, [page])
+    }, [page, limit])
 
 
     const loadPayments = (clearCache = false)=>{
@@ -29,7 +31,8 @@ const Payment = () => {
         if(!loading){
             api.get(`/api/web/payments`, {
                 params: {
-                    page, ...addFilter
+                    page, ...addFilter,
+                    per_page: limit
                 },
                 cache: {
                     exclude: { query: false },
@@ -40,6 +43,7 @@ const Payment = () => {
                 const { data } = res
                 setPaymentList(data.data)
                 setCount(data.meta ? data.meta.total : 0)
+                setMeta(data.meta)
             }).finally(()=>{
                 setLoading(false)
             })
@@ -56,12 +60,13 @@ const Payment = () => {
     return(
         <section>
             <PaymentHeader count={count} setShowAdd={()=> handleForm({}, false, true)} />
-            <div className="component-body flex p-8">
+            <div className="component-body flex flex-col p-8">
                 <PaymentTable
                     data={paymentList}
                     loading={loading}
                     handleForm={handleForm}
                 />
+                <Paginator setLimit={setLimit} {...meta} clickedPage={setPage}/>
             </div>
             {
                 showInfo && <PaymentView data={focus} handleForm={handleForm} />
