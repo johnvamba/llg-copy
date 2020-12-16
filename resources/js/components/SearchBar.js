@@ -87,6 +87,13 @@ const SearchBar = () => {
 	            		}
 	            			<div className="result-groups">
 	            			{
+	            				(_.isEmpty(results)) &&
+	            				<div className="result-header">
+		            				<i className="fa fa-search"></i>
+			            			<h5>Maybe look for other keywords</h5>
+		            			</div>
+	            			}
+	            			{
 	            				(results.needs && results.needs.length > 0) &&
 		            			<div className="result-group">
 		            				<h4>Needs</h4>
