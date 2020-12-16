@@ -16,6 +16,10 @@ class CheckEmail extends Controller
      */
     public function __invoke(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email' 
+        ]);
+        
         $query = null;
         switch($request->get('type')){
             case 'organisation':

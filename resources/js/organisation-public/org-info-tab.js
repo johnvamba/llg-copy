@@ -30,9 +30,9 @@ const OrgInfoTab = ({ orgData, handleOrgInfo, setErrors, removeError, errors }) 
                         setErrors({...errors, email: 'Email already existed'})                    
                 }
                 console.log('running?')
-            })
-        } else {
-            // setErrors({...form, email: 'Not proper email'})
+            }).catch(e=> setErrors({...errors, email: 'Invalid Email'}))
+        } else if (blur) {
+            setErrors({...form, email: 'Not proper email'})
         }
     }
 

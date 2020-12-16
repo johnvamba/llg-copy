@@ -86,7 +86,7 @@ const OrgPub = () => {
                 case 2:
                 set = {
                     name: orgInfoForm.name == '' ? 'Missing title' : null,
-                    // email: orgInfoForm.email == '' ? 'Missing Email' : null,
+                    email: orgInfoForm.email == '' ? 'Missing Email' : null,
                     site: orgInfoForm.site == '' ? 'Missing Website' : null,
                     phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
                     description: orgInfoForm.description == '' ? 'Missing Description' : null
