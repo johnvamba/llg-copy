@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import Cookie from 'js-cookie'
 import PlusRounded from '../svg/plus-rounded'
 import { validateEmail, isValidated } from '../components/helpers/validator';
+import {  checkEmail } from '../components/helpers/async_options';
 
 import './org-pub.css';
 
@@ -81,21 +82,24 @@ const OrgInviteTab = ({ submitting, users, setUsers }) => {
         setForm({ ...form, email })
         if(validateEmail(email)){
             removeError('email')
-            // checkEmail(email, {type: 'user'})
-            // .then(({data})=>{
-            //     if(form.email == data.email){
-            //         if(data.status == 'free')
-            //             removeError('email')
-            //         else
-            //             setErrors({...errors, email: 'Email already existed'})                    
-            //     }
-            // })
+            checkEmail(email, {type: 'user'})
+            .then(({data})=>{
+                if(email == data.email){
+                    if(data.status == 'free')
+                        removeError('email')
+                    else
+                        setErrors({...errors, email: 'Email already existed'})
+                }
+                console.log('haa??', form.email, data.email, data.status)
+            })
         } else {
             // setErrors({...form, email: 'Not proper email'})
         }
     }
 
     const addUser = () => {
+        if(!_.isEmpty(errors))
+            return;
         if(form.email == ''){
             setErrors({email: 'Missing email'})
             return;

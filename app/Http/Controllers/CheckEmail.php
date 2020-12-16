@@ -18,6 +18,7 @@ class CheckEmail extends Controller
     {
         $query = null;
         switch($request->get('type')){
+            case 'organisation':
             case 'organization':
             $query = Organization::query();
             break;
@@ -29,7 +30,7 @@ class CheckEmail extends Controller
         $email = $request->get('email');
         
         if($query && $email) {
-            $query->where('email', $email);
+            $query->unfilter()->where('email', $email);
         }
 
         return response()->json(['email' => $email, 'status' => $query->exists() ? 'exists' : 'free'], 200);

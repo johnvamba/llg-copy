@@ -86,7 +86,7 @@ const OrgPub = () => {
                 case 2:
                 set = {
                     name: orgInfoForm.name == '' ? 'Missing title' : null,
-                    email: orgInfoForm.email == '' ? 'Missing Email' : null,
+                    // email: orgInfoForm.email == '' ? 'Missing Email' : null,
                     site: orgInfoForm.site == '' ? 'Missing Website' : null,
                     phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
                     description: orgInfoForm.description == '' ? 'Missing Description' : null
@@ -98,13 +98,6 @@ const OrgPub = () => {
                     })
                     setCountTab(2)
                     return;
-                } else {
-                    delete errors.name;
-                    delete errors.email;
-                    delete errors.site;
-                    delete errors.phone_number;
-                    delete errors.description;
-                    setErrors({...errors});
                 }
                 break;
                 case 3:
@@ -198,7 +191,7 @@ const OrgPub = () => {
                     <div className="offers-create-form__body">
                         { showTabTitle() }
                         { countTab == 1 && <CategoryGrid selectedCategories={category} handleCategories={handleCategories} errors={errors.category}/>}
-                        { countTab == 2 && <OrgInfoTab orgData={orgInfoForm} handleOrgInfo={handleOrgInfo} errors={errors}/>}
+                        { countTab == 2 && <OrgInfoTab orgData={orgInfoForm} handleOrgInfo={handleOrgInfo} setErrors={setErrors} removeError={removeError} errors={errors}/>}
                         { countTab == 3 && <OrgInviteTab users={users} submitting={submitting} setUsers={setUsers}/>}
                         {/* { countTab == 3 && <FormBusinessInfo service={{business_name, business_site, business_contact}} updateBusiness={updateBusiness}  errors={errors}/>} */}
                     </div>

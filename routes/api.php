@@ -27,8 +27,9 @@ Route::post('register/campus/user', 'CampusController@addUser');
 
 Route::post('org-create', 'Admin\OrganizationController@openCreate');
 
+Route::get('checkemail', 'CheckEmail');
+
 Route::group(['middleware' => ['auth:api']], function () {
-    Route::get('checkemail', 'CheckEmail');
 
     Route::group(['prefix'=>'web', 'namespace'=>'Admin', 'middleware' => 'datafilter'], function() {
         Route::get('needs/types', 'NeedsController@types');
