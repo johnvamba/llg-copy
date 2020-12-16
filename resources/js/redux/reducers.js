@@ -10,6 +10,7 @@ import {reducer as NeedsReducer} from './needs/reducer';
 import {reducer as OffersReducer} from './offers/reducer';
 import {reducer as StoriesReducer} from './stories/reducer';
 import {reducer as GroupsReducer} from './groups/reducer';
+import {reducer as FormReducer} from './forms/reducer';
 
 const appReducers = combineReducers({
     AuthUserReducer: AuthUserReducer,
@@ -23,6 +24,7 @@ const appReducers = combineReducers({
     OffersReducer: OffersReducer,
     StoriesReducer: StoriesReducer,
     GroupsReducer: GroupsReducer,
+    FormReducer
 });
 
 const rootReducer = (state, action) => {

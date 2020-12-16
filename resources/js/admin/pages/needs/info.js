@@ -55,7 +55,6 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
             // setDate(date || new Date);
             // setTime(time || '');
             setLocation(location || {});
-            console.log('response here', data);
         })
         .catch(err => {
             // if(err.response){
@@ -69,11 +68,9 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
 
     useEffect(()=>{
         if(data.id) {
-            // console.log('called?', data);
             collectData(data.id)
         } else {
             const { ratio, description, bring, type, category, photo } = data || {}
-            console.log('raw here?', data);
             // setTitle(title || '');
             setDescription(description || '');
             setCategory(category || []);

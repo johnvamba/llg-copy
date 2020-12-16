@@ -7,12 +7,35 @@ import Logo from '../../assets/images/logo.png';
 import containerImage from '../../assets/images/create-org.jpg';
 import mainBackground from '../../assets/images/login-2.jpg';
 import CategoryGrid from '../components/CategoryGrid'
+import { validateEmail, isValidated } from '../components/helpers/validator';
+import {  checkEmail } from '../components/helpers/async_options';
 
 import './org-pub.css';
 
 import 'pretty-checkbox';
 
-const OrgInfoTab = ({ orgData, handleOrgInfo, errors }) => {
+const OrgInfoTab = ({ orgData, handleOrgInfo, setErrors, removeError, errors }) => {
+
+    const handleEmail = (e, blur = false) => {
+        const email = e.target.value
+        handleOrgInfo(e)
+        if(validateEmail(email) || blur){
+            removeError('email')
+            checkEmail(email, {type: 'organization'})
+            .then(({data})=>{
+                if(orgData.email == data.email){
+                    if(data.status == 'free')
+                        removeError('email')
+                    else
+                        setErrors({...errors, email: 'Email already existed'})                    
+                }
+                console.log('running?')
+            }).catch(e=> setErrors({...errors, email: 'Invalid Email'}))
+        } else if (blur) {
+            setErrors({...form, email: 'Not proper email'})
+        }
+    }
+
     return (
         <form>
             <div className="flex flex-wrap -mx-2">
@@ -38,11 +61,12 @@ const OrgInfoTab = ({ orgData, handleOrgInfo, errors }) => {
                             type="text"
                             value={orgData.email}
                             name="email"
-                            onChange={handleOrgInfo}
+                            onChange={handleEmail}
+                            onBlur={e=>handleEmail(e, true)}
                             placeholder="Enter Email Address"
                         />
                         {
-                            (errors.email || false) && <span className="text-xs pt-1 text-red-500 italic">Missing email</span>
+                            (errors.email || false) && <span className="text-xs pt-1 text-red-500 italic">{errors.email}</span>
                         }
                     </div>
                 </div>
