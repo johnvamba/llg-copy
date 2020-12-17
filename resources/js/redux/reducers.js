@@ -23,8 +23,8 @@ const appReducers = combineReducers({
     NeedsReducer: NeedsReducer,
     OffersReducer: OffersReducer,
     StoriesReducer: StoriesReducer,
-    GroupsReducer: GroupsReducer,
-    FormReducer
+    GroupsReducer: GroupsReducer
+    // FormReducer
 });
 
 const rootReducer = (state, action) => {
