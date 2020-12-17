@@ -130,7 +130,7 @@ input[type="time"]::-webkit-datetime-edit-ampm-field {
 	display: none;
 }
 
-header .filter-header .filter-content, .search-header .search-content {
+header .filter-header .filter-content, .search-header .search-content, .dashboard-filter {
 	background: #FFFFFF;
 	border: 1px solid #E7EBF3;
 	box-sizing: border-box;
@@ -190,6 +190,14 @@ td.actions, th.actions{
     top: -4px; 
     left: 25px;
 }
+.dbfilter-arrow, .dbfilter-arrow::before{
+	width: 15px;
+    height: 15px;
+    position: absolute;
+    top: -4px; 
+    left: 0px;
+}
+.dbfilter-arrow::before, 
 .filter-arrow::before, 
 .search-arrow::before{
 	content: '';
@@ -370,7 +378,7 @@ td.actions, th.actions{
 	/*display: block;*/
 }
 /*text-red-500*/
-.form-group.form-error label{
+.form-group.form-error > label{
 	color: #f56565 !important; 
 	font-weight: 600;
 }
@@ -984,4 +992,26 @@ header .search-content .search-listing.searching {
 
 .filepond--drop-label.filepond--drop-label label span {
 	outline: none;
+}
+.form.dashboard-filter {
+	padding-top: 20px;
+}
+.form-check .form-check-input {
+    width: 25px;
+    height: 25px;
+    margin: 0px;
+    margin-left: -2.25rem;
+}
+.form-check .form-check-label {
+	font-family: InterMedium;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 13px;
+	line-height: 16px;
+	color: #231F20;
+}
+.form-check.mr-4 {
+    display: flex;
+    align-items: center;
+    padding-left: 2.25rem;
 }
