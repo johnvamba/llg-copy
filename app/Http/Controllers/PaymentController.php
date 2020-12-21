@@ -140,6 +140,12 @@ class PaymentController extends Controller
                     ]);
         
                 $invoice = $need->invoices()->save($initInvoice);
+                //Email receipt
+                $transacts = 'Donation on need#'. $need->id;
+                $organization = $need->organization;
+                if($organization && $transacts){
+                    dispatch(fn() =>  Mail::to(auth()->user())->send(new TransactionReceipt($organization, [  $transacts => $request->amount ?? 0 ])) );
+                }
 
                 return $invoice;
             });

@@ -24,6 +24,10 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
     const [ratio, setRatio] = useState(0);
     const [category, setCategory] = useState([]);
     const [photo, setPhoto] = useState('');
+    const [amounts, setAmounts] = useState({
+        goal: 0,
+        raised: 0
+    })
     const [location, setLocation] = useState({
         formatted_address: '',
         lat: null,
@@ -43,7 +47,9 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                 time,
                 location,
                 ratio,
-                category
+                category,
+                goal = 0,
+                raised = 0,
             } = data.data
             // setTitle(title || '');
             setDescription(description || '');
@@ -51,6 +57,7 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
             setCategory(all.filter(i => category.indexOf(i.name) >= 0));
             setPhoto(photo || '');
             setRatio(ratio || 0);
+            setAmounts({ goal, raised })
             // setGoal(goal || 0);
             // setDate(date || new Date);
             // setTime(time || '');
@@ -136,8 +143,8 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                             </div>
                         </div>
                         <div className="money flex items-center justify-between pt-2">
-                            <span>Raised: $2000.00</span>
-                            <span>Goal: $2500.00</span>                            
+                            <span>Raised: ${parseFloat(amounts.raised || 0).toFixed(2)}</span>
+                            <span>Goal: ${parseFloat(amounts.goal || 0).toFixed(2)}</span>                            
                         </div>
                     </div>
                     {

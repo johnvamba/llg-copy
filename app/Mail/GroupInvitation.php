@@ -11,14 +11,15 @@ class GroupInvitation extends Mailable
 {
     use Queueable, SerializesModels;
 
+    protected $group;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($group)
     {
-        //
+        $this->group = $group;
     }
 
     /**
@@ -28,6 +29,11 @@ class GroupInvitation extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->from(env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja'))
+            ->view('email.group_invite')
+            ->with([
+                'group' => $this->group,
+                'user' => $this->to
+            ]);
     }
 }

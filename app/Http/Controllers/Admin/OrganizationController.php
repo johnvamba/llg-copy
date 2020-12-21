@@ -12,6 +12,9 @@ use App\OrganizationCategory;
 use App\OrganizationMember;
 use App\CampusOrganisation;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrgInvitation;
+
 use App\User;
 use App\UserProfile;
 use App\Need;
@@ -361,7 +364,9 @@ class OrganizationController extends Controller
                     'organization_id' => $organization->id
                 ]);
 
-                // dispatch(fn() => $user-> );
+                if($user) {
+                    dispatch(fn() => Mail::to($user)->send(new OrgInvitation($organization))); //Run this on production but with dispatch
+                }
             }
 
             DB::commit();
@@ -428,7 +433,12 @@ class OrganizationController extends Controller
                         'organization_id' => $organization->id
                     ]);
                 } else {
+                    $intUser = $user['email'] ?? '';
                     //send invitation by email
+                }
+
+                if($insUser && $org) {
+                    dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($org))); //Run this on production but with dispatch
                 }
             }
 

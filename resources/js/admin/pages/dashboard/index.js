@@ -14,12 +14,22 @@ import NearbyOrganizations from './nearby-organizations';
 import RecentActivities from '../recent-activities';
 import '../organizations/organizations.css';
 import OrganizationView from '../organizations/view';
+import { usePopper } from 'react-popper';
+import DashboardFilter from './filter'
 
 const Dashboard = ({ ...props }) => {
     const roles = useSelector(state => state.AuthUserReducer.roles);
-
+    const [filterElement, setFilterElement] = useState(null);
+    const [toggleFilter, showFilter] = useState(false);
     const [organization, setOrganization] = useState(null);
-
+    const [popperElement, setPopperElement] = useState(null);
+    const [arrowElement, setArrowElement] = useState(null);
+    const [options, setOptions] = useState({});
+    const {styles, attributes} = usePopper(filterElement, popperElement, {
+        placement: 'bottom-start',
+        className: 'arror',
+        modifiers: [{name: 'arrow', options: {element: arrowElement } }],
+    })
     // if (roles.name !== 'admin') {
     //     window.location = '/admin';
     // }
@@ -30,9 +40,18 @@ const Dashboard = ({ ...props }) => {
                 <div className="header-title flex flex-1">
                     <h1>Dashboard</h1>
                 </div>
-                <button className="primary-btn page-header-btn flex rounded-sm">
-                    <span>Generate Report</span>
+                <button ref={setFilterElement} onClick={e=>showFilter(!toggleFilter)} className="primary-btn page-header-btn flex rounded-sm px-4">
+                    <span >Filter</span>
                 </button>
+                {
+                    toggleFilter && <div ref={setPopperElement} 
+                        className="filter-content" 
+                        style={{...styles.popper, top:'15px', zIndex: 1}} 
+                        {...attributes.popper}>
+                        <div ref={setArrowElement} className='dbfilter-arrow' style={{...styles.arrow}} />
+                        <DashboardFilter />
+                    </div>
+                }
             </div>
             <div className="component-body flex dashboard-body">
                 

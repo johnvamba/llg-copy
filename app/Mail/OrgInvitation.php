@@ -6,12 +6,13 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use App\Organization;
 
 class OrgInvitation extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $user;
+    // protected $user;
     protected $org;
 
     /**
@@ -19,9 +20,8 @@ class OrgInvitation extends Mailable
      *
      * @return void
      */
-    public function __construct($user, Organization $org)
+    public function __construct(Organization $org)
     {
-        $this->user = $user;
         $this->org = $org;
     }
 
@@ -32,6 +32,11 @@ class OrgInvitation extends Mailable
      */
     public function build()
     {
-        return $this->view('email.org_invite');
+        return $this->from(env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja'))
+            ->view('email.org_invite')
+            ->with([
+                'org' => $this->org,
+                'user' => $this->to
+            ]);
     }
 }

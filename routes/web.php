@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::group([
+	'prefix' => 'test'
+], function() {
+	Route::get('receipt', 'TestControl@receiptEmail');
+	Route::get('org', 'TestControl@orgEmail');
+	Route::get('group', 'TestControl@groupEmail');
+	Route::get('initreceipt', 'TestControl@sendEmail');
+});
+
 Route::view('/{path1?}/{path2?}/{path3?}/{path4?}/{path5?}', 'app');
 
 Route::any('*', function(){

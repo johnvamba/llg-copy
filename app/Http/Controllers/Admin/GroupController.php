@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\Mini\UserResource;
+use Illuminate\Support\Facades\Mail;
 
 use App\Group;
 use App\GroupParticipant;
-
 use App\User;
+use App\Mail\GroupInvitation;
 
 use DB;
 use Str;
@@ -219,7 +220,17 @@ class GroupController extends Controller
 
     public function initUserInvite(Request $request)
     {
-        $gp = GroupParticipant::firstOrCreate( $request->only('group_id', 'user_id') );
+        $user = User::unfilter()->find($request->get('user_id'));
+        $group = Group::unfilter()->find($request->get('group_id'));
+
+        $gp = null;
+        if($user && $group) {
+            $gp = GroupParticipant::firstOrCreate( $request->only('group_id', 'user_id') );
+            dispatch(fn() => Mail::to($user)->send(new GroupInvitation($group))); //Run this on production but with dispatch
+        }
+
+        if(is_null($gp))
+            return response()->json('Error in inviting User', 400);
 
         return response()->json([ 'invite_status' => ($gp->status ?? 'pending') ], 200);
     }
