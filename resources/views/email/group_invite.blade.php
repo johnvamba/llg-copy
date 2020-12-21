@@ -9,9 +9,9 @@
 @section('content')
 	<strong>Dear {{$user['name'] ?? 'User'}}, </strong>
 	<p>
-		You are invited to join {{ $org->name ?? 'an organization' }} on Love-Lives Generously.
+		You are invited to join {{ $group->name ?? 'a group' }} on Love-Lives Generously.
 		<br/>
-		Sign-in and discuss with your favorite philanthrophists and activists.
+		Sign-in and be up-to-date with your local community.
 	</p>
 	<p>Warm welcome.</p>
 	<strong>Neuma Team</strong>

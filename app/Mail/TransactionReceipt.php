@@ -6,19 +6,25 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use App\ReceiptTemplate;
+use App\Organization;
 
 class TransactionReceipt extends Mailable
 {
     use Queueable, SerializesModels;
 
+    protected $org;
+
+    protected $transactions;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Organization $org, $transactions = [])
     {
-        //
+        $this->org = $org;
+        $this->transactions = $transactions;
     }
 
     /**
@@ -28,6 +34,14 @@ class TransactionReceipt extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->view('email.transact')
+            ->from(env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja')) // or use org email
+            ->subject(optional($this->org->template)->subject ?? 'Payment Received!')
+            ->with([
+                'org' => $this->org,
+                'transacts' => $this->transactions,
+                'paid' => array_sum($this->transactions),
+                'template' => optional($this->org)->template
+            ]);
     }
 }

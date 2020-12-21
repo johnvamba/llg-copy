@@ -10,4 +10,8 @@ trait GroupPortalTrait
     {
         static::addGlobalScope(new GroupPortalScope);
     }
+
+    public static function scopeUnfilter($query){
+    	return $query->withoutGlobalScope(GroupPortalScope::class);
+    }
 }
