@@ -18,7 +18,6 @@ use App\Mail\OrgInvitation;
 use App\User;
 use App\UserProfile;
 use App\Need;
-use App\Mail\OrgInvitation;
 
 use App\Http\Resources\OrganizationResource;
 use App\Http\Resources\Async\OrganizationResource as AsyncResource;
