@@ -82,6 +82,18 @@
     letter-spacing: 0.01em;
     color: #98999B;
 }
+.org-list__footer .accessable{
+    font-family: InterMedium;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 12px;
+    letter-spacing: 0.01em;
+    color: #fff;
+    background-color: #CF995F;
+    padding: 2px 5px;
+    border-radius: 5px;
+}
 .org-list__footer .middle{
     color: #C2CFE0;
     margin: 0 10px;

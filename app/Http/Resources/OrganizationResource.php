@@ -30,8 +30,8 @@ class OrganizationResource extends JsonResource
             'past_needs' => $this->when(!is_null($this->past_needs), $this->past_needs ?? 0),
             'members_count' => $this->when(!is_null($this->members_count), $this->members_count ?? 0),
             'campus' => $this->when($this->relationLoaded('campus'), $this->morphCampus()),
-            'category' => $this->whenLoaded('categories', optional($this->categories)->pluck('name'))
-
+            'category' => $this->whenLoaded('categories', optional($this->categories)->pluck('name')),
+            'accessable' => $this->when($this->accessable, $this->accessable)
         ];
     }
 

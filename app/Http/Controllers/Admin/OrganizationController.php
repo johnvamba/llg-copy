@@ -38,14 +38,17 @@ class OrganizationController extends Controller
     public function index(Request $request)
     {
         $mainQuery = Organization::with('media')
-            ->latest()
             ->withCount(['needs as active_needs' => function($query){
                 $query->whereNotNull('approved_at')->whereRaw('needs.goal > needs.raised');
             }, 'needs as past_needs' => function($query){
                 $query->whereNotNull('approved_at')->whereRaw('needs.goal <= needs.raised');
             }, 'members as members_count' => function($query){
                 $query->where('organization_members.status', 'approved');
-            }]);
+            }])->when($camp_id = session('camp_id'), function($query) use ($camp_id){
+                $query->withCount(['campus as accessable' => fn($q) => $q->where('campuses.id', $camp_id)])
+                    ->orderBy('accessable', 'desc');
+            })
+            ->latest();
 
         return OrganizationResource::collection($mainQuery->paginate());
     }
@@ -178,7 +181,12 @@ class OrganizationController extends Controller
      */
     public function show(Organization $organization)
     {
+        // DB::enableQueryLog();
         $organization->loadMissing('categories');
+        // $camp_id = session('camp_id');
+        if($camp_id = session('camp_id'))
+            $organization->accessable = $organization->campus()->where('campuses.id', $camp_id)->exists();
+        // dd($organization->accessable, $organization->campus()->where('campus_organisations.campus_id', $camp_id)->first(), DB::getQueryLog());
 
         if(auth()->user()->hasRole('admin'))
             $organization->loadMissing('campus');
@@ -447,6 +455,27 @@ class OrganizationController extends Controller
             DB::rollBack();
             return response()->json('Error occured: '+$e->getMessage(), 400);
         }
+    }
 
+    public function access(Request $request, Organization $organization) {
+        $request->validate([
+            'access' => 'required|boolean'
+        ]);
+
+        $camp_id = session('camp_id');
+
+        $node = CampusOrganisation::firstOrNew([
+            'campus_id' => $camp_id,
+            'organization_id' => $organization->id
+        ]);
+
+        if($access = $request->get('access')){
+            $node->save();
+        } else {
+            $node->delete();
+        }
+
+        return response()
+            ->json(['message'=> optional($node)->wasRecentlyCreated ? 'Campus Attached' : 'Access for campus removed'], 200);
     }
 }

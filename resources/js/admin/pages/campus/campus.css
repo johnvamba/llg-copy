@@ -37,6 +37,19 @@
     line-height: 150%;
     color: #231F20
 }
+.campus-list__body > h2 span.accessed {
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 12px;
+    letter-spacing: 0.01em;
+    color: #fff;
+    background: #CF995F;
+    padding: 5px 10px;
+    border-radius: 10px;
+    float: right;
+}
 .campus-list__body > div{
     margin-top: 13px;
 }

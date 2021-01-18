@@ -5,6 +5,7 @@ import OffersLocation from '../../../svg/offers-location';
 import TabOrgs from './tab-org';
 import TabTeams from './tab-team';
 import LoadingScreen from '../../../components/LoadingScreen'
+import { useSelector } from 'react-redux';
 
 const CampusView = ({ data, handleForm }) => {
     const { name, org_count, team_count, description, location, photo } = data
@@ -20,7 +21,9 @@ const CampusView = ({ data, handleForm }) => {
         teams: 1
     })
     const [tab, setTab] = useState('orgs');
-    
+    const roles = useSelector(
+        state => state.AuthUserReducer.roles
+    );
     useEffect(()=>{
         setLoading(true)
         loadTeams()
@@ -85,10 +88,13 @@ const CampusView = ({ data, handleForm }) => {
             <section className="campus-view__body">
                 <div className="title flex items-center justify-between">
                     <h2>{name}</h2>
-                    <button className="flex items-center" onClick={()=>handleForm(data, true, false)}>
-                        <PencilIcon />
-                        Edit
-                    </button>
+                    {
+                        (roles.name === 'admin' || roles.name === 'campus admin') &&
+                        <button className="flex items-center" onClick={()=>handleForm(data, true, false)}>
+                            <PencilIcon />
+                            Edit
+                        </button>
+                    }
                 </div>
                 <div className="address flex items-center">
                     <OffersLocation />
