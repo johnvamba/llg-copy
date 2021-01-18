@@ -65,6 +65,15 @@ class Organization extends Model implements HasMedia
         );
     }
 
+    public function campuses(){
+        return $this->hasManyThrough(\App\Campus::class, \App\CampusOrganisation::class,
+            'organization_id',
+            'id',
+            'id',
+            'campus_id'
+        );
+    }
+
 
     /**
      * Set short description column value

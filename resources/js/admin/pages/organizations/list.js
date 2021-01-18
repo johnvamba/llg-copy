@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ListItem = ({data, handlePanels}) => {
-    const { name, description, active_needs, past_needs, photo, banner } = data
+    const { name, description, active_needs, past_needs, photo, banner, accessable } = data
     return (<li onClick={() => handlePanels(data, false, true)}>
         <header>
             <div className="org-list__cover-bg bg-cover bg-center" style={{backgroundImage: `url(${banner})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} >
@@ -16,6 +16,12 @@ const ListItem = ({data, handlePanels}) => {
             <span className="active">{active_needs || 0} Active Needs</span>
             <span className="middle">.</span>
             <span className="past">{past_needs || 0} Past Needs</span>
+            {
+                accessable && <>
+                    <span className="middle">.</span>
+                    <span className="accessable">Accessable</span>
+                </>
+            }
         </footer>
     </li>)
 }

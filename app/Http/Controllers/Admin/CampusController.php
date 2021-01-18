@@ -23,8 +23,11 @@ class CampusController extends Controller
      */
     public function index()
     {
-        $campus = Campus::withCount('organizations')->with('media')->latest()->get();
-
+        $campus = Campus::withCount('organizations')->with('media')
+            ->when($org_id = session('org_id'), function($query) use ($org_id){
+                $query->withCount(['organizations as accessed' => fn($q) => $q->where('organizations.id', $org_id)])
+                    ->orderBy('accessed', 'desc');
+            })->latest()->get();
         return CampusResource::collection($campus);
     }
 

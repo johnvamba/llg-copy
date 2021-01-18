@@ -20,6 +20,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
     const { roles } = AuthUserReducer;
 
     const [category, setCategory] = useState([]);
+    const [accessable, setAccess] = useState(false);
     const [form, setForm] = useState({
         name: '', 
         email: '',
@@ -41,7 +42,6 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
     })
     const [loading, setLoading] = useState(false);
     const [campus, setCampus] = useState({});
-
     //Loading data from table
     useEffect(()=>{
         if(data.id){
@@ -74,11 +74,12 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             clearCacheEntry: clearCache,
             cancelToken: token.token
         }).then(({ data })=>{
-            const { name, email, site, phone_number, description, category = [], campus } = data.data
+            const { name, email, site, phone_number, description, category = [], campus, accessable } = data.data
             // setForm({...form, name, email, site, phone_number, description})
             setCampus(campus)
             setCategory( all.filter(i => category.includes(i.name) ) );
             setLoading(false)
+            setAccess(accessable || false)
         }).catch(({response})=>{
             if(response){
                 setErrors({...response.errors})
@@ -204,6 +205,17 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         setCategory([])
         setError({})
         handleClose({}, true)
+    }
+
+    const access = () => {
+        setLoading(true)
+        api.post(`/api/web/organizations/${data.id}/access`, {
+            access: !accessable
+        }).then((res) =>{
+            loadAll(true)
+        }).catch(err=>{
+
+        })
     }
 
     return (
@@ -339,6 +351,10 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             <footer className="form-footer org-form__footer">
                 <button className="btn btn-secondary" onClick={handleDiscard}>Discard</button>
                 <div className="flex-grow-1"></div>
+                {
+                    (roles.name === 'campus admin' && data.id ) && 
+                    <button className="primary-btn mr-2" onClick={access}>{!accessable ? "Access Org" : "Remove Access" }</button>
+                }
                 <button className="primary-btn" onClick={handleSubmit}>{data.id ? "Save" : "Add"}</button>
             </footer>
         </section>

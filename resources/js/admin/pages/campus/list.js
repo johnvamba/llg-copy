@@ -13,7 +13,12 @@ const CampusList = ({ campuses = [], setShowView }) => {
                             <div className="flex bg-cover bg-center" style={{backgroundImage: `url(${i.photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} />
                         </header>
                         <section className="campus-list__body">
-                            <h2>{i.name || 'Missing'}</h2>
+                            <h2>{i.name || 'Missing'} 
+                            {
+                                i.accessed && 
+                                <span className="accessed">Has Access</span>
+                            }
+                            </h2>
                             <p>{i.description}</p>
                             <div className="flex items-center">
                                 <CampusIcon />
