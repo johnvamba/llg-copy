@@ -23,17 +23,17 @@ const DashboardFilter = ({onClose, generate}) => {
     const dispatch = useDispatch();
 
     const clickDispatch = ()=>{
-        if(minSwitch && maxSwitch && min > max){
+        const obj = {
+            ...needs, ...types, dateType, 
+            startdate: startdate.toUTCString(), 
+            enddate: enddate.toUTCString()
+        }
+        if(typeof generate == 'function'){
+            generate(obj)
             return;
         }
-        if(typeof generate == 'function')
-            generate({
-                ...needs,
-                types,
-                dateType,
-                startdate,
-                enddate
-            })
+        const url = new URLSearchParams(obj).toString();
+        window.open(`/needs/print?${url}`, '__blank');
     }
 
     return (
