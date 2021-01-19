@@ -135,11 +135,12 @@ class NeedsController extends Controller
                     'title',
                     'raised',
                     'goal',
-                    'description'
+                    'description',
+                    'requirements'
                 ]) +
                 //dynamic details
                 [
-                    'short_description' => $request->get('description') ?? 'No description',
+                    // 'short_description' => $request->get('description') ?? 'No description',
                     'location' => $location['formatted_address'] ?? null,
                     'lat' => $location['lat'] ?? null,
                     'lng' => $location['lng'] ?? null,
@@ -256,11 +257,12 @@ class NeedsController extends Controller
                     'title',
                     'raised',
                     'goal',
-                    'description'
+                    'description',
+                    'requirements'
                 ]) +
                 //dynamic details
                 [
-                    'short_description' => $request->get('description') ?? 'No description',
+                    // 'short_description' => $request->get('description') ?? 'No description',
                     'location' =>$location['formatted_address'] ?? null,
                     'lat' => $location['lat'] ?? null,
                     'lng' => $location['lng'] ?? null,
@@ -282,7 +284,7 @@ class NeedsController extends Controller
                 $need->scheduled_at = $date->setTime($time->hour, $time->minute);
             }
             //We can do better pd diri.
-            if ( ($image = $request->get('photo')) && !preg_match('^http', $image) ) {
+            if ( ($image = $request->get('photo')) && !preg_match('/^http/', $image) ) {
                 $name = time().'-'.Str::random(20);
                 $extension = explode('/', mime_content_type($image))[1];
                 
@@ -305,7 +307,7 @@ class NeedsController extends Controller
             return new NeedResource($need);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error'=> $e->getMessage()], 400);
+            return response()->json(['error'=> $e->getMessage(), 'stack'=>$e->getTrace()], 400);
         }
     }
 

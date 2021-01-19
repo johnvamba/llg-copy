@@ -55,8 +55,8 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             const { 
                 title,
                 about,
-                bring,
                 description,
+                requirements,
                 type,
                 lctype,
                 category = [],
@@ -71,7 +71,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             } = data.data
             setTitle(title || '');
             setAbout(about || description || '');
-            setBring(bring || description || '');
+            setBring(requirements || '');
             setType(lctype || 'donation');
             setCategory( all.filter(i => category.includes(i.name) ) );
             setPhoto(photo || null);
@@ -158,12 +158,14 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             api.post(`/api/web/needs`, {
                 title, type, category, goal, date, time, location, organization,
                 photo,//files.length > 0 ? photo : null,
-                description: about || bring || ''
+                description: about,
+                requirements: bring
             }) : 
             api.patch(`/api/web/needs/${data.id}`, { 
                 title, type, category, goal, date, time, location, organization,
                 photo,//files.length > 0 ? photo : null,
-                description: about || bring || ''
+                description: about,
+                requirements: bring
             })
 
         submitPromise.then(({data})=>{
@@ -264,6 +266,13 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 {
                     type == 'volunteer' && 
                     <div className="flex-content">
+                        <div className={`form-group w-full ${errors.description && 'form-error'}`}>
+                            <label>Volunteer Opportunity Information</label>
+                            <input type="text" className="input-field" placeholder="Enter Information" value={about} onChange={e=>setAbout(e.target.value)}/>
+                            {
+                                (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Volunteer Opportunity Information</span>
+                            }
+                        </div>
                         <div className={`form-group short-width ${errors.date ? 'form-error' : ''}`}>
                             <label>Date Needed</label>
                             <div className="input-container">
@@ -311,11 +320,11 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                                 (errors.goal || false) && <span className="text-xs pt-1 text-red-500 italic">Missing number of people</span>
                             }
                         </div>
-                        <div className={`form-group w-full ${errors.description && 'form-error'}`}>
-                            <label>What to bring</label>
+                        <div className={`form-group w-full ${errors.requirements && 'form-error'}`}>
+                            <label>Requirements</label>
                             <textarea className="input-field" placeholder="Enter things to bring" value={bring} onChange={e=>setBring(e.target.value)}/>
                             {
-                                (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing what to bring</span>
+                                (errors.requirements || false) && <span className="text-xs pt-1 text-red-500 italic">Missing what to bring</span>
                             }
                         </div>
                     </div>
