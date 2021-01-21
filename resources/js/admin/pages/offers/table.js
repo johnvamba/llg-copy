@@ -18,12 +18,13 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
 
     const switchStatus=()=>{
         switch(status){
+            case 'approved':
             case 'achieved':
             case 'Achieved':
             return <span className="label label-success">Achieved</span>;
             case 'pending':
-            case 'pending':
-            return <span className="label label-active">On-Going</span>;
+            case 'Pending':
+            return <span className="label label-active">Pending</span>;
             case 'denied':
             case 'Denied':
             return <span className="label label-pending">Denied</span>;
@@ -69,12 +70,69 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         <td>
             <p>{ date }</p>
         </td>
+        {
+            status == 'pending' &&
+            <td className="actions row-actions">
+                <button onClick={()=>popAction(approveElement, 'approve')}>
+                    <i ref={setApproveElement}>
+                    <Check />
+                    </i>
+                </button>
+                <button onClick={()=>popAction(rejectElement, 'disapprove')}>
+                    <i ref={setRejectElement}>
+                    <Cross/>
+                    </i>
+                </button>
+            </td>
+        }
     </tr>
 }
 
 // Proper content
+//Button Popper and action 
+const ButtonPopper = ({buttonElement, actionClosure, btnAction, loading}) => {
+    const [popperElement, setPopperElement] = useState(null);
+    const [arrowElement, setArrowElement] = useState(null);
+    const [togglePopper, setToggle] = useState(false);
+    const [popContent, setContent] = useState('approval')
+
+    const {styles, attributes} = usePopper(buttonElement, popperElement, {
+        placement: 'bottom-end',
+        className: 'arror',
+        modifiers: [{name: 'arrow', options: {element: arrowElement } }],
+    })
+
+    return <div ref={setPopperElement} 
+        className="action-content" 
+        style={{...styles.popper, top:'10px', left: '0px', zIndex: 1}} 
+        {...attributes.popper}>
+        <div ref={setArrowElement} 
+            className='action-arrow' 
+            style={{...styles.arrow, left: '-8px'}} />
+        {
+            loading ? <div className="button-container">
+                <p className="text-center mb-2">Loading...</p>
+            </div> : 
+            <div className="button-container">
+                {
+                    btnAction == 'approve' ?
+                    <p className="text-center mb-2">Are you sure you want to approve this request?</p>
+                    : <p className="text-center mb-2 text-red-400">Are you sure you want to reject this request?</p>
+                }
+                <div className="flex justify-between">
+                    <Button onClick={()=>actionClosure(false)}>
+                        No, Cancel
+                    </Button>
+                    <Button onClick={()=>actionClosure(true)}>
+                        Yes
+                    </Button>
+                </div>
+            </div>
+        }
+    </div>
+}
 //click on row shows popper
-const OfferTable = ({tab = null, data = [], showInfo, loading = false, loadTable})=> {
+const OfferTable = ({tab = null, data = [], showInfo, loading = false, type='approved', loadTable})=> {
     const [checkAll, setCheckAll] = useState(false)
     const [offers, setOffers] = useState([])
     const [popped, setPopItem] = useState(null)
@@ -114,22 +172,23 @@ const OfferTable = ({tab = null, data = [], showInfo, loading = false, loadTable
             const text = action == 'approve' ? "You successfully created offer" : "Cancel"
             // return;
             setPopLoading(true)
-            // api.post(`/api/web/needs/${popped.id}/${action}`)
-            //     .then(()=>{
-            //         loadTable(true);
+            api.post(`/api/web/offers/${popped.id}/${action}`)
+                .then(()=>{
+                    loadTable(true);
                     swalSuccess(text);
-                // }).catch(()=>{
-                //     swalError()
-                // }).finally(()=>{
+                }).catch(()=>{
+                    swalError()
+                }).finally(()=>{
                     setPopLoading(false);
-                // })
+                })
             // alert("Do actions here "+ popped.id + " with settings "+ action)
         }
         //
         setPopItem(null)//close box
     }
 
-    return <table className="table">
+    return <div>
+    <table className="table">
         <thead className="bg-white tb-head">
             <tr>
                 <th className="checkbox">
@@ -140,6 +199,10 @@ const OfferTable = ({tab = null, data = [], showInfo, loading = false, loadTable
                 <th className="">Location</th>
                 <th className="">Status</th>
                 <th className="">Date Added</th>
+                {
+                    type == 'pending' &&
+                    <th className=''>Action</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -158,12 +221,17 @@ const OfferTable = ({tab = null, data = [], showInfo, loading = false, loadTable
                         popAction={(button, type)=>togglePopItem(i, button, type)}/>
                     ) :
                     <tr>
-                        <td colSpan={6}>No data found</td>
+                        <td colSpan={type == 'pending' ? 7 : 6}>No data found</td>
                     </tr>
                 )
             }
         </tbody>
     </table>
+        {
+            popped && 
+            <ButtonPopper popped={popped} loading={popLoading} buttonElement={buttonElement} btnAction={action} actionClosure={executeButton}/>
+        }
+    </div>
     }
 OfferTable.defaultProps = {
     type: 'approved',

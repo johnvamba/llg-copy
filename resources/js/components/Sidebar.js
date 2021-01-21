@@ -48,6 +48,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
     const [show, setShow] = useState({
         need: false,
         story: false,
+        offer: false,
         payment: false,
     });
 
@@ -145,19 +146,61 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         </div>
                     }
 
-                    {(roles.name === 'admin' || roles.name === 'campus admin') &&
-                        (
-                            <div
-                                className={`mt-6 
-                                ${location.pathname == "/offers" ? "text-yellow-400" : "text-gray-400"}`}
+                    { 
+                        (roles.name === 'admin' || roles.name === 'campus admin') ?
+                        <div className="mt-6 text-gray-400">
+                            <button
+                                onClick={() => handleOpen('offer')}
+                                className={`relative w-full flex items-center focus:outline-none
+                                ${(location.pathname == "/offer") || (location.pathname == "/offer/requests") ? "text-blue-400" : "text-gray-400"}`}
                             >
-                                <Link to="/offers" className="flex items-center">
-                                    {/* <i className="text-xl fas fa-hand-holding-heart"></i> */}
-                                    <Offers active={location.pathname == "/offers" ? true : false} />
-                                    <span className="px-4">Offers</span>
-                                </Link>
-                            </div>
-                        )
+                                <Offers active={location.pathname == "/offers" ? true : false} />
+                                <span className="px-4">Offers</span>
+
+
+                                <div className="absolute inset-y-0 right-0 text-gray-400">
+                                    <svg
+                                        className="fill-current h-6 w-6"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                    </svg>
+                                </div>
+                            </button>
+
+                            {show.offer &&
+                                <div className={`ml-8`}>
+                                    <div
+                                        className={`mt-4 
+                                        ${location.pathname == "/offers" ? "text-blue-400" : "text-gray-400"}`}
+                                    >
+                                        <Link to="/offers">
+                                            Approved
+                                        </Link>
+                                    </div>
+
+                                    <div
+                                    className={`mt-4 
+                                        ${location.pathname == "/offers/requests" ? "text-blue-400" : "text-gray-400"}`}
+                                    >
+                                        <Link to="/offers/requests">
+                                            Requests
+                                        </Link>
+                                    </div>
+                                </div>
+                            }
+                        </div> :
+                        <div
+                            className={`mt-6 
+                            ${location.pathname == "/offers" ? "text-yellow-400" : "text-gray-400"}`}
+                        >
+                            <Link to="/offers" className="flex items-center">
+                                {/* <i className="text-xl fas fa-hand-holding-heart"></i> */}
+                                <Offers active={location.pathname == "/offers" ? true : false} />
+                                <span className="px-4">Offers</span>
+                            </Link>
+                        </div>
                     }
 
                     <div className="mt-6 text-gray-400">

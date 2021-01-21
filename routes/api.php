@@ -47,6 +47,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::resource('organizations', 'OrganizationController');
 
         Route::resource('offers', 'OffersController');
+        Route::post('offers/{offer}/approve', 'OffersController@approve');
+        Route::post('offers/{offer}/disapprove', 'OffersController@disapprove');
 
         Route::resource('users', 'UsersController');
 

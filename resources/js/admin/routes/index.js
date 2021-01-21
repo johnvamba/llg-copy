@@ -11,6 +11,7 @@ import Users from '../pages/users';
 import CreateUser from '../pages/users/create';
 import EditUser from '../pages/users/edit';
 import Offers from '../pages/offers';
+import OfferRequests from '../pages/offers/requests';
 import EditOffer from '../pages/offers/edit';
 import Stories from '../pages/stories';
 import StoriesDrafts from '../pages/stories/drafts';
@@ -82,6 +83,11 @@ const routes = [
         component: () => <Offers />
     },
     {
+        path: '/offers/requests',
+        exact: true,
+        component: () => <OfferRequests />
+    },
+    {
         path: '/offers/edit/:id',
         exact: true,
         component: () => <EditOffer />
@@ -91,11 +97,11 @@ const routes = [
         exact: true,
         component: () => <Stories />
     },
-    {
-        path: '/stories/drafts',
-        exact: true,
-        component: () => <Stories />
-    },
+    // {
+    //     path: '/stories/drafts',
+    //     exact: true,
+    //     component: () => <Stories />
+    // },
     {
         path: '/stories/edit/:id',
         exact: true,
