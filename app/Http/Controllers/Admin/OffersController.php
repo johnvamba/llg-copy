@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\ServiceOffer;
 use App\ServiceType;
 use App\User;
+use App\Campus;
+use App\Organization;
 
 use App\Http\Resources\OfferResource;
 use DB;
@@ -25,10 +27,13 @@ class OffersController extends Controller
         // DB::enableQueryLog();
         $offers = ServiceOffer::latest()->with('serviceType');
 
-        return OfferResource::collection($offers->paginate($request->get('per_page') ?? 15))
-            ->additional([
-                'offers_count' => ServiceOffer::count()
-            ]);
+        if($status = $request->get('status') ) {
+            $offers->where('status', $status);
+        } else {
+            $offers->where('status', 'approved');
+        }
+
+        return OfferResource::collection($offers->paginate($request->get('per_page') ?? 15));
     }
 
     /**
@@ -65,6 +70,15 @@ class OffersController extends Controller
             $category = $request->get('category') ?? null;
 
             $user = auth()->user();
+            $model_id = null;
+            $model_type = null;
+            if($user->hasRole('campus_user')){
+                $model_id = session('camp_id', null);
+                $model_type = Campus::class;
+            } else if ($user->hasRole('organization admin')){
+                $model_id = session('org_id', null);
+                $model_type = Organization::class;
+            }
 
             $type = ServiceType::where('name', $category['name'] ?? '')->first();
 
@@ -73,8 +87,8 @@ class OffersController extends Controller
             $offer = ServiceOffer::create(
                 $request->only('title', 'description', 'business_name', 'business_site', 'business_contact') 
                 + [
-                    'model_type' => User::class,
-                    'model_id' => optional($user)->id ?? 1,
+                    'model_type' => $model_type ?? User::class,
+                    'model_id' => $model_id ?? optional($user)->id ?? 1,
                     'service_type_id' => optional($type)->id ?? 1,
                     'location' => $location['location'] ?? 'N/A',
                     'lng' => $location['lng'] ?? 0.0,
@@ -162,8 +176,8 @@ class OffersController extends Controller
             $offer->fill(
                 $request->only('title', 'description', 'business_name', 'business_site', 'business_contact') 
                 + [
-                    'model_type' => User::class,
-                    'model_id' => optional($user)->id ?? 1,
+                    // 'model_type' => User::class,
+                    // 'model_id' => optional($user)->id ?? 1,
                     'service_type_id' => optional($type)->id ?? 1,
                     'location' => $location['location'] ?? 'N/A',
                     'lng' => $location['lng'] ?? 0.0,
@@ -206,5 +220,41 @@ class OffersController extends Controller
     public function destroy(ServiceOffer $offer)
     {
         //
+    }
+
+    public function approve(ServiceOffer $offer){
+        DB::beginTransaction();
+        try {
+            //Do validation here
+            $offer->fill([
+                'status' => 'approved',
+                'approved_by' => auth()->user()->id,
+                'approved_at' => now()
+            ]);
+            $offer->save();
+
+            DB::commit();
+            return response()->json(['Success'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error'=>$e->getMessage()], 400);
+        }
+    }
+
+    public function disapprove(ServiceOffer $offer){
+    DB::beginTransaction();
+        try {
+            $offer->fill([
+                'status' => 'denied',
+                'approved_by' => auth()->user()->id,
+            ]);
+            $offer->save();
+
+            DB::commit();
+            return response()->json(['Success'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error'=>$e->getMessage()], 400);
+        }
     }
 }

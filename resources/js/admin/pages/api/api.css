@@ -113,3 +113,20 @@ input[type=radio].form-radio{
         font-size: 12px !important;
     }
 }
+
+.stripe-container {
+    background: #FFFFFF;
+    border: 1px solid #EBEFF2;
+    flex: 0 1 calc(50% - 15px);
+    padding: 25px 30px;
+    margin-bottom: 30px;
+}
+
+.stripe-container h2{
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 150%;
+    color: #587B7F;
+}

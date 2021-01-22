@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ApiHeader from './header';
 import ApiList from './list';
 import ApiForm from './form';
+import StripeKey from './stripe-key';
 
 import './api.css';
 
@@ -22,9 +23,12 @@ const Api = () => {
         <>
             <section>
                 <ApiHeader setShowCreate={setShowCreate} />
-                <ApiList handleEditForm={handleEditForm} />
+                <section className="flex p-10">
+                    <StripeKey />
+                </section>
                 {
-                    (showCreate || showEdit) && <ApiForm activeForm={showCreate ? 'Create' : 'Edit'} handleCloseForm={showCreate ? setShowCreate : setShowEdit} />
+                    // <ApiList handleEditForm={handleEditForm} />
+                    //(showCreate || showEdit) && <ApiForm activeForm={showCreate ? 'Create' : 'Edit'} handleCloseForm={showCreate ? setShowCreate : setShowEdit} />
                 }
             </section>
         </>

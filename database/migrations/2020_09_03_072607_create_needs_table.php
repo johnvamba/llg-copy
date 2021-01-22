@@ -29,6 +29,7 @@ class CreateNeedsTable extends Migration
             $table->unsignedBigInteger('approved_by')->nullable()->index();
             $table->dateTime('approved_at')->nullable()->index();
             $table->dateTime('scheduled_at')->nullable();
+            // $table->text('requirements')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

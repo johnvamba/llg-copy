@@ -29,6 +29,8 @@ class CreateServiceOffersTable extends Migration
             $table->string('business_site')->nullable();
             $table->string('business_contact');
             $table->date('end_date');
+            // $table->unsignedBigInteger('approved_by')->nullable()->index();
+            // $table->dateTime('approved_at')->nullable()->index();
             $table->timestamps();
             $table->softDeletes();
             //Transfer to categories table

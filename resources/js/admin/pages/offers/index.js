@@ -42,7 +42,7 @@ const Offers = () => {
             const { data } = res
             const { offers_count } = data
             setOffers(data.data || [])
-            setCount(offers_count || 0)
+            setCount(data.meta ? data.meta.total : 0)
             setMeta(data.meta)
         }).finally(()=>{
             setLoading(false)

@@ -43,10 +43,14 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('organizations/{organization}/members', 'OrganizationController@memberInvite');
         Route::get('organizations/{organization}/needs', 'OrganizationController@needs');
         Route::post('organizations/{organization}/access', 'OrganizationController@access');
+        Route::get('organizations/credentials', 'OrganizationController@credentials');
+        Route::post('organizations/credentials', 'OrganizationController@postCred');
 
         Route::resource('organizations', 'OrganizationController');
 
         Route::resource('offers', 'OffersController');
+        Route::post('offers/{offer}/approve', 'OffersController@approve');
+        Route::post('offers/{offer}/disapprove', 'OffersController@disapprove');
 
         Route::resource('users', 'UsersController');
 

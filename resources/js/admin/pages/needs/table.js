@@ -153,6 +153,7 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false, loadTable,
     }
 
     const togglePopItem = (item, button, type ='reject', clicked)=>{
+        console.log('clicked');
         setAction(type)
         setPopItem(item)
         setButton(button)
