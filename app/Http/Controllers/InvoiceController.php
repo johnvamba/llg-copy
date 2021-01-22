@@ -140,7 +140,7 @@ class InvoiceController extends Controller
 
         foreach ($users as $user) {
             if (count($user->invoice) > 0) {
-                $user['donated'] = $user->invoice->first()->donations;
+                $user['donated'] = number_format($user->invoice->first()->donations, 2);
                 $user['organization'] = $user->invoice->first()->organization;
             }
         }
