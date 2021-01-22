@@ -478,4 +478,39 @@ class OrganizationController extends Controller
         return response()
             ->json(['message'=> optional($node)->wasRecentlyCreated ? 'Campus Attached' : 'Access for campus removed'], 200);
     }
+
+    public function credentials(Request $request){
+        if($id = session('org_id')){
+            $credential = OrganizationCredential::firstOrNew([
+                'organization_id' => $id
+            ]);
+            return response()->json($credential);
+        }
+
+        return response()->json('No registered organization', 400);
+    }
+
+    public function postCred(Request $request){
+        $request->validate([
+            'secret_key' => 'required',
+            'publishable_key' => 'required'
+        ]);
+
+        if($id = session('org_id')){
+            $credential = OrganizationCredential::firstOrNew([
+                'organization_id' => $id
+            ]);
+
+            $credential->fill( $request->only([
+                'secret_key',
+                'publishable_key'
+            ]) );
+
+            $credential->save();
+
+            return response()->json($credential);
+        }
+
+        return response()->json('No registered organization', 400);
+    }
 }
