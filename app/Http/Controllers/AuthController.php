@@ -14,9 +14,17 @@ use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\UserProfile;
 use DB;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
 class AuthController extends Controller
 {
+    use SendsPasswordResetEmails;
+    
+    /*
+        SendsPasswordResetEmails::sendResetLinkEmail();
+        ResetsPasswords::reset();
+    */
+
     /**
      * User's login
      * 
@@ -178,5 +186,10 @@ class AuthController extends Controller
         ];
 
         return response()->json($data, 202);
+    }
+    //override reset link sending response
+    protected function sendResetLinkResponse(Request $request, $response)
+    {
+        return response()->json('Password reset link sent!', 200);
     }
 }
