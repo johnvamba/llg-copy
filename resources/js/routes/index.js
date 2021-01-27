@@ -19,12 +19,9 @@ const AppRoute = () => {
             <PublicRoutes exact path="/" component={Login}/>
             <PublicRoutes exact path="/login" component={Login}/>
             <PublicRoutes exact path="/forgot-password" component={ForgotPassword}/>
-            <PublicRoutes exact path="/reset-password" component={ResetPassword}/>
-
+            <PublicRoutes exact path="/password/reset" component={ResetPassword}/>
             <PublicRoutes exact path="/create-organisation" component={OrganisationPublic}/>
-
             <PrivateRoute path="/admin" component={Home}/>
-
             <Route path="*" component={NotFound} />
         </Switch>
     )
