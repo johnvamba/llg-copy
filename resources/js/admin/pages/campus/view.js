@@ -75,7 +75,7 @@ const CampusView = ({ data, handleForm }) => {
             {
                 (loading) &&
                 <LoadingScreen title={
-                    'Loading contents for campus'
+                    'Loading contents for Location'
                 }/>
             }
             <header className="campus-view__header">

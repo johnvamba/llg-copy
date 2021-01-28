@@ -54,7 +54,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
     }
 
     const fieldErrorMsg = {
-        name: 'Missing Campus Name',
+        name: 'Missing Location Name',
         description: 'Missing Description',
         location: 'Missing Location',
         photo: 'Missing photo',

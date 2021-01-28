@@ -298,7 +298,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                             >
                                 <Link to="/campus" className="flex items-center">
                                     <Campus active={location.pathname == "/campus" ? true : false} />
-                                    <span className="px-4">Campus</span>
+                                    <span className="px-4">Location</span>
                                 </Link>
                             </div>
                         )
