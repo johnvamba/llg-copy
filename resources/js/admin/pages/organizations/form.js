@@ -256,14 +256,14 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                     {
                         //Set user priveledges here.. campus users will need to know what organization is asking for need.
                         (roles.name == 'admin') && <div className={`form-group w-full ${errors.campus && 'form-error'}`}>
-                            <label>Campus</label>
+                            <label>Location</label>
                             <AsyncSelect
                                 styles={selectStylePaddingZero}
                                 loadOptions={loadCampus}
                                 defaultOptions
                                 cacheOptions
                                 value={campus}
-                                placeholder="Campus"
+                                placeholder="Location"
                                 onChange={setCampus}
                                 />
                             {

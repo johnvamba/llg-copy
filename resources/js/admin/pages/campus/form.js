@@ -112,7 +112,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
             {
                 (submitting) &&
                 <LoadingScreen title={
-                    (submitting && (data.id ? 'Updating Campus' : 'Creating Campus')) ||
+                    (submitting && (data.id ? 'Updating Location' : 'Creating Location')) ||
                     'Please wait'
                 }/>
             }
@@ -122,7 +122,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
                     closeCropper={()=>openCropper(null)} />
             }
             <header className="form-title create-story__header">
-                <h3>{data.id ? 'Edit' : 'Add'} Campus</h3>
+                <h3>{data.id ? 'Edit' : 'Add'} Location</h3>
                 <button type="button" onClick={()=> handleForm(data, false, false)}>
                     <OffersFormCross />
                 </button>
@@ -132,17 +132,17 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
                 <form>
                     <div className="w-full">
                         <div className={`form-group ${errors.name && 'form-error'}`}>
-                            <label>Campus Name</label>
+                            <label>Location Name</label>
                             <input
                                 className="input-field"
                                 type="text"
-                                placeholder="Enter Campus Name"
+                                placeholder="Enter Location Name"
                                 name="name"
                                 value={form.name || ''}
                                 onChange={handleInput}
                             />
                             {
-                                (errors.name || false) && <span className="text-xs pt-1 text-red-500 italic">Missing campus name</span>
+                                (errors.name || false) && <span className="text-xs pt-1 text-red-500 italic">Missing location name</span>
                             }
                         </div>
                     </div>
@@ -157,7 +157,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
                     <div className="w-full">
                         <div className={`form-group form-group-textarea ${errors.description && 'form-error'}`}>
                             <label>Description</label>
-                            <textarea type="text" placeholder="Write something about this campus" rows="3"
+                            <textarea type="text" placeholder="Write something about this location" rows="3"
                                 value={form.description || ''}
                                 name="description"
                                 onChange={handleInput}
