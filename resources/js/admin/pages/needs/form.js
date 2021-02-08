@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../../../components/Button'
 import { NavLink } from 'react-router-dom';
-import { swalDelete } from '../../../components/helpers/alerts';
+import { swalSuccess, swalDelete } from '../../../components/helpers/alerts';
 import { selectStyle, selectStylePaddingZero, loadOrganization } from '../../../components/helpers/async_options';
 import DatePicker from 'react-datepicker';
 import AsyncSelect from 'react-select/async';
@@ -170,6 +170,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
 
         submitPromise.then(({data})=>{
             setSubmitting(false)
+            swalSuccess(data.id ? "Need has been updated": 'Need has been requested!')
             handleForm(data.data, false, 'submit');
         }).catch(err=>{
             // console.log('error', err, err.response)

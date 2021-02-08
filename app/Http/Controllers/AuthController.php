@@ -192,4 +192,8 @@ class AuthController extends Controller
     {
         return response()->json('Password reset link sent!', 200);
     }
+
+    public function logout(Request $request) {
+        
+    }
 }

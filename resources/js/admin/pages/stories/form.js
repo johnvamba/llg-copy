@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Button, ButtonGroup } from 'reactstrap';
-import { swalCreate } from '../../../components/helpers/alerts';
+import { swalCreate, swalSuccess } from '../../../components/helpers/alerts';
 import ReactTagInput from "@pathofdev/react-tag-input";
 import OffersFormCross from '../../../svg/offers-form-cross';
 import StoriesPublishIcon from '../../../svg/stories-publish';
@@ -97,6 +97,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
         submitPromise.then(({data})=>{
             setSubmitting(false)
             handleForm(); //cleardata
+            swalSuccess(data.id ? "Story has been updated!": 'Story has been created!')
             afterSubmit(data.data, saveAs)
         }).catch(err=>{
             if(err.response){

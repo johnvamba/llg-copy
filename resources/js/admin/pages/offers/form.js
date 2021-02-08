@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import OffersFormCross from '../../../svg/offers-form-cross';
-import { swalError } from '../../../components/helpers/alerts';
+import { swalSuccess, swalError } from '../../../components/helpers/alerts';
 
 // import FormSelectCategory from './form-select-category';
 import FormServiceInfo from './form-service-info';
@@ -202,6 +202,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
 
             submitPromise.then(({data})=>{
                 setSubmitting(false)
+                swalSuccess(data.id ? "Offer has been updated": 'Offer has been requested!')
                 handleForm(false, 'submit', data.data);
             }).catch(err=>{
                 if(err.response){
