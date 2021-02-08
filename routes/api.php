@@ -199,4 +199,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Activities resource module */
     Route::post('activity/recents', 'ActivityController@recent');
     Route::resource('activities', 'ActivityController');
+
+    Route::post('logout', 'AuthController@logout');
 });

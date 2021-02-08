@@ -36,12 +36,20 @@ const Home = () => {
     }, [])
 
     const logout = async () => {
-        if (Cookie.get("oToken_admin")) {
-            Cookie.set("oToken_admin", "")
-        } else if (Cookie.get("oToken_org_admin")) {
-            Cookie.set("oToken_org_admin", "")
-        }
-        window.location = '/login';
+        api.post('/api/logout')
+        .then(({ config })=>{
+            //clear cache of data
+            cache.store.clear();
+        }).finally(()=>{
+            if (Cookie.get("oToken_admin")) {
+                Cookie.set("oToken_admin", "")
+            } else if (Cookie.get("oToken_org_admin")) {
+                Cookie.set("oToken_org_admin", "")
+            }
+            window.location = '/login';
+
+        })
+
     }
 
     const handleHamburgerMenu = () => {
