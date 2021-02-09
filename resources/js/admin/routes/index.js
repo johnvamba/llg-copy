@@ -14,7 +14,7 @@ import Offers from '../pages/offers';
 import OfferRequests from '../pages/offers/requests';
 import EditOffer from '../pages/offers/edit';
 import Stories from '../pages/stories';
-import StoriesDrafts from '../pages/stories/drafts';
+// import StoriesDrafts from '../pages/stories/drafts';
 import EditStory from '../pages/stories/edit';
 import Groups from '../pages/groups';
 import CreateGroup from '../pages/groups/create';
@@ -93,7 +93,7 @@ const routes = [
         component: () => <EditOffer />
     },
     {
-        path: '/stories',
+        path: ['/stories', '/stories/drafts'],
         exact: true,
         component: () => <Stories />
     },
