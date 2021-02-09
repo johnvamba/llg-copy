@@ -34,23 +34,23 @@ class UserSeeder extends Seeder
             'bio' => $faker->text,
         ]);
 
-        $org = User::firstOrCreate([
-            'name' => 'organization admin',
-            'email' => 'organ@gmail.com',
-            'password' => bcrypt('password'),
-        ]);
+        // $org = User::firstOrCreate([
+        //     'name' => 'organization admin',
+        //     'email' => 'organ@gmail.com',
+        //     'password' => bcrypt('password'),
+        // ]);
         
-        $org->assignRole('organization admin');
+        // $org->assignRole('organization admin');
         
-        UserProfile::create([
-            'user_id' => $org->id,
-            'first_name' => $faker->firstName,
-            'last_name' => $faker->lastName,
-            'age' => 20,
-            'location' => $faker->address,
-            'lat' => $faker->latitude,
-            'lng' => $faker->longitude,
-            'bio' => $faker->text,
-        ]);
+        // UserProfile::create([
+        //     'user_id' => $org->id,
+        //     'first_name' => $faker->firstName,
+        //     'last_name' => $faker->lastName,
+        //     'age' => 20,
+        //     'location' => $faker->address,
+        //     'lat' => $faker->latitude,
+        //     'lng' => $faker->longitude,
+        //     'bio' => $faker->text,
+        // ]);
     }
 }

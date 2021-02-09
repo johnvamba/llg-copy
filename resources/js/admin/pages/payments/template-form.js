@@ -6,6 +6,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import CircleImageForm from '../../../components/CircleImageForm';
 import LoadingScreen from '../../../components/LoadingScreen'
 import { tryParseJson } from '../../../components/helpers/validator';
+import { swalSuccess } from '../../../components/helpers/alerts';
 
 const TemplateForm = () => {
     const [photo, setPhoto] = useState(null);
@@ -107,7 +108,7 @@ const TemplateForm = () => {
             photo
         }).then(({ data })=>{
             const { id, subject, html_content, raw_draft_json, org_name, org_location, photo } = data.data
-
+            swalSuccess('Receipt Template Updated!')
         }).finally(()=>{
             setSubmit(false);
         })

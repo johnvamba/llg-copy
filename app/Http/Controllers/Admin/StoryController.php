@@ -95,7 +95,7 @@ class StoryController extends Controller
             return new StoryResource($story, true);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json(['error' => $e->getMessage(), 'stack' => $e->getTrace()], 400);
         }
     }
 

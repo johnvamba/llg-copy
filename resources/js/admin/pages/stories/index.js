@@ -9,7 +9,6 @@ import StoriesForm from './form';
 import EditStory from './edit';
 import View from './view';
 import StoriesHeader from './header';
-import StoriesDrafts from './drafts';
 
 import './story.css';
 
