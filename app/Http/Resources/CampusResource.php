@@ -22,7 +22,8 @@ class CampusResource extends JsonResource
             'description' => $this->description,
             'location' => $this->location,
             'photo' => $this->whenLoaded('media', $this->getFirstMediaUrl('photo')),
-            'accessed' => $this->when($this->accessed, $this->accessed)
+            'accessed' => $this->when($this->accessed, $this->accessed),
+            'address' => $this->address
             //load others stuff here
         ];
     }

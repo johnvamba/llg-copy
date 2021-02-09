@@ -17,7 +17,11 @@ class OrganizationResource extends JsonResource
         return [
             'id'    => $this->id, //We need only this.
             'label' => $this->name, //we show this.
-            'value' => $this->id
+            'value' => $this->id,
+            'location' => $this->location,
+            'address' => $this->address,
+            'lat' => $this->lat,
+            'lng' => $this->lng
         ];
     }
 }

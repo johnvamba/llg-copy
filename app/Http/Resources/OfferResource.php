@@ -26,6 +26,7 @@ class OfferResource extends JsonResource
             'location' => $this->location,
             'lat' => (float) $this->lat,
             'lng' => (float) $this->lng,
+            'address' => $this->address,
             'business_name' => $this->business_name,
             'business_site' => $this->business_site,
             'business_contact' => $this->business_contact,
