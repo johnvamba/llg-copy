@@ -15,7 +15,7 @@ const Location = ({
 
     return (
         <div className={`form-group ${className}`} >
-            <label>{ label || 'Location'}</label>
+            <label>{ label || 'Address'}</label>
             <div className={`input-container ${cNContainer}`}>
                 <i className="icon absolute map-pin">
                     <MapPin/>

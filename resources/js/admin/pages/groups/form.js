@@ -3,7 +3,7 @@ import OffersFormCross from '../../../svg/offers-form-cross';
 import FormTabInfo from './form-tab-info';
 import FormTabInvite from './form-tab-invite';
 import FormTabGoal from './form-tab-goal';
-import { swalError } from '../../../components/helpers/alerts';
+import { swalSuccess, swalError } from '../../../components/helpers/alerts';
 import LoadingScreen from '../../../components/LoadingScreen';
 
 const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
@@ -17,6 +17,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
         name: '',
         description: '',
         location: '',
+        address: '',
         privacy: '',
         photo: null,
         lat: null,
@@ -30,6 +31,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                 name: data.name,
                 description: data.description,
                 location: data.location,
+                address: data.address,
                 privacy: data.privacy,
                 photo: data.photo,
                 lat: data.lat,
@@ -101,6 +103,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
             setSubmitting(true)
             const params = {
                 ...fields,
+                address,
                 users,
                 goal
             }
@@ -111,6 +114,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
             submitPromise.then(({data})=>{
                 setSubmitting(false)
                 handleForm({});
+                swalSuccess(data.id ? "Group has been updated" : "Group added successfully")
                 afterSubmit(data.data)
             }).catch(err=>{
                 if(err.response){

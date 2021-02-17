@@ -39,6 +39,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     const [openDate, setOpenDate] = useState(false);
     const [time, setTime] = useState('09:00 AM');
     const [errors, setErrors] = useState({});
+    const [address, setAddress] = useState('');
     const [location, setLocation] = useState({
         formatted_address: '',
         lat: null,
@@ -65,6 +66,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 goal,
                 date,
                 time,
+                address,
                 location,
                 lng,
                 lat
@@ -78,6 +80,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setGoal(goal || 0);
             setDate(date ? new Date(date) :  new Date);
             setTime(time || '');
+            setAddress(address || '');
             setLocation({formatted_address: location, lng, lat});
             setOrganization(organization || {});
         })
@@ -106,6 +109,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setOpenDate(false)
             setTime('09:00 AM')
             setErrors({})
+            setAddress('')
             setLocation({
                 formatted_address: '',
                 lat: null,
@@ -115,8 +119,21 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setSubmitting(false)
             setLoading(false)
         }
-        console.log('trigger data', data);
+        // console.log('trigger data', data);
     }, [data])
+
+    const updateOrganization = (org) => {
+        if(org.address || org.location) {
+            setLocation({
+                formatted_address: org.location || '',
+                lat: org.lat,
+                lng: org.lng
+            })
+
+            setAddress(org.address || '')
+        }
+        setOrganization(org)
+    }
 
     const updateGoal = (value)=>{
         if(value < 0)
@@ -150,23 +167,19 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     const removePhoto = () => {
 
     }
-
     //Axios
     const submit = () => {
         setSubmitting(true)
+        const submit = { 
+            title, type, category, goal, date, time, location, organization,
+            photo,//files.length > 0 ? photo : null,
+            address,
+            description: about,
+            requirements: bring
+        }
         const submitPromise = !data.id ? 
-            api.post(`/api/web/needs`, {
-                title, type, category, goal, date, time, location, organization,
-                photo,//files.length > 0 ? photo : null,
-                description: about,
-                requirements: bring
-            }) : 
-            api.patch(`/api/web/needs/${data.id}`, { 
-                title, type, category, goal, date, time, location, organization,
-                photo,//files.length > 0 ? photo : null,
-                description: about,
-                requirements: bring
-            })
+            api.post(`/api/web/needs`, submit) : 
+            api.patch(`/api/web/needs/${data.id}`, )
 
         submitPromise.then(({data})=>{
             setSubmitting(false)
@@ -218,7 +231,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                             cacheOptions
                             value={organization}
                             placeholder="Organization"
-                            onChange={setOrganization}
+                            onChange={updateOrganization}
                             />
                         {
                             (errors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
@@ -249,6 +262,20 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                             </div>
                             {
                                 (errors.goal || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Goal</span>
+                            }
+                        </div>
+                        <Location 
+                            className={`short-width ${errors.location && 'form-error'}`}
+                            name={'location'}
+                            defaultValue={location.formatted_address}
+                            placesSelected={handleLocation}
+                            errors={errors.location || []}
+                        />
+                        <div className={`form-group ${errors.address && 'form-error'}`}>
+                            <label>Specific Address</label>
+                            <input type='text' className="input-field" placeholder="House #, Lot and/or street" value={address} onChange={e=>setAddress(e.target.value)}/>
+                            {
+                                (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Specific Address</span>
                             }
                         </div>
                         <div className={`form-group ${errors.description && 'form-error'}`}>
@@ -303,13 +330,6 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                                 (errors.time || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Time of Need</span>
                             }
                         </div>
-                        <Location 
-                            className={`short-width ${errors.location && 'form-error'}`}
-                            name={'location'}
-                            defaultValue={location.formatted_address}
-                            placesSelected={handleLocation}
-                            errors={errors.location || []}
-                        />
                         <div className={`form-group short-width ${errors.goal && 'form-error'}`}>
                             <label>Number of People Needed</label>
                             <div className="input-container">
@@ -319,6 +339,20 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                             </div>
                             {
                                 (errors.goal || false) && <span className="text-xs pt-1 text-red-500 italic">Missing number of people</span>
+                            }
+                        </div>
+                        <Location 
+                            className={`w-full ${errors.location && 'form-error'}`}
+                            name={'location'}
+                            defaultValue={location.formatted_address}
+                            placesSelected={handleLocation}
+                            errors={errors.location || []}
+                        />
+                        <div className={`form-group w-full${errors.title && 'form-error'}`}>
+                            <label>Specific Address</label>
+                            <input type='text' className="input-field" placeholder="House #, Lot and/or street" value={address} onChange={e=>setTitle(e.target.value)}/>
+                            {
+                                (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Specific Address</span>
                             }
                         </div>
                         <div className={`form-group w-full ${errors.requirements && 'form-error'}`}>

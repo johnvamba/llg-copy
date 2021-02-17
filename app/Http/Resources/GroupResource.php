@@ -27,6 +27,7 @@ class GroupResource extends JsonResource
             'photo' => $this->whenLoaded('media', $this->getFirstMediaUrl('photo')),
             'goal_ratio' => (isset($this->goals_count) && $this->goals_count > 0) ? "$achieved/$goals" : 0,
             'goal_percent' => (isset($this->goals_count) && $this->goals_count > 0) ? number_format($achieved/$goals, 1) : 0,
+            'address' => $this->address,
             'location' => $this->location,
             'lat' => $this->lat,
             'lng' => $this->lng

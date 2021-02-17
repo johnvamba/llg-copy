@@ -63,6 +63,7 @@ class OffersController extends Controller
             'photo' => 'required',
             'business_name' => 'required',
             'business_contact' => 'required',
+            'address' => 'required',
         ]);
 
         DB::beginTransaction();
@@ -85,7 +86,7 @@ class OffersController extends Controller
             $location = $request->get('location');
 
             $offer = ServiceOffer::create(
-                $request->only('title', 'description', 'business_name', 'business_site', 'business_contact') 
+                $request->only('title', 'description', 'business_name', 'business_site', 'business_contact', 'address') 
                 + [
                     'model_type' => $model_type ?? User::class,
                     'model_id' => $model_id ?? optional($user)->id ?? 1,
@@ -162,6 +163,7 @@ class OffersController extends Controller
             'photo' => 'required',
             'busName' => 'required',
             'busContact' => 'required',
+            'address' => 'required'
         ]);
 
         DB::beginTransaction();
@@ -174,7 +176,7 @@ class OffersController extends Controller
             $location = $request->get('location');
 
             $offer->fill(
-                $request->only('title', 'description', 'business_name', 'business_site', 'business_contact') 
+                $request->only('title', 'description', 'business_name', 'business_site', 'business_contact', 'address') 
                 + [
                     // 'model_type' => User::class,
                     // 'model_id' => optional($user)->id ?? 1,
