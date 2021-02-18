@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use App\Http\Resources\Async\OrganizationResource;
+
 class NeedResource extends JsonResource
 {
     protected $complete = false;
@@ -30,7 +32,7 @@ class NeedResource extends JsonResource
             'date' => optional($this->scheduled_at)->format('m/d/Y'),//'08/27/2020'
             'time' => strtolower(optional($this->scheduled_at)->format('h:i A')),
             'date_added' => optional($this->created_at)->format('m/d/Y'),
-            'organization' => $this->whenLoaded('organization', $this->parseOrg()),
+            'organization' => new OrganizationResource($this->whenLoaded('organization')),
             'lat' => (float) $this->lat,
             'lng' => (float) $this->lng,
             'location' => $this->location,
@@ -39,7 +41,8 @@ class NeedResource extends JsonResource
             'ratio' => $this->getRatio(),
             'description' => $this->description,
             'requirements' => $this->requirements,
-            'raised' => $this->raised
+            'raised' => $this->raised,
+            'address' => $this->address
         ];
     }
 

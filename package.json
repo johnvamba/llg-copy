@@ -66,6 +66,7 @@
         "redux-logger": "^3.0.6",
         "sweetalert2": "^10.0.2",
         "sweetalert2-react-content": "^3.2.2",
-        "tailwindcss": "^1.7.6"
+        "tailwindcss": "^1.7.6",
+        "watch": "^1.0.2"
     }
 }

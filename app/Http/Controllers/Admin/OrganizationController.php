@@ -100,6 +100,7 @@ class OrganizationController extends Controller
             'description' => 'required',
             'category' => 'required',
             'location' => 'required',
+            'address' => 'required',
             'lat' => 'required',
             'lng' => 'required',
         ]);
@@ -107,7 +108,7 @@ class OrganizationController extends Controller
         DB::beginTransaction();
         try {
             $org = Organization::create( 
-                $request->only('name', 'email', 'phone_number', 'site', 'description', 'location', 'lat', 'lng') 
+                $request->only('name', 'email', 'phone_number', 'site', 'description', 'location', 'lat', 'lng' , 'address') 
                 + [
                     'short_description' => substr($request->get('description'), 0, 100)
                 ]);
@@ -221,6 +222,7 @@ class OrganizationController extends Controller
             'phone_number' => 'required',
             'description' => 'required',
             'category' => 'required',
+            'address' => 'required',
             'location' => 'required',
             'lat' => 'required',
             'lng' => 'required',
@@ -229,7 +231,7 @@ class OrganizationController extends Controller
         DB::beginTransaction();
         try {
             $organization->fill( 
-                $request->only('name', 'email','phone_number', 'site', 'description', 'location', 'lat', 'lng') 
+                $request->only('name', 'email','phone_number', 'site', 'description', 'location', 'lat', 'lng', 'address') 
                 + [
                     'short_description' => substr($request->get('description'), 0, 100)
                 ]);

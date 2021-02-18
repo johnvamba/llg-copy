@@ -107,6 +107,9 @@ class NeedsController extends Controller
             'type'  => 'required',
             'goal' => 'required',
             'description' => 'required',
+            'address' => 'required',
+            'location' => 'required', //doesn't really work
+            'photo' => 'required'
             // 'time'=> 'exclude_if:type,volunteer|required',
             // 'date'=> 'exclude_if:type,volunteer|required'
         ]);
@@ -136,7 +139,8 @@ class NeedsController extends Controller
                     'raised',
                     'goal',
                     'description',
-                    'requirements'
+                    'requirements',
+                    'address'
                 ]) +
                 //dynamic details
                 [
@@ -229,6 +233,7 @@ class NeedsController extends Controller
             'type'  => 'required',
             'goal' => 'required',
             'description' => 'required',
+            'address' => 'required',
             // 'time'=> 'exclude_if:type,volunteer|required',
             // 'date'=> 'exclude_if:type,volunteer|required'
         ]);
@@ -258,7 +263,8 @@ class NeedsController extends Controller
                     'raised',
                     'goal',
                     'description',
-                    'requirements'
+                    'requirements',
+                    'address'
                 ]) +
                 //dynamic details
                 [

@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'datafilter' => \App\Http\Middleware\FilterByUserType::class
+        'datafilter' => \App\Http\Middleware\FilterByUserType::class,
+        'wpcors' => \App\Http\Middleware\WPCors::class
     ];
 }

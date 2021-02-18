@@ -15,6 +15,7 @@ import AsyncSelect from 'react-select/async';
 import { connect } from 'react-redux';
 import { selectStyle, selectStylePaddingZero, loadCampus, checkEmail } from '../../../components/helpers/async_options';
 import { all } from '../needs/categorylist';
+import Location from '../../../components/Location'
 
 const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer }) => {
     const { roles } = AuthUserReducer;
@@ -26,6 +27,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         email: '',
         site: '', 
         phone_number: '',
+        address: '',
         description: ''
     })
     const [images, setImages] = useState({
@@ -45,12 +47,12 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
     //Loading data from table
     useEffect(()=>{
         if(data.id){
-                const { name, email, site, phone_number, description, category, banner, photo } = data
-                setForm({ ...form, name, email, site, phone_number, description})
+                const { name, email, site, phone_number, description, category, banner, photo, address } = data
+                setForm({ ...form, name, email, site, phone_number, description, address })
                 setImages({banner, photo})
             loadAll()
         } else {
-            setForm({name: '', email: '',site: '', phone_number: '',description: ''})
+            setForm({name: '', email: '',site: '', phone_number: '', description: '', address: ''})
             setImages({ banner: null, photo: null })
             setCampus({})
             setLoading(false)
@@ -74,7 +76,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             clearCacheEntry: clearCache,
             cancelToken: token.token
         }).then(({ data })=>{
-            const { name, email, site, phone_number, description, category = [], campus, accessable } = data.data
+            const { name, email, site, phone_number, description, category = [], campus, accessable, address } = data.data
             // setForm({...form, name, email, site, phone_number, description})
             setCampus(campus)
             setCategory( all.filter(i => category.includes(i.name) ) );
@@ -192,6 +194,14 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         } else {
             swalError('Invalid field content')
         }
+    }
+
+    const handleLocation = ({formatted_address, geometry}) => {
+        setLocation({
+            location: formatted_address, 
+            lat: geometry.location.lat(), 
+            lng: geometry.location.lng()
+        })
     }
 
     const handleDiscard = () => {
@@ -329,6 +339,29 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                 />
                                 {
                                     (errors.phone_number || false) && <span className="text-xs pt-1 text-red-500 italic">Missing phone number</span>
+                                }
+                            </div>
+                        </div>
+                        <div className="w-full px-2">
+                            <Location 
+                                className={`short-width ${errors.location && 'form-error'}`}
+                                name={'location'}
+                                defaultValue={location.location}
+                                placesSelected={handleLocation}
+                                errors={errors.location || []}
+                            />
+                            <div className={`form-group ${errors.address && 'form-error'}`}>
+                                <label>Specific Address</label>
+                                <input
+                                    className="input-field"
+                                    type="text"
+                                    value={form.address}
+                                    name="address"
+                                    onChange={handleInput}
+                                    placeholder="House #, Lot and/or street"
+                                />
+                                {
+                                    (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing phone number</span>
                                 }
                             </div>
                         </div>

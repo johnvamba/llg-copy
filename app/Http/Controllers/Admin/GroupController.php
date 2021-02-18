@@ -58,6 +58,7 @@ class GroupController extends Controller
             'description' => 'required',
             'location' => 'required',
             'privacy' => 'required',
+            'address' => 'required',
             'lat' => 'required',
             'lng' => 'required',
             'goal' => 'required',
@@ -65,7 +66,7 @@ class GroupController extends Controller
         DB::beginTransaction();
         try {
             $group = Group::create( 
-                $request->only('name','description','location','privacy','lat','lng') 
+                $request->only('name', 'description', 'location', 'privacy', 'lat', 'lng' , 'address') 
                 + [
                     'user_id' => (auth()->user())->id,
                     'short_description' => substr($request->description, 0, 100)

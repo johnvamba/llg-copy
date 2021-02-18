@@ -11,8 +11,8 @@ const NearbyOrganizations = ({...props}) => {
     const [all, setAll] = useState(false);
 
     const center = {
-        lat: -33.868782,
-        lng: 151.207583
+        lat: -37.8180604,
+        lng: 145.0001764
     }
 
     useEffect(() => {

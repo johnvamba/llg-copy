@@ -17,6 +17,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
     const [category, setCategory] = useState({});
     const [title, setTitle] = useState('');
     const [desc, setDesc] = useState('');
+    const [address, setAddress] = useState('');
     const [location, setLocation] = useState({});
     const [photo, setImage] = useState(null);
     const [business_name, setBusName] = useState('');
@@ -41,6 +42,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
             setBusSite('')
             setBusContact('')
             setFiles([])
+            setAddress('')
             setLocation({})
             setCategory({})
             setSubmitting(false)
@@ -52,8 +54,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
         setLoading(true)
         api.get(`/api/web/offers/${data.id}`)
         .then(({ data })=>{
-            const { title, type, photo, description, location, lat, lng, business_name, business_site, business_contact} = data.data
-            console.log('data?', data.data)
+            const { title, type, photo, description, location, lat, lng, business_name, business_site, business_contact, address} = data.data
             setTitle(title || '')
             setDesc(description || '')
             setImage(photo || null)
@@ -61,10 +62,10 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
             setBusSite(business_site || '')
             setBusContact(business_contact || '')
             setLocation(location ? { location, lat, lng} : {})
+            setAddress(address)
             setCategory(type ? volunteer.find(i => i.name == type) : {})
             setErrors({})
             setLoading(false)
-            console.log('reached');
         })
     }
 
@@ -77,11 +78,12 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
         setErrors(errors)
     }
 
-    const updateService = ({title, desc, location, photo}) => {
+    const updateService = ({title, desc, location, photo, address}) => {
         setTitle(title)
         setDesc(desc)
         setLocation(location)
         setImage(photo)
+        setAddress(address)
         if(title !== '')
             delete errors.title
         if(desc !== '')
@@ -189,6 +191,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
             const params = {
                 title,
                 category,
+                address,
                 location,
                 business_name,
                 business_site,

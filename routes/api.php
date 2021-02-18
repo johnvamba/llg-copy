@@ -31,6 +31,10 @@ Route::post('org-create', 'Admin\OrganizationController@openCreate');
 
 Route::get('checkemail', 'CheckEmail');
 
+Route::group(['middleware' => 'wpcors', 'namespace' => 'Admin'], function () {
+
+});
+
 Route::group(['middleware' => ['auth:api']], function () {
 
     Route::group(['prefix'=>'web', 'namespace'=>'Admin', 'middleware' => 'datafilter'], function() {
