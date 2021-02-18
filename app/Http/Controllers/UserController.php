@@ -172,7 +172,9 @@ class UserController extends Controller
         $result = DB::transaction(function () use ($request, $user) {
             User::find($user->id)
                 ->update([
-                    'name' => $request->firstName.' '.$request->lastName
+                    'name' => $request->firstName.' '.$request->lastName,
+                    'email' => $request->email,
+                    'phone_number' => $request->phone_number,
                 ]);
 
             UserProfile::where('user_id', $user->id)

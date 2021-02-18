@@ -104,6 +104,7 @@ class AuthController extends Controller
                 $user = User::create([
                         'name' => $request->firstName.' '.$request->lastName,
                         'email' => $request->email,
+                        'phone_number' => $request->phone_number,
                     ]);
                 $user->assignRole('user');
 

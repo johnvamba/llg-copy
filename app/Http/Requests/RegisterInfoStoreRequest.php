@@ -28,6 +28,7 @@ class RegisterInfoStoreRequest extends FormRequest
             'lastName' => 'required|string',
             'age' => 'required|numeric',
             'email' => 'required|email|unique:users',
+            'phone_number' => 'required|unique:users',
         ];
     }
 }
