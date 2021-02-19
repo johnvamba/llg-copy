@@ -63,7 +63,7 @@ class OffersController extends Controller
             'photo' => 'required',
             'business_name' => 'required',
             'business_contact' => 'required',
-            'address' => 'required',
+            // 'address' => 'required',
         ]);
 
         DB::beginTransaction();
@@ -162,8 +162,8 @@ class OffersController extends Controller
             'description' => 'required',
             'photo' => 'required',
             'busName' => 'required',
-            'busContact' => 'required',
-            'address' => 'required'
+            'busContact' => 'required'
+            // 'address' => 'required'
         ]);
 
         DB::beginTransaction();

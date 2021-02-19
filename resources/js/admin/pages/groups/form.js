@@ -17,7 +17,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
         name: '',
         description: '',
         location: '',
-        address: '',
+        // address: '',
         privacy: '',
         photo: null,
         lat: null,
@@ -31,7 +31,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                 name: data.name,
                 description: data.description,
                 location: data.location,
-                address: data.address,
+                // address: data.address,
                 privacy: data.privacy,
                 photo: data.photo,
                 lat: data.lat,
@@ -43,6 +43,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                 name: '',
                 description: '',
                 location: '',
+                // address: '',
                 privacy: '',
                 photo: null,
                 lat: null,
@@ -103,18 +104,17 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
             setSubmitting(true)
             const params = {
                 ...fields,
-                address,
                 users,
                 goal
             }
             const submitPromise = !data.id ? 
                 api.post(`/api/web/groups`, params) : 
                 api.patch(`/api/web/groups/${data.id}`, params)
-
+            const data_id = data.id
             submitPromise.then(({data})=>{
                 setSubmitting(false)
                 handleForm({});
-                swalSuccess(data.id ? "Group has been updated" : "Group added successfully")
+                swalSuccess(data_id ? "Group has been updated" : "Group added successfully")
                 afterSubmit(data.data)
             }).catch(err=>{
                 if(err.response){

@@ -6,7 +6,7 @@ import StoriesCatChildrenIcon from '../../../svg/stories-cat-children';
 import { Editor, EditorState, ContentState, convertToRaw, convertFromRaw, convertFromHTML } from "draft-js";
 import { tryParseJson } from '../../../components/helpers/validator'
 import LoadingScreen from '../../../components/LoadingScreen'
-import { swalDelete2 } from '../../../components/helpers/alerts';
+import { swalDelete2, swalSuccess } from '../../../components/helpers/alerts';
 import { monetary } from '../needs/categorylist';
 
 const View = ({data = {}, handleForm, afterSubmit }) => {
@@ -42,6 +42,7 @@ const View = ({data = {}, handleForm, afterSubmit }) => {
                 api.delete(`/api/web/stories/${data.id}`)
                 .then(()=>{
                     afterSubmit();
+                    swalSuccess('Story Removed.')
                 }).finally(()=>{
                     setLoading(null)
                     handleForm()
@@ -56,6 +57,7 @@ const View = ({data = {}, handleForm, afterSubmit }) => {
             .then(()=>{
                 afterSubmit();
                 setLoading(null);
+                    swalSuccess(data.released_at ? 'Story Published' : 'Story Unpublished')
                 handleForm()
             })
     }

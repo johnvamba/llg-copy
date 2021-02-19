@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Search from '../../../svg/search';
 import Attachment from '../../../svg/attachment';
 import ItemMember from './item-member'
+import { swalSuccess } from '../../../components/helpers/alerts';
+
 const FormTabInvite = ({data = {}, users = [], setUsers}) => {
     const [suggest, setSuggest] = useState(true)
     const [loading, setLoading] = useState(false)
@@ -40,6 +42,7 @@ const FormTabInvite = ({data = {}, users = [], setUsers}) => {
             }).then(({data})=>{
                 const { invite_status } = data
                 handleInvite({...item, invite_status}, true);
+                swalSuccess('User has been invited!')
             })
         } else {
             setUsers([...users, item]);

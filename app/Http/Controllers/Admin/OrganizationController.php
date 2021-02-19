@@ -100,7 +100,7 @@ class OrganizationController extends Controller
             'description' => 'required',
             'category' => 'required',
             'location' => 'required',
-            'address' => 'required',
+            // 'address' => 'required',
             'lat' => 'required',
             'lng' => 'required',
         ]);
@@ -222,7 +222,7 @@ class OrganizationController extends Controller
             'phone_number' => 'required',
             'description' => 'required',
             'category' => 'required',
-            'address' => 'required',
+            // 'address' => 'required',
             'location' => 'required',
             'lat' => 'required',
             'lng' => 'required',

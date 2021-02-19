@@ -179,8 +179,9 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             const submitPromise = !data.id ? 
                 api.post(`/api/web/organizations`, params) : 
                 api.patch(`/api/web/organizations/${data.id}`, { ...params })
-
+            const data_id = data.id;
             submitPromise.then(({data})=>{
+                swalSuccess(data_id ? "Organization has been updated": 'New Organization Created!')
                 setSubmitting(false)
                 afterSubmit()
                 handleClose(data.data);
@@ -223,6 +224,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             access: !accessable
         }).then((res) =>{
             loadAll(true)
+            swalSuccess(!accessable ? 'Access to organization added' : "Access to this Organization revoked")
         }).catch(err=>{
 
         })
@@ -343,6 +345,22 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                             </div>
                         </div>
                         <div className="w-full px-2">
+                        {/*
+                            <div className={`form-group ${errors.address && 'form-error'}`}>
+                                <label>Street Address</label>
+                                <input
+                                    className="input-field"
+                                    type="text"
+                                    value={form.address}
+                                    name="address"
+                                    onChange={handleInput}
+                                    placeholder="House # and/or Lot"
+                                />
+                                {
+                                    (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing street address</span>
+                                }
+                            </div>
+                        */}
                             <Location 
                                 className={`short-width ${errors.location && 'form-error'}`}
                                 name={'location'}
@@ -350,20 +368,6 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                 placesSelected={handleLocation}
                                 errors={errors.location || []}
                             />
-                            <div className={`form-group ${errors.address && 'form-error'}`}>
-                                <label>Specific Address</label>
-                                <input
-                                    className="input-field"
-                                    type="text"
-                                    value={form.address}
-                                    name="address"
-                                    onChange={handleInput}
-                                    placeholder="House #, Lot and/or street"
-                                />
-                                {
-                                    (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing phone number</span>
-                                }
-                            </div>
                         </div>
                         <div className="w-full xl:w-full px-2">
                             <div className={`form-group form-group-textarea ${errors.description && 'form-error'}`}>

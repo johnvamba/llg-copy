@@ -39,7 +39,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     const [openDate, setOpenDate] = useState(false);
     const [time, setTime] = useState('09:00 AM');
     const [errors, setErrors] = useState({});
-    const [address, setAddress] = useState('');
+    // const [address, setAddress] = useState('');
     const [location, setLocation] = useState({
         formatted_address: '',
         lat: null,
@@ -66,7 +66,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 goal,
                 date,
                 time,
-                address,
+                // address,
                 location,
                 lng,
                 lat
@@ -80,7 +80,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setGoal(goal || 0);
             setDate(date ? new Date(date) :  new Date);
             setTime(time || '');
-            setAddress(address || '');
+            // setAddress(address || '');
             setLocation({formatted_address: location, lng, lat});
             setOrganization(organization || {});
         })
@@ -109,7 +109,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setOpenDate(false)
             setTime('09:00 AM')
             setErrors({})
-            setAddress('')
+            // setAddress('')
             setLocation({
                 formatted_address: '',
                 lat: null,
@@ -123,14 +123,14 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     }, [data])
 
     const updateOrganization = (org) => {
-        if(org.address || org.location) {
+        if(org.location) {
             setLocation({
                 formatted_address: org.location || '',
                 lat: org.lat,
                 lng: org.lng
             })
 
-            setAddress(org.address || '')
+            // setAddress(org.address || '')
         }
         setOrganization(org)
     }
@@ -173,17 +173,17 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         const submit = { 
             title, type, category, goal, date, time, location, organization,
             photo,//files.length > 0 ? photo : null,
-            address,
+            // address,
             description: about,
             requirements: bring
         }
         const submitPromise = !data.id ? 
             api.post(`/api/web/needs`, submit) : 
-            api.patch(`/api/web/needs/${data.id}`, )
-
+            api.patch(`/api/web/needs/${data.id}`, submit)
+        const data_id = data.id;
         submitPromise.then(({data})=>{
             setSubmitting(false)
-            swalSuccess(data.id ? "Need has been updated": 'Need has been requested!')
+            swalSuccess(data_id ? "Need has been updated": 'Need has been requested!')
             handleForm(data.data, false, 'submit');
         }).catch(err=>{
             // console.log('error', err, err.response)
@@ -264,6 +264,15 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                                 (errors.goal || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Goal</span>
                             }
                         </div>
+                        {/*
+                        <div className={`form-group ${errors.address && 'form-error'}`}>
+                            <label>Street Address</label>
+                            <input type='text' className="input-field" placeholder="House # and/or Lot" value={address} onChange={e=>setAddress(e.target.value)}/>
+                            {
+                                (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Street Address</span>
+                            }
+                        </div>
+                        */}
                         <Location 
                             className={`short-width ${errors.location && 'form-error'}`}
                             name={'location'}
@@ -271,13 +280,6 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                             placesSelected={handleLocation}
                             errors={errors.location || []}
                         />
-                        <div className={`form-group ${errors.address && 'form-error'}`}>
-                            <label>Specific Address</label>
-                            <input type='text' className="input-field" placeholder="House #, Lot and/or street" value={address} onChange={e=>setAddress(e.target.value)}/>
-                            {
-                                (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Specific Address</span>
-                            }
-                        </div>
                         <div className={`form-group ${errors.description && 'form-error'}`}>
                             <label>About</label>
                             <textarea className="input-field" placeholder="Say something about this need" value={about} onChange={e=>setAbout(e.target.value)}/>
@@ -341,6 +343,17 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                                 (errors.goal || false) && <span className="text-xs pt-1 text-red-500 italic">Missing number of people</span>
                             }
                         </div>
+                        {
+                            /*
+                        <div className={`form-group w-full${errors.title && 'form-error'}`}>
+                            <label>Specific Address</label>
+                            <input type='text' className="input-field" placeholder="House # and/or Lot" value={address} onChange={e=>setTitle(e.target.value)}/>
+                            {
+                                (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Specific Address</span>
+                            }
+                        </div>
+                            */
+                        }
                         <Location 
                             className={`w-full ${errors.location && 'form-error'}`}
                             name={'location'}
@@ -348,13 +361,6 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                             placesSelected={handleLocation}
                             errors={errors.location || []}
                         />
-                        <div className={`form-group w-full${errors.title && 'form-error'}`}>
-                            <label>Specific Address</label>
-                            <input type='text' className="input-field" placeholder="House #, Lot and/or street" value={address} onChange={e=>setTitle(e.target.value)}/>
-                            {
-                                (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Specific Address</span>
-                            }
-                        </div>
                         <div className={`form-group w-full ${errors.requirements && 'form-error'}`}>
                             <label>Requirements</label>
                             <textarea className="input-field" placeholder="Enter things to bring" value={bring} onChange={e=>setBring(e.target.value)}/>

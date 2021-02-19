@@ -18,8 +18,12 @@ class TestControl extends Controller
     public function receiptEmail(){
     	$organization = Organization::has('template')->with('template')->first();
 
+        if(!$organization->template){
+            $organization->setRelation('template', new ReceiptTemplate);
+        }
+
     	return new TransactionReceipt($organization, 
-    		[  'Sample Transaction' => 200 ]
+    		[ 'Sample Transaction' => 200 ]
     	);
     }
 
@@ -41,8 +45,8 @@ class TestControl extends Controller
 
     public function sendEmail() {
         //tested and works for receipt email. //requires lower version of css for email setup
-    	// $organization = Organization::has('template')->with('template')->first();
-    	// dispatch(fn() =>  Mail::to('logicbase.amba@gmail.com')->send(new TransactionReceipt($organization, [  'Sample Transaction' => 200 ])) );
+    	$organization = Organization::has('template')->with('template')->first();
+    	dispatch(fn() =>  Mail::to('logicbase.amba@gmail.com')->send(new TransactionReceipt($organization, [  'Sample Transaction' => 200 ])) );
 
     	return 'Email Sent!';
     }

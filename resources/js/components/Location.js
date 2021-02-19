@@ -25,13 +25,11 @@ const Location = ({
                     className={`input-field space-l `}
                     defaultValue={defaultValue}
                     onPlaceSelected={placesSelected}
-                    types={['(regions)']}
+                    types={['address']}
                     componentRestrictions={{ country: "au" }}
+                    placeholder={'Street, Suburb, State, Country'}
                     {...props}
                 />
-                {
-                    //<input className="" type="text" placeholder="Enter Location" name="usrnm"/>
-                }
             </div>
             {errors &&
                 <span className="text-red-500 text-xs italic">{ Array.isArray(errors) ? errors[0] : errors}</span>
