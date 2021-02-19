@@ -194,8 +194,8 @@ class AuthController extends Controller
     }
 
     public function logout(Request $request) {
-        auth()->logout();
         session()->flush();
+        auth()->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
     }
