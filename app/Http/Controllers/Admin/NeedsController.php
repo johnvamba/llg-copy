@@ -107,7 +107,7 @@ class NeedsController extends Controller
             'type'  => 'required',
             'goal' => 'required',
             'description' => 'required',
-            'address' => 'required',
+            // 'address' => 'required',
             'location' => 'required', //doesn't really work
             'photo' => 'required'
             // 'time'=> 'exclude_if:type,volunteer|required',
@@ -233,7 +233,7 @@ class NeedsController extends Controller
             'type'  => 'required',
             'goal' => 'required',
             'description' => 'required',
-            'address' => 'required',
+            // 'address' => 'required',
             // 'time'=> 'exclude_if:type,volunteer|required',
             // 'date'=> 'exclude_if:type,volunteer|required'
         ]);
@@ -296,10 +296,10 @@ class NeedsController extends Controller
                 
                 $need 
                     ->clearMediaCollection('photo')
+                    ->addMediaFromBase64($image)
                     ->addCustomHeaders([
                         'ACL' => 'public-read'
                     ])
-                    ->addMediaFromBase64($image)
                     ->usingName($name)
                     ->usingFileName($name.'.'.$extension)
                     ->toMediaCollection('photo');

@@ -31,8 +31,10 @@ Route::post('org-create', 'Admin\OrganizationController@openCreate');
 
 Route::get('checkemail', 'CheckEmail');
 
-Route::group(['middleware' => 'wpcors', 'namespace' => 'Admin'], function () {
-
+Route::group(['middleware' => 'wpcors', 'prefix' => 'offsite', 'namespace' => 'Admin'], function () {
+    Route::get('stories', 'StoryController@onlyPublished')->name('wp.story.index');
+    Route::get('stories/{story}', 'StoryController@show')->name('wp.story.show');
+    Route::post('stories/{story}', 'StoryController@share')->name('wp.story.share');
 });
 
 Route::group(['middleware' => ['auth:api']], function () {

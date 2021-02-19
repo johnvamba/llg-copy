@@ -16,7 +16,7 @@ class WPCors
     public function handle($request, Closure $next)
     {
         return $next($request)
-            ->header('Access-Control-Allow-Origin', '*') // add domains from wp landing page here
+            ->header('Access-Control-Allow-Origin', env('WORDPRESS_SITE', '*')) // add domain of wp landing page here
             ->header('Access-Control-Allow-Methods', 'GET, POST') //only get and post lang required
             ->header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, X-Token-Auth');
     }

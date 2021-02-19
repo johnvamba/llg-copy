@@ -58,7 +58,7 @@ class GroupController extends Controller
             'description' => 'required',
             'location' => 'required',
             'privacy' => 'required',
-            'address' => 'required',
+            // 'address' => 'required',
             'lat' => 'required',
             'lng' => 'required',
             'goal' => 'required',

@@ -38,6 +38,15 @@ const FormServiceInfo = ({service, updateService, errors, fileList}) => {
                         (errors.desc || false) && <span className="text-xs pt-1 text-red-500 italic">Missing About description</span>
                     }
                 </div>
+                {/*
+                <div className={`form-group ${errors.address && 'form-error'}`}>
+                    <label>Street Address</label>
+                    <input className="input-field" type="text" value={service.address || ''} onChange={(e)=>updateService({...service, address: e.target.value})} placeholder="Enter Specific Address" />
+                    {
+                        (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Street Address</span>
+                    }
+                </div>
+                */}
                 <Location 
                     className={`short-width ${errors.location && 'form-error'}`}
                     name={'location'}
@@ -45,13 +54,6 @@ const FormServiceInfo = ({service, updateService, errors, fileList}) => {
                     placesSelected={handleLocation}
                     errors={errors.location || []}
                 />
-                <div className={`form-group ${errors.address && 'form-error'}`}>
-                    <label>Specific Address</label>
-                    <input className="input-field" type="text" value={service.address || ''} onChange={(e)=>updateService({...service, address: e.target.value})} placeholder="Enter Specific Address" />
-                    {
-                        (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Specific Address</span>
-                    }
-                </div>
                 <Imagepond photo={service.photo} imageSelected={updatePhoto} updatedFiles={(e)=>console.log('service info files', e)} errors={errors.photo}/>
             </form>
         </section>

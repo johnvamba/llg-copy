@@ -74,6 +74,15 @@ const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPriva
                         }
                         {/*<span className="input-error-msg">{fieldErrors.description}</span>*/}
                     </div>
+                    {/*<div className="w-full xl:w-full">
+                        <div className={`form-group ${fieldErrors.address && 'form-error'}`}>
+                            <label>Street Address</label>
+                            <input type='text' className="input-field" name="address" placeholder="House # and/or Lot" value={fields.address} onChange={handleInputChange}/>
+                            {
+                                (fieldErrors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Street Address</span>
+                            }
+                        </div>
+                    </div>*/}
                     <div className="w-full xl:w-full">
                         <Location 
                             className={`${fieldErrors.location && 'form-error'}`}
@@ -83,16 +92,6 @@ const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPriva
                             errors={[fieldErrors.location] || []}
                         />
                     </div>
-                    <div className="w-full xl:w-full">
-                        <div className={`form-group ${fieldErrors.address && 'form-error'}`}>
-                            <label>Specific Address</label>
-                            <input type='text' className="input-field" name="address" placeholder="House #, Lot and/or street" value={fields.address} onChange={handleInputChange}/>
-                            {
-                                (fieldErrors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Specific Address</span>
-                            }
-                        </div>
-                    </div>
-                    
                     <div className="w-full sm:w-full md:w-full">
                         <div className={`form-group form-input-select ${privacyOpen ? 'active' : ''} ${(!privacyOpen && fieldErrors.privacy && !fields.privacy) ? 'has-error' : ''}`}>
                             <label>Privacy</label>

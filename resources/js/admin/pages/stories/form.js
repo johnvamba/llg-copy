@@ -93,11 +93,11 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
         const submitPromise = !data.id ? 
             api.post(`/api/web/stories`, params) : 
             api.patch(`/api/web/stories/${data.id}`, { ...params })
-
+        const data_id = data.id
         submitPromise.then(({data})=>{
             setSubmitting(false)
             handleForm(); //cleardata
-            swalSuccess(data.id ? "Story has been updated!": 'Story has been created!')
+            swalSuccess(data_id ? "Story has been updated!": 'Story has been created!')
             afterSubmit(data.data, saveAs)
         }).catch(err=>{
             if(err.response){

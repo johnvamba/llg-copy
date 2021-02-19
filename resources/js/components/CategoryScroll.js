@@ -83,6 +83,7 @@ const CategoryScroll = ({
                         onSelect={handleCategories}
                         />)
                 }
+                
             </div>
             {
                 (errors || false) && <span className="text-xs pt-1 text-red-500">Pick at least a category</span>

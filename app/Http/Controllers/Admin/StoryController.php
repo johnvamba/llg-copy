@@ -28,8 +28,27 @@ class StoryController extends Controller
             $stories->when($type=='drafts', fn($sub) => $sub->whereNull('posted_at'))
             ->when($type=='published', fn($sub) => $sub->whereNotNull('posted_at'));
 
+        if($string = $request->get('search')) {
+            $stories->where('title', 'like', '%'.$string.'%');
+        }
+
         return StoryResource::collection( $stories->paginate() );
     }
+
+    public function onlyPublished(Request $request)
+    {
+        $stories = Story::with(['categories:name', 'media', 'organization.media'])
+            ->withCount(['appreciates', 'comments'])
+            ->whereNotNull('posted_at')
+            ->latest();
+
+        if($string = $request->get('search')) {
+            $stories->where('title', 'like', '%'.$string.'%');
+        }
+
+        return StoryResource::collection( $stories->paginate() );
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -216,7 +235,21 @@ class StoryController extends Controller
                 'posted_at' => !isset($story->posted_at) ? now() : null
             ]);
             DB::commit();
-            return response()->json(['Successfully deleted'], 200);
+            return response()->json(['Successfully updated'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    public function share(Story $story){
+        DB::beginTransaction();
+        try {
+            // $story->update([
+            //     'posted_at' => !isset($story->posted_at) ? now() : null
+            // ]);
+            DB::commit();
+            return response()->json(['Successfully shared'], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
