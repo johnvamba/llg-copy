@@ -1,11 +1,13 @@
 import {
     SET_PROFILE,
     SET_ROLES,
+    SET_ORG
 } from './types';
 
 let initialState = {
     profile: {},
     roles: {},
+    org: {}
 }
 
 export const reducer = (state = initialState, {type, payload}) => {
@@ -22,6 +24,11 @@ export const reducer = (state = initialState, {type, payload}) => {
                 roles: payload
             }
             break;
+        case SET_ORG:
+            return {
+                ...state,
+                org: payload
+            }
         default :
             return state;
             break;

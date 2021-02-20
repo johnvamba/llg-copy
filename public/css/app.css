@@ -29052,7 +29052,6 @@ video {
 }
 
 .view-offer__header {
-  justify-content: space-between;
   padding: 19px;
   padding-top: 20px;
   border-bottom: 1px solid #E6E7EF;

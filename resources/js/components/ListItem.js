@@ -24,18 +24,16 @@ const ListItem = ({
                     />}
 
                 <div className="ml-4 flex flex-col justify-center">
-                    <>
-                        <p className={` mr-2`}>
-                            <span className={`recent-added-needs-title ${titleStyle}`}>{title}</span>
+                    <p className={` mr-2`}>
+                        <span className={`recent-added-needs-title ${titleStyle}`}>{title}</span>
 
-                            {description && 
-                                <span className={`text-gray-800 font-thin`}> {description} 
-                                    <span className="text-blue-400 font-semibold"> {shortDescription}
-                                    </span>
+                        {description && 
+                            <span className={`text-gray-800 font-thin`}> {description} 
+                                <span className="text-yellow-600 font-semibold"> {shortDescription}
                                 </span>
-                            }
-                        </p>
-                    </>
+                            </span>
+                        }
+                    </p>
 
                     {status &&
                         <p className={`recent-added-needs-status capitalize`}>

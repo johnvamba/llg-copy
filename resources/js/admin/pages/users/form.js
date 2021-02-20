@@ -16,7 +16,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
     const selectOptions = [
         { value: 'user', label: 'App User'},
         { value: 'organization admin', label: 'Organization User'},
-        { value: 'campus admin', label: 'Campus User'},
+        { value: 'campus admin', label: 'Location User'},
         { value: 'admin', label: 'Super User'},
     ];
     const [form, setForm] = useState({

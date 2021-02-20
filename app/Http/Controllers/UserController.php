@@ -16,6 +16,8 @@ use App\OrganizationCredential;
 use Carbon\Carbon;
 use DB;
 
+use App\Http\Resources\Async\OrganizationResource;
+
 class UserController extends Controller
 {
     /**
@@ -45,11 +47,11 @@ class UserController extends Controller
     {
         $date = Carbon::now();
 
-        $users['Total Users'] = User::withTrashed()->get()->count();
-        $users['Active Users'] = User::all()->count();     
+        $users['Total Users'] = User::withTrashed()->count();
+        $users['Active Users'] = User::whereHas('activities', fn($q) => $q->whereBetween('activities.updated_at', [ (clone $date)->subMonth(), $date]))->count();     
         $users['New Users'] = User::where([
-                ['created_at', '>=', $date->startOfYear()->toDateString()], 
-                ['created_at', '<=', $date->endOfYear()->toDateString()]
+                ['created_at', '>=', $date->startOfMonth()->toDateString()], 
+                ['created_at', '<=', $date->endOfMonth()->toDateString()]
             ])
             ->get()
             ->count();
@@ -134,10 +136,16 @@ class UserController extends Controller
      */
     public function getProfile(Request $request)
     {
-        $user = User::with('profile')
+        $user = User::with(['profile', 'organization'])
             ->find(auth()->user()->id);
 
         $user->getRoleNames();
+
+        if($user->hasRole('organization admin')){
+            $org = (new OrganizationResource($user->organization))->resolve();
+            $user->unsetRelation('organization');
+            $user->organization = $org;
+        }
 
         return response()->json($user);
     }

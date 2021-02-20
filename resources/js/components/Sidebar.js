@@ -32,14 +32,15 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
         state => state.AuthUserReducer.roles
     );
 
-    const disptach = useDispatch();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         async function fetchData() {
             let { data } = await axios.get('/api/user/me');
 
-            disptach(AuthUserActions.setProfile(data));
-            disptach(AuthUserActions.setRoles(data.roles[0]));
+            dispatch(AuthUserActions.setProfile(data));
+            dispatch(AuthUserActions.setRoles(data.roles[0]));
+            dispatch(AuthUserActions.setOrg(data.organization));
         }
 
         fetchData();

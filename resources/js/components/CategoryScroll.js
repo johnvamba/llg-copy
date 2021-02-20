@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 //This part is just a test
 import { monetary, volunteer } from '../admin/pages/needs/categorylist';
@@ -27,9 +27,16 @@ const CategoryScroll = ({
     const [catList, setCatList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [scrollLeft, setScrollLeft] = useState(0);
+    const container = useRef(null);
+    const [widths, setWidth] = useState({
+        start: 0,
+        end: 0,
+        full: 0
+    });
 
     useEffect(()=>{
         //load categories here.
+
     }, [type])
 
     const categoryWheel = event => {
@@ -50,11 +57,21 @@ const CategoryScroll = ({
     }
 
     return (
-        <div className={`form-group ${errors ? 'form-error' : ''}`}>
+        <div className={`form-group category-container ${errors ? 'form-error' : ''}`}>
             <label>Select Category</label>
             <div className="icon-categories"
+                ref={container}
                 onWheel={categoryWheel}
                 onScroll={categoryScroll}>
+                {
+                    widths.start != 0 &&
+                    <div className="scroll left-scroll">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="12" fill="#109CF1"/>
+                        <path d="M10 7L15 12L10 17" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                }
                 {
                     //Apply me later on. At the meantime, do svg
                     /*
@@ -83,7 +100,15 @@ const CategoryScroll = ({
                         onSelect={handleCategories}
                         />)
                 }
-                
+                {
+                    widths.end != widths.full &&
+                    <div className="scroll right-scroll">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="12" fill="#109CF1"/>
+                        <path d="M10 7L15 12L10 17" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                }
             </div>
             {
                 (errors || false) && <span className="text-xs pt-1 text-red-500">Pick at least a category</span>

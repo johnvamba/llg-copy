@@ -10,7 +10,7 @@ import MapMini from '../../../components/helpers/map/index-mini';
 import { volunteer } from '../needs/categorylist';
 import { Other } from '../needs/categories'
 
-const OfferView = ({ setShowOfferEdit, data = {} }) => {
+const OfferView = ({ setShowOfferEdit, data = {} , toClose}) => {
     // const [ title, setTitle ] = useState('')
     // const [ type, setType ] = useState('')
     // const [ location, setLocation ] = useState('')
@@ -66,8 +66,8 @@ const OfferView = ({ setShowOfferEdit, data = {} }) => {
 
     return(
         <div className="view-offer">
-            <div className="view-offer__header flex flex-wrap">
-                <div className="view-offer__header-left flex flex-wrap">
+            <div className="view-offer__header flex flex-wrap items-center">
+                <div className="view-offer__header-left flex flex-wrap flex-grow">
                     <Circlet stroke={fillCirclet} />
                     {switchStatus()}
                 </div>
@@ -75,6 +75,15 @@ const OfferView = ({ setShowOfferEdit, data = {} }) => {
                     <OffersViewEdit />
                     <label>Edit</label>
                 </div>
+                <span className="ver-divider"></span>
+                <button className="" onClick={toClose}>
+                    <i className="">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L13 13" stroke="#98999B" stroke-width="1.5"/>
+                            <path d="M13 1L1 13" stroke="#98999B" stroke-width="1.5"/>
+                        </svg>
+                    </i>
+                </button>
             </div>
             <div className="view-offer__body">
                 {

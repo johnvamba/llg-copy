@@ -81,6 +81,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('receipt/template', 'ReceiptTemplateController@update');
 
         Route::get('search', 'GeneralSearch');
+
+        Route::get('activities', 'Activities');
     });
 
     /** Role resource module */
@@ -89,7 +91,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** User resource module */
     Route::get('user/me', 'UserController@getProfile');
     Route::get('user/me/update-profile', 'UserController@updateProfile');
-    Route::get('user/stats', 'UserController@getUsersStatistics');
+    Route::get('user/stats', 'UserController@getUsersStatistics')->middleware('datafilter');
     Route::post('users/lists', 'UserController@getUsers');
     Route::post('user/add-card/{organization}', 'UserController@addCard');
     Route::post('user/cards', 'UserController@getCards');

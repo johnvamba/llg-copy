@@ -7,8 +7,6 @@ use Carbon\Carbon;
 
 class Activity extends Model
 {
-    //
-
     protected $guarded = [];
 
     protected $appends = ['created'];

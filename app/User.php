@@ -91,6 +91,11 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough('App\Group', 'App\GroupParticipant', 'user_id', 'id', 'id', 'group_id');
     }
+
+    public function activities()
+    {
+        return $this->hasMany('App\Activity');
+    }
     
     public function group_pivots()
     {

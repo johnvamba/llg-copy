@@ -185,6 +185,10 @@ class AuthController extends Controller
             'token' => $token
         ];
 
+        if($user->hasRole('organization admin')){
+            $data['org'] = $user->organization;
+        }
+
         return response()->json($data, 202);
     }
     //override reset link sending response

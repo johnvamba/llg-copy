@@ -13,13 +13,13 @@ const NeedFilter = ({onClose, NeedsReducer}) => {
     const [min, setMin] = useState(NeedsReducer.min || 0);
     const [max, setMax] = useState(NeedsReducer.max || 0);
     const [dateType, selectDateType] = useState('custom');
-    const [minSwitch, setMinSwitch] = useState(NeedsReducer.minSwitch|| false);
-    const [maxSwitch, setMaxSwitch] = useState(NeedsReducer.maxSwitch|| false);
+    // const [minSwitch, setMinSwitch] = useState(NeedsReducer.minSwitch|| false);
+    // const [maxSwitch, setMaxSwitch] = useState(NeedsReducer.maxSwitch|| false);
 
     const dispatch = useDispatch();
 
     const clickDispatch = ()=>{
-        if(minSwitch && maxSwitch && min > max){
+        if(min > max){
             return;
         }
         dispatch( setFilters({ type, startdate, enddate, min, max, dateType, minSwitch, maxSwitch }) );
@@ -37,10 +37,13 @@ const NeedFilter = ({onClose, NeedsReducer}) => {
     return (
         <div className="filter-need form">
             <div className="form-body filter-body">
+
                 <div className="flex justify-between">
                     <div className="form-group checkbox">
                         <label>Minimum Amount </label>
+                    {/*
                         <SwitchCheckbox name={'minAmount'} checked={minSwitch} onChange={setMinSwitch}/>
+                    */}
                         <div className="input-container">
                             <span className="currency">$</span>
                             <input className="input-field space-l" type="number" placeholder="0.00" value={min} name="goal" onChange={e=>setMin(e.target.value)}/>
@@ -48,7 +51,9 @@ const NeedFilter = ({onClose, NeedsReducer}) => {
                     </div>
                     <div className="form-group checkbox">
                         <label>Maximum Amount  </label>
+                    {/*
                         <SwitchCheckbox name={'maxAmount'} checked={maxSwitch} onChange={setMaxSwitch}/>
+                    */}
                         <div className="input-container">
                             <span className="currency">$</span>
                             <input className="input-field space-l" type="number" placeholder="0.00" value={max} name="goal" onChange={e=>setMax(e.target.value)}/>
