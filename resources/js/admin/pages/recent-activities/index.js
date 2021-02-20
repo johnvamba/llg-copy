@@ -6,6 +6,7 @@ import * as RecentActivtiesActions from '../../../redux/recent-activities/action
 import ActivitySection from './activity-section';
 
 const RecentActivities = () => {
+    
     const todayActivities = useSelector(
             state => state.RecentActivitiesReducer.todayActivities
         );
@@ -16,25 +17,34 @@ const RecentActivities = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        async function getTodayActivities() {
-            let {data} = await axios.post('/api/activity/recents', {
-                'limit': 3,
-                'date': moment()
-            });
-            dispatch(RecentActivtiesActions.setTodayActivities(data));
-        } 
+        getAllData();
+        // async function getTodayActivities() {
+        //     let {data} = await axios.post('/api/activity/recents', {
+        //         // 'limit': 3,
+        //         'date': moment()
+        //     });
+        //     dispatch(RecentActivtiesActions.setTodayActivities(data));
+        // } 
 
-        async function getYesterdayActivities() {
-            let {data} = await axios.post('/api/activity/recents', {
-                'limit': 3,
-                'date': moment().subtract(1, 'days')
-            });
-            dispatch(RecentActivtiesActions.setYesterdayActivities(data));
-        } 
+        // async function getYesterdayActivities() {
+        //     let {data} = await axios.post('/api/activity/recents', {
+        //         'limit': 3,
+        //         'date': moment().subtract(1, 'days')
+        //     });
+        //     dispatch(RecentActivtiesActions.setYesterdayActivities(data));
+        // } 
 
-        getTodayActivities();
-        getYesterdayActivities();
+        // getTodayActivities();
+        // getYesterdayActivities();
     }, []);
+
+    const getAllData = () => {
+        api.get('/api/web/activities').then(({data}) => {
+            dispatch(RecentActivtiesActions.setTodayActivities(data.today || []));
+            dispatch(RecentActivtiesActions.setYesterdayActivities(data.yesterday || []));
+
+        });
+    }
 
     return (
         <div className="flex flex-shrink-0 flex-col w-full md:w-64 xl:w-64 border-l">
@@ -43,8 +53,8 @@ const RecentActivities = () => {
                     <h1>Recent Activities</h1>
                 </div>
 
-                <ActivitySection title="Today" data={todayActivities} />
-                <ActivitySection title="Yesterday" data={yesterdayActivities} />
+                <ActivitySection title="Today" data={todayActivities} ver='2'/>
+                <ActivitySection title="Yesterday" data={yesterdayActivities} ver='2'/>
             </aside>
         </div>
     )

@@ -22,11 +22,14 @@ import Imagepond from '../../../components/Imagepond'
 import LoadingScreen from '../../../components/LoadingScreen'
 import TimeInput from '../../../components/TimeInput'
 
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
 const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     //user
     const { roles } = AuthUserReducer;
+    const org = useSelector(
+        state => state.AuthUserReducer.org
+    );
     //form
     const [title, setTitle] = useState('');
     const [about, setAbout] = useState('');
@@ -122,6 +125,14 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         // console.log('trigger data', data);
     }, [data])
 
+    useEffect(()=>{
+        if(!_.isEmpty(org)) {
+            console.log('org', org)
+            updateOrganization(org)
+        }
+        console.log('shold run', org)
+    }, [org])
+
     const updateOrganization = (org) => {
         if(org.location) {
             setLocation({
@@ -129,8 +140,6 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 lat: org.lat,
                 lng: org.lng
             })
-
-            // setAddress(org.address || '')
         }
         setOrganization(org)
     }
@@ -222,7 +231,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 </div>
                 {
                     //Set user priveledges here.. campus users will need to know what organization is asking for need.
-                    (roles.name == 'admin') && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
+                    (roles.name == 'admin' || roles.name == 'campus admin') && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
                         <label>Organization</label>
                         <AsyncSelect
                             styles={selectStylePaddingZero}
@@ -303,6 +312,13 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                                 (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Volunteer Opportunity Information</span>
                             }
                         </div>
+                        <div className={`form-group w-full ${errors.requirements && 'form-error'}`}>
+                            <label>Requirements</label>
+                            <textarea className="input-field" placeholder="Enter things to bring" value={bring} onChange={e=>setBring(e.target.value)}/>
+                            {
+                                (errors.requirements || false) && <span className="text-xs pt-1 text-red-500 italic">Missing what to bring</span>
+                            }
+                        </div>
                         <div className={`form-group short-width ${errors.date ? 'form-error' : ''}`}>
                             <label>Date Needed</label>
                             <div className="input-container">
@@ -361,13 +377,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                             placesSelected={handleLocation}
                             errors={errors.location || []}
                         />
-                        <div className={`form-group w-full ${errors.requirements && 'form-error'}`}>
-                            <label>Requirements</label>
-                            <textarea className="input-field" placeholder="Enter things to bring" value={bring} onChange={e=>setBring(e.target.value)}/>
-                            {
-                                (errors.requirements || false) && <span className="text-xs pt-1 text-red-500 italic">Missing what to bring</span>
-                            }
-                        </div>
+                        
                     </div>
                 }
                 <Imagepond photo={photo} imageSelected={setPhoto} errors={errors.photo}/>

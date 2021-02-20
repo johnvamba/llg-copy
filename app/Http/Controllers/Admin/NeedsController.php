@@ -121,9 +121,11 @@ class NeedsController extends Controller
 
             if($org = $request->get('organization')) {
                 $organization = Organization::findOrFail($org['id'] ?? 0);
-            } else {
+            } else if($session = session('org_id')) {
                 //Query user under what organization here instead
-                $organization = Organization::first();
+                $organization = Organization::findOrFail( $session );
+            } else {
+                throw new \Exception("Missing Organization");
             }
 
             $location = $request->get('location');

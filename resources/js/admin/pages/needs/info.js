@@ -122,6 +122,15 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
             	<button className="contents" onClick={clickEdit}>
                     <i className="ml-1"><Pencil/></i>
                     Edit</button>
+                <span className="ver-divider"></span>
+                <button className="" onClick={toClose}>
+                    <i className="ml-1">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1L13 13" stroke="#98999B" stroke-width="1.5"/>
+                            <path d="M13 1L1 13" stroke="#98999B" stroke-width="1.5"/>
+                        </svg>
+                    </i>
+                </button>
             </div>
             {
                 (!loading) ? 

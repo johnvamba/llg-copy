@@ -37,14 +37,14 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         <td className="checkbox">
             <input type='checkbox' checked={checkValue} onChange={checkChange}/>
         </td>
-        <td className="title">
+        <td className="title" onClick={onShowInfo}>
             <div className="flex items-center"> 
                 {
                     photo ?
                     <img className="title-img" src={photo}/> :
                     <img className="title-img"/>
                 }
-                <span onClick={onShowInfo}>
+                <span>
                     { title }
                 </span>
             </div>

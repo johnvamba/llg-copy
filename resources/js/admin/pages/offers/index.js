@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import * as OffersAction from '../../../redux/offers/actions';
 import OffersEmployment from '../../../svg/offers-employment';
 import OffersPlus from '../../../svg/offers-plus';
@@ -11,7 +11,10 @@ import OfferView from './offer-view';
 import OfferTable from './table'
 
 const Offers = () => {
-    const dispatch = useDispatch();
+    const roles = useSelector(
+        state => state.AuthUserReducer.roles
+    );
+    // const dispatch = useDispatch();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(15);
     const [meta, setMeta] = useState({})
@@ -87,10 +90,13 @@ const Offers = () => {
                 <div className="flex flex-1">
                     <h1>Offers { count > 0 ? `(${count})` : ''}</h1>
                 </div>
-                <button className="primary-btn flex justify-end rounded-sm" onClick={()=>showItem({}, false, true)}>
-                    <OffersPlus />
-                    <span>Create Offer</span>
-                </button>
+                {
+                    roles.name != 'organization user' && 
+                    <button className="primary-btn flex justify-end rounded-sm" onClick={()=>showItem({}, false, true)}>
+                        <OffersPlus />
+                        <span>Create Offer</span>
+                    </button>
+                }
             </div>
             
             <div className="component-body flex flex-col p-8">
@@ -103,7 +109,7 @@ const Offers = () => {
             }
             {
                 showView && 
-                <OfferView data={focus} setShowOfferEdit={(e)=>showItem(focus, false, true)} />
+                <OfferView data={focus} setShowOfferEdit={(e)=>showItem(focus, false, true)} toClose={()=>showItem({}, false)} />
             }
         </>
     )

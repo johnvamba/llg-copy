@@ -118,10 +118,9 @@ class PaymentController extends Controller
                     ]);
                     
                 $activity->store($need, [
-                        'description' => 'donated to ',
-                        'short_description' => $need->title,
-                    ]);
-
+                    'description' => 'donated ',
+                    'short_description' => "$ ". number_format($request->amount, 2),
+                ]);
     
                 $charge = \Stripe\Charge::create([
                         'customer' => $request->customer_id,

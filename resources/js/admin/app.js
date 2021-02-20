@@ -3,6 +3,7 @@ import Sidebar from '../components/Sidebar';
 import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 import Cookie from 'js-cookie';
 import Content from './content';
+import { useSelector } from 'react-redux';
 import OrganizationView from './pages/organizations/view';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../assets/css/general.css';
@@ -21,7 +22,9 @@ const Home = () => {
     const [notifications, setNotifications] = useState([]);
     const [showSidebarMobile, setShowSidebarMobile] = useState(false);
     const [actPanel,showActPanel] = useState(false);
-
+    const roles = useSelector(
+        state => state.AuthUserReducer.roles
+    );
     const windowWidth = window.innerWidth;
 
     useEffect(() => {
@@ -56,6 +59,18 @@ const Home = () => {
         setShowSidebarMobile(true);
     }
 
+    const switchButton = () => {
+        switch(roles.name){
+            case 'admin':
+            return 'Admin Portal';
+            case 'campus admin':
+            return 'Location Portal';
+            case 'organization admin':
+            default: 
+            return "Organization Portal";
+        }
+    }
+
     return (
         <Router basename="/admin">
             <div className="flex min-h-screen">
@@ -83,7 +98,7 @@ const Home = () => {
                                     </button>
                                     {
                                         toggleFilter &&
-                                                <MainFilter referElement={filterElement} onClose={()=>showFilter(false)}/>
+                                        <MainFilter referElement={filterElement} onClose={()=>showFilter(false)}/>
                                     }
                                 </div>
                         }/>
@@ -93,11 +108,7 @@ const Home = () => {
                             <Link className="admin-mobile" to="/">
                                 <i className="fas fa-user-cog"></i>
                             </Link>
-                            <button
-                                className="admin-desktop bg-blue-100 rounded-full text-blue-400 focus:outline-none py-2 px-6 mr-6"
-                            >
-                                Admin
-                            </button>
+                            <button className="admin-desktop bg-blue-100 rounded-full text-blue-400 focus:outline-none py-2 px-6 mr-6">{switchButton()}</button>
                             <div className="admin-notif relative">
                                 <button className="mr-6 text-lg" onClick={()=>showActPanel(!actPanel)}>
                                     <i className="far fa-bell"></i>

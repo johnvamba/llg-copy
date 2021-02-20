@@ -36,7 +36,6 @@ export const swalDelete = async (name) => {
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'No, keep it'
         }).then((result) => {
-            console.log(result);
             if (result.value) {
                 Swal.fire({
                     text: 'Refreshing records...',
