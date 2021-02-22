@@ -169,6 +169,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('groups/messages/{group}', 'GroupController@messages');
     Route::post('groups/message/{group}', 'GroupController@addMessage');
     Route::get('groups/discover/page/{page?}', 'GroupController@getDiscoverGroups');
+    Route::post('groups/suggested/nearby/{lat}/{lng}', 'GroupController@suggestedNearby');
     Route::resource('groups', 'GroupController');
 
     /** Orgnization Categories resource module */

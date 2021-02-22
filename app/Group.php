@@ -48,6 +48,11 @@ class Group extends Model implements HasMedia
         return $this->hasMany('App\GroupParticipant');
     }
 
+    public function notifications()
+    {
+        return $this->morphMany('App\Notification', 'model');
+    }
+
     /**
      * Set short description column value
      */

@@ -188,11 +188,15 @@ class NeedsMetController extends Controller
      */
     public function getNeedsVolunteer(Request $request, Need $need)
     {
-        $needsMets = NeedMet::where('need_id', $need->id)
+        $needsMets['volunteered'] = false;
+
+        $needsMets['volunteers'] = NeedMet::where('need_id', $need->id)
             ->limit(6)
             ->get();
         
-        foreach($needsMets as $met) {
+        foreach($needsMets['volunteers'] as $met) {
+            if ($met->model->profile->id == auth()->user()->id) 
+            $needsMets['volunteered'] = true;
             $met->model->profile;
         }
 

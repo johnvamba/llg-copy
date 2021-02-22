@@ -538,4 +538,30 @@ class GroupController extends Controller
 
         return response()->json($users);
     }
+
+    /**
+     * Display a listing of the resource nearby.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function suggestedNearby(Request $request, $lat, $lng)
+    {
+        $groups = Group::select('groups.*')
+            ->selectRaw('( 6371 * acos( cos( radians(?) ) 
+                * cos( radians( lat ) ) * cos( radians( lng ) 
+                - radians(?) ) + sin( radians(?) ) 
+                * sin( radians( lat ) ) ) ) AS distance', 
+                [$lat, $lng, $lat])
+            ->orderBy('distance')
+            ->limit(10)
+            ->get();
+        
+        foreach($groups as $group) {
+            $group['type'] = 'church';
+            $group['photo'] = $group->getFirstMediaUrl('photo');
+            $group['cover_photo'] = $group->getFirstMediaUrl('cover_photo');
+        } 
+
+        return response()->json($groups->toArray(), 200);
+    }
 }

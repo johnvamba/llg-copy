@@ -7,6 +7,8 @@ use App\User;
 use App\Group;
 use App\GroupInvite;
 use App\GroupParticipant;
+use App\Notification;
+use App\Events\GroupInvite as GroupInviteEvent;
 
 class GroupInviteController extends Controller
 {
@@ -58,11 +60,22 @@ class GroupInviteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $group = Group::find($request->group_id);
+
         $invite = GroupInvite::create(request()->only([
             'group_id',
             'user_id'
         ]));
+
+        $params = [
+            "description" => "invited you to join {$group->name} here",
+            "type" => 'group invitation',
+            "isRead" => false
+        ];
+
+        Notification::storeNotification($group, $params);
+
+        event(new GroupInviteEvent($params));
 
         return response()->json($invite, 202);
     }
