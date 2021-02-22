@@ -127,10 +127,10 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
 
     useEffect(()=>{
         if(!_.isEmpty(org)) {
-            console.log('org', org)
+            // console.log('org', org)
             updateOrganization(org)
         }
-        console.log('shold run', org)
+        // console.log('shold run', org)
     }, [org])
 
     const updateOrganization = (org) => {
@@ -273,15 +273,6 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                                 (errors.goal || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Goal</span>
                             }
                         </div>
-                        {/*
-                        <div className={`form-group ${errors.address && 'form-error'}`}>
-                            <label>Street Address</label>
-                            <input type='text' className="input-field" placeholder="House # and/or Lot" value={address} onChange={e=>setAddress(e.target.value)}/>
-                            {
-                                (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Street Address</span>
-                            }
-                        </div>
-                        */}
                         <Location 
                             className={`short-width ${errors.location && 'form-error'}`}
                             name={'location'}
@@ -292,10 +283,6 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                         <div className={`form-group ${errors.description && 'form-error'}`}>
                             <label>About</label>
                             <textarea className="input-field" placeholder="Say something about this need" value={about} onChange={e=>setAbout(e.target.value)}/>
-                            {
-                                //
-                            //<input type='text' className="input-field" placeholder="Say something about this need" value={about} onChange={e=>setAbout(e.target.value)}/>
-                            }
                             {
                                 (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing About content</span>
                             }
@@ -359,17 +346,6 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                                 (errors.goal || false) && <span className="text-xs pt-1 text-red-500 italic">Missing number of people</span>
                             }
                         </div>
-                        {
-                            /*
-                        <div className={`form-group w-full${errors.title && 'form-error'}`}>
-                            <label>Specific Address</label>
-                            <input type='text' className="input-field" placeholder="House # and/or Lot" value={address} onChange={e=>setTitle(e.target.value)}/>
-                            {
-                                (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Specific Address</span>
-                            }
-                        </div>
-                            */
-                        }
                         <Location 
                             className={`w-full ${errors.location && 'form-error'}`}
                             name={'location'}

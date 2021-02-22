@@ -17,6 +17,8 @@ use App\Need;
 use App\NeedMet;
 use App\Tag;
 
+use App\Http\Resources\Mini\UserResource;
+
 use App\Http\Resources\NeedResource;
 use Carbon\Carbon;
 class NeedsController extends Controller
@@ -204,9 +206,17 @@ class NeedsController extends Controller
      */
     public function show(Need $need)
     {
-        $need->loadMissing('media', 'type', 'organization', 'categories');
+        $need->loadMissing('media', 'type', 'organization', 'categories');//->loadCount('contributors');
 
         return new NeedResource($need);
+    }
+
+    public function contributors(Need $need)
+    {
+        $need->loadMissing([
+            'contributors' => fn($contri) => $contri->withoutGlobalScopes()->with('profile')->select(["*", "need_mets.created_at as custom_date"])]);
+
+        return UserResource::collection($need->contributors);
     }
 
     /**

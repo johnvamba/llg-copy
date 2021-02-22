@@ -43,6 +43,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('needs/types', 'NeedsController@types');
 
         Route::resource('needs', 'NeedsController');
+        Route::get('needs/{need}/contributors', 'NeedsController@contributors');
         Route::post('needs/{need}/approve', 'NeedsController@approve');
         Route::post('needs/{need}/disapprove', 'NeedsController@disapprove');
 
