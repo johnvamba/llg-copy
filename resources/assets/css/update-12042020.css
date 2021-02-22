@@ -229,6 +229,9 @@ button.admin-desktop {
     line-height: 17px;
     letter-spacing: 0.01em;
     color: #231F20;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .list-single-story__header span {

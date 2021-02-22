@@ -64,6 +64,10 @@ class NeedsController extends Controller
                 ->when($enddate, fn($need) => $need->where('created_at', '<=', $enddate));
         }
 
+        if($search = $request->get('search')) {
+            $need->where('title', 'like', '%'.$search.'%');
+        }
+
         if($request->get('debug')){
             dd($need->get(), DB::getQueryLog(),session()->only(['camp_id','org_id']));
         }

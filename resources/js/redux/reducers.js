@@ -10,6 +10,9 @@ import {reducer as NeedsReducer} from './needs/reducer';
 import {reducer as OffersReducer} from './offers/reducer';
 import {reducer as StoriesReducer} from './stories/reducer';
 import {reducer as GroupsReducer} from './groups/reducer';
+
+import {reducer as SearchReducer} from './search/reducer';
+
 // import {reducer as FormReducer} from './forms/reducer';
 
 const appReducers = combineReducers({
@@ -23,7 +26,9 @@ const appReducers = combineReducers({
     NeedsReducer: NeedsReducer,
     OffersReducer: OffersReducer,
     StoriesReducer: StoriesReducer,
-    GroupsReducer: GroupsReducer
+    GroupsReducer: GroupsReducer,
+    SearchReducer,
+
     // FormReducer
 });
 

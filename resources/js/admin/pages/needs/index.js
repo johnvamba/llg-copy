@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, connect } from 'react-redux';
 import * as NeedsActions from '../../../redux/needs/actions';
-// import DataTable from '../../../components/layout/DataTable';
 import Button from '../../../components/Button';
 import Paginator from '../../../components/Paginator';
-
 import Check from '../../../svg/check'
 import Cross from '../../../svg/cross'
-// import CrossPlain from '../../../svg/cross-plain'
 import Quill from '../../../svg/quill'
-//As test icon only
-// import IconTest from '../../../svg/icon-test'
-
 import './needs.css';
 
 import NeedForm from './form'
@@ -45,6 +39,8 @@ const Needs = ({NeedsReducer}) => {
 
     const dispatch = useDispatch();
 
+    const search = useSelector(({SearchReducer}) => SearchReducer.search);
+
     useEffect(() => {
         setLoading(true)
         const ct = loadTable();
@@ -52,7 +48,7 @@ const Needs = ({NeedsReducer}) => {
             //cancel api here
             ct.cancel('Resetting');
         }
-    }, [ tab, page, needs, type, startdate, enddate, min, max, dateType, limit ]);
+    }, [ tab, page, needs, type, startdate, enddate, min, max, dateType, limit, search ]);
 
     const loadTable = (clearCache = false) => {
         const addFilter = filter ? { type, startdate, enddate, min, max } : {};
@@ -60,7 +56,8 @@ const Needs = ({NeedsReducer}) => {
         api.get(`/api/web/needs`, {
             params: {
                 tab, page, ...addFilter,
-                per_page: limit || 15
+                per_page: limit || 15,
+                search
             },
             cache: {
                 exclude: { query: false },
@@ -73,8 +70,8 @@ const Needs = ({NeedsReducer}) => {
             setNeeds(data.data)
             setMeta(data.meta)
             setTabCounts({ aggregate, current, past})
-        }).finally(()=>{
             setLoading(false)
+        }).finally(()=>{
         })
         return token; //for useEffect
     }

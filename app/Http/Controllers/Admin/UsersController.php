@@ -23,6 +23,11 @@ class UsersController extends Controller
         DB::enableQueryLog();
         $users = User::latest()->with('profile');
 
+        if($search = $request->get('search')) {
+            $users->where('email', 'like', '%'.$search.'%')
+                ->orWhere('name', 'like', '%'.$search.'%');
+        }
+
         if(false){
             dd($users->get(), auth()->user()->hasRole('campus admin'), DB::getQueryLog(),session()->only(['filterOn','camp_id','org_id']));
         }

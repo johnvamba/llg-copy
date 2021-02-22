@@ -26,6 +26,9 @@ class GroupController extends Controller
     public function index(Request $request)
     {
         $group = Group::withCount('participants')->withGoalRatio()->latest();
+        
+        if($search = $request->get('search'))
+            $group->where('name', 'like', '%'.$search.'%');
 
         return GroupResource::collection($group->paginate());
     }

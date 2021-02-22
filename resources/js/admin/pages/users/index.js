@@ -29,7 +29,7 @@ const Users = () => {
         bio: '',
         dateAdded: '',
     });
-
+    const search = useSelector(({SearchReducer}) => SearchReducer.search);
     const roles = useSelector(state => state.AuthUserReducer.roles);
 
     const dispatch = useDispatch();
@@ -40,7 +40,8 @@ const Users = () => {
         api.get(`/api/web/users`, {
             params: {
                 page, ...addFilter,
-                per_page: limit
+                per_page: limit,
+                search
             },
             cache: {
                 exclude: { query: false },
@@ -53,8 +54,8 @@ const Users = () => {
             setUsers(data.data || [])
             setCount(users_count || 0)
             setMeta(data.meta)
-        }).finally(()=>{
             setLoading(false)
+        }).finally(()=>{
         })
         return token; //for useEffect
     }
@@ -66,7 +67,7 @@ const Users = () => {
             //cancel api here
             ct.cancel('Resetting');
         }
-    }, [page, limit]);
+    }, [page, limit, search]);
     const handleLimitChange = (limit) => {
         setLimit(parseInt(limit));
     }

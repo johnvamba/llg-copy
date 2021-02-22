@@ -150,7 +150,7 @@ const UserTable = ({tab = null, data = [], showInfo, loading = false, loadTable}
                 <th className="checkbox">
                     <input type='checkbox' checked={checkAll} onChange={e=>handleCheckAll(e.target.checked)}/>
                 </th>
-                <th className="title">Title</th>
+                <th className="title">Name</th>
                 <th className="">Email</th>
                 <th className="">Age</th>
                 <th className="">Bio</th>

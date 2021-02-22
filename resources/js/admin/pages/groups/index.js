@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as GroupsActions from '../../../redux/groups/actions';
-import DataTable from '../../../components/layout/DataTable';
+import LoadingScreen from '../../../components/LoadingScreen'
 
 import GroupsHeader from './header';
 import GroupsList from './list';
@@ -12,19 +12,20 @@ const Groups = () => {
     const [page, setPage] = useState(1);
     const [showForm, setShowForm] = useState(false);
     const [focus, setFocus] = useState({});
-
     const [groups, setGroups] = useState([]);
+    const [count, setCount] = useState(0);
+    const search = useSelector(({SearchReducer}) => SearchReducer.search);
 
     useEffect(()=>{
         loadTable()
-    }, [page])
+    }, [page, search])
 
     const loadTable = (clearCache = false) => {
         const token = axios.CancelToken.source();
         setLoading(true);
         api.get(`/api/web/groups`, {
             params: {
-                page, 
+                page, search
             },
             cache: {
                 exclude: { query: false },
@@ -34,6 +35,7 @@ const Groups = () => {
         }).then((res)=>{
             const { data } = res
             setGroups( page == 1 ? data.data : [...groups, ...data.data])
+            setCount( data.meta ? data.meta.total : 0)
         }).finally(()=>{
             setLoading(false)
         })
@@ -64,15 +66,18 @@ const Groups = () => {
     return (
         <>
             <GroupsHeader
+                count={count}
                 setShowAdd={()=>handleForm({}, true)}
             />
-
-            <GroupsList
-                data={groups}
-                handleForm={handleForm}
-                afterSubmit={afterSubmit}
-                handleActionButtons={handleActionButtons}
-            />
+            {
+                loading ? <LoadingScreen title={'Loading Groups'}/> :
+                <GroupsList
+                    data={groups}
+                    handleForm={handleForm}
+                    afterSubmit={afterSubmit}
+                    handleActionButtons={handleActionButtons}
+                />
+            }
 
             {   
                 showForm && 

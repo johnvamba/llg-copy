@@ -50,6 +50,11 @@ class OrganizationController extends Controller
             })
             ->latest();
 
+        if($search = $request->get('search')){
+            $mainQuery->where('name', 'like', '%'.$search.'%')
+                ->orWhere('email', 'like', '%'.$search.'%');
+        }
+
         return OrganizationResource::collection($mainQuery->paginate());
     }
 
