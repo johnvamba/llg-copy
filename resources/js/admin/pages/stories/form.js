@@ -14,12 +14,14 @@ import { tryParseJson } from '../../../components/helpers/validator'
 import LoadingScreen from '../../../components/LoadingScreen'
 import { selectStyle, selectStylePaddingZero, loadOrganization } from '../../../components/helpers/async_options';
 import AsyncSelect from 'react-select/async';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { monetary } from '../needs/categorylist';
+
 
 const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
     const { roles } = AuthUserReducer;
-
+    const org = useSelector(({StoriesReducer}) => StoriesReducer.org)
+    const [hideOrg, setHideOrg] = useState(false);
     const [errors, setErrors] = useState({});
     const [tags, setTags] = useState([]);
     const [form, setForm] = useState({});
@@ -56,7 +58,8 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
             // setHasFeaturedImage( )
             setLoading(false)
             setSubmitting(false)
-            setOrganization({})
+            setOrganization(org || {})
+            setHideOrg(org ? true : false)
         }
     }, [data])
 
@@ -171,7 +174,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                 <form>
                     {
                         //Set user priveledges here.. campus users will need to know what organization is asking for need.
-                        (roles.name == 'admin') && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
+                        ((roles.name == 'admin' || roles.name == 'campus admin') && !hideOrg) && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
                             <label>Organization</label>
                             <AsyncSelect
                                 styles={selectStylePaddingZero}

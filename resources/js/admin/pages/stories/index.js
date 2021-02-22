@@ -10,6 +10,8 @@ import EditStory from './edit';
 import View from './view';
 import StoriesHeader from './header';
 import LoadingScreen from '../../../components/LoadingScreen'
+import { setOrg } from '../../../redux/stories/actions';
+
 import './story.css';
 
 const Stories = () => {
@@ -35,7 +37,7 @@ const Stories = () => {
     const [submitting, setSubmitting] = useState(false);
     const [loading, setLoading] = useState(false);
     const search = useSelector(({SearchReducer}) => SearchReducer.search);
-
+    const dispatch = useDispatch();
 
     const loadPublished = (clearCache = false) => {
         setLoading(true)
@@ -102,11 +104,14 @@ const Stories = () => {
         }
     }, [page, limit, search])
 
+    useEffect(()=>{
+        dispatch( setOrg(null))
+    }, [])
+
     // const stories = useSelector(
     //         state => state.StoriesReducer.stories
     //     )
 
-    // const dispatch = useDispatch();
 
     // useEffect(() => {
     //     async function fetchData() {

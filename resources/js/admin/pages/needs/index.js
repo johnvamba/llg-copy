@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, connect } from 'react-redux';
-import * as NeedsActions from '../../../redux/needs/actions';
+// import * as NeedsActions from '../../../redux/needs/actions';
+import { setOrg } from '../../../redux/stories/actions';
+
 import Button from '../../../components/Button';
 import Paginator from '../../../components/Paginator';
 import Check from '../../../svg/check'
@@ -90,16 +92,21 @@ const Needs = ({NeedsReducer}) => {
 
     const handleForm = (info={}, form = false, setting = 'close', story = false)=>{
         //change content of table here
-        setInfo(info)
+        setInfo(story ? {} : info) //dont set info?
         showForm(form)
         showStoryForm(story)
-        if(setting == 'discard'){
-            //discard Changes here
-        }
-        if(setting == 'submit'){
-            //reload table
+
+        switch(setting){
+            case 'story':
+            dispatch( setOrg(info) );
+            break;
+            case 'discard':
+            break;
+            case 'submit':
             loadTable(true)
-            //or insert data here
+            break;
+            default:
+            break;
         }
     }
 
@@ -145,7 +152,7 @@ const Needs = ({NeedsReducer}) => {
             }
             {
                 (info && bolInfo) && 
-                <NeedInfo toClose={e=>setInfo(null)} clickEdit={openForm} data={info}/>
+                <NeedInfo toClose={e=>setInfo(null)} clickEdit={openForm} data={info} openStory={()=>handleForm(info.organization, false, 'story', true)}/>
             }
             {
                 story && //Open story here

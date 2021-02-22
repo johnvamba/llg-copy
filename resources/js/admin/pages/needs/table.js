@@ -72,7 +72,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
             <td className="actions row-actions">
                 <Button className="primary-btn flex text-white bg-blue-500 hover:bg-blue-600" 
                     disabled={status !== 'achieved'}
-                    onClick={()=>handleForm(item, false, 'story', true)}>
+                    onClick={()=>handleForm(item.organization, false, 'story', true)}>
                     <Quill/>
                     Write a Story
                 </Button>
@@ -153,7 +153,6 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false, loadTable,
     }
 
     const togglePopItem = (item, button, type ='reject', clicked)=>{
-        console.log('clicked');
         setAction(type)
         setPopItem(item)
         setButton(button)

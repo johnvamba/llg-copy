@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as NeedsActions from '../../../redux/needs/actions';
+
 // import DataTable from '../../../components/layout/DataTable';
 import Button from '../../../components/Button';
 import MapMini from '../../../components/helpers/map/index-mini';
@@ -19,7 +20,7 @@ import TabMembers from './tab-volunteers';
 
 import './needs.css';
 
-const NeedInfo = ({data, clickEdit, toClose}) => {
+const NeedInfo = ({data, clickEdit, toClose, openStory}) => {
     const sampleSvg = all[0];
     const [loading, setLoading] = useState(false);
     const [ratio, setRatio] = useState(0);
@@ -270,7 +271,7 @@ const NeedInfo = ({data, clickEdit, toClose}) => {
                 (switchStatus() == 'Achieved' && (ratio >= 100)) &&
                     <div className="need-footer">
                         <Button className="primary-btn flex items-center" 
-                            onClick={()=>alert('something')}>
+                            onClick={openStory}>
                             <Quill/>
                             Write a Story
                         </Button>

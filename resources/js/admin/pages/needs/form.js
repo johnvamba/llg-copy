@@ -86,6 +86,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             // setAddress(address || '');
             setLocation({formatted_address: location, lng, lat});
             setOrganization(organization || {});
+            setLoading(false)
         })
         .catch(err => {
             // if(err.response){
@@ -93,7 +94,6 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             //     setErrors(errors)
             // }
         }).then(()=>{
-            setLoading(false)
         })
 
     }
@@ -127,10 +127,8 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
 
     useEffect(()=>{
         if(!_.isEmpty(org)) {
-            // console.log('org', org)
             updateOrganization(org)
         }
-        // console.log('shold run', org)
     }, [org])
 
     const updateOrganization = (org) => {

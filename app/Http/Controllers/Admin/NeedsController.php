@@ -31,7 +31,7 @@ class NeedsController extends Controller
     public function index(Request $request)
     {
         DB::enableQueryLog();
-        $need = Need::with(['type', 'media', 'categories'])
+        $need = Need::with(['type', 'media', 'categories', 'organization'])
             ->latest();
 
         if($user = auth()->user()){
