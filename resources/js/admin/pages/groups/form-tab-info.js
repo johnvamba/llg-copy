@@ -4,12 +4,12 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap
 import OffersLocation from '../../../svg/offers-location';
 import Browse from '../../../svg/browse';
 import Location from '../../../components/Location'
-import { selectStyle, loadOrganization } from '../../../components/helpers/async_options';
+import { selectStyle, selectStylePaddingZero, loadOrganization, loadCampus } from '../../../components/helpers/async_options';
 import { connect } from 'react-redux';
 import AsyncSelect from 'react-select/async';
 import CircleImageForm from '../../../components/CircleImageForm';
 
-const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPrivacy, handleLocation, AuthUserReducer, onChangePhoto, data }) => {
+const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPrivacy, handleLocation, AuthUserReducer, onChangePhoto, setCampus, campus, data }) => {
     const { roles } = AuthUserReducer;
     const [organization, setOrganization] = useState({});
 
@@ -37,6 +37,24 @@ const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPriva
                             (fieldErrors.name || false) && <span className="text-xs pt-1 text-red-500 italic">{fieldErrors.name}</span>
                         }
                     </div>
+                    {
+                        //Set user priveledges here.. campus users will need to know what organization is asking for need.
+                        (roles.name == 'admin') && <div className={`form-group w-full ${fieldErrors.campus && 'form-error'}`}>
+                            <label>Location</label>
+                            <AsyncSelect
+                                styles={selectStylePaddingZero}
+                                loadOptions={loadCampus}
+                                defaultOptions
+                                cacheOptions
+                                value={campus}
+                                placeholder="Location"
+                                onChange={setCampus}
+                                />
+                            {
+                                (fieldErrors.campus || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
+                            }
+                        </div>
+                    }
                     {
                         //Set user priveledges here.. campus users will need to know what organization is asking for need.
                         // (roles.name == 'admin') && <div className={`form-group w-full ${fieldErrors.organization && 'form-error'}`}>

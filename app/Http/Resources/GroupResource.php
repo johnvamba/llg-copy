@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Async\CampusResource;
 
 class GroupResource extends JsonResource
 {
@@ -30,7 +31,8 @@ class GroupResource extends JsonResource
             'address' => $this->address,
             'location' => $this->location,
             'lat' => $this->lat,
-            'lng' => $this->lng
+            'lng' => $this->lng,
+            'campus' => new CampusResource($this->whenLoaded('campus',optional($this->campus)->first())) 
         ];
     }
 }
