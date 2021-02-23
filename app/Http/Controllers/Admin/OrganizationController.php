@@ -71,6 +71,9 @@ class OrganizationController extends Controller
             $orgs->latest();
         }
         //Add queries here
+        if($campus = $request->get('campus')){
+            $orgs->whereHas('campus', fn($camp) => $camp->where('campuses.id', $campus['id'] ?? $campus));
+        }
 
         if($name = $request->get('name')){
             $orgs->where('name', 'like', '%'.$name.'%');

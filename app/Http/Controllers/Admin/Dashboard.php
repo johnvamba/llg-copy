@@ -34,6 +34,14 @@ class Dashboard extends Controller
     		$query->whereHas('type', fn($type) => $type->whereIn('needs_types.name', $keys) );
     	}
 
+        if($campus = $request->get('campus')) {
+            $query->whereHas('campus', fn($camp) => $camp->where('campuses.id', $campus['id'] ?? $campus ))
+        }
+
+        if($org = $request->get('org')){
+            $query->whereHas('organization', fn($organ) => $organ->where('organizations.id', $org['id'] ?? $org ));
+        }
+
     	if($startDate && !$endDate)
     		$query->whereDate('created_at', '>', $startDate);
     	else if(!$startDate && $endDate)

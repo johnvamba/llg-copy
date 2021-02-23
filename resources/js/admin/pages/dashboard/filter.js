@@ -1,15 +1,20 @@
 import React, {useState} from 'react';
 import Button from '../../../components/Button'
 import DatePicker from 'react-datepicker';
+import { selectStyle, selectStylePaddingZero, loadOrganization, loadCampus } from '../../../components/helpers/async_options';
 import { useSelector, useDispatch, connect } from 'react-redux';
 import { setFilters } from '../../../redux/needs/actions';
 import Calendar from '../../../svg/calendar'
 import SwitchCheckbox from '../../../components/SwitchCheckbox'
+import AsyncSelect from 'react-select/async';
 
 const DashboardFilter = ({onClose, generate}) => {
     const [startdate, setStartDate] = useState(startdate|| new Date());
     const [enddate, setEndDate] = useState(enddate|| new Date());
     const [dateType, selectDateType] = useState('custom');
+    const [campus, setCampus] = useState(null)
+    const [org, setOrg] = useState(null)
+    const [errors, setErrors] = useState({})
     const [needs, setNeeds] = useState({
         open: false,
         mets: false,
@@ -19,6 +24,7 @@ const DashboardFilter = ({onClose, generate}) => {
         fundraise: false,
         volunteer: false
     })
+    const roles = useSelector( ({AuthUserReducer}) => AuthUserReducer.roles);
 
     const dispatch = useDispatch();
 
@@ -26,19 +32,23 @@ const DashboardFilter = ({onClose, generate}) => {
         const obj = {
             ...needs, ...types, dateType, 
             startdate: startdate.toUTCString(), 
-            enddate: enddate.toUTCString()
+            enddate: enddate.toUTCString(),
+            org: (roles.name == 'campus admin' || roles.name == 'admin') && !_.isEmpty(org) ? org.id : null,
+            campus: (roles.name == 'admin') && !_.isEmpty(campus) ? campus.id : null
         }
+
         if(typeof generate == 'function'){
             generate(obj)
             return;
         }
+        
         const url = new URLSearchParams(obj).toString();
         window.open(`/needs/print?${url}`, '__blank');
     }
 
     return (
         <div className="form dashboard-filter">
-            <div className="form-body filter-body">
+            <div className="form-body filter-body overflow-visible">
                 <div className="form-group">
                     <label>Needs</label>
                     <div className="flex mt-2">
@@ -133,6 +143,44 @@ const DashboardFilter = ({onClose, generate}) => {
                         </div>
                     </div>
                 </div>
+                {
+                    //Set user priveledges here.. campus users will need to know what organization is asking for need.
+                    (roles.name == 'admin') && <div className={`form-group w-full ${errors.campus && 'form-error'}`}>
+                        <label>Location</label>
+                        <AsyncSelect
+                            styles={selectStylePaddingZero}
+                            loadOptions={loadCampus}
+                            defaultOptions
+                            cacheOptions
+                            isClearable
+                            value={campus}
+                            placeholder="Location"
+                            onChange={setCampus}
+                            />
+                        {
+                            (errors.campus || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Location</span>
+                        }
+                    </div>
+                }
+                {
+                    //Set user priveledges here.. campus users will need to know what organization is asking for need.
+                    (roles.name == 'admin' || roles.name == 'campus admin') && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
+                        <label>Organization</label>
+                        <AsyncSelect
+                            key={campus ? campus.id : 'default'}
+                            styles={selectStylePaddingZero}
+                            loadOptions={(x,cb)=>loadOrganization(x, cb, { campus: campus ? campus.id:null })}
+                            defaultOptions
+                            isClearable
+                            value={org}
+                            placeholder="Organization"
+                            onChange={setOrg}
+                            />
+                        {
+                            (errors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
+                        }
+                    </div>
+                }
             </div>
             <div className="filter-footer flex p-3 px-4">
                 <div className="flex-grow-1"/>

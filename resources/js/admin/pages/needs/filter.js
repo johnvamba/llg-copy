@@ -42,7 +42,7 @@ const NeedFilter = ({onClose, NeedsReducer}) => {
     
     return (
         <div className="filter-need form">
-            <div className="form-body filter-body">
+            <div className="form-body filter-body overflow-visible">
 
                 <div className="flex justify-between">
                     <div className="form-group checkbox">

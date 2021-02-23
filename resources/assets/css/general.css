@@ -140,6 +140,7 @@ header .filter-header .filter-content, .search-header .search-content, .dashboar
 
 header .filter-content .form-body.filter-body{
 	height: auto !important;
+	overflow: visible;
 	padding-top: 20px;
 }
 
@@ -1048,4 +1049,8 @@ header .search-content .search-listing.searching {
 	border: .5px solid #000;
 	opacity: 0.1;
 	margin: 0 20px;
+}
+
+.overflow-visible {
+	overflow: visible !important;
 }
