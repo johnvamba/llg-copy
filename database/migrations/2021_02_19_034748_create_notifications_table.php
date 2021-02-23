@@ -15,7 +15,8 @@ class CreateNotificationsTable extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned()->index();
+            $table->bigInteger('from')->nullable()->unsigned();
+            $table->bigInteger('to')->unsigned()->index();
             $table->morphs('model');
             $table->string('description');
             $table->string('type');
@@ -23,7 +24,8 @@ class CreateNotificationsTable extends Migration
             $table->boolean('isRead')->default(false);
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('from')->references('id')->on('users');
+            $table->foreign('to')->references('id')->on('users');
         });
     }
 

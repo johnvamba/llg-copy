@@ -68,12 +68,13 @@ class GroupInviteController extends Controller
         ]));
 
         $params = [
+            "to" => $request->user_id,
             "description" => "invited you to join {$group->name} here",
-            "type" => 'group invitation',
+            "type" => 'group_invitation',
             "isRead" => false
         ];
 
-        Notification::storeNotification($group, $params);
+        Notification::storeNotification($invite, $params);
 
         event(new GroupInviteEvent($params));
 

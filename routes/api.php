@@ -84,6 +84,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Role resource module */
     Route::resource('roles', 'RoleController');
 
+    /** Device resource module */
+    Route::resource('devices', 'DeviceController');
+
     /** User resource module */
     Route::get('user/me', 'UserController@getProfile');
     Route::get('user/me/update-profile', 'UserController@updateProfile');
@@ -204,6 +207,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Activities resource module */
     Route::post('activity/recents', 'ActivityController@recent');
     Route::resource('activities', 'ActivityController');
+
+    /** Notification resource module */
+    Route::resource('notifications', 'NotificationController');
 
     Route::post('logout', 'AuthController@logout');
 });

@@ -13,6 +13,7 @@ use App\UserProfile;
 use App\CustomerCredential;
 use App\Organization;
 use App\OrganizationCredential;
+use App\Device;
 use Carbon\Carbon;
 use DB;
 
@@ -174,7 +175,7 @@ class UserController extends Controller
                 ->update([
                     'name' => $request->firstName.' '.$request->lastName,
                     'email' => $request->email,
-                    'phone_number' => $request->phone_number,
+                    'mobile_number' => $request->mobile_number,
                 ]);
 
             UserProfile::where('user_id', $user->id)

@@ -84,10 +84,16 @@ class GroupController extends Controller
      */
     public function getDiscoverGroups(Request $request, $page = 1)
     {
+        $groupParticipated = GroupParticipant::where(function($query) {
+                $query->where('user_id', auth()->user()->id)
+                    ->where('status', 'approved');
+            })->pluck('group_id');
+
         $groups = Group::where([
                 ['user_id', '!=', auth()->user()->id],
                 ['privacy', 'public']
             ])
+            ->whereIn('id', $groupParticipated)
             ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($groups as $group) {
@@ -144,8 +150,18 @@ class GroupController extends Controller
         $group = Group::where('user_id', auth()->user()->id)
             ->first();
 
-        if (!$group)
-            return response()->json($group);
+        if (!$group) {
+            $hasParticipated = GroupParticipant::where(function($query) {
+                    $query->where('user_id', auth()->user()->id)
+                        ->where('status', 'approved');
+                })->first();
+
+            if ($hasParticipated) {
+                $group = Group::find($hasParticipated->id);
+            } else {
+                return response()->json($group);
+            }
+        }
 
         $group['goal'] = Goal::whereHasMorph(
                 'model',
