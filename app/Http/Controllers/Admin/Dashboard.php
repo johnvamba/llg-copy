@@ -35,7 +35,7 @@ class Dashboard extends Controller
     	}
 
         if($campus = $request->get('campus')) {
-            $query->whereHas('campus', fn($camp) => $camp->where('campuses.id', $campus['id'] ?? $campus ))
+            $query->whereHas('campus', fn($camp) => $camp->where('campuses.id', $campus['id'] ?? $campus ));
         }
 
         if($org = $request->get('org')){

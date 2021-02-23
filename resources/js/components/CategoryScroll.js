@@ -29,14 +29,24 @@ const CategoryScroll = ({
     const [scrollLeft, setScrollLeft] = useState(0);
     const container = useRef(null);
     const [widths, setWidth] = useState({
+        left: 0,
+        right: 0,
         start: 0,
-        end: 0,
         full: 0
     });
 
     useEffect(()=>{
         //load categories here.
-
+        const { current } = container
+        if(container.current){
+            setWidth({
+                left: 0,
+                right: current.offsetWidth,
+                start: 0,
+                full: current.scrollWidth
+            })
+            console.log('changed?')
+        }
     }, [type])
 
     const categoryWheel = event => {
@@ -56,6 +66,24 @@ const CategoryScroll = ({
         setScrollLeft(event.target.scrollLeft)
     }
 
+    const hover = (e, action = 'right') => {
+        const { current } = container
+        let left = widths.left + (action == 'right' ? 200 : -200)
+        if(left < 0) {
+            left = 0;
+        } else if(left > current.offsetWidth) {
+            left -= current.offsetWidth;
+        }
+        current.scroll({left, behavior: 'smooth'})
+        setWidth({
+            ...widths,
+            left,
+            right: left + current.offsetWidth,
+        })
+        console.log('widths', widths, current.offsetWidth, current.scrollWidth)
+        // current.scrollLeft = view;
+    }
+
     return (
         <div className={`form-group category-container ${errors ? 'form-error' : ''}`}>
             <label>Select Category</label>
@@ -64,27 +92,14 @@ const CategoryScroll = ({
                 onWheel={categoryWheel}
                 onScroll={categoryScroll}>
                 {
-                    widths.start != 0 &&
-                    <div className="scroll left-scroll">
+                    widths.left > 0 &&
+                    <div className="scroll left-scroll" onClick={(e)=>hover(e, 'left')}>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="12" fill="#109CF1"/>
-                        <path d="M10 7L15 12L10 17" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24Z" fill="#CF995F"/>
+                            <path d="M14 7L9 12L14 17" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
+
                     </div>
-                }
-                {
-                    //Apply me later on. At the meantime, do svg
-                    /*
-                    <div className={`icon-category ${test ? 'active':''}`} onClick={()=>setTest(!test)}>
-                        <div>
-                        <i className={`icon-circle icon-png`} style={{background: "url('/assets/icons/Employment.png')"}}>
-                            { test &&
-                                <Check className="svg-check" fill='#109CF1'/>
-                            }
-                        </i>
-                        {'Test'}
-                    </div>
-                    */
                 }
                 {
                     type == 'monetary' ?
@@ -101,11 +116,11 @@ const CategoryScroll = ({
                         />)
                 }
                 {
-                    widths.end != widths.full &&
-                    <div className="scroll right-scroll">
+                    (widths.right < widths.full) &&
+                    <div className="scroll right-scroll" onClick={hover}>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="12" fill="#109CF1"/>
-                        <path d="M10 7L15 12L10 17" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="12" cy="12" r="12" fill="#CF995F"/>
+                        <path d="M10 7L15 12L10 17" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                     </div>
                 }
