@@ -136,16 +136,29 @@ class UserController extends Controller
      */
     public function getProfile(Request $request)
     {
-        $user = User::with(['profile', 'organization'])
+        $user = User::with(['profile', 
+                'organization'=> fn($org) => $org->select('location', 'lat', 'lng'),
+                'campus'=> fn($org) => $org->select('location', 'lat', 'lng')
+            ])
             ->find(auth()->user()->id);
 
         $user->getRoleNames();
 
         if($user->hasRole('organization admin')){
+            $user->loc = optional($user->organization)->toArray();
+        } else if ($user->hasRole('campus admin')){
+            $user->loc = optional($user->campus)->toArray();
+        } else {
+            $user->loc = optional($user->profile)->only('location', 'lng', 'lat');
+        }
+        
+        if($user->organization) {
             $org = (new OrganizationResource($user->organization))->resolve();
             $user->unsetRelation('organization');
             $user->organization = $org;
         }
+
+        $user->unsetRelation('campus');
 
         return response()->json($user);
     }

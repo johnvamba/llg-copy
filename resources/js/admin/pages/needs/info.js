@@ -11,6 +11,7 @@ import Cross from '../../../svg/cross'
 import Quill from '../../../svg/quill'
 import Circlet from '../../../svg/circlet'
 import Pencil from '../../../svg/pencil'
+import MapPin from '../../../svg/map-pin'
 
 import { all } from './categorylist'
 //As test icon only
@@ -35,8 +36,8 @@ const NeedInfo = ({data, clickEdit, toClose, openStory}) => {
     })
     const [location, setLocation] = useState({
         formatted_address: '',
-        lat: null,
-        lng: null,
+        lat: -37.8180604,
+        lng: 145.0001764
     })
     const [description, setDescription] = useState('');
 
@@ -51,6 +52,8 @@ const NeedInfo = ({data, clickEdit, toClose, openStory}) => {
                 date,
                 time,
                 location,
+                lat, 
+                lng,
                 ratio,
                 category,
                 goal = 0,
@@ -66,7 +69,12 @@ const NeedInfo = ({data, clickEdit, toClose, openStory}) => {
             // setGoal(goal || 0);
             // setDate(date || new Date);
             // setTime(time || '');
-            setLocation(location || {});
+            setLocation({
+                formatted_address: location,
+                lat,
+                lng
+            } || {});
+            setLoading(false)
         })
         .catch(err => {
             // if(err.response){
@@ -74,7 +82,6 @@ const NeedInfo = ({data, clickEdit, toClose, openStory}) => {
             //     setErrors(errors)
             // }
         }).then(()=>{
-            setLoading(false)
         })
     }
 
@@ -198,9 +205,10 @@ const NeedInfo = ({data, clickEdit, toClose, openStory}) => {
                                         </div>
                                     </div>
                                     <div className="group-content view-map">
-                                        <label>Location</label>
+                                        <label className="mb-1">Location</label>
                                         <div className="google-map">
-                                            <MapMini lat={data.lat} lng={data.lng}/>
+                                            <span className="location"><MapPin/>{location.formatted_address}</span>
+                                            <MapMini lat={location.lat} lng={location.lng}/>
                                         </div>
                                     </div>
                                     <div className="flex">

@@ -822,8 +822,29 @@ div.view-map div.google-map{
 	background: rgba(255, 255, 255, 0.5);
 	mix-blend-mode: normal;
 	border-radius: 4px;
+	position: relative;
 	/*border: 1px solid #109CF1;*/
 }
+.google-map span.location {
+	font-family: InterMedium;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 9px;
+	line-height: 100%;
+	z-index: 1;
+	position: absolute;
+	color: #587B7F;
+
+	display: flex;
+	background: rgba(88, 123, 127, 0.12);
+	border-radius: 10px;
+	padding: 8px;
+	margin: 5px;
+}
+.google-map span.location svg {
+	margin-right: 5px;
+}
+
 .group-content .content-category {
 	display: flex;
 }

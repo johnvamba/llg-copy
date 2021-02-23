@@ -27,9 +27,7 @@ import { connect, useSelector } from 'react-redux';
 const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     //user
     const { roles } = AuthUserReducer;
-    const org = useSelector(
-        state => state.AuthUserReducer.org
-    );
+    const loc = useSelector(({AuthUserReducer}) => AuthUserReducer.loc);
     //form
     const [title, setTitle] = useState('');
     const [about, setAbout] = useState('');
@@ -45,8 +43,8 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     // const [address, setAddress] = useState('');
     const [location, setLocation] = useState({
         formatted_address: '',
-        lat: null,
-        lng: null,
+        lat: -37.8180604,
+        lng: 145.0001764
     })
     const [organization, setOrganization] = useState({});
     const [submitting, setSubmitting] = useState(false);
@@ -64,7 +62,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 type,
                 lctype,
                 category = [],
-                organization,
+                organization = {},
                 photo,
                 goal,
                 date,
@@ -84,8 +82,12 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setDate(date ? new Date(date) :  new Date);
             setTime(time || '');
             // setAddress(address || '');
-            setLocation({formatted_address: location, lng, lat});
-            setOrganization(organization || {});
+            setLocation({
+                formatted_address: location || organization.location, 
+                lng:lng || organization.lng, 
+                lat:lat || organization.lat
+            });
+            setOrganization(organization);
             setLoading(false)
         })
         .catch(err => {
@@ -115,8 +117,8 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             // setAddress('')
             setLocation({
                 formatted_address: '',
-                lat: null,
-                lng: null,
+                lat: -37.8180604,
+                lng: 145.0001764
             })
             setOrganization({})
             setSubmitting(false)
@@ -126,10 +128,14 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     }, [data])
 
     useEffect(()=>{
-        if(!_.isEmpty(org)) {
-            updateOrganization(org)
+        if(!_.isEmpty(loc)) {
+            setLocation({
+                formatted_address: loc.location || '',
+                lat: loc.lat,
+                lng: loc.lng
+            })
         }
-    }, [org])
+    }, [loc])
 
     const updateOrganization = (org) => {
         if(org.location) {
@@ -150,10 +156,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     }
 
     const handleCategories = (item, truth = false) => {
-        if(truth)
-            setCategory(category.filter(i=>item.slug != i.slug))
-        else 
-            setCategory([item, ...category])
+        setCategory(truth ? category.filter(i=>item.slug != i.slug) : [item, ...category])
     }
 
     const handleType = (newType = 'donation') => {

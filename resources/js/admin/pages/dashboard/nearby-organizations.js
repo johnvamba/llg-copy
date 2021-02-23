@@ -1,19 +1,30 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Map from '../../../components/helpers/map/';
 import { Checkbox } from 'pretty-checkbox-react';
+import { connect, useSelector } from 'react-redux';
+
 import 'pretty-checkbox';
 
 const NearbyOrganizations = ({...props}) => {
     const [categories, setCategories] = useState([]);
     const [showFilter, setShowFilter] = useState(false);
+
     const [filter, setFilter] = useState([]);
     const [markers, setMarkers] = useState([]);
     const [all, setAll] = useState(false);
-
-    const center = {
+    //HQ
+    const [center, setCenter] = useState({
         lat: -37.8180604,
         lng: 145.0001764
-    }
+    });
+    
+    const loc = useSelector(({AuthUserReducer}) => AuthUserReducer.loc);
+
+    useEffect(()=> {
+        if(!_.isEmpty(loc)){
+            setCenter(loc)
+        }
+    }, [loc])
 
     useEffect(() => {
         async function fetchData() {

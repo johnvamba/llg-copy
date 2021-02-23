@@ -45,7 +45,6 @@ const CategoryScroll = ({
                 start: 0,
                 full: current.scrollWidth
             })
-            console.log('changed?')
         }
     }, [type])
 
@@ -80,8 +79,6 @@ const CategoryScroll = ({
             left,
             right: left + current.offsetWidth,
         })
-        console.log('widths', widths, current.offsetWidth, current.scrollWidth)
-        // current.scrollLeft = view;
     }
 
     return (

@@ -19,15 +19,16 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
     const [cover, setCover] = useState(null)
     const [location, setLocation] = useState({
         location: '',
-        lat: 0,
-        lng: 0,
+        lat: -37.8180604,
+        lng: 145.0001764
     })
     const [errors, setErrors] = useState({})
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(()=>{
-        const {name, description}= data;
+        const { name, description, location, lng, lat }= data;
         setForm({name:name || '', description:description || ''})
+        setLocation({ location, lat, lng })
     }, [data])
 
     const handleInput = (e) => {
