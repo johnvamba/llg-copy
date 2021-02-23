@@ -1,9 +1,11 @@
 import {
     SET_STORIES,
+    SET_ORG
 } from './types';
 
 let initialState = {
-    stories: []
+    stories: [],
+    org: null,
 }
 
 export const reducer = (state = initialState, {type, payload}) => {
@@ -14,6 +16,11 @@ export const reducer = (state = initialState, {type, payload}) => {
                 stories: payload
             }
             break;
+        case SET_ORG:
+            return {
+                ...state,
+                org: payload 
+            }
         default :
             return state;
             break;

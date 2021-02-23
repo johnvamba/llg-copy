@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar'; 
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import Cookie from 'js-cookie';
 import Content from './content';
 import { useSelector } from 'react-redux';
@@ -8,12 +8,11 @@ import OrganizationView from './pages/organizations/view';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../assets/css/general.css';
 import '../../assets/css/update-12042020.css';
-
 import Filter from '../svg/filter';
-
 import MainFilter from './filter'
-import SearchBar from '../components/SearchBar'
 
+import SearchBar from '../components/SearchBar'
+import SearchBarRedux from '../components/SearchBarRedux'
 import RecentActivities from './pages/recent-activities';
 
 const Home = () => {
@@ -102,7 +101,11 @@ const Home = () => {
                                     }
                                 </div>
                         }/>
-                        <SearchBar />
+                        <Switch>
+                            <Route path={'/admin/dashboard'} exact component={()=><SearchBar/>} />
+                            {/*As default*/}
+                            <Route path={'*'} component={()=> <SearchBarRedux/>} />
+                        </Switch>
 
                         <div className="flex flex-1 justify-end items-center">
                             <Link className="admin-mobile" to="/">

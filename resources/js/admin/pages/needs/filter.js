@@ -13,8 +13,6 @@ const NeedFilter = ({onClose, NeedsReducer}) => {
     const [min, setMin] = useState(NeedsReducer.min || 0);
     const [max, setMax] = useState(NeedsReducer.max || 0);
     const [dateType, selectDateType] = useState('custom');
-    // const [minSwitch, setMinSwitch] = useState(NeedsReducer.minSwitch|| false);
-    // const [maxSwitch, setMaxSwitch] = useState(NeedsReducer.maxSwitch|| false);
 
     const dispatch = useDispatch();
 
@@ -22,21 +20,29 @@ const NeedFilter = ({onClose, NeedsReducer}) => {
         if(min > max){
             return;
         }
-        dispatch( setFilters({ type, startdate, enddate, min, max, dateType, minSwitch, maxSwitch }) );
+        dispatch( setFilters({ type, startdate, enddate, min, max, dateType }) );
     }
 
     const reset=() => {
         setType(null)
-        setDate(new Date)
+        setStartDate(new Date)
+        setEndDate(new Date)
         setMin(0.00)
         setMax(0.00)
         selectDateType('custom')
-        dispatch( setFilters({ type, startdate, enddate, min, max, dateType, filter: false }) );
+        dispatch( setFilters({ 
+            type: null, 
+            startdate: new Date, 
+            enddate: new Date, 
+            min: 0.00, 
+            max: 0.00, 
+            dateType: 'custom', 
+            filter: false }) );
     }
     
     return (
         <div className="filter-need form">
-            <div className="form-body filter-body">
+            <div className="form-body filter-body overflow-visible">
 
                 <div className="flex justify-between">
                     <div className="form-group checkbox">
@@ -46,7 +52,7 @@ const NeedFilter = ({onClose, NeedsReducer}) => {
                     */}
                         <div className="input-container">
                             <span className="currency">$</span>
-                            <input className="input-field space-l" type="number" placeholder="0.00" value={min} name="goal" onChange={e=>setMin(e.target.value)}/>
+                            <input className="input-field space-l" type="number" placeholder="0.00" value={null} name="goal" onChange={e=>setMin(e.target.value)}/>
                         </div>
                     </div>
                     <div className="form-group checkbox">
@@ -56,7 +62,7 @@ const NeedFilter = ({onClose, NeedsReducer}) => {
                     */}
                         <div className="input-container">
                             <span className="currency">$</span>
-                            <input className="input-field space-l" type="number" placeholder="0.00" value={max} name="goal" onChange={e=>setMax(e.target.value)}/>
+                            <input className="input-field space-l" type="number" placeholder="0.00" value={null} name="goal" onChange={e=>setMax(e.target.value)}/>
                         </div>
                     </div>
                 </div>

@@ -12,6 +12,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
     const [fieldErrors, setFieldErrors] = useState({});
     const [goal, setGoal] = useState(1);
     const [goalType, setGoalType] = useState('month')
+    const [campus, setCampus] = useState({})
     const [users, setUsers] = useState([]);
     const [fields, setFields] = useState({
         name: '',
@@ -37,6 +38,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                 lat: data.lat,
                 lng: data.lng
             })
+            setCampus(data.campus || {})
             loadExtra()
         } else {
             setFields({
@@ -49,6 +51,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                 lat: null,
                 lng: null
             })
+            setCampus({})
         }
     }, [data])
 
@@ -96,7 +99,10 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
     }
 
     const loadExtra = (cacheClear = false) => {
-
+        api.get(`/api/web/groups/${data.id}`)
+        .then(()=>{
+            
+        })
     }
 
     const attemptSubmit = () => {
@@ -105,6 +111,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
             const params = {
                 ...fields,
                 users,
+                campus,
                 goal
             }
             const submitPromise = !data.id ? 
@@ -182,6 +189,8 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                         fields={fields}
                         onChangePhoto={onChangePhoto}
                         handleSelectPrivacy={handleSelectPrivacy}
+                        campus={campus}
+                        setCampus={setCampus}
                         data={data}
                     />
                 }

@@ -14,6 +14,7 @@ const Offers = () => {
     const roles = useSelector(
         state => state.AuthUserReducer.roles
     );
+    const search = useSelector(({SearchReducer}) => SearchReducer.search);
     // const dispatch = useDispatch();
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(15);
@@ -34,7 +35,8 @@ const Offers = () => {
         api.get(`/api/web/offers`, {
             params: {
                 page, ...addFilter,
-                per_page: limit
+                per_page: limit,
+                search
             },
             cache: {
                 exclude: { query: false },
@@ -47,8 +49,8 @@ const Offers = () => {
             setOffers(data.data || [])
             setCount(data.meta ? data.meta.total : 0)
             setMeta(data.meta)
-        }).finally(()=>{
             setLoading(false)
+        }).finally(()=>{
         })
         return token; //for useEffect
     }
@@ -60,7 +62,7 @@ const Offers = () => {
             //cancel api here
             ct.cancel('Resetting');
         }
-    }, [page, limit]);
+    }, [page, limit, search]);
 
     const handleChangePage = (page) => {
         setPage(parseInt(page));

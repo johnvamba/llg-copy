@@ -17,6 +17,8 @@ use App\Need;
 use App\NeedMet;
 use App\Tag;
 
+use App\Http\Resources\Mini\UserResource;
+
 use App\Http\Resources\NeedResource;
 use Carbon\Carbon;
 class NeedsController extends Controller
@@ -29,7 +31,7 @@ class NeedsController extends Controller
     public function index(Request $request)
     {
         DB::enableQueryLog();
-        $need = Need::with(['type', 'media', 'categories'])
+        $need = Need::with(['type', 'media', 'categories', 'organization'])
             ->latest();
 
         if($user = auth()->user()){
@@ -60,6 +62,10 @@ class NeedsController extends Controller
             $need->when($startdate || $enddate, fn($need) => $need->whereBetween('created_at', [$startdate, $enddate]))
                 ->when($startdate, fn($need) => $need->where('created_at', '>=', $startdate))
                 ->when($enddate, fn($need) => $need->where('created_at', '<=', $enddate));
+        }
+
+        if($search = $request->get('search')) {
+            $need->where('title', 'like', '%'.$search.'%');
         }
 
         if($request->get('debug')){
@@ -147,7 +153,7 @@ class NeedsController extends Controller
                 //dynamic details
                 [
                     // 'short_description' => $request->get('description') ?? 'No description',
-                    'location' => $location['formatted_address'] ?? null,
+                    'location' => $location['formatted_address'] ?? $location['location'] ?? $location ?? null,
                     'lat' => $location['lat'] ?? null,
                     'lng' => $location['lng'] ?? null,
                 ]
@@ -204,9 +210,17 @@ class NeedsController extends Controller
      */
     public function show(Need $need)
     {
-        $need->loadMissing('media', 'type', 'organization', 'categories');
+        $need->loadMissing('media', 'type', 'organization', 'categories');//->loadCount('contributors');
 
         return new NeedResource($need);
+    }
+
+    public function contributors(Need $need)
+    {
+        $need->loadMissing([
+            'contributors' => fn($contri) => $contri->withoutGlobalScopes()->with('profile')->select(["*", "need_mets.created_at as custom_date"])]);
+
+        return UserResource::collection($need->contributors);
     }
 
     /**
@@ -271,7 +285,7 @@ class NeedsController extends Controller
                 //dynamic details
                 [
                     // 'short_description' => $request->get('description') ?? 'No description',
-                    'location' =>$location['formatted_address'] ?? null,
+                    'location' =>$location['formatted_address'] ?? $location['location'] ?? $location ?? null,
                     'lat' => $location['lat'] ?? null,
                     'lng' => $location['lng'] ?? null,
                 ]

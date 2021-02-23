@@ -12,6 +12,7 @@ import OfferTable from './table'
 
 const OfferRequests = () => {
     const dispatch = useDispatch();
+    const search = useSelector(({SearchReducer}) => SearchReducer.search);
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(15);
     const [meta, setMeta] = useState({})
@@ -32,7 +33,8 @@ const OfferRequests = () => {
             params: {
                 page, ...addFilter,
                 status: 'pending',
-                per_page: limit
+                per_page: limit,
+                search
             },
             cache: {
                 exclude: { query: false },
@@ -45,8 +47,8 @@ const OfferRequests = () => {
             setOffers(data.data || [])
             setCount(data.meta ? data.meta.total : 0)
             setMeta(data.meta)
-        }).finally(()=>{
             setLoading(false)
+        }).finally(()=>{
         })
         return token; //for useEffect
     }
@@ -58,7 +60,7 @@ const OfferRequests = () => {
             //cancel api here
             ct.cancel('Resetting');
         }
-    }, [page, limit]);
+    }, [page, limit, search]);
 
     const handleChangePage = (page) => {
         setPage(parseInt(page));

@@ -1,7 +1,8 @@
 import {
     SET_PROFILE,
     SET_ROLES,
-    SET_ORG
+    SET_ORG,
+    SET_LOC
 } from './types';
 
 export const setProfile = (params) => ({
@@ -16,5 +17,10 @@ export const setRoles = (params) => ({
 
 export const setOrg = (params) => ({
     type: SET_ORG,
+    payload: params
+})
+
+export const setLoc = (params) => ({
+    type: SET_LOC,
     payload: params
 })

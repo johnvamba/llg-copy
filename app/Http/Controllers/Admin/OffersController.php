@@ -33,6 +33,10 @@ class OffersController extends Controller
             $offers->where('status', 'approved');
         }
 
+        if($search = $request->get('search')){
+            $offers->where('title', 'like', '%'.$search.'%');
+        }
+
         return OfferResource::collection($offers->paginate($request->get('per_page') ?? 15));
     }
 

@@ -35,6 +35,7 @@ const Needs = ({NeedsReducer}) => {
 
     const [arrayNeeds, setNeeds] = useState([]);
 
+    const search = useSelector(({SearchReducer}) => SearchReducer.search);
     const { needs, type, startdate, enddate, min, max, dateType, filter } = NeedsReducer
 
     const dispatch = useDispatch();
@@ -54,7 +55,8 @@ const Needs = ({NeedsReducer}) => {
         api.get(`/api/web/needs`, {
             params: {
                 tab, page, ...addFilter,
-                per_page: limit || 15
+                per_page: limit || 15,
+                search
             },
             cache: {
                 exclude: { query: false },
@@ -69,9 +71,10 @@ const Needs = ({NeedsReducer}) => {
             }
             setMeta(data.meta)
             setTabCount(data.requests || 0);
-        }).finally(()=>{
             setLoading(false)
+        }).finally(()=>{
         })
+        //Why?? for all tabs?
         if(clearCache){
             api.get(`/api/web/needs`, {
                 params: {

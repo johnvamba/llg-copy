@@ -12,14 +12,14 @@ const ListSingleStory = ({ set = [], handleForm }) => {
                     <div className="list-single-story__header">
                         <div className="list-single-story__rounded-img" style={{backgroundImage: `url(${i.org_photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} ></div>
                         <div style={{width: '300px'}}>
-                            <h2>{i.title || 'Missing-title'}</h2>
+                            <h2>{i.org_name || 'Missing-Org-Name'}</h2>
                             <span>{i.date || 'Missing-date'}</span>
                         </div>
                     </div>
                     <div className="list-single-story__body">
                         <div className="bg-cover bg-center" style={{backgroundImage: `url(${i.photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} ></div>
                         <div className="list-single-story__content">
-                            <h3>Story Title Here</h3>
+                            <h3>{i.title || 'Missing-title'}</h3>
                             <p>{i.short_description || i.description || ''}</p>
                             <div className="list-single-story__footer">
                                 <ul>
