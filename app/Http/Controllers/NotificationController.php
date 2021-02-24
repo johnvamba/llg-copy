@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Notification;
+use App\Events\GroupInvite as GroupInviteEvent;
 
 class NotificationController extends Controller
 {
