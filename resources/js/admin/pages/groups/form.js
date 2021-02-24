@@ -53,6 +53,8 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
             })
             setCampus({})
         }
+        if(data.countTab)
+            setCountTab(data.countTab)
     }, [data])
 
     const handleTab = (tab = 1) => {

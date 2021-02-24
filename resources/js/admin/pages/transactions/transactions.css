@@ -94,3 +94,9 @@
     color: #231F20;
     flex-grow: 1;
 }
+table.table td.title p{
+    max-width: 500px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

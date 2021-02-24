@@ -31,7 +31,7 @@ table.table > thead.tb-head > tr > th {
 
 table.table > thead.tb-head > tr > th,
 table.table > tbody > tr > td {
-	flex: 1;
+	/*flex: 1;*/
 }
 
 table.table > tbody > tr > td {
@@ -74,14 +74,14 @@ table.table > tbody > tr > td.title img.title-img.circle {
 
 table.table tr {
 	border: 1px solid rgb(235,239,242,1);
-	display: flex;
+	/*display: flex;*/
 }
 
-table.table td.row-actions svg{
+table.table td .row-actions svg{
 	margin-right: 10px;
 }
-table.table td.row-actions{
-	/*display: flex;*/
+table.table td .row-actions{
+	display: flex;
 	/*font-size: 12px;*/
 	line-height: 14px;
 	letter-spacing: 0.01em;
@@ -172,13 +172,13 @@ button[type=button].disabled{
 }
 
 td.title, th.title{
-	flex:2 !important;
+	/*flex:2 !important;*/
 }
 td.checkbox, th.checkbox{
-	flex:0.5 !important;
+	/*flex:0.5 !important;*/
 }
 td.actions, th.actions{
-	flex:0.8 !important;
+	/*flex:0.8 !important;*/
 }
 .search-arrow {
 	display: none;

@@ -72,7 +72,8 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         </td>
         {
             status == 'pending' &&
-            <td className="actions row-actions">
+            <td>
+                <div className="actions row-actions">
                 <button onClick={()=>popAction(approveElement, 'approve')}>
                     <i ref={setApproveElement}>
                     <Check />
@@ -83,6 +84,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
                     <Cross/>
                     </i>
                 </button>
+                </div>
             </td>
         }
     </tr>
@@ -208,7 +210,7 @@ const OfferTable = ({tab = null, data = [], showInfo, loading = false, type='app
         <tbody>
             { loading ?
                 <tr>
-                    <td colSpan={6}>Loading data</td>
+                    <td colSpan={type == 'pending' ? 7 : 6}>Loading data</td>
                 </tr> :
                 (
                     ( offers.length > 0 ) ? 

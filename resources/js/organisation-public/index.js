@@ -22,7 +22,6 @@ import 'pretty-checkbox';
 
 const OrgPub = () => {
     const [countTab, setCountTab] = useState(1);
-    const [category, setCategory] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const [users, setUsers] = useState([]);
     //validators
@@ -33,7 +32,10 @@ const OrgPub = () => {
         email: '',
         site: '', 
         phone_number: '',
-        description: ''
+        description: '',
+        location: '',
+        lat: '',
+        lng: ''
     });
 
     const handleOrgInfo = (e) => {
@@ -49,18 +51,15 @@ const OrgPub = () => {
         setErrors(errors)
     }
 
-    const handleCategories = (item, truth = false) => {0
-        setCategory(item);
-    }
 
     const showTabTitle = () => {
         switch(countTab){
             case 1:
-            return <h3>Select Category</h3>
-            case 2:
             return <h3>Organisation Information</h3>
+            case 2:
+            return <h3>Invite Staff</h3>
             case 3:
-            return <h3>Invite Members</h3>
+            return <h3>Please answer the questions below</h3>
             default:
             return '';
         }
@@ -71,25 +70,13 @@ const OrgPub = () => {
         if(newCount > countTab)
             switch(countTab){
                 case 1:
-                if(_.isEmpty(category)){
-                    setErrors({
-                        ...errors,
-                        category: 'Missing Category'
-                    })
-                    setCountTab(1) //meaning show tab 1
-                    return;
-                } else {
-                    delete errors.category
-                    setErrors({...errors})
-                }
-                break;
-                case 2:
                 set = {
                     name: orgInfoForm.name == '' ? 'Missing title' : null,
                     email: orgInfoForm.email == '' ? 'Missing Email' : null,
                     site: orgInfoForm.site == '' ? 'Missing Website' : null,
                     phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
-                    description: orgInfoForm.description == '' ? 'Missing Description' : null
+                    description: orgInfoForm.description == '' ? 'Missing Description' : null,
+                    location: orgInfoForm.location == '' ? 'Missing location' : null
                 }
                 if(Object.values(set).filter(i=>i).length > 0){
                     setErrors({
@@ -100,7 +87,7 @@ const OrgPub = () => {
                     return;
                 }
                 break;
-                case 3:
+                case 2:
                 set = {
                     business_name: business_name == '' ? 'Missing business name' : null,
                     business_contact: business_contact == '' ? 'Missing business contract' : null
@@ -116,6 +103,8 @@ const OrgPub = () => {
                     delete errors.business_contact;
                     setErrors({...errors});
                 }
+                break;
+                case 3:
                 break;
             }
 
@@ -190,10 +179,9 @@ const OrgPub = () => {
 
                     <div className="offers-create-form__body">
                         { showTabTitle() }
-                        { countTab == 1 && <CategoryGrid selectedCategories={category} handleCategories={handleCategories} errors={errors.category}/>}
-                        { countTab == 2 && <OrgInfoTab orgData={orgInfoForm} handleOrgInfo={handleOrgInfo} setErrors={setErrors} removeError={removeError} errors={errors}/>}
-                        { countTab == 3 && <OrgInviteTab users={users} submitting={submitting} setUsers={setUsers}/>}
-                        {/* { countTab == 3 && <FormBusinessInfo service={{business_name, business_site, business_contact}} updateBusiness={updateBusiness}  errors={errors}/>} */}
+                        { countTab == 1 && <OrgInfoTab orgData={orgInfoForm} handleOrgInfo={handleOrgInfo} setOrgInfoForm={setOrgInfoForm} setErrors={setErrors} removeError={removeError} errors={errors}/>}
+                        { countTab == 2 && <OrgInviteTab users={users} submitting={submitting} setUsers={setUsers}/>}
+                        { countTab == 3 && 'Something here'}
                     </div>
 
                     <div className={`create-org-pub__footer ${countTab == 3 ? 'create-org-pub__footer-cols-2' : ''} `}>

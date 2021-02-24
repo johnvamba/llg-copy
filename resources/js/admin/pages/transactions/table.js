@@ -6,7 +6,7 @@ import { swalSuccess, swalError } from '../../../components/helpers/alerts';
 import UsersActionsEdit from '../../../svg/users-actions-edit';
 import Mail from '../../../svg/mail';
 
-const RowTable = ({organisation, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction}) => {
+const RowTable = ({invoice, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction}) => {
     // const { title ="Untitled", email = 'N/A', age = 'N/A', bio = '', date = "Missing"} = organisation
     const [approveElement, setApproveElement] = useState(null);
     const [rejectElement, setRejectElement] = useState(null);
@@ -16,35 +16,37 @@ const RowTable = ({organisation, checkValue = false, checkChange, writeStory = (
             <input type='checkbox' checked={checkValue} onChange={checkChange}/>
         </td>
         <td>
-            <p>{organisation.id}</p>
+            <p>{invoice.charge_id}</p>
         </td>
         <td className="title" onClick={onShowInfo}>
             <p>
-                {organisation.org_name}
+                {invoice.org_name}
             </p>
         </td>
         <td>
-            <p>{organisation.giversName}</p>
+            <p>{invoice.giversName}</p>
         </td>
         <td>
-            <p>{organisation.email}</p>
+            <p>{invoice.email}</p>
         </td>
         <td>
             <p>
                 <span className="currency">$</span> 
-                {organisation.amount}
+                {invoice.amount}
             </p>
         </td>
         <td>
-            <p>{organisation.date}</p>
+            <p>{invoice.date}</p>
         </td>
 
-        <td className="actions row-actions">
-            <button onClick={onShowInfo}>
-                <i ref={setApproveElement}>
-                <Mail />
-                </i>
-            </button>
+        <td>
+            <div className="actions row-actions">
+                <button onClick={onShowInfo}>
+                    <i ref={setApproveElement}>
+                    <Mail />
+                    </i>
+                </button>
+            </div>
         {/*
             <button onClick={onShowInfo}>
                 <i ref={setRejectElement}>
@@ -165,20 +167,20 @@ const TransactionTable = ({tab = null, data = [], handleForm, loading = false, l
         <tbody>
             { loading ?
                 <tr>
-                    <td colSpan={7}>Loading data</td>
+                    <td colSpan={8}>Loading data</td>
                 </tr> :
                 (
                     ( users.length > 0 ) ? 
                     users.map((i, ind) => <RowTable key={ind} 
                         tab={tab} 
-                        organisation={i} 
+                        invoice={i} 
                         checkValue={i.checked}
                         checkChange={e=>handleRowCheckbox(i,e.target.checked)}
                         onShowInfo={()=>handleForm(i, true)}
                         popAction={(button, type)=>togglePopItem(i, button, type)}/>
                     ) :
                     <tr>
-                        <td colSpan={7}>No data found</td>
+                        <td colSpan={8}>No data found</td>
                     </tr>
                 )
             }

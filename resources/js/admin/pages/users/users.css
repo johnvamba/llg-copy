@@ -189,7 +189,12 @@
     border-bottom: 1px solid #109CF1;
 }
 
-
+table.table td.bio p{
+    max-width: 500px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 @media (max-width: 768px) {
     .users-form{
         width: 100%;
