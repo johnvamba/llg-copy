@@ -32,23 +32,25 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         <td>
             <p>{ age }</p>
         </td>
-        <td>
+        <td className="bio">
             <p>{ bio }</p>
         </td>
         <td>
             <p>{ date }</p>
         </td>
-        <td className="actions row-actions">
-            <button onClick={onShowInfo}>
-                <i ref={setApproveElement}>
-                <UsersActionsEdit />
-                </i>
-            </button>
-            <button onClick={()=>popAction(rejectElement, 'remove')}>
-                <i ref={setRejectElement}>
-                <UsersActionsDelete />
-                </i>
-            </button>
+        <td className="">
+            <div className="actions row-actions">
+                <button onClick={onShowInfo}>
+                    <i ref={setApproveElement}>
+                    <UsersActionsEdit />
+                    </i>
+                </button>
+                <button onClick={()=>popAction(rejectElement, 'remove')}>
+                    <i ref={setRejectElement}>
+                    <UsersActionsDelete />
+                    </i>
+                </button>
+            </div>
         </td>
     </tr>
 }
@@ -144,7 +146,7 @@ const UserTable = ({tab = null, data = [], showInfo, loading = false, loadTable}
     }
 
     return <>
-    <table className="table">
+    <table className="table table-user">
         <thead className="bg-white tb-head">
             <tr>
                 <th className="checkbox">
@@ -153,7 +155,7 @@ const UserTable = ({tab = null, data = [], showInfo, loading = false, loadTable}
                 <th className="title">Name</th>
                 <th className="">Email</th>
                 <th className="">Age</th>
-                <th className="">Bio</th>
+                <th className="bio">Bio</th>
                 <th className="">Date Added</th>
                 <th className="actions">Actions</th>
             </tr>

@@ -30,7 +30,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
             <input type='checkbox' checked={checkValue} onChange={checkChange}/>
         </td>
         <td className="title" onClick={onShowInfo}>
-            <div className="flex"> 
+            <div className="flex items-center"> 
                 {
                     photo ?
                     <img className="title-img" src={photo}/> :
@@ -57,25 +57,29 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         </td>
         {
             status == 'pending' ?
-            <td className="actions row-actions">
-                <button onClick={()=>popAction(approveElement, 'approve')}>
-                    <i ref={setApproveElement}>
-                    <Check />
-                    </i>
-                </button>
-                <button onClick={()=>popAction(rejectElement, 'disapprove')}>
-                    <i ref={setRejectElement}>
-                    <Cross/>
-                    </i>
-                </button>
+            <td>
+                <div className="actions row-actions">
+                    <button onClick={()=>popAction(approveElement, 'approve')}>
+                        <i ref={setApproveElement}>
+                        <Check />
+                        </i>
+                    </button>
+                    <button onClick={()=>popAction(rejectElement, 'disapprove')}>
+                        <i ref={setRejectElement}>
+                        <Cross/>
+                        </i>
+                    </button>
+                </div>
             </td> :
-            <td className="actions row-actions">
-                <Button className="primary-btn flex text-white bg-blue-500 hover:bg-blue-600" 
-                    disabled={status !== 'achieved'}
-                    onClick={()=>handleForm(item.organization, false, 'story', true)}>
-                    <Quill/>
-                    Write a Story
-                </Button>
+            <td>
+                <div className="actions row-actions">
+                    <Button className="primary-btn flex text-white bg-blue-500 hover:bg-blue-600" 
+                        disabled={status !== 'achieved'}
+                        onClick={()=>handleForm(item.organization, false, 'story', true)}>
+                        <Quill/>
+                        Write a Story
+                    </Button>
+                </div>
             </td>
         }
     </tr>

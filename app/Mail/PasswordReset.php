@@ -2,32 +2,37 @@
 
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Auth\Notifications\ResetPassword;
 
-class PasswordReset extends Mailable
+class PasswordReset extends ResetPassword
 {
-    use Queueable, SerializesModels;
-
     /**
-     * Create a new message instance.
+     * Build the mail representation of the notification.
      *
-     * @return void
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function __construct()
+    public function toMail($notifiable)
     {
-        //
-    }
+        if (static::$toMailCallback) {
+            return call_user_func(static::$toMailCallback, $notifiable, $this->token);
+        }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
-    public function build()
-    {
-        return $this->view('view.name');
+        if (static::$createUrlCallback) {
+            $url = call_user_func(static::$createUrlCallback, $notifiable, $this->token);
+        } else {
+            $url = url(route('password.reset', [
+                'token' => $this->token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ], false));
+        }
+
+        return (new MailMessage)
+            ->view('resetpass')
+            ->subject(Lang::get('Reset Password Notification'))
+            ->line(Lang::get('You are receiving this email because we received a password reset request for your account.'))
+            ->action(Lang::get('Reset Password'), $url)
+            ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
+            ->line(Lang::get('If you did not request a password reset, no further action is required.'));
     }
 }

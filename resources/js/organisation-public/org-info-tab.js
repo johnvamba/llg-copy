@@ -7,6 +7,7 @@ import Logo from '../../assets/images/logo.png';
 import containerImage from '../../assets/images/create-org.jpg';
 import mainBackground from '../../assets/images/login-2.jpg';
 import CategoryGrid from '../components/CategoryGrid'
+import Location from '../components/Location'
 import { validateEmail, isValidated } from '../components/helpers/validator';
 import {  checkEmail } from '../components/helpers/async_options';
 
@@ -14,7 +15,7 @@ import './org-pub.css';
 
 import 'pretty-checkbox';
 
-const OrgInfoTab = ({ orgData, handleOrgInfo, setErrors, removeError, errors }) => {
+const OrgInfoTab = ({ orgData, handleOrgInfo, setOrgInfoForm, setErrors, removeError, errors }) => {
 
     const handleEmail = (e, blur = false) => {
         const email = e.target.value
@@ -29,11 +30,20 @@ const OrgInfoTab = ({ orgData, handleOrgInfo, setErrors, removeError, errors }) 
                     else
                         setErrors({...errors, email: 'Email already existed'})                    
                 }
-                console.log('running?')
             }).catch(e=> setErrors({...errors, email: 'Invalid Email'}))
         } else if (blur) {
             setErrors({...form, email: 'Not proper email'})
         }
+    }
+
+    const handleLocation = ({formatted_address, geometry}) => {
+        setOrgInfoForm({
+            ...orgData,
+            location: formatted_address, 
+            lat: geometry.location.lat(), 
+            lng: geometry.location.lng()
+        })
+        removeError('location')
     }
 
     return (
@@ -99,6 +109,15 @@ const OrgInfoTab = ({ orgData, handleOrgInfo, setErrors, removeError, errors }) 
                             (errors.phone_number || false) && <span className="text-xs pt-1 text-red-500 italic">Missing phone number</span>
                         }
                     </div>
+                </div>
+                <div className="w-full xl:w-full px-2">
+                    <Location 
+                        className={`short-width ${errors.location && 'form-error'}`}
+                        name={'location'}
+                        defaultValue={orgData.location}
+                        placesSelected={handleLocation}
+                        errors={errors.location || []}
+                    />
                 </div>
                 <div className="w-full xl:w-full px-2">
                     <div className={`form-group form-group-textarea ${errors.description && 'form-error'}`}>

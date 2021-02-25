@@ -59,7 +59,8 @@ const OrgInviteTab = ({ submitting, users, setUsers }) => {
     const [form, setForm] = useState({
         email: '',
         firstName: '',
-        lastName: ''
+        lastName: '',
+        phone: ''
     });
     const [errors, setErrors] = useState({});
 
@@ -116,7 +117,8 @@ const OrgInviteTab = ({ submitting, users, setUsers }) => {
         setForm({
             email: '',
             firstName: '',
-            lastName: ''
+            lastName: '',
+            phone: ''
         })
     }
 
@@ -127,7 +129,7 @@ const OrgInviteTab = ({ submitting, users, setUsers }) => {
                     users.length > 0 && users.map(i => <User key={i.email} form={i}/>)
                 }
                 <div className="flex flex-wrap -mx-2">
-                    <div className="w-full sm:w-full md:w-full xl:w-1/3 px-2">
+                    <div className="w-full sm:w-full md:w-full xl:w-1/4 px-2">
                         <div className={`form-group ${errors.email && 'form-error'}`}>
                             <label>Email Address</label>
                             <input
@@ -143,7 +145,7 @@ const OrgInviteTab = ({ submitting, users, setUsers }) => {
                             }
                         </div>
                     </div>
-                    <div className="w-full sm:w-full md:w-full xl:w-1/3 px-2">
+                    <div className="w-full sm:w-full md:w-full xl:w-1/4 px-2">
                         <div className={`form-group ${errors.name && 'form-error'}`}>
                             <label>First Name (Optional)</label>
                             <input
@@ -159,7 +161,7 @@ const OrgInviteTab = ({ submitting, users, setUsers }) => {
                             }
                         </div>
                     </div>
-                    <div className="w-full sm:w-full md:w-full xl:w-1/3 px-2">
+                    <div className="w-full sm:w-full md:w-full xl:w-1/4 px-2">
                         <div className={`form-group ${errors.name && 'form-error'}`}>
                             <label>Last Name (Optional)</label>
                             <input
@@ -172,6 +174,22 @@ const OrgInviteTab = ({ submitting, users, setUsers }) => {
                             />
                             {
                                 (errors.name || false) && <span className="text-xs pt-1 text-red-500 italic">Missing name</span>
+                            }
+                        </div>
+                    </div>
+                    <div className="w-full sm:w-full md:w-full xl:w-1/4 px-2">
+                        <div className={`form-group ${errors.phone && 'form-error'}`}>
+                            <label>Phone (Optional)</label>
+                            <input
+                                className="input-field"
+                                type="text"
+                                value={form.phone}
+                                name="phone"
+                                onChange={handleOrgInvite}
+                                placeholder="Enter Last Name"
+                            />
+                            {
+                                (errors.phone || false) && <span className="text-xs pt-1 text-red-500 italic">Missing phone</span>
                             }
                         </div>
                     </div>

@@ -58,6 +58,15 @@ class ActivitySeeder extends Seeder
                     'created_at' => $date,
                     'updated_at' => $date
                 ]);
+
+                Invoice::create([
+                    'model_id' => $need->id,
+                    'model_type' => Need::class,
+                    'charge_id' => Str::random(12),
+                    'user_id' => $user->id,
+                    'organization_id' => $need->organization_id,
+                    'amount' => number_format($amount, 2)
+                ]);
             }
         });
     }

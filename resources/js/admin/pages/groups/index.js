@@ -6,11 +6,14 @@ import LoadingScreen from '../../../components/LoadingScreen'
 import GroupsHeader from './header';
 import GroupsList from './list';
 import GroupsForm from './form';
+import GroupView from './view';
+import './groups.css';
 
 const Groups = () => {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [showForm, setShowForm] = useState(false);
+    const [view, setView] = useState(false);
     const [focus, setFocus] = useState({});
     const [groups, setGroups] = useState([]);
     const [count, setCount] = useState(0);
@@ -53,9 +56,10 @@ const Groups = () => {
         }));
     }
 
-    const handleForm = (data={}, showForm=false)=>{
+    const handleForm = (data={}, showForm=false, showView=false)=>{
         setFocus(data)
         setShowForm(showForm)
+        setView(showView)
     }
 
     const afterSubmit = (data = {}) => {
@@ -86,6 +90,10 @@ const Groups = () => {
                     handleForm={handleForm}
                     afterSubmit={afterSubmit}
                 />
+            }
+            {
+                view && 
+                <GroupView data={focus} handleForm={handleForm} closePanel={()=>setView(false)}/>
             }
         </>
     )
