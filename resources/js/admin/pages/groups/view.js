@@ -29,7 +29,7 @@ const GroupInfo = ({ data={}, closePanel, handleForm}) => {
     const loadItem = (clearCache = false) => {
         setLoading(true)
         // const token = axios.CancelToken.source();
-        api.get(`/api/web/organizations/${data.id}`, {
+        api.get(`/api/web/groups/${data.id}`, {
             cache: {
                 exclude: { query: false },
             }, 
@@ -45,7 +45,7 @@ const GroupInfo = ({ data={}, closePanel, handleForm}) => {
     const loadMembers = (clearCache = false) => {
         setLoadingMembers(true);
         // const token = axios.CancelToken.source();
-        api.get(`/api/web/organizations/${data.id}/members`, {
+        api.get(`/api/web/groups/${data.id}/members`, {
             cache: {
                 exclude: { query: false },
             }, 

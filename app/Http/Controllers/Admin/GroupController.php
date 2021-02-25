@@ -13,6 +13,7 @@ use App\GroupLocation;
 use App\GroupParticipant;
 use App\User;
 use App\Mail\GroupInvitation;
+use App\Helper\Scopes\UserPortalScope;
 
 use DB;
 use Str;
@@ -261,5 +262,13 @@ class GroupController extends Controller
             return response()->json('Error in inviting User', 400);
 
         return response()->json([ 'invite_status' => ($gp->status ?? 'pending') ], 200);
+    }
+
+    public function members(Request $request, Group $group) {
+        $members = $group->participant_users()
+        ->unfilter()
+        ->with('profile.media');
+        
+        return UserResource::collection( $members->paginate() );
     }
 }
