@@ -414,19 +414,17 @@ class OrganizationController extends Controller
             'site' => 'required',
             'phone_number' => 'required',
             'description' => 'required',
-            'category' => 'required',
+            'terms' => 'required',
+            'location' => 'required'
         ]);
 
         DB::beginTransaction();
 
         try {
             $org = Organization::create( 
-                    $request->only('name', 'email', 'phone_number', 'site', 'description') 
+                    $request->only('name', 'email', 'phone_number', 'site', 'description',  'acnc', 'fundraiser', 'insured', 'location', 'lat', 'lng') 
                     + [
                         'short_description' => substr($request->get('description'), 0, 100),
-                        'location' => 'Sydney, Australia',
-                        'lat' => -33.868782, 
-                        'lng' => 151.207583
                     ]);
 
             if($catlist = $request->get('category')){

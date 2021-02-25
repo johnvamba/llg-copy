@@ -11,12 +11,16 @@ import mainBackground from '../../assets/images/login-2.jpg';
 import CategoryGrid from '../components/CategoryGrid'
 import OrgInfoTab from './org-info-tab';
 import OrgInviteTab from './org-invite-tab';
+import OrgQuestion from './org-question';
+
 import LoadingScreen from '../components/LoadingScreen'
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
 const swal = withReactContent(Swal);
 import SwalIcon from '../svg/swal-icon'
 import './org-pub.css';
+import { swalError } from '../components/helpers/alerts'
+import { isValidated } from '../components/helpers/validator'
 
 import 'pretty-checkbox';
 
@@ -37,6 +41,19 @@ const OrgPub = () => {
         lat: '',
         lng: ''
     });
+
+    const [answers, setAnswers] = useState({
+        acnc: false,
+        fundraiser: false,
+        insured: false,
+        terms: false
+    })
+
+    const updateAnswers = (field = 'terms', state= false)=>{
+        setAnswers({ ...answers, [field]: state })
+        if(field == 'terms' && state)
+            removeError(field)
+    }
 
     const handleOrgInfo = (e) => {
         const { name, value } = e.target
@@ -67,49 +84,37 @@ const OrgPub = () => {
 
     const validateTab = (newCount) => {
         let set = {} 
-        if(newCount > countTab)
-            switch(countTab){
-                case 1:
-                set = {
-                    name: orgInfoForm.name == '' ? 'Missing title' : null,
-                    email: orgInfoForm.email == '' ? 'Missing Email' : null,
-                    site: orgInfoForm.site == '' ? 'Missing Website' : null,
-                    phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
-                    description: orgInfoForm.description == '' ? 'Missing Description' : null,
-                    location: orgInfoForm.location == '' ? 'Missing location' : null
-                }
-                if(Object.values(set).filter(i=>i).length > 0){
-                    setErrors({
-                        ...errors,
-                        ...set
-                    })
-                    setCountTab(2)
-                    return;
-                }
-                break;
-                case 2:
-                set = {
-                    business_name: business_name == '' ? 'Missing business name' : null,
-                    business_contact: business_contact == '' ? 'Missing business contract' : null
-                }
-                if(Object.values(set).filter(i=>i).length > 0){
-                    setErrors({
-                        ...errors,
-                        ...set
-                    })
-                    return;
-                } else {
-                    delete errors.business_name;
-                    delete errors.business_contact;
-                    setErrors({...errors});
-                }
-                break;
-                case 3:
-                break;
+        switch(countTab){
+            case 1:
+            set = {
+                name: orgInfoForm.name == '' ? 'Missing title' : null,
+                email: orgInfoForm.email == '' ? 'Missing Email' : null,
+                site: orgInfoForm.site == '' ? 'Missing Website' : null,
+                phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
+                description: orgInfoForm.description == '' ? 'Missing Description' : null,
+                location: orgInfoForm.location == '' ? 'Missing location' : null
             }
-
-        setCountTab(newCount)
-        return set;
+            break;
+            case 2:
+            //Skippable?
+            break;
+            case 3:
+            set = {
+                terms: answers.terms ? null : 'Missing terms' ,
+            }
+            break;
+            default:
+            return {};
+        }
+        if(Object.values(set).filter(i=>i).length > 0){
+            setErrors({
+                ...errors,
+                ...set
+            })
+        } else {
+            setCountTab(newCount)
+        }
+        return isValidated(set);
     }
 
     const submit = (includeUsers = true) => {
@@ -119,7 +124,7 @@ const OrgPub = () => {
 
             const params = {
                 ...orgInfoForm,
-                category,
+                ...answers,
                 users: includeUsers ? users : null,
             }
             api.post(`/api/org-create`, params)
@@ -146,6 +151,7 @@ const OrgPub = () => {
             })
         } else {
             swalError();
+            console.log('set', set)
         }
     }
 
@@ -181,13 +187,13 @@ const OrgPub = () => {
                         { showTabTitle() }
                         { countTab == 1 && <OrgInfoTab orgData={orgInfoForm} handleOrgInfo={handleOrgInfo} setOrgInfoForm={setOrgInfoForm} setErrors={setErrors} removeError={removeError} errors={errors}/>}
                         { countTab == 2 && <OrgInviteTab users={users} submitting={submitting} setUsers={setUsers}/>}
-                        { countTab == 3 && 'Something here'}
+                        { countTab == 3 && <OrgQuestion answers={answers} updateAnswers={updateAnswers} errors={errors}/>}
                     </div>
 
                     <div className={`create-org-pub__footer ${countTab == 3 ? 'create-org-pub__footer-cols-2' : ''} `}>
                         {
-                            countTab == 3 &&
-                                <span onClick={()=>submit(false)}>Skip and complete</span>
+                            /*(countTab == 2 || countTab == 3) &&
+                                <span onClick={()=>submit(false)}>Skip and complete</span>*/
                         }
                         <div>
                             {

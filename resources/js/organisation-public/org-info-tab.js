@@ -43,6 +43,7 @@ const OrgInfoTab = ({ orgData, handleOrgInfo, setOrgInfoForm, setErrors, removeE
             lat: geometry.location.lat(), 
             lng: geometry.location.lng()
         })
+        removeError('location')
     }
 
     return (
