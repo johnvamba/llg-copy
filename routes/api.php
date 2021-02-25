@@ -72,6 +72,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('stories/{story}/toggle', 'StoryController@toggle');
 
         Route::get('groups/invite', 'GroupController@searchUserInvite');
+        Route::get('groups/{group}/members', 'GroupController@members');
         Route::post('groups/invite', 'GroupController@initUserInvite');
         Route::resource('groups', 'GroupController');
 
