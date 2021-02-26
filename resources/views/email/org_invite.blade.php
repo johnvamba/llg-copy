@@ -11,6 +11,7 @@
 	<p>
 		You are invited to join {{ $org->name ?? 'an organization' }} on Love-Lives Generously.
 		<br/>
+		<a href="{{ $url }}">Create Account</a>
 		Sign-in and discuss with your favorite philanthrophists and activists.
 	</p>
 	<p>Warm welcome.</p>

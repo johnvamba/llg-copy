@@ -37,6 +37,8 @@ Route::group(['middleware' => 'wpcors', 'prefix' => 'offsite', 'namespace' => 'A
     Route::post('stories/{story}', 'StoryController@share')->name('wp.story.share');
 });
 
+Route::post('account', 'Admin\CompleteAccount')->name('post.complete.account');
+
 Route::group(['middleware' => ['auth:api']], function () {
 
     Route::group(['prefix'=>'web', 'namespace'=>'Admin', 'middleware' => 'datafilter'], function() {

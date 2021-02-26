@@ -25,6 +25,8 @@ use App\Http\Resources\Async\OrganizationResource as AsyncResource;
 use App\Http\Resources\Mini\UserResource;
 use App\Http\Resources\Mini\NeedResource;
 
+use App\OrgInvites;
+
 use DB;
 use Str;
 
@@ -450,12 +452,20 @@ class OrganizationController extends Controller
                     ]);
                 } else {
                     $intUser = $user['email'] ?? '';
-                    //send invitation by email
+                    $invite = OrgInvites::firstOrCreate([
+                        'org_id' => $org->id,
+                        'email' => $user['email'],
+                    ]);
+                    if(!$invite->wasRecentlyCreated){
+                        $invite->update([
+                            'first_name' => $user['firstName'] ?? '',
+                            'last_name' => $user['lastName'] ?? '',
+                            'phone' => $user['phone'] ?? ''
+                        ]);
+                    }
+                    dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($org, $invite))); //Run this on production but with dispatch
                 }
 
-                if($insUser && $org) {
-                    dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($org))); //Run this on production but with dispatch
-                }
             }
 
             DB::commit();
