@@ -57,10 +57,11 @@ Route::group(['middleware' => ['auth:api']], function () {
 
         Route::resource('organizations', 'OrganizationController');
 
-        Route::resource('offers', 'OffersController');
         Route::post('offers/{offer}/approve', 'OffersController@approve');
         Route::post('offers/{offer}/disapprove', 'OffersController@disapprove');
+        Route::resource('offers', 'OffersController');
 
+        Route::get('users/{user}/groups', 'UserController@groups');
         Route::resource('users', 'UsersController');
 
         Route::get('campuses/async', 'CampusController@async');

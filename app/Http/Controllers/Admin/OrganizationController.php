@@ -55,7 +55,7 @@ class OrganizationController extends Controller
                 ->orWhere('email', 'like', '%'.$search.'%');
         }
 
-        return OrganizationResource::collection($mainQuery->paginate());
+        return OrganizationResource::collection($mainQuery->paginate(16));
     }
 
     /**
@@ -339,7 +339,7 @@ class OrganizationController extends Controller
      */
     public function members(Organization $organization)
     {
-        $users = User::whereHas('organizationMembers', function($query) use ($organization){
+        $users = User::unfilter()->whereHas('organizationMembers', function($query) use ($organization){
             $query->where('organization_id', $organization->id);
         });
 
@@ -397,6 +397,7 @@ class OrganizationController extends Controller
     public function needs(Request $request, Organization $organization)
     {
         $needs = Need::where('organization_id', $organization->id)
+            ->unfilter()
             ->when($status = $request->get('status'), function($sub) use ($status){
                 $sub
                     ->when($status == 'current', fn($need) => $need->whereRaw('raised < goal')->whereNotNull('approved_at') )

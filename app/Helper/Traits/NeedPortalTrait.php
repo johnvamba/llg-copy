@@ -10,4 +10,8 @@ trait NeedPortalTrait
     {
         static::addGlobalScope(new NeedPortalScope);
     }
+
+    public static function scopeUnfilter($query){
+    	return $query->withoutGlobalScope(NeedPortalScope::class);
+    }
 }

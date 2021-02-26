@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\User;
 use App\UserProfile;
 
+use App\Http\Resources\GroupResource;
 use App\Http\Resources\UserResource;
+
 use Spatie\Permission\Models\Role;
 use DB;
 
@@ -216,5 +218,14 @@ class UsersController extends Controller
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
+    }
+
+    public function groups(User $user)
+    {
+        $groups = $user->groups_member()
+            ->withCount('participants')
+            ->latest();
+
+        return GroupResource::collection( $groups->paginate(5) );
     }
 }
