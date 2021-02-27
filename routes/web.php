@@ -23,6 +23,8 @@ Route::group([
 	Route::get('org', 'TestControl@orgEmail');
 	Route::get('group', 'TestControl@groupEmail');
 	Route::get('initreceipt', 'TestControl@sendEmail');
+	Route::get('password', 'TestControl@password');
+
 });
 
 Route::get('/admin/invite', function () {
