@@ -10,6 +10,9 @@ use App\UserProfile;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\UserResource;
 
+use App\Need;
+use App\Http\Resources\NeedResource;
+
 use Spatie\Permission\Models\Role;
 use DB;
 
@@ -121,6 +124,13 @@ class UsersController extends Controller
         $user->loadMissing(['profile', 'roles', 'organization']);
 
         return new UserResource($user);
+    }
+
+    public function showNeedMet(User $user) {
+        $needs = Need::unfilter()
+            ->whereHas('contributors', fn($q) => $q->where('model_id', $user->id) );
+
+        return NeedResource::collection($needs->paginate(5));
     }
 
     /**
