@@ -264,6 +264,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 {
                     (type == 'donation' || type == 'fundraise') && 
                     <div>
+                        {/* if this requires improvement check this out. https://codepen.io/559wade/pen/LRzEjj*/}
                         <div className={`form-group ${errors.goal && 'form-error'}`}>
                             <label>Goal</label>
                             <div className="input-container">

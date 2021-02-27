@@ -17,11 +17,11 @@ import './story.css';
 const Stories = () => {
 
     const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(5);
     const [counts, setCounts] = useState({
         published: 0,
         drafts: 0
     })
+        const [endPage, setEndPage] = useState(1);
 
     const [publishes, setPublishes] = useState([])
     const [drafts, setDrafts] = useState([])
@@ -102,10 +102,11 @@ const Stories = () => {
             c.cancel('reset');
             d.cancel('reset');
         }
-    }, [page, limit, search])
+    }, [search])
 
     useEffect(()=>{
-        dispatch( setOrg(null))
+        //redux defaults
+        dispatch( setOrg(null) )
     }, [])
 
     // const stories = useSelector(
@@ -134,9 +135,9 @@ const Stories = () => {
     }
     
 
-    const handleLimitChange = (limit) => {
-        setLimit(parseInt(limit));
-    }
+    // const handleLimitChange = (limit) => {
+    //     setLimit(parseInt(limit));
+    // }
 
     const handleChangePage = (page) => {
         setPage(parseInt(page));

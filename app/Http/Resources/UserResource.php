@@ -31,6 +31,7 @@ class UserResource extends JsonResource
 
             'type' => $this->when($this->relationLoaded('roles'), optional($this->getRoleNames())->first()),
             'organization' => $this->when($this->relationLoaded('organization'), $this->parseOrg()),
+            'mobile_number' => $this->when(isset($this->mobile_number), $this->mobile_number),
         ];
     }
 

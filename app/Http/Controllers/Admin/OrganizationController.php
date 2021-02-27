@@ -25,6 +25,8 @@ use App\Http\Resources\Async\OrganizationResource as AsyncResource;
 use App\Http\Resources\Mini\UserResource;
 use App\Http\Resources\Mini\NeedResource;
 
+use App\OrgInvites;
+
 use DB;
 use Str;
 
@@ -55,7 +57,7 @@ class OrganizationController extends Controller
                 ->orWhere('email', 'like', '%'.$search.'%');
         }
 
-        return OrganizationResource::collection($mainQuery->paginate());
+        return OrganizationResource::collection($mainQuery->paginate(16));
     }
 
     /**
@@ -339,7 +341,7 @@ class OrganizationController extends Controller
      */
     public function members(Organization $organization)
     {
-        $users = User::whereHas('organizationMembers', function($query) use ($organization){
+        $users = User::unfilter()->whereHas('organizationMembers', function($query) use ($organization){
             $query->where('organization_id', $organization->id);
         });
 
@@ -357,7 +359,7 @@ class OrganizationController extends Controller
         try {
             foreach ($request->get('users') as $key => $value) {
                 $user = User::firstOrCreate([
-                    'email' => $request->get('email'),
+                    'email' => $value['email'],
                     'password' => bcrypt('temp_secret'),
                     'name'  => $value['firstname']. ' ' .$value['lastname']
                 ]);
@@ -381,8 +383,18 @@ class OrganizationController extends Controller
                     'organization_id' => $organization->id
                 ]);
 
+                $invite = OrgInvites::firstOrCreate([
+                    'org_id' => $organization->id,
+                    'email' => $value['email'],
+                ]);
+                $invite->update([
+                    'first_name' => $value['firstName'] ?? 'Invited',
+                    'last_name' => $value['lastName'] ?? 'User',
+                    'phone' => $value['phone'] ?? '00 0000 0000'
+                ]);
+
                 if($user) {
-                    dispatch(fn() => Mail::to($user)->send(new OrgInvitation($organization))); //Run this on production but with dispatch
+                    dispatch(fn() => Mail::to($user)->send(new OrgInvitation($organization, $invite))); //Run this on production but with dispatch
                 }
             }
 
@@ -397,6 +409,7 @@ class OrganizationController extends Controller
     public function needs(Request $request, Organization $organization)
     {
         $needs = Need::where('organization_id', $organization->id)
+            ->unfilter()
             ->when($status = $request->get('status'), function($sub) use ($status){
                 $sub
                     ->when($status == 'current', fn($need) => $need->whereRaw('raised < goal')->whereNotNull('approved_at') )
@@ -449,12 +462,18 @@ class OrganizationController extends Controller
                     ]);
                 } else {
                     $intUser = $user['email'] ?? '';
-                    //send invitation by email
+                    $invite = OrgInvites::firstOrCreate([
+                        'org_id' => $org->id,
+                        'email' => $user['email'],
+                    ]);
+                    $invite->update([
+                        'first_name' => $user['firstName'] ?? 'Invited',
+                        'last_name' => $user['lastName'] ?? 'User',
+                        'phone' => $user['phone'] ?? '00 0000 0000'
+                    ]);
+                    dispatch(fn() => Mail::to($intUser)->send(new OrgInvitation($org, $invite))); //Run this on production but with dispatch
                 }
 
-                if($insUser && $org) {
-                    dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($org))); //Run this on production but with dispatch
-                }
             }
 
             DB::commit();

@@ -84,6 +84,10 @@ const OrgPub = () => {
 
     const validateTab = (newCount) => {
         let set = {} 
+        if(newCount < countTab){
+            setCountTab(newCount)
+            return;
+        }
         switch(countTab){
             case 1:
             set = {
@@ -151,7 +155,6 @@ const OrgPub = () => {
             })
         } else {
             swalError();
-            console.log('set', set)
         }
     }
 
@@ -198,7 +201,7 @@ const OrgPub = () => {
                         <div>
                             {
                                 countTab > 1 &&
-                                    <button className="primary-btn primary-btn--transparent" disabled={submitting} onClick={() => validateTab(countTab-1)}>Back</button>
+                                <button className="primary-btn primary-btn--transparent" disabled={submitting} onClick={() => validateTab(countTab-1)}>Back</button>
                             }
                             {
                                 (countTab < 3) 

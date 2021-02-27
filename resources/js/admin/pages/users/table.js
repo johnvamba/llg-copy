@@ -18,7 +18,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         <td className="checkbox">
             <input type='checkbox' checked={checkValue} onChange={checkChange}/>
         </td>
-        <td className="title" onClick={onShowInfo}>
+        <td className="title" onClick={()=>onShowInfo(item, false, true)}>
             <div className="flex items-center">
                 <img className="title-img circle" src={photo || "http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp"}/>
                 <p>
@@ -40,7 +40,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         </td>
         <td className="">
             <div className="actions row-actions">
-                <button onClick={onShowInfo}>
+                <button onClick={()=>onShowInfo(item, true)}>
                     <i ref={setApproveElement}>
                     <UsersActionsEdit />
                     </i>
@@ -172,7 +172,7 @@ const UserTable = ({tab = null, data = [], showInfo, loading = false, loadTable}
                         item={i} 
                         checkValue={i.checked}
                         checkChange={e=>handleRowCheckbox(i,e.target.checked)}
-                        onShowInfo={()=>showInfo(i, true)}
+                        onShowInfo={showInfo}
                         popAction={(button, type)=>togglePopItem(i, button, type)}/>
                     ) :
                     <tr>

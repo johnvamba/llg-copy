@@ -37,6 +37,8 @@ Route::group(['middleware' => 'wpcors', 'prefix' => 'offsite', 'namespace' => 'A
     Route::post('stories/{story}', 'StoryController@share')->name('wp.story.share');
 });
 
+Route::post('account', 'Admin\CompleteAccount')->name('post.complete.account');
+
 Route::group(['middleware' => ['auth:api']], function () {
 
     Route::group(['prefix'=>'web', 'namespace'=>'Admin', 'middleware' => 'datafilter'], function() {
@@ -57,10 +59,11 @@ Route::group(['middleware' => ['auth:api']], function () {
 
         Route::resource('organizations', 'OrganizationController');
 
-        Route::resource('offers', 'OffersController');
         Route::post('offers/{offer}/approve', 'OffersController@approve');
         Route::post('offers/{offer}/disapprove', 'OffersController@disapprove');
+        Route::resource('offers', 'OffersController');
 
+        Route::get('users/{user}/groups', 'UserController@groups');
         Route::resource('users', 'UsersController');
 
         Route::get('campuses/async', 'CampusController@async');
