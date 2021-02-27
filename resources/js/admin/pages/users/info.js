@@ -6,7 +6,7 @@ import OffersPlus from '../../../svg/offers-plus';
 import LoadingScreen from '../../../components/LoadingScreen'
 
 const UserInfo = ({ data={}, closePanel, handleForm}) => {
-    const { title, bio, email, photo, phone } = data
+    const { title, bio, email, photo, mobile_number } = data
     const [loading, setLoading] = useState({
         user: false,
         group: false,
@@ -35,6 +35,7 @@ const UserInfo = ({ data={}, closePanel, handleForm}) => {
 
     const loadGroups = () => {
         updateLoading('group', true)
+        setGroups([]);
         api.get(`/api/web/users/${data.id}/groups`)
         .then(({data})=> {
             setGroups(data.data);
@@ -42,9 +43,21 @@ const UserInfo = ({ data={}, closePanel, handleForm}) => {
         })
     }
 
+    const loadMets = () => {
+        updateLoading('mets', true)
+        setNeeds([])
+        api.get(`/api/web/users/${data.id}/needs`)
+        .then(({data})=> {
+            setNeeds(data.data);
+            updateLoading('mets')
+        })
+    }
+
     useEffect(()=>{
         if(data.id){
             const a = loadUser()
+            loadGroups()
+            loadMets()
             return ()=>{
 
             }
@@ -84,12 +97,12 @@ const UserInfo = ({ data={}, closePanel, handleForm}) => {
                     <h2>{ title }, {data.age || '18'}</h2>
                     <div className="user-contacts my-2">
                         {
-                            phone && 
+                            mobile_number && 
                             <div className="user-phone mr-3">
                                 <svg className="mr-2" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M13.3419 10.0764L11.4258 8.16036C10.7415 7.47606 9.57818 7.74981 9.30446 8.63938C9.09917 9.25528 8.41486 9.59744 7.79899 9.46055C6.43037 9.11839 4.58274 7.3392 4.24059 5.90215C4.0353 5.28625 4.44588 4.60194 5.06176 4.39667C5.95136 4.12295 6.22508 2.95963 5.54077 2.27532L3.62471 0.359261C3.07727 -0.119754 2.2561 -0.119754 1.77708 0.359261L0.476899 1.65945C-0.823285 3.02806 0.61376 6.65489 3.83 9.87113C7.04625 13.0874 10.6731 14.5929 12.0417 13.2242L13.3419 11.9241C13.8209 11.3766 13.8209 10.5554 13.3419 10.0764Z" fill="#CF995F"/>
                                 </svg>
-                                { phone }
+                                { mobile_number }
                             </div>
                         }
                         {
@@ -131,23 +144,25 @@ const UserInfo = ({ data={}, closePanel, handleForm}) => {
                         {
                             needs.map((i, ind) => 
                             <div className="need-item">
-                                <img className="need-img" src={'http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp'}/>
+                                <img className="need-img" src={i.photo || 'http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp'}/>
                                 <div className="need-detail">
                                     <div className="need-title">
-                                        <h3>Title</h3>
-                                        <span>Fundraiser</span>
+                                        <h3>{i.title}</h3>
+                                        <span>{i.type || 'Donation'}</span>
                                     </div>
-                                    <p className="need-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute</p>
-                                    <p className="need-inform">{'2 days ago'} <span>$130.00</span></p>
+                                    <p className="need-description">{i.description || ''}</p>
+                                    <p className="need-inform">{i.contri_date || 'Recently'} 
+                                        <span>{i.type != 'Volunteer' && '$'}{i.contri_amount || 0.00}</span>
+                                    </p>
                                     <div className="bar-status">
                                         <div className="progress">
-                                            <div className="progress-bar"></div>
+                                            <div className="progress-bar" style={{width: `${i.ratio || 0}%`}}></div>
                                         </div>
-                                        <span className="percent">70%</span>
+                                        <span className="percent">{i.ratio || 0}%</span>
                                     </div>
                                     <div className="need-status">
-                                        <p>Raised: $0.00</p>
-                                        <p>Goal: $200.00</p>
+                                        <p>{i.type != 'Volunteer' ? 'Raised: $' : 'Volunteered: '}{i.raised || 0.00}</p>
+                                        <p>Goal: {i.type != 'Volunteer' && '$'}{i.goal || 0.00}</p>
                                     </div>
                                 </div>
                             </div>)

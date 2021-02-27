@@ -385,8 +385,10 @@ table.table td.bio p{
 .bar-status .progress {
     width: 92%;
 }
+.bar-status .progress .progress-bar {
+    background-color: #587B7F !important;
+}
 .bar-status .percent {
-    width: 5%;
     font-family: Lato;
     font-style: normal;
     font-weight: 500;

@@ -128,7 +128,8 @@ class UsersController extends Controller
 
     public function showNeedMet(User $user) {
         $needs = Need::unfilter()
-            ->whereHas('contributors', fn($q) => $q->where('model_id', $user->id) );
+            ->whereHas('contributors', fn($q) => $q->unfilter()->where('model_id', $user->id) )
+            ->with(['contribution' => fn($q) => $q->where('need_mets.model_id', $user->id)->where('need_mets.model_type', 'App\User')]);
 
         return NeedResource::collection($needs->paginate(5));
     }

@@ -24,7 +24,7 @@ const OrgQuestions = ({answers = {}, updateAnswers = {}, errors = {}}) => {
 			</div>
 		</div>
 		<label className="check-container">
-			Create an account means you're okay with our <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a>
+			Create an account means you're okay with our <a href="/agreement.pdf" download>Terms of Service</a>
 			<input type="checkbox" name='terms' checked={answers.terms} onChange={e=>updateAnswers('terms', e.target.checked)} />
 			<span className={`checkmark ${answers.terms ? 'active' : ''}`}></span>
 		</label>

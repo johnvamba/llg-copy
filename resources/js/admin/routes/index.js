@@ -182,11 +182,11 @@ const routes = [
         exact: true,
         component: () => <Campus />
     },
-    {
-        path: '/push-notifications',
-        exact: true,
-        component: () => <PushNotification />
-    },
+    // {
+    //     path: '/push-notifications',
+    //     exact: true,
+    //     component: () => <PushNotification />
+    // },
     {
         path: '*',
         component: () => <NotFound />
