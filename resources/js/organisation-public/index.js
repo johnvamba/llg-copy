@@ -168,8 +168,8 @@ const OrgPub = () => {
                         <img src={Logo} />
                     </div>
                     <div>
-                        <h2>Neuma Organisation</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur dolor</p>
+                        <h2>Welcome to Neuma Care.</h2>
+                        <p>Thanks for partnering with us to transform our city</p>
                     </div>
                 </section>
                 <section className="right">

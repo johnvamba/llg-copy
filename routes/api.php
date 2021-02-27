@@ -63,7 +63,9 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('offers/{offer}/disapprove', 'OffersController@disapprove');
         Route::resource('offers', 'OffersController');
 
-        Route::get('users/{user}/groups', 'UserController@groups');
+        Route::get('users/{user}/groups', 'UsersController@groups');
+        Route::get('users/{user}/needs', 'UsersController@showNeedMet');
+
         Route::resource('users', 'UsersController');
 
         Route::get('campuses/async', 'CampusController@async');
