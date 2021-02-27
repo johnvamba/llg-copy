@@ -29,7 +29,8 @@ class CompleteAccount extends Controller
 	            'email' => $request->get('email'),
 	            'password' => bcrypt($request->get('password')),
 	            'name'  => $invite->first_name. ' ' .$invite->last_name,
-	            'email_verified_at' => now() //auto verify user if naa sila link
+	            'email_verified_at' => now(), //auto verify user if naa sila link
+	            'mobile_number' => $invite->phone
 	        ]);
 
 	        $role = Role::where('name', 'organization admin')->first();
