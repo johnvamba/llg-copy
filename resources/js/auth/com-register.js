@@ -5,6 +5,7 @@ import { Link, useLocation, useHistory } from 'react-router-dom';
 import { EmailValidator } from '../utils/helper';
 import LoadingScreen from '../components/LoadingScreen';
 import { swalSuccess, swalError } from '../components/helpers/alerts';
+import {  checkEmail } from '../components/helpers/async_options';
 
 import Cookie from 'js-cookie'
 import Logo from '../svg/logo';
@@ -42,6 +43,22 @@ const CompleteRegister = () => {
         setEmail(email);
     }, [location])
 
+    useEffect(()=>{
+        if(email != '' && EmailValidator(email) == '') {
+            checkEmail(email, {type: 'user'})
+            .then(({data})=>{
+                if(email == data.email){
+                    if(data.status == 'free'){
+                        delete errors.email;
+                        setErrors(errors)
+                    } else
+                        setErrors({...errors, email: 'User already existed'})
+                }
+            })
+
+        }
+    }, [email])
+
     const handleChange = ({ target }) => setForm({ ...form, [target.name]: target.value });
 
     const handleShow = (state = false, shown = 'password') => setShow({...show, [shown]: state}) 
@@ -55,6 +72,7 @@ const CompleteRegister = () => {
         setComplete(true);
         api.post(`/api/account`, {
             ...form,
+            email,
             token
         }).then(({data}) => {
             swalSuccess('Account has been created. Please Log in!');
@@ -113,7 +131,7 @@ const CompleteRegister = () => {
                                     focus:outline-none focus:border-blue-300"
                                 />
                                 <div className={`absolute inset-y-0 right-0 pr-2 flex items-end text-sm leading-7`}>
-                                    <button type="button" className="focus:outline-none" onClick={() => setShow(!show.password)}>
+                                    <button type="button" className="focus:outline-none" onClick={() => handleShow(!show.password)}>
                                         {show.password ?
                                             <i className="fa fa-eye-slash text-gray-500" aria-hidden="true"></i>
                                             :
@@ -140,7 +158,7 @@ const CompleteRegister = () => {
                                     focus:outline-none focus:border-blue-300"
                                 />
                                 <div className={`absolute inset-y-0 right-0 pr-2 flex items-end text-sm leading-7`}>
-                                    <button type="button" className="focus:outline-none" onClick={() => setShow(!show.confirm_password, 'confirm_password')}>
+                                    <button type="button" className="focus:outline-none" onClick={() => handleShow(!show.confirm_password, 'confirm_password')}>
                                         {show.confirm_password ?
                                             <i className="fa fa-eye-slash text-gray-500" aria-hidden="true"></i>
                                             :

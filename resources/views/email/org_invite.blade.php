@@ -1,10 +1,6 @@
 @extends('email_base')
 @push('css')
 <style type="text/css">
-	* {
-		font-family: InterRegular;
-	}
-
 	.wrapper {
 		height: 100%;
 		background: #f2f2f2;
@@ -32,11 +28,13 @@
 
 	strong {
 		color: #92A9AB;
-		font: 23px bolder;
+		font-size: 23px;
+		font-weight: bolder;
 	}
 
 	p {
-		font: 16px normal;
+		font-size: 16px;
+		font-weight: normal;
 	}
 
 	p.note {
@@ -128,7 +126,7 @@
 				</a>
 
 				<p class="note">
-					This invitation will expire on 5th Mar 2021
+					This invitation will expire on {{ $expires->format('jS M Y') }}
 				</p>
 			</div>
 

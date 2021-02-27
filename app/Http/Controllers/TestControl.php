@@ -10,6 +10,8 @@ use App\Mail\OrgInvitation;
 
 use App\ReceiptTemplate;
 use App\Organization;
+use App\OrgInvites;
+
 use App\User;
 use App\Group;
 
@@ -32,7 +34,7 @@ class TestControl extends Controller
 
         $user = User::where('email', 'admin@gmail.com')->first();
 
-        return (new OrgInvitation($organization))->to('logicbase.amba@gmail.com');
+        return (new OrgInvitation($organization, new OrgInvites))->to('logicbase.amba@gmail.com');
     }
 
     public function groupEmail(){

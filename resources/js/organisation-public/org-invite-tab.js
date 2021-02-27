@@ -104,7 +104,6 @@ const OrgInviteTab = ({ submitting, users, setUsers }) => {
                     else
                         setErrors({...errors, email: 'Email already existed'})
                 }
-                console.log('haa??', form.email, data.email, data.status)
             })
         } else {
             // setErrors({...form, email: 'Not proper email'})

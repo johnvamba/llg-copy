@@ -23,7 +23,7 @@ class OrgInvitation extends Mailable
      *
      * @return void
      */
-    public function __construct(Organization $org, OrgInvites, $invite)
+    public function __construct(Organization $org, OrgInvites $invite)
     {
         $this->org = $org;
         $this->invite = $invite;
@@ -37,13 +37,18 @@ class OrgInvitation extends Mailable
     public function build()
     {
         $user = $this->to[0];
+        $expires = now()->addWeek();
 
         return $this->from(env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja'))
             ->view('email.org_invite')
+            ->subject('Account Invitation')
             ->with([
                 'org' => $this->org,
+                'expires' => $expires,
                 'user' => $user,
-                'url' => URL::signedRoute('complete.account', ['email' => $user['address'] ?? 'missing', 'token' => optional($this->invite)->token ]);
+                'url' => URL::temporarySignedRoute('complete.account', $expires, [
+                    'email' => $user['address'] ?? 'missing', 
+                    'token' => optional($this->invite)->token ])
             ]);
     }
 }

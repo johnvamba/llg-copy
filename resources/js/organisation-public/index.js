@@ -155,7 +155,6 @@ const OrgPub = () => {
             })
         } else {
             swalError();
-            console.log('set', set)
         }
     }
 

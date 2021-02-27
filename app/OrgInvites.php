@@ -8,7 +8,7 @@ class OrgInvites extends Model
 {
     protected $guarded = [];
 
-    public function boot() {
+    protected static function boot() {
     	parent::boot();
 		static::creating(function ($model){
 			$model->token = Str::random(12);

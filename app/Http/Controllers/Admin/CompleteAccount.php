@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
-use App\OrgInvites;
 use DB;
+use App\User;
+use Spatie\Permission\Models\Role;
+use App\OrgInvites;
 
 class CompleteAccount extends Controller
 {
@@ -27,7 +28,8 @@ class CompleteAccount extends Controller
 	        $user = User::create([
 	            'email' => $request->get('email'),
 	            'password' => bcrypt($request->get('password')),
-	            'name'  => $invite->first_name. ' ' .$invite->last_name
+	            'name'  => $invite->first_name. ' ' .$invite->last_name,
+	            'email_verified_at' => now() //auto verify user if naa sila link
 	        ]);
 
 	        $role = Role::where('name', 'organization admin')->first();

@@ -30,7 +30,7 @@ class UsersController extends Controller
                 ->orWhere('name', 'like', '%'.$search.'%');
         }
 
-        if(false){
+        if($request->get('debug')){
             dd($users->get(), auth()->user()->hasRole('campus admin'), DB::getQueryLog(),session()->only(['filterOn','camp_id','org_id']));
         }
 
@@ -66,6 +66,7 @@ class UsersController extends Controller
             'bio' => 'required',
             // 'photo' => 'sometimes|required|image',
             'type' => 'required',
+            'mobile_number' => 'required'
         ]);
 
         DB::beginTransaction();
@@ -74,7 +75,8 @@ class UsersController extends Controller
             $user = User::create([
                 'email' => $request->get('email'),
                 'password' => bcrypt('temp_secret'),
-                'name'  => $request->get('firstName'). ' ' .$request->get('lastName')
+                'name'  => $request->get('firstName'). ' ' .$request->get('lastName'),
+                'mobile_number' => $request->get('mobile_number')
             ]);
 
             if($type = $request->get('type')){
@@ -148,7 +150,8 @@ class UsersController extends Controller
             'age' => 'required',
             'bio' => 'required',
             // 'photo' => 'sometimes|required|image',
-            'type' => 'required'
+            'type' => 'required',
+            'mobile_number' => 'required'
         ]);
 
         DB::beginTransaction();
@@ -156,7 +159,8 @@ class UsersController extends Controller
             $user->fill([
                 'email' => $request->get('email'),
                 'password' => bcrypt('temp_secret'),
-                'name'  => $request->get('firstName'). ' ' .$request->get('lastName')
+                'name'  => $request->get('firstName'). ' ' .$request->get('lastName'),
+                'mobile_number' => $request->get('mobile_number')
             ]);
 
             if($type = $request->get('type')){

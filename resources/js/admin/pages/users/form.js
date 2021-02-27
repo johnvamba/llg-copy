@@ -24,6 +24,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
         lastName: '',
         email: '',
         age: 0,
+        mobile_number: '(02) 0000 0000',
         bio: '',
     })
 
@@ -56,12 +57,13 @@ const UsersForm = ({ data, showItem, handleForm }) => {
     }, [data])
 
     const loadData = () => {
-        const { firstName, lastName, email, age, bio } = data
+        const { firstName, lastName, email, age, bio, mobile_number } = data
         setForm({
             firstName:firstName || '', 
             lastName:lastName || '', 
             email:email || '', 
-            age:age || 0, 
+            age:age || 0,
+            mobile_number: mobile_number || '(02) 0000 0000',
             bio:bio || ''
         })
         setLoading(true)
@@ -102,7 +104,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
     }
 
     const validateSubmit = (e) => {
-        const { firstName, lastName, email, age, bio } = form
+        const { firstName, lastName, email, age, bio, mobile_number } = form
         const set = isValidated({
             firstName: firstName == '' ? "Missing first name" : null,
             lastName: lastName == '' ? "Missing last name" : null,
@@ -112,6 +114,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
             photo: !photo ? 'Missing photo' : null,
             type: _.isEmpty(type) ? "Missing type" : null,
             organization: _.isEmpty(organization) ? "Missing organization" : null,
+            mobile_number: mobile_number == '' ? "Missing mobile number" : null
         })
         setErrors({...set})
         return set;
@@ -255,6 +258,23 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                                 />
                                 {
                                     (errors.age || false) && <span className="text-xs pt-1 text-red-500 italic">Missing age</span>
+                                }
+                            </div>
+                        </div>
+                        <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
+                            <div className={`form-group ${errors.mobile_number && 'form-error'}`}>
+                                <label>Mobile Number</label>
+                                {/* check libphonenumber-js for this improvement */}
+                                <input
+                                    className="input-field"
+                                    type="string"
+                                    name="mobile_number"
+                                    placeholder="Enter Mobile Number"
+                                    value={form.mobile_number}
+                                    onChange={handleInput}
+                                />
+                                {
+                                    (errors.mobile_number || false) && <span className="text-xs pt-1 text-red-500 italic">Missing mobile number</span>
                                 }
                             </div>
                         </div>

@@ -364,8 +364,6 @@ class OrganizationController extends Controller
                     'name'  => $value['firstname']. ' ' .$value['lastname']
                 ]);
 
-                dd($user);
-
                 $profile = UserProfile::create([
                     'age' => 18,
                     'bio' => '',
@@ -385,8 +383,18 @@ class OrganizationController extends Controller
                     'organization_id' => $organization->id
                 ]);
 
+                $invite = OrgInvites::firstOrCreate([
+                    'org_id' => $organization->id,
+                    'email' => $value['email'],
+                ]);
+                $invite->update([
+                    'first_name' => $value['firstName'] ?? 'Invited',
+                    'last_name' => $value['lastName'] ?? 'User',
+                    'phone' => $value['phone'] ?? '00 0000 0000'
+                ]);
+
                 if($user) {
-                    dispatch(fn() => Mail::to($user)->send(new OrgInvitation($organization))); //Run this on production but with dispatch
+                    dispatch(fn() => Mail::to($user)->send(new OrgInvitation($organization, $invite))); //Run this on production but with dispatch
                 }
             }
 
@@ -458,14 +466,12 @@ class OrganizationController extends Controller
                         'org_id' => $org->id,
                         'email' => $user['email'],
                     ]);
-                    if(!$invite->wasRecentlyCreated){
-                        $invite->update([
-                            'first_name' => $user['firstName'] ?? '',
-                            'last_name' => $user['lastName'] ?? '',
-                            'phone' => $user['phone'] ?? ''
-                        ]);
-                    }
-                    dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($org, $invite))); //Run this on production but with dispatch
+                    $invite->update([
+                        'first_name' => $user['firstName'] ?? 'Invited',
+                        'last_name' => $user['lastName'] ?? 'User',
+                        'phone' => $user['phone'] ?? '00 0000 0000'
+                    ]);
+                    dispatch(fn() => Mail::to($intUser)->send(new OrgInvitation($org, $invite))); //Run this on production but with dispatch
                 }
 
             }
