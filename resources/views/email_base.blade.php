@@ -145,6 +145,7 @@
             }
         </style>
         @stack('css')
+
     </head>
     <body>
         @yield('content')

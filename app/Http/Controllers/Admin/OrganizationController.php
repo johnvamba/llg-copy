@@ -359,10 +359,12 @@ class OrganizationController extends Controller
         try {
             foreach ($request->get('users') as $key => $value) {
                 $user = User::firstOrCreate([
-                    'email' => $request->get('email'),
+                    'email' => $value['email'],
                     'password' => bcrypt('temp_secret'),
                     'name'  => $value['firstname']. ' ' .$value['lastname']
                 ]);
+
+                dd($user);
 
                 $profile = UserProfile::create([
                     'age' => 18,

@@ -18,4 +18,9 @@ class GroupInvite extends Model
     {
         return $this->belongsTo('App\User', 'user_id');
     }
+
+    public function notifications()
+    {
+        return $this->morphMany('App\Notification', 'model');
+    }
 }

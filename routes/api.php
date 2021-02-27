@@ -93,6 +93,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Role resource module */
     Route::resource('roles', 'RoleController');
 
+    /** Device resource module */
+    Route::resource('devices', 'DeviceController');
+
     /** User resource module */
     Route::get('user/me', 'UserController@getProfile');
     Route::get('user/me/update-profile', 'UserController@updateProfile');
@@ -178,6 +181,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('groups/messages/{group}', 'GroupController@messages');
     Route::post('groups/message/{group}', 'GroupController@addMessage');
     Route::get('groups/discover/page/{page?}', 'GroupController@getDiscoverGroups');
+    Route::post('groups/suggested/nearby/{lat}/{lng}', 'GroupController@suggestedNearby');
     Route::resource('groups', 'GroupController');
 
     /** Orgnization Categories resource module */
@@ -212,6 +216,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Activities resource module */
     Route::post('activity/recents', 'ActivityController@recent');
     Route::resource('activities', 'ActivityController');
+
+    /** Notification resource module */
+    Route::resource('notifications', 'NotificationController');
 
     Route::post('logout', 'AuthController@logout');
 });
