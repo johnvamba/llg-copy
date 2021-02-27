@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\TransactionReceipt;
 use App\Mail\GroupInvitation;
 use App\Mail\OrgInvitation;
+use App\Mail\PasswordReset;
 
 use App\ReceiptTemplate;
 use App\Organization;
@@ -43,6 +44,12 @@ class TestControl extends Controller
         $user = User::where('email', 'admin@gmail.com')->first();
 
         return (new GroupInvitation($group))->to('logicbase.amba@gmail.com');
+    }
+
+    public function password() {
+        $user = User::where('email', 'admin@gmail.com')->first();
+
+        return (new PasswordReset('sample_token'))->toMail($user);
     }
 
     public function sendEmail() {

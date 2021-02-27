@@ -115,7 +115,7 @@
 				</strong>
 
 				<p>
-					You are invited you to access the Jiffi Web Help portal. 
+					You are invited you to access {{ $org->name ?? 'an organization'}} on Love-Lives Generously. 
 					Click this button bellow to create your account
 				</p>
 

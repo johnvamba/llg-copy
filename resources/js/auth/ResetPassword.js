@@ -4,7 +4,7 @@ import { Link, useLocation, useHistory } from 'react-router-dom';
 import formBackground from '../../assets/images/login-1.png';
 import mainBackground from '../../assets/images/login-2.jpg';
 import Logo from '../svg/logo';
-import { swalSuccess } from '../components/helpers/alerts';
+import { swalSuccess, swalError } from '../components/helpers/alerts';
 
 import './auth.css';
 
@@ -51,8 +51,12 @@ const ResetPassword = () => {
             setSubmit(false)
             swalSuccess('Password has been reset!')
             history.push('/login')
-        }).catch(err => {
-            console.log('errors', err)
+        }).catch(({response}) => {
+            const { data } = response || {};
+            const { errors } = data || {} ;
+            const { message, password = [] } = errors || {};
+            setSubmit(false)
+            swalError(password[0] || message || 'Server error occured. Please try again later')
         })
     }
 
