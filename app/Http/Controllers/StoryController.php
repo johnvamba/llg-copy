@@ -114,10 +114,12 @@ class StoryController extends Controller
 
         $story = Story::with(
                 'user', 
+                'user.profile', 
                 'organization', 
-                'appreciates',
-                'appreciates.user',
+                //'appreciates',
+                //'appreciates.user',
             )
+            ->withCount('appreciates', 'comments')
             //->where('featured_start_date', '<=', $date)
             //->where('featured_end_date', '>=', $date)
             ->inRandomOrder()
