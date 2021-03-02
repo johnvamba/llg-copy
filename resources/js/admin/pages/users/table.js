@@ -18,7 +18,7 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         <td className="checkbox">
             <input type='checkbox' checked={checkValue} onChange={checkChange}/>
         </td>
-        <td className="title" onClick={onShowInfo}>
+        <td className="title" onClick={()=>onShowInfo(item, false, true)}>
             <div className="flex items-center">
                 <img className="title-img circle" src={photo || "http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp"}/>
                 <p>
@@ -32,23 +32,25 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         <td>
             <p>{ age }</p>
         </td>
-        <td>
+        <td className="bio">
             <p>{ bio }</p>
         </td>
         <td>
             <p>{ date }</p>
         </td>
-        <td className="actions row-actions">
-            <button onClick={onShowInfo}>
-                <i ref={setApproveElement}>
-                <UsersActionsEdit />
-                </i>
-            </button>
-            <button onClick={()=>popAction(rejectElement, 'remove')}>
-                <i ref={setRejectElement}>
-                <UsersActionsDelete />
-                </i>
-            </button>
+        <td className="">
+            <div className="actions row-actions">
+                <button onClick={()=>onShowInfo(item, true)}>
+                    <i ref={setApproveElement}>
+                    <UsersActionsEdit />
+                    </i>
+                </button>
+                <button onClick={()=>popAction(rejectElement, 'remove')}>
+                    <i ref={setRejectElement}>
+                    <UsersActionsDelete />
+                    </i>
+                </button>
+            </div>
         </td>
     </tr>
 }
@@ -144,16 +146,16 @@ const UserTable = ({tab = null, data = [], showInfo, loading = false, loadTable}
     }
 
     return <>
-    <table className="table">
+    <table className="table table-user">
         <thead className="bg-white tb-head">
             <tr>
                 <th className="checkbox">
                     <input type='checkbox' checked={checkAll} onChange={e=>handleCheckAll(e.target.checked)}/>
                 </th>
-                <th className="title">Title</th>
+                <th className="title">Name</th>
                 <th className="">Email</th>
                 <th className="">Age</th>
-                <th className="">Bio</th>
+                <th className="bio">Bio</th>
                 <th className="">Date Added</th>
                 <th className="actions">Actions</th>
             </tr>
@@ -170,7 +172,7 @@ const UserTable = ({tab = null, data = [], showInfo, loading = false, loadTable}
                         item={i} 
                         checkValue={i.checked}
                         checkChange={e=>handleRowCheckbox(i,e.target.checked)}
-                        onShowInfo={()=>showInfo(i, true)}
+                        onShowInfo={showInfo}
                         popAction={(button, type)=>togglePopItem(i, button, type)}/>
                     ) :
                     <tr>

@@ -21,6 +21,8 @@ class CampusResource extends JsonResource
             'team_count' =>$this->when(isset($this->users_count), $this->users_count),
             'description' => $this->description,
             'location' => $this->location,
+            'lng' => $this->lng,
+            'lat' => $this->lat,
             'photo' => $this->whenLoaded('media', $this->getFirstMediaUrl('photo')),
             'accessed' => $this->when($this->accessed, $this->accessed),
             'address' => $this->address

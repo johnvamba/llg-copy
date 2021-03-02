@@ -25,7 +25,7 @@ class OrgPortalScope implements Scope
             } else if($user->hasRole('organization admin')){
                 $builder->where('organizations.id', session('org_id', 0));
             } else if($user->hasRole('campus admin')){
-                // $builder->whereHas('campus', fn($camp) => $camp->where('campuses.id', session('camp_id', 0)));
+                $builder->whereHas('campus', fn($camp) => $camp->where('campuses.id', session('camp_id', 0)));
             } else if($user->hasRole('admin')){
                 // return;
             }

@@ -11,18 +11,21 @@ import mainBackground from '../../assets/images/login-2.jpg';
 import CategoryGrid from '../components/CategoryGrid'
 import OrgInfoTab from './org-info-tab';
 import OrgInviteTab from './org-invite-tab';
+import OrgQuestion from './org-question';
+
 import LoadingScreen from '../components/LoadingScreen'
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
 const swal = withReactContent(Swal);
 import SwalIcon from '../svg/swal-icon'
 import './org-pub.css';
+import { swalError } from '../components/helpers/alerts'
+import { isValidated } from '../components/helpers/validator'
 
 import 'pretty-checkbox';
 
 const OrgPub = () => {
     const [countTab, setCountTab] = useState(1);
-    const [category, setCategory] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const [users, setUsers] = useState([]);
     //validators
@@ -33,8 +36,24 @@ const OrgPub = () => {
         email: '',
         site: '', 
         phone_number: '',
-        description: ''
+        description: '',
+        location: '',
+        lat: '',
+        lng: ''
     });
+
+    const [answers, setAnswers] = useState({
+        acnc: false,
+        fundraiser: false,
+        insured: false,
+        terms: false
+    })
+
+    const updateAnswers = (field = 'terms', state= false)=>{
+        setAnswers({ ...answers, [field]: state })
+        if(field == 'terms' && state)
+            removeError(field)
+    }
 
     const handleOrgInfo = (e) => {
         const { name, value } = e.target
@@ -49,18 +68,15 @@ const OrgPub = () => {
         setErrors(errors)
     }
 
-    const handleCategories = (item, truth = false) => {0
-        setCategory(item);
-    }
 
     const showTabTitle = () => {
         switch(countTab){
             case 1:
-            return <h3>Select Category</h3>
-            case 2:
             return <h3>Organisation Information</h3>
+            case 2:
+            return <h3>Invite Staff</h3>
             case 3:
-            return <h3>Invite Members</h3>
+            return <h3>Please answer the questions below</h3>
             default:
             return '';
         }
@@ -68,59 +84,41 @@ const OrgPub = () => {
 
     const validateTab = (newCount) => {
         let set = {} 
-        if(newCount > countTab)
-            switch(countTab){
-                case 1:
-                if(_.isEmpty(category)){
-                    setErrors({
-                        ...errors,
-                        category: 'Missing Category'
-                    })
-                    setCountTab(1) //meaning show tab 1
-                    return;
-                } else {
-                    delete errors.category
-                    setErrors({...errors})
-                }
-                break;
-                case 2:
-                set = {
-                    name: orgInfoForm.name == '' ? 'Missing title' : null,
-                    email: orgInfoForm.email == '' ? 'Missing Email' : null,
-                    site: orgInfoForm.site == '' ? 'Missing Website' : null,
-                    phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
-                    description: orgInfoForm.description == '' ? 'Missing Description' : null
-                }
-                if(Object.values(set).filter(i=>i).length > 0){
-                    setErrors({
-                        ...errors,
-                        ...set
-                    })
-                    setCountTab(2)
-                    return;
-                }
-                break;
-                case 3:
-                set = {
-                    business_name: business_name == '' ? 'Missing business name' : null,
-                    business_contact: business_contact == '' ? 'Missing business contract' : null
-                }
-                if(Object.values(set).filter(i=>i).length > 0){
-                    setErrors({
-                        ...errors,
-                        ...set
-                    })
-                    return;
-                } else {
-                    delete errors.business_name;
-                    delete errors.business_contact;
-                    setErrors({...errors});
-                }
-                break;
+        if(newCount < countTab){
+            setCountTab(newCount)
+            return;
+        }
+        switch(countTab){
+            case 1:
+            set = {
+                name: orgInfoForm.name == '' ? 'Missing title' : null,
+                email: orgInfoForm.email == '' ? 'Missing Email' : null,
+                site: orgInfoForm.site == '' ? 'Missing Website' : null,
+                phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
+                description: orgInfoForm.description == '' ? 'Missing Description' : null,
+                location: orgInfoForm.location == '' ? 'Missing location' : null
             }
-
-        setCountTab(newCount)
-        return set;
+            break;
+            case 2:
+            //Skippable?
+            break;
+            case 3:
+            set = {
+                terms: answers.terms ? null : 'Missing terms' ,
+            }
+            break;
+            default:
+            return {};
+        }
+        if(Object.values(set).filter(i=>i).length > 0){
+            setErrors({
+                ...errors,
+                ...set
+            })
+        } else {
+            setCountTab(newCount)
+        }
+        return isValidated(set);
     }
 
     const submit = (includeUsers = true) => {
@@ -130,7 +128,7 @@ const OrgPub = () => {
 
             const params = {
                 ...orgInfoForm,
-                category,
+                ...answers,
                 users: includeUsers ? users : null,
             }
             api.post(`/api/org-create`, params)
@@ -170,8 +168,8 @@ const OrgPub = () => {
                         <img src={Logo} />
                     </div>
                     <div>
-                        <h2>Neuma Organisation</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur dolor</p>
+                        <h2>Welcome to Neuma Care.</h2>
+                        <p>Thanks for partnering with us to transform our city</p>
                     </div>
                 </section>
                 <section className="right">
@@ -190,21 +188,20 @@ const OrgPub = () => {
 
                     <div className="offers-create-form__body">
                         { showTabTitle() }
-                        { countTab == 1 && <CategoryGrid selectedCategories={category} handleCategories={handleCategories} errors={errors.category}/>}
-                        { countTab == 2 && <OrgInfoTab orgData={orgInfoForm} handleOrgInfo={handleOrgInfo} setErrors={setErrors} removeError={removeError} errors={errors}/>}
-                        { countTab == 3 && <OrgInviteTab users={users} submitting={submitting} setUsers={setUsers}/>}
-                        {/* { countTab == 3 && <FormBusinessInfo service={{business_name, business_site, business_contact}} updateBusiness={updateBusiness}  errors={errors}/>} */}
+                        { countTab == 1 && <OrgInfoTab orgData={orgInfoForm} handleOrgInfo={handleOrgInfo} setOrgInfoForm={setOrgInfoForm} setErrors={setErrors} removeError={removeError} errors={errors}/>}
+                        { countTab == 2 && <OrgInviteTab users={users} submitting={submitting} setUsers={setUsers}/>}
+                        { countTab == 3 && <OrgQuestion answers={answers} updateAnswers={updateAnswers} errors={errors}/>}
                     </div>
 
                     <div className={`create-org-pub__footer ${countTab == 3 ? 'create-org-pub__footer-cols-2' : ''} `}>
                         {
-                            countTab == 3 &&
-                                <span onClick={()=>submit(false)}>Skip and complete</span>
+                            /*(countTab == 2 || countTab == 3) &&
+                                <span onClick={()=>submit(false)}>Skip and complete</span>*/
                         }
                         <div>
                             {
                                 countTab > 1 &&
-                                    <button className="primary-btn primary-btn--transparent" disabled={submitting} onClick={() => validateTab(countTab-1)}>Back</button>
+                                <button className="primary-btn primary-btn--transparent" disabled={submitting} onClick={() => validateTab(countTab-1)}>Back</button>
                             }
                             {
                                 (countTab < 3) 

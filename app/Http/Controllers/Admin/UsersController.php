@@ -7,7 +7,12 @@ use Illuminate\Http\Request;
 use App\User;
 use App\UserProfile;
 
+use App\Http\Resources\GroupResource;
 use App\Http\Resources\UserResource;
+
+use App\Need;
+use App\Http\Resources\NeedResource;
+
 use Spatie\Permission\Models\Role;
 use DB;
 
@@ -23,7 +28,12 @@ class UsersController extends Controller
         DB::enableQueryLog();
         $users = User::latest()->with('profile');
 
-        if(false){
+        if($search = $request->get('search')) {
+            $users->where('email', 'like', '%'.$search.'%')
+                ->orWhere('name', 'like', '%'.$search.'%');
+        }
+
+        if($request->get('debug')){
             dd($users->get(), auth()->user()->hasRole('campus admin'), DB::getQueryLog(),session()->only(['filterOn','camp_id','org_id']));
         }
 
@@ -59,6 +69,7 @@ class UsersController extends Controller
             'bio' => 'required',
             // 'photo' => 'sometimes|required|image',
             'type' => 'required',
+            'mobile_number' => 'required'
         ]);
 
         DB::beginTransaction();
@@ -67,7 +78,8 @@ class UsersController extends Controller
             $user = User::create([
                 'email' => $request->get('email'),
                 'password' => bcrypt('temp_secret'),
-                'name'  => $request->get('firstName'). ' ' .$request->get('lastName')
+                'name'  => $request->get('firstName'). ' ' .$request->get('lastName'),
+                'mobile_number' => $request->get('mobile_number')
             ]);
 
             if($type = $request->get('type')){
@@ -114,6 +126,14 @@ class UsersController extends Controller
         return new UserResource($user);
     }
 
+    public function showNeedMet(User $user) {
+        $needs = Need::unfilter()
+            ->whereHas('contributors', fn($q) => $q->unfilter()->where('model_id', $user->id) )
+            ->with(['contribution' => fn($q) => $q->where('need_mets.model_id', $user->id)->where('need_mets.model_type', 'App\User')]);
+
+        return NeedResource::collection($needs->paginate(5));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -141,7 +161,8 @@ class UsersController extends Controller
             'age' => 'required',
             'bio' => 'required',
             // 'photo' => 'sometimes|required|image',
-            'type' => 'required'
+            'type' => 'required',
+            'mobile_number' => 'required'
         ]);
 
         DB::beginTransaction();
@@ -149,7 +170,8 @@ class UsersController extends Controller
             $user->fill([
                 'email' => $request->get('email'),
                 'password' => bcrypt('temp_secret'),
-                'name'  => $request->get('firstName'). ' ' .$request->get('lastName')
+                'name'  => $request->get('firstName'). ' ' .$request->get('lastName'),
+                'mobile_number' => $request->get('mobile_number')
             ]);
 
             if($type = $request->get('type')){
@@ -211,5 +233,14 @@ class UsersController extends Controller
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
+    }
+
+    public function groups(User $user)
+    {
+        $groups = $user->groups_member()
+            ->withCount('participants')
+            ->latest();
+
+        return GroupResource::collection( $groups->paginate(5) );
     }
 }

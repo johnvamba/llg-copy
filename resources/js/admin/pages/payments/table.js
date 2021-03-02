@@ -155,7 +155,7 @@ const PaymentTable = ({tab = null, data = [], handleForm, loading = false, loadT
         <tbody>
             { loading ?
                 <tr>
-                    <td colSpan={7}>Loading data</td>
+                    <td colSpan={5}>Loading data</td>
                 </tr> :
                 (
                     ( users.length > 0 ) ? 
@@ -168,7 +168,7 @@ const PaymentTable = ({tab = null, data = [], handleForm, loading = false, loadT
                         popAction={(button, type)=>togglePopItem(i, button, type)}/>
                     ) :
                     <tr>
-                        <td colSpan={7}>No data found</td>
+                        <td colSpan={5}>No data found</td>
                     </tr>
                 )
             }

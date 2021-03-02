@@ -9,9 +9,11 @@ use App\Http\Resources\Mini\UserResource;
 use Illuminate\Support\Facades\Mail;
 
 use App\Group;
+use App\GroupLocation;
 use App\GroupParticipant;
 use App\User;
 use App\Mail\GroupInvitation;
+use App\Helper\Scopes\UserPortalScope;
 
 use DB;
 use Str;
@@ -26,6 +28,9 @@ class GroupController extends Controller
     public function index(Request $request)
     {
         $group = Group::withCount('participants')->withGoalRatio()->latest();
+        
+        if($search = $request->get('search'))
+            $group->where('name', 'like', '%'.$search.'%');
 
         return GroupResource::collection($group->paginate());
     }
@@ -58,7 +63,8 @@ class GroupController extends Controller
             'description' => 'required',
             'location' => 'required',
             'privacy' => 'required',
-            'address' => 'required',
+            'campus' => 'required',
+            // 'address' => 'required',
             'lat' => 'required',
             'lng' => 'required',
             'goal' => 'required',
@@ -72,6 +78,14 @@ class GroupController extends Controller
                     'short_description' => substr($request->description, 0, 100)
                 ]
             );
+
+            $campus = $request->get('campus') ?? [];
+            GroupLocation::firstOrCreate([
+                'group_id' => $group->id,
+                'location_type' => 'App\Campus',
+                'location_id' => $campus['id'] ?? session('camp_id')
+            ]);
+
             if ($image = $request->get('photo')) {
                 $name = time().'-'.Str::random(20);
                 $extension = explode('/', mime_content_type($image))[1];
@@ -105,6 +119,8 @@ class GroupController extends Controller
     public function show(Group $group)
     {
         //load other parts here
+        $group->loadMissing('campus');
+
         return new GroupResource($group);
     }
 
@@ -132,6 +148,7 @@ class GroupController extends Controller
             'description' => 'required',
             'location' => 'required',
             'privacy' => 'required',
+            'campus' => 'required',
             'lat' => 'required',
             'lng' => 'required',
             'goal' => 'required',
@@ -146,6 +163,17 @@ class GroupController extends Controller
                     'short_description' => substr($request->description, 0, 100)
                 ]
             );
+
+            if($campus = $request->get('campus')) {
+                $group->groupLocations()->delete(); //remove extra
+
+                GroupLocation::firstOrCreate([
+                    'group_id' => $group->id,
+                    'location_type' => 'App\Campus',
+                    'location_id' => $campus['id'] ?? session('camp_id')
+                ]);
+            }
+
             //We can do better pd diri.
             if ($image = $request->get('photo')) {
                 $name = time().'-'.Str::random(20);
@@ -234,5 +262,13 @@ class GroupController extends Controller
             return response()->json('Error in inviting User', 400);
 
         return response()->json([ 'invite_status' => ($gp->status ?? 'pending') ], 200);
+    }
+
+    public function members(Request $request, Group $group) {
+        $members = $group->participant_users()
+        ->unfilter()
+        ->with('profile.media');
+        
+        return UserResource::collection( $members->paginate() );
     }
 }

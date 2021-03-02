@@ -31,9 +31,13 @@ Route::post('org-create', 'Admin\OrganizationController@openCreate');
 
 Route::get('checkemail', 'CheckEmail');
 
-Route::group(['middleware' => 'wpcors', 'namespace' => 'Admin'], function () {
-
+Route::group(['middleware' => 'wpcors', 'prefix' => 'offsite', 'namespace' => 'Admin'], function () {
+    Route::get('stories', 'StoryController@onlyPublished')->name('wp.story.index');
+    Route::get('stories/{story}', 'StoryController@show')->name('wp.story.show');
+    Route::post('stories/{story}', 'StoryController@share')->name('wp.story.share');
 });
+
+Route::post('account', 'Admin\CompleteAccount')->name('post.complete.account');
 
 Route::group(['middleware' => ['auth:api']], function () {
 
@@ -41,6 +45,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('needs/types', 'NeedsController@types');
 
         Route::resource('needs', 'NeedsController');
+        Route::get('needs/{need}/contributors', 'NeedsController@contributors');
         Route::post('needs/{need}/approve', 'NeedsController@approve');
         Route::post('needs/{need}/disapprove', 'NeedsController@disapprove');
 
@@ -54,9 +59,12 @@ Route::group(['middleware' => ['auth:api']], function () {
 
         Route::resource('organizations', 'OrganizationController');
 
-        Route::resource('offers', 'OffersController');
         Route::post('offers/{offer}/approve', 'OffersController@approve');
         Route::post('offers/{offer}/disapprove', 'OffersController@disapprove');
+        Route::resource('offers', 'OffersController');
+
+        Route::get('users/{user}/groups', 'UsersController@groups');
+        Route::get('users/{user}/needs', 'UsersController@showNeedMet');
 
         Route::resource('users', 'UsersController');
 
@@ -69,6 +77,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('stories/{story}/toggle', 'StoryController@toggle');
 
         Route::get('groups/invite', 'GroupController@searchUserInvite');
+        Route::get('groups/{group}/members', 'GroupController@members');
         Route::post('groups/invite', 'GroupController@initUserInvite');
         Route::resource('groups', 'GroupController');
 
@@ -79,15 +88,20 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('receipt/template', 'ReceiptTemplateController@update');
 
         Route::get('search', 'GeneralSearch');
+
+        Route::get('activities', 'Activities');
     });
 
     /** Role resource module */
     Route::resource('roles', 'RoleController');
 
+    /** Device resource module */
+    Route::resource('devices', 'DeviceController');
+
     /** User resource module */
     Route::get('user/me', 'UserController@getProfile');
     Route::get('user/me/update-profile', 'UserController@updateProfile');
-    Route::get('user/stats', 'UserController@getUsersStatistics');
+    Route::get('user/stats', 'UserController@getUsersStatistics')->middleware('datafilter');
     Route::post('users/lists', 'UserController@getUsers');
     Route::post('user/add-card/{organization}', 'UserController@addCard');
     Route::post('user/cards', 'UserController@getCards');
@@ -169,6 +183,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('groups/messages/{group}', 'GroupController@messages');
     Route::post('groups/message/{group}', 'GroupController@addMessage');
     Route::get('groups/discover/page/{page?}', 'GroupController@getDiscoverGroups');
+    Route::post('groups/suggested/nearby/{lat}/{lng}', 'GroupController@suggestedNearby');
     Route::resource('groups', 'GroupController');
 
     /** Orgnization Categories resource module */
@@ -203,6 +218,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Activities resource module */
     Route::post('activity/recents', 'ActivityController@recent');
     Route::resource('activities', 'ActivityController');
+
+    /** Notification resource module */
+    Route::resource('notifications', 'NotificationController');
 
     Route::post('logout', 'AuthController@logout');
 });

@@ -15,7 +15,7 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        $activities = Activity::with('user', 'user.profile')
+        $activities = Activity::with('user.profile')
             ->orderBy('created_at', 'desc')
             ->paginate();
 

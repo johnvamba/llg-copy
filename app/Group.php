@@ -33,6 +33,16 @@ class Group extends Model implements HasMedia
         return $this->belongsTo('App\User');
     }
 
+    public function campus()
+    {
+        return $this->morphedByMany('App\Campus', 'location', 'group_locations');
+    }
+
+    public function groupLocation()
+    {
+        return $this->hasMany('App\GroupLocation');
+    }
+
     public function participants()
     {
         return $this->hasMany('App\GroupParticipant');

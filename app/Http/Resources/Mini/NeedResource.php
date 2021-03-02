@@ -19,7 +19,7 @@ class NeedResource extends JsonResource
             'title' => $this->title,
             'type' => $this->whenLoaded('type', optional($this->type)->name),
             'goal' => $this->goal,
-            'date' => "String date",
+            'date' => $this->created,
             'photo' => $this->getFirstMediaUrl('photo'),
             'ratio' => $this->getRatio(),
             'description' => $this->description,

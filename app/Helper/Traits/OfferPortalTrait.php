@@ -10,4 +10,8 @@ trait OfferPortalTrait
     {
         static::addGlobalScope(new OfferPortalScope);
     }
+
+    public static function scopeUnfilter($query){
+    	return $query->withoutGlobalScope(OfferPortalScope::class);
+    }
 }

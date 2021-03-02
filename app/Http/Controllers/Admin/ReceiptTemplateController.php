@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ReceiptTemplateResource;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
+use App\Organization;
 use Str;
 
 class ReceiptTemplateController extends Controller
@@ -20,9 +21,13 @@ class ReceiptTemplateController extends Controller
     public function show()
     {
         if($org = session('org_id')){
-            $template = ReceiptTemplate::with(['organization.media', 'media'])->firstOrNew(['organization_id' => $org]);
+            $template = ReceiptTemplate::with(['organization.media', 'media'])
+                ->firstOrNew(['organization_id' => $org]);
 
-            // $template->loadMissing(['organization', 'media']);
+            if(!$template->exists){
+                $template->setRelation('organization', Organization::with('media')->findOrFail($org));
+            }
+
             return new ReceiptTemplateResource($template);
         }
         

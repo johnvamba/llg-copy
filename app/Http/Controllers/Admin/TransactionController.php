@@ -18,6 +18,11 @@ class TransactionController extends Controller
     {
         $transacts = Transact::with(['organization','user'])->latest();
 
+        if($search = $request->get('search')) {
+            $transacts->whereHas('organization', fn($org) => $org->where('organizations.name', 'like', '%'.$search.'%'))
+                ->orWhereHas('user', fn($user) => $user->where('users.name', 'like', '%'.$search.'%')->orWhere('users.email', 'like', '%'.$search.'%') );
+        }
+
         // dd($transacts->get());
         return TransactionResource::collection($transacts->paginate($request->get('per_page') ?? 15));
     }

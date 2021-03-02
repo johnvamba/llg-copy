@@ -29,14 +29,14 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         <td className="checkbox">
             <input type='checkbox' checked={checkValue} onChange={checkChange}/>
         </td>
-        <td className="title">
-            <div className="flex"> 
+        <td className="title" onClick={onShowInfo}>
+            <div className="flex items-center"> 
                 {
                     photo ?
                     <img className="title-img" src={photo}/> :
                     <img className="title-img" />
                 }
-                <span onClick={onShowInfo}>
+                <span>
                     { title }
                 </span>
             </div>
@@ -57,25 +57,29 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
         </td>
         {
             status == 'pending' ?
-            <td className="actions row-actions">
-                <button onClick={()=>popAction(approveElement, 'approve')}>
-                    <i ref={setApproveElement}>
-                    <Check />
-                    </i>
-                </button>
-                <button onClick={()=>popAction(rejectElement, 'disapprove')}>
-                    <i ref={setRejectElement}>
-                    <Cross/>
-                    </i>
-                </button>
+            <td>
+                <div className="actions row-actions">
+                    <button onClick={()=>popAction(approveElement, 'approve')}>
+                        <i ref={setApproveElement}>
+                        <Check />
+                        </i>
+                    </button>
+                    <button onClick={()=>popAction(rejectElement, 'disapprove')}>
+                        <i ref={setRejectElement}>
+                        <Cross/>
+                        </i>
+                    </button>
+                </div>
             </td> :
-            <td className="actions row-actions">
-                <Button className="primary-btn flex text-white bg-blue-500 hover:bg-blue-600" 
-                    disabled={status !== 'achieved'}
-                    onClick={()=>handleForm(item, false, 'story', true)}>
-                    <Quill/>
-                    Write a Story
-                </Button>
+            <td>
+                <div className="actions row-actions">
+                    <Button className="primary-btn flex text-white bg-blue-500 hover:bg-blue-600" 
+                        disabled={status !== 'achieved'}
+                        onClick={()=>handleForm(item.organization, false, 'story', true)}>
+                        <Quill/>
+                        Write a Story
+                    </Button>
+                </div>
             </td>
         }
     </tr>
@@ -153,7 +157,6 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false, loadTable,
     }
 
     const togglePopItem = (item, button, type ='reject', clicked)=>{
-        console.log('clicked');
         setAction(type)
         setPopItem(item)
         setButton(button)

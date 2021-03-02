@@ -9,6 +9,7 @@ use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Helper\Traits\UserPortalTrait;
+use App\Mail\PasswordReset\ResetPasswordNotification;
 
 class User extends Authenticatable
 {
@@ -23,9 +24,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -91,6 +90,11 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough('App\Group', 'App\GroupParticipant', 'user_id', 'id', 'id', 'group_id');
     }
+
+    public function activities()
+    {
+        return $this->hasMany('App\Activity');
+    }
     
     public function group_pivots()
     {
@@ -114,4 +118,9 @@ class User extends Authenticatable
 
         return $createdUser;
     }
+
+    // public function sendPasswordResetNotification($token)
+    // {
+    //     $this->notify(new ResetPasswordNotification($token));
+    // }
 }

@@ -10,6 +10,7 @@ import UsersHeader from './header';
 import UserTable from './table';
 import OffersPlus from '../../../svg/offers-plus';
 import UsersForm from './form';
+import UserInfo from './info';
 import './users.css';
 
 const Users = () => {
@@ -22,6 +23,7 @@ const Users = () => {
     const [count, setCount] = useState(0);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
     const [userData, setUserData] = useState({
         title: '',
         email: '',
@@ -29,7 +31,7 @@ const Users = () => {
         bio: '',
         dateAdded: '',
     });
-
+    const search = useSelector(({SearchReducer}) => SearchReducer.search);
     const roles = useSelector(state => state.AuthUserReducer.roles);
 
     const dispatch = useDispatch();
@@ -40,7 +42,8 @@ const Users = () => {
         api.get(`/api/web/users`, {
             params: {
                 page, ...addFilter,
-                per_page: limit
+                per_page: limit,
+                search
             },
             cache: {
                 exclude: { query: false },
@@ -53,8 +56,8 @@ const Users = () => {
             setUsers(data.data || [])
             setCount(users_count || 0)
             setMeta(data.meta)
-        }).finally(()=>{
             setLoading(false)
+        }).finally(()=>{
         })
         return token; //for useEffect
     }
@@ -66,7 +69,7 @@ const Users = () => {
             //cancel api here
             ct.cancel('Resetting');
         }
-    }, [page, limit]);
+    }, [page, limit, search]);
     const handleLimitChange = (limit) => {
         setLimit(parseInt(limit));
     }
@@ -75,9 +78,10 @@ const Users = () => {
         setPage(parseInt(page));
     }
 
-    const showItem = (data={}, showForm=false) => {
+    const showItem = (data={}, showForm=false, showInfo=false) => {
         setShowForm(showForm);
         setFocus(data);
+        setShowInfo(showInfo)
     }
 
     const handleForm = (form = false, setting = null, data = null)=>{
@@ -114,6 +118,10 @@ const Users = () => {
             {
                 showForm && 
                 <UsersForm data={focus} handleForm={handleForm} showItem={showItem} />
+            }
+            {
+                showInfo &&
+                <UserInfo data={focus} closePanel={()=>showItem({})} handleForm={handleForm}/>
             }
         </>
     )

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import { FilePond, File, registerPlugin } from 'react-filepond'
 
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
@@ -20,17 +20,18 @@ const Imagepond = ({
     ...props
 }) => {
     const [files, setFiles] = useState([]);
-
-    const handleImage = (error, file)=>{
+    const input = useRef(null);
+    const handleImage = (error, file, update = false)=>{
         if(!error && file){
             setFiles([file]);
             let reader = new FileReader();
             reader.onload = (e) => {
                 imageSelected(e.target.result);
             };
-            reader.readAsDataURL(file.file);
+            reader.readAsDataURL(update ? file : file.file);
         }
     }
+
 
     return (
         <div className={`form-group  ${errors && 'form-error'} ${className} `} >
@@ -38,11 +39,11 @@ const Imagepond = ({
             {
                 (files.length <= 0 && photo) ? <div className="photo-container relative">
                     <img className={'feat-photo'} src={photo} />
-                    <button className="flex absolute rounded-sm" type="button" onClick={({target})=>handleImage(null, target.files.length > 0 ? target.files[0] : null )}>
+                    <button className="flex absolute rounded-sm" type="button" onClick={()=>input.current.click()}>
                         <Pencil fill={'#ffffff'} /> 
                         <span className="ml-1">Upload Image</span>
                     </button>
-                    <input type="file" className="feat-photo-input" id="InputPhoto"/>
+                    <input type="file" ref={input} className="feat-photo-input" onChange={({target})=>handleImage(null, (target.files && target.files.length > 0) ? target.files[0] : null, true )} id="InputPhoto"/>
                 </div> : 
                 <FilePond
                     files={files}

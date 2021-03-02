@@ -13,8 +13,11 @@ use App\UserProfile;
 use App\CustomerCredential;
 use App\Organization;
 use App\OrganizationCredential;
+use App\Device;
 use Carbon\Carbon;
 use DB;
+
+use App\Http\Resources\Async\OrganizationResource;
 
 class UserController extends Controller
 {
@@ -45,11 +48,11 @@ class UserController extends Controller
     {
         $date = Carbon::now();
 
-        $users['Total Users'] = User::withTrashed()->get()->count();
-        $users['Active Users'] = User::all()->count();     
+        $users['Total Users'] = User::withTrashed()->count();
+        $users['Active Users'] = User::whereHas('activities', fn($q) => $q->whereBetween('activities.updated_at', [ (clone $date)->subMonth(), $date]))->count();     
         $users['New Users'] = User::where([
-                ['created_at', '>=', $date->startOfYear()->toDateString()], 
-                ['created_at', '<=', $date->endOfYear()->toDateString()]
+                ['created_at', '>=', $date->startOfMonth()->toDateString()], 
+                ['created_at', '<=', $date->endOfMonth()->toDateString()]
             ])
             ->get()
             ->count();
@@ -134,10 +137,29 @@ class UserController extends Controller
      */
     public function getProfile(Request $request)
     {
-        $user = User::with('profile')
+        $user = User::with(['profile', 
+                'organization'=> fn($org) => $org->select('location', 'lat', 'lng'),
+                'campus'=> fn($org) => $org->select('location', 'lat', 'lng')
+            ])
             ->find(auth()->user()->id);
 
         $user->getRoleNames();
+
+        if($user->hasRole('organization admin')){
+            $user->loc = optional($user->organization)->toArray();
+        } else if ($user->hasRole('campus admin')){
+            $user->loc = optional($user->campus)->toArray();
+        } else {
+            $user->loc = optional($user->profile)->only('location', 'lng', 'lat');
+        }
+        
+        if($user->organization) {
+            $org = (new OrganizationResource($user->organization))->resolve();
+            $user->unsetRelation('organization');
+            $user->organization = $org;
+        }
+
+        $user->unsetRelation('campus');
 
         return response()->json($user);
     }
@@ -172,7 +194,9 @@ class UserController extends Controller
         $result = DB::transaction(function () use ($request, $user) {
             User::find($user->id)
                 ->update([
-                    'name' => $request->firstName.' '.$request->lastName
+                    'name' => $request->firstName.' '.$request->lastName,
+                    'email' => $request->email,
+                    'mobile_number' => $request->mobile_number,
                 ]);
 
             UserProfile::where('user_id', $user->id)

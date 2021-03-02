@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api"
+import MarkerImg from '../../../../assets/images/marker.png';
 import Style from './style';
 
 const defaultMapOptions = {
@@ -37,6 +38,7 @@ const Map = ({markers, lat, lng, ...props}) => {
                 mks.map((org, key) => (
                     <Marker
                         key={key}
+                        icon={MarkerImg}
                         position={{ lat: parseFloat(org.lat), lng: parseFloat(org.lng) }}
                         onClick={() => { handleClick(org.id) }}
                     />

@@ -84,10 +84,16 @@ class GroupController extends Controller
      */
     public function getDiscoverGroups(Request $request, $page = 1)
     {
+        $groupParticipated = GroupParticipant::where(function($query) {
+                $query->where('user_id', auth()->user()->id)
+                    ->where('status', 'approved');
+            })->pluck('group_id');
+
         $groups = Group::where([
                 ['user_id', '!=', auth()->user()->id],
                 ['privacy', 'public']
             ])
+            ->whereIn('id', $groupParticipated)
             ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($groups as $group) {
@@ -144,8 +150,18 @@ class GroupController extends Controller
         $group = Group::where('user_id', auth()->user()->id)
             ->first();
 
-        if (!$group)
-            return response()->json($group);
+        if (!$group) {
+            $hasParticipated = GroupParticipant::where(function($query) {
+                    $query->where('user_id', auth()->user()->id)
+                        ->where('status', 'approved');
+                })->first();
+
+            if ($hasParticipated) {
+                $group = Group::find($hasParticipated->id);
+            } else {
+                return response()->json($group);
+            }
+        }
 
         $group['goal'] = Goal::whereHasMorph(
                 'model',
@@ -537,5 +553,31 @@ class GroupController extends Controller
             ->get();
 
         return response()->json($users);
+    }
+
+    /**
+     * Display a listing of the resource nearby.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function suggestedNearby(Request $request, $lat, $lng)
+    {
+        $groups = Group::select('groups.*')
+            ->selectRaw('( 6371 * acos( cos( radians(?) ) 
+                * cos( radians( lat ) ) * cos( radians( lng ) 
+                - radians(?) ) + sin( radians(?) ) 
+                * sin( radians( lat ) ) ) ) AS distance', 
+                [$lat, $lng, $lat])
+            ->orderBy('distance')
+            ->limit(10)
+            ->get();
+        
+        foreach($groups as $group) {
+            $group['type'] = 'church';
+            $group['photo'] = $group->getFirstMediaUrl('photo');
+            $group['cover_photo'] = $group->getFirstMediaUrl('cover_photo');
+        } 
+
+        return response()->json($groups->toArray(), 200);
     }
 }

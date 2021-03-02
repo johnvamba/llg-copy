@@ -47,7 +47,7 @@ const TransactionsView = ({ data = {}, handleForm }) => {
                     <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
                         <div className={`form-group`}>
                             <label>Transaction ID</label>
-                            <p>{ data.id || 'Missing id'}</p>
+                            <p>{ data.charge_id || 'Missing id'}</p>
                         </div>
                     </div>
                     <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">

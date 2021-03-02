@@ -33,6 +33,10 @@ class OffersController extends Controller
             $offers->where('status', 'approved');
         }
 
+        if($search = $request->get('search')){
+            $offers->where('title', 'like', '%'.$search.'%');
+        }
+
         return OfferResource::collection($offers->paginate($request->get('per_page') ?? 15));
     }
 
@@ -63,7 +67,7 @@ class OffersController extends Controller
             'photo' => 'required',
             'business_name' => 'required',
             'business_contact' => 'required',
-            'address' => 'required',
+            // 'address' => 'required',
         ]);
 
         DB::beginTransaction();
@@ -162,8 +166,8 @@ class OffersController extends Controller
             'description' => 'required',
             'photo' => 'required',
             'busName' => 'required',
-            'busContact' => 'required',
-            'address' => 'required'
+            'busContact' => 'required'
+            // 'address' => 'required'
         ]);
 
         DB::beginTransaction();

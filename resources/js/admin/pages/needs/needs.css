@@ -209,6 +209,9 @@ header .filter-header .filter-need {
 	height: 150px;
 	background-color: #CF995F;
 }
+.unflex{
+	flex: 1 1 auto !important;
+}
 /*
 .icon-circle .icon-png {
 	height: 20px;

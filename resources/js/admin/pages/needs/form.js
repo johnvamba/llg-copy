@@ -22,11 +22,12 @@ import Imagepond from '../../../components/Imagepond'
 import LoadingScreen from '../../../components/LoadingScreen'
 import TimeInput from '../../../components/TimeInput'
 
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
 const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     //user
     const { roles } = AuthUserReducer;
+    const loc = useSelector(({AuthUserReducer}) => AuthUserReducer.loc);
     //form
     const [title, setTitle] = useState('');
     const [about, setAbout] = useState('');
@@ -39,11 +40,11 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     const [openDate, setOpenDate] = useState(false);
     const [time, setTime] = useState('09:00 AM');
     const [errors, setErrors] = useState({});
-    const [address, setAddress] = useState('');
+    // const [address, setAddress] = useState('');
     const [location, setLocation] = useState({
         formatted_address: '',
-        lat: null,
-        lng: null,
+        lat: -37.8180604,
+        lng: 145.0001764
     })
     const [organization, setOrganization] = useState({});
     const [submitting, setSubmitting] = useState(false);
@@ -61,12 +62,12 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 type,
                 lctype,
                 category = [],
-                organization,
+                organization = {},
                 photo,
                 goal,
                 date,
                 time,
-                address,
+                // address,
                 location,
                 lng,
                 lat
@@ -80,9 +81,14 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setGoal(goal || 0);
             setDate(date ? new Date(date) :  new Date);
             setTime(time || '');
-            setAddress(address || '');
-            setLocation({formatted_address: location, lng, lat});
-            setOrganization(organization || {});
+            // setAddress(address || '');
+            setLocation({
+                formatted_address: location || organization.location, 
+                lng:lng || organization.lng, 
+                lat:lat || organization.lat
+            });
+            setOrganization(organization);
+            setLoading(false)
         })
         .catch(err => {
             // if(err.response){
@@ -90,7 +96,6 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             //     setErrors(errors)
             // }
         }).then(()=>{
-            setLoading(false)
         })
 
     }
@@ -109,11 +114,11 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setOpenDate(false)
             setTime('09:00 AM')
             setErrors({})
-            setAddress('')
+            // setAddress('')
             setLocation({
                 formatted_address: '',
-                lat: null,
-                lng: null,
+                lat: -37.8180604,
+                lng: 145.0001764
             })
             setOrganization({})
             setSubmitting(false)
@@ -122,15 +127,23 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         // console.log('trigger data', data);
     }, [data])
 
+    useEffect(()=>{
+        if(!_.isEmpty(loc)) {
+            setLocation({
+                formatted_address: loc.location || '',
+                lat: loc.lat,
+                lng: loc.lng
+            })
+        }
+    }, [loc])
+
     const updateOrganization = (org) => {
-        if(org.address || org.location) {
+        if(org.location) {
             setLocation({
                 formatted_address: org.location || '',
                 lat: org.lat,
                 lng: org.lng
             })
-
-            setAddress(org.address || '')
         }
         setOrganization(org)
     }
@@ -143,10 +156,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     }
 
     const handleCategories = (item, truth = false) => {
-        if(truth)
-            setCategory(category.filter(i=>item.slug != i.slug))
-        else 
-            setCategory([item, ...category])
+        setCategory(truth ? category.filter(i=>item.slug != i.slug) : [item, ...category])
     }
 
     const handleType = (newType = 'donation') => {
@@ -173,17 +183,17 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         const submit = { 
             title, type, category, goal, date, time, location, organization,
             photo,//files.length > 0 ? photo : null,
-            address,
+            // address,
             description: about,
             requirements: bring
         }
         const submitPromise = !data.id ? 
             api.post(`/api/web/needs`, submit) : 
-            api.patch(`/api/web/needs/${data.id}`, )
-
+            api.patch(`/api/web/needs/${data.id}`, submit)
+        const data_id = data.id;
         submitPromise.then(({data})=>{
             setSubmitting(false)
-            swalSuccess(data.id ? "Need has been updated": 'Need has been requested!')
+            swalSuccess(data_id ? "Need has been updated": 'Need has been requested!')
             handleForm(data.data, false, 'submit');
         }).catch(err=>{
             // console.log('error', err, err.response)
@@ -222,7 +232,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 </div>
                 {
                     //Set user priveledges here.. campus users will need to know what organization is asking for need.
-                    (roles.name == 'admin') && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
+                    (roles.name == 'admin' || roles.name == 'campus admin') && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
                         <label>Organization</label>
                         <AsyncSelect
                             styles={selectStylePaddingZero}
@@ -254,6 +264,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 {
                     (type == 'donation' || type == 'fundraise') && 
                     <div>
+                        {/* if this requires improvement check this out. https://codepen.io/559wade/pen/LRzEjj*/}
                         <div className={`form-group ${errors.goal && 'form-error'}`}>
                             <label>Goal</label>
                             <div className="input-container">
@@ -271,20 +282,9 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                             placesSelected={handleLocation}
                             errors={errors.location || []}
                         />
-                        <div className={`form-group ${errors.address && 'form-error'}`}>
-                            <label>Specific Address</label>
-                            <input type='text' className="input-field" placeholder="House #, Lot and/or street" value={address} onChange={e=>setAddress(e.target.value)}/>
-                            {
-                                (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Specific Address</span>
-                            }
-                        </div>
                         <div className={`form-group ${errors.description && 'form-error'}`}>
                             <label>About</label>
                             <textarea className="input-field" placeholder="Say something about this need" value={about} onChange={e=>setAbout(e.target.value)}/>
-                            {
-                                //
-                            //<input type='text' className="input-field" placeholder="Say something about this need" value={about} onChange={e=>setAbout(e.target.value)}/>
-                            }
                             {
                                 (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing About content</span>
                             }
@@ -299,6 +299,13 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                             <input type="text" className="input-field" placeholder="Enter Information" value={about} onChange={e=>setAbout(e.target.value)}/>
                             {
                                 (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Volunteer Opportunity Information</span>
+                            }
+                        </div>
+                        <div className={`form-group w-full ${errors.requirements && 'form-error'}`}>
+                            <label>Requirements</label>
+                            <textarea className="input-field" placeholder="Enter things to bring" value={bring} onChange={e=>setBring(e.target.value)}/>
+                            {
+                                (errors.requirements || false) && <span className="text-xs pt-1 text-red-500 italic">Missing what to bring</span>
                             }
                         </div>
                         <div className={`form-group short-width ${errors.date ? 'form-error' : ''}`}>
@@ -348,20 +355,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                             placesSelected={handleLocation}
                             errors={errors.location || []}
                         />
-                        <div className={`form-group w-full${errors.title && 'form-error'}`}>
-                            <label>Specific Address</label>
-                            <input type='text' className="input-field" placeholder="House #, Lot and/or street" value={address} onChange={e=>setTitle(e.target.value)}/>
-                            {
-                                (errors.address || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Specific Address</span>
-                            }
-                        </div>
-                        <div className={`form-group w-full ${errors.requirements && 'form-error'}`}>
-                            <label>Requirements</label>
-                            <textarea className="input-field" placeholder="Enter things to bring" value={bring} onChange={e=>setBring(e.target.value)}/>
-                            {
-                                (errors.requirements || false) && <span className="text-xs pt-1 text-red-500 italic">Missing what to bring</span>
-                            }
-                        </div>
+                        
                     </div>
                 }
                 <Imagepond photo={photo} imageSelected={setPhoto} errors={errors.photo}/>

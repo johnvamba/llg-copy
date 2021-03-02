@@ -6,12 +6,14 @@ import List from './list';
 import Form from './form';
 import OrgView from './info';
 import OrgInvite from './invite';
+import LoadingScreen from '../../../components/LoadingScreen'
 
 import './organizations.css';
 
 
 const Organizations = () => {
     const [page, setPage] = useState(1);
+    const [endPage, setEndPage] = useState(1);
     const [limit, setLimit] = useState(5);
     const [loading, setLoading] = useState(false);
     const [orgs, setOrgs] = useState([]);
@@ -22,6 +24,7 @@ const Organizations = () => {
     const [invite, showInvite] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
 
+    const search = useSelector(({SearchReducer}) => SearchReducer.search);
     const dispatch = useDispatch();
 
     const handleLimitChange = (limit) => {
@@ -33,11 +36,12 @@ const Organizations = () => {
     }
 
     const loadTable = (clearCache = false) => {
+        setLoading(true)
         const addFilter = {}; //for redux values
         const token = axios.CancelToken.source();
         api.get(`/api/web/organizations`, {
             params: {
-                page, ...addFilter
+                page, ...addFilter, search
             },
             cache: {
                 exclude: { query: false },
@@ -46,22 +50,50 @@ const Organizations = () => {
             cancelToken: token.token
         }).then(({ data })=>{
             const { org_count } = data
-            setOrgs(data.data || [])
+            setOrgs( data.data )
             setCount(data.meta ? data.meta.total : 0)
-        }).finally(()=>{
+            setEndPage(data.meta ? data.meta.last_page : 1)
+            setPage(data.meta ? data.meta.current_page : 0)
             setLoading(false)
+        }).finally(()=>{
         })
         return token; //for useEffect
     }
+    //To always get fresh new ones
+    const nextPage = (clearCache = true) => {
+        const nextpage = page+1;
+        if(nextpage <= endPage && endPage > 1){
+            const addFilter = {};
+            const token = axios.CancelToken.source();
+            api.get(`/api/web/organizations`, {
+                params: {
+                    ...addFilter,
+                    page: nextpage, search
+                },
+                cache: {
+                    exclude: { query: false },
+                }, 
+                clearCacheEntry: clearCache,
+                cancelToken: token.token
+            }).then(({ data })=>{
+                const { org_count } = data
+                setOrgs( [...orgs, ...data.data] )
+                setCount(data.meta ? data.meta.total : 0)
+                setEndPage(data.meta ? data.meta.last_page : 1)
+                setPage(data.meta ? data.meta.current_page : 0)
+            }).finally(()=>{
+            })
+            return token; //for useEffect
+        }
+    }
 
     useEffect(() => {
-        setLoading(true)
         const ct = loadTable();
         return ()=>{
             //cancel api here
             ct.cancel('Resetting');
         }
-    }, []);
+    }, [search]);
 
     const handlePanels = (data = {},  form = false, info = false, invite = false) => {
         setInfo(data)
@@ -77,7 +109,10 @@ const Organizations = () => {
     return (
         <>
             <Header count={count} handlePanels={handlePanels} />
-            <List set={orgs} handlePanels={handlePanels} />
+            {
+                loading ? <LoadingScreen title={'Loading Organizations'}/>
+                : <List set={orgs} handlePanels={handlePanels} triggerPage={nextPage}/>
+            }
             {
                 form && <Form data={info} afterSubmit={afterSubmit} handlePanels={handlePanels} handleClose={handlePanels}/>
             }

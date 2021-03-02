@@ -3,7 +3,7 @@ import OffersFormCross from '../../../svg/offers-form-cross';
 import Camera from '../../../svg/camera';
 
 import Location from '../../../components/Location'
-import { swalError } from '../../../components/helpers/alerts';
+import { swalError, swalSuccess } from '../../../components/helpers/alerts';
 import { isValidated } from '../../../components/helpers/validator';
 import LoadingScreen from '../../../components/LoadingScreen'
 import BannerImage from '../../../components/BannerImage';
@@ -19,15 +19,16 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
     const [cover, setCover] = useState(null)
     const [location, setLocation] = useState({
         location: '',
-        lat: 0,
-        lng: 0,
+        lat: -37.8180604,
+        lng: 145.0001764
     })
     const [errors, setErrors] = useState({})
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(()=>{
-        const {name, description}= data;
+        const { name, description, location, lng, lat }= data;
         setForm({name:name || '', description:description || ''})
+        setLocation({ location, lat, lng })
     }, [data])
 
     const handleInput = (e) => {
@@ -91,11 +92,12 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
             const submitPromise = !data.id ? 
                 api.post(`/api/web/campuses`, params) : 
                 api.patch(`/api/web/campuses/${data.id}`, { ...params })
-
+            const data_id = data.id;
             submitPromise.then(({data})=>{
                 afterSubmit(data.data);
+                swalSuccess(data_id ? "Organization has been updated": 'New Organization Created!')
+
                 handleForm({}, false, false)
-                
             }).catch(({response})=>{
                 if(response){
                     setErrors(response.data)

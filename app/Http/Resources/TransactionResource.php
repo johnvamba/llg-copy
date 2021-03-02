@@ -17,6 +17,7 @@ class TransactionResource extends JsonResource
         // dd($this->when($this->relationLoaded('organization'), 'haa?'));
         return [
             'id' => $this->id,
+            'charge_id' => $this->charge_id,
             'org_name' => $this->when($this->relationLoaded('organization'), fn() => optional($this->organization)->name),
             'org_id' => $this->when($this->relationLoaded('organization'), fn() => optional($this->organization)->id),
             'org_photo' => $this->when($this->relationLoaded('organization'), fn() => optional($this->organization)->getFirstMediaUrl('photo')),

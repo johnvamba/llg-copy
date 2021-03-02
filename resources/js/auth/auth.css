@@ -241,3 +241,22 @@
     }
 
 }
+.email-container {
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 24px;
+    padding: 5px;
+    color: #231F20;
+    border: 1px solid #D7DEE3;
+    margin-bottom: 16px;
+    border-radius: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.email-container svg {
+    left: 0px !important;
+}

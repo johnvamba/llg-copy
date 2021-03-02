@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+
 import TransactionsHeader from './header';
 import TransactionsTable from './table';
 import TransactionsView from './view';
@@ -15,9 +17,10 @@ const Transactions = () => {
     const [meta, setMeta] = useState({});
     const [loading, setLoading] = useState(false);
     const [transactions, setTransactions] = useState( [ ] )
+    const search = useSelector(({SearchReducer}) => SearchReducer.search);
     useEffect(() => {
         loadTransactions()
-    }, [page, limit])
+    }, [page, limit, search])
 
     const loadTransactions = (clearCache = false)=>{
         const addFilter = {}; //for redux values
@@ -27,7 +30,8 @@ const Transactions = () => {
             api.get(`/api/web/transacts`, {
                 params: {
                     page, ...addFilter,
-                    per_page: limit
+                    per_page: limit,
+                    search
                 },
                 cache: {
                     exclude: { query: false },
@@ -38,8 +42,8 @@ const Transactions = () => {
                 const { data } = res
                 setTransactions(data.data)
                 setMeta(data.meta)
-            }).finally(()=>{
                 setLoading(false)
+            }).finally(()=>{
             })
         }
         return token; //for useEffect

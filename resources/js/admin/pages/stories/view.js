@@ -6,7 +6,7 @@ import StoriesCatChildrenIcon from '../../../svg/stories-cat-children';
 import { Editor, EditorState, ContentState, convertToRaw, convertFromRaw, convertFromHTML } from "draft-js";
 import { tryParseJson } from '../../../components/helpers/validator'
 import LoadingScreen from '../../../components/LoadingScreen'
-import { swalDelete2 } from '../../../components/helpers/alerts';
+import { swalDelete2, swalSuccess } from '../../../components/helpers/alerts';
 import { monetary } from '../needs/categorylist';
 
 const View = ({data = {}, handleForm, afterSubmit }) => {
@@ -37,15 +37,18 @@ const View = ({data = {}, handleForm, afterSubmit }) => {
     const deleting = () => {
         if(data.id) {
             swalDelete2(title)
-            .then(()=> {
-                setLoading('Deleting Story...')
-                api.delete(`/api/web/stories/${data.id}`)
-                .then(()=>{
-                    afterSubmit();
-                }).finally(()=>{
-                    setLoading(null)
-                    handleForm()
-                })
+            .then((result)=> {
+                if(result.value) {
+                    setLoading('Deleting Story...')
+                    api.delete(`/api/web/stories/${data.id}`)
+                    .then(()=>{
+                        afterSubmit();
+                        swalSuccess('Story Removed.')
+                    }).finally(()=>{
+                        setLoading(null)
+                        handleForm()
+                    })
+                }
             })
         }
     }
@@ -56,6 +59,7 @@ const View = ({data = {}, handleForm, afterSubmit }) => {
             .then(()=>{
                 afterSubmit();
                 setLoading(null);
+                    swalSuccess(data.released_at ? 'Story Published' : 'Story Unpublished')
                 handleForm()
             })
     }
@@ -82,6 +86,15 @@ const View = ({data = {}, handleForm, afterSubmit }) => {
                         <OffersViewEdit />
                         <label>Edit</label>
                     </div>
+                    <span className="ver-divider"></span>
+                    <button className="" onClick={()=>handleForm()}>
+                        <i className="">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1L13 13" stroke="#98999B" strokeWidth="1.5"/>
+                                <path d="M13 1L1 13" stroke="#98999B" strokeWidth="1.5"/>
+                            </svg>
+                        </i>
+                    </button>
                 </div>
             </header>
             <article className="view-story__body">

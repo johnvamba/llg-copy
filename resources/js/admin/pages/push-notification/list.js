@@ -109,7 +109,9 @@ const PushList = ({ showEdit, handleForm}) => {
                             <td>
                                 { switchStatus(notif.status) }
                             </td>
-                            <td className="actions row-actions">
+                            <td>
+                                <div className="actions row-actions">
+                                    
                                 <button onClick={() => handleRowActive(notif)}>
                                     <i ref={setApproveElement}>
                                     <UsersActionsEdit />
@@ -120,6 +122,7 @@ const PushList = ({ showEdit, handleForm}) => {
                                     <UsersActionsDelete />
                                     </i>
                                 </button>
+                                </div>
                             </td>
                         </tr>
                     )

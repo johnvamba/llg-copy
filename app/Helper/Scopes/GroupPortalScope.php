@@ -25,6 +25,7 @@ class GroupPortalScope implements Scope
             } else if($user->hasRole('organization admin')){
                 //Group unfiltered
             } else if($user->hasRole('campus admin')){
+                $builder->whereHas('campus', fn($campus) => $campus->where('campuses.id', session('camp_id')) ); //
                 //Group unfiltered
             } else if($user->hasRole('admin')){
                 return;

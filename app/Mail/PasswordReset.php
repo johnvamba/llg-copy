@@ -2,32 +2,38 @@
 
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Notifications\Messages\MailMessage;
 
-class PasswordReset extends Mailable
+class PasswordReset extends ResetPassword
 {
-    use Queueable, SerializesModels;
-
     /**
-     * Create a new message instance.
+     * Build the mail representation of the notification.
      *
-     * @return void
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function __construct()
+    public function toMail($notifiable)
     {
-        //
-    }
+        if (static::$toMailCallback) {
+            return call_user_func(static::$toMailCallback, $notifiable, $this->token);
+        }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
-    public function build()
-    {
-        return $this->view('view.name');
+        if (static::$createUrlCallback) {
+            $url = call_user_func(static::$createUrlCallback, $notifiable, $this->token);
+        } else {
+            $url = url(route('password.reset', [
+                'token' => $this->token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ], false));
+        }
+
+        return (new MailMessage)
+            ->view('email.resetpass', [
+                'url' => $url,
+                'user' => $notifiable
+            ])
+            ->subject('Forgot Password');
     }
 }

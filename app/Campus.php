@@ -29,4 +29,9 @@ class Campus extends Model implements HasMedia
     public function needs() {
         return $this->hasManyThrough(\App\Need::class, \App\CampusOrganisation::class, 'campus_id', 'organization_id', 'id', 'organization_id');
     }
+
+    public function groups()
+    {
+        return $this->morphedByMany('App\Group', 'location', 'group_locations');
+    }
 }

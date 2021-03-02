@@ -397,3 +397,96 @@ section.invites li div.member-item button.invite-button.invited{
     border: 0;
     color: #fff;
 }
+
+.group-view {
+    width: 544px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    background: #FFFFFF;
+    border: 1px solid #E7EAEF;
+    height: 100%;
+}
+
+.group-view .group-img {
+    border: 2px solid #FFFFFF;
+    filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.08));
+    border-radius: 40px;
+    height: 80px;
+    width: 80px;
+}
+
+.group-view .group-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.group-view-details h2 {
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 150%;
+    color: #587B7F;
+}
+.group-view-details p {
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 24px;
+    color: #231F20;
+}
+.view-buttons {
+    display: flex;
+    align-items: center;
+    height: fit-content;
+}
+.view-buttons button.edit-btn {
+    color: #CF995F;
+    display: contents;
+}
+.member-cta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0px;
+}
+.member-cta label {
+    color: #CF995F;
+    font-family: InterRegular;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+.invite-button button {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid #CF995F;
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    letter-spacing: 0.01em;
+    color: #CF995F;
+    padding: 8px 26px;
+}
+.member-list .tab-members {
+    padding: 0;
+}
+.group-view svg path{
+    fill: #CF995F;
+}
+.invite-button button svg path{
+    stroke: #CF995F;
+}

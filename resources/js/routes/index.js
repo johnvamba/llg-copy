@@ -5,6 +5,9 @@ import PublicRoutes from './public-routes'
 import Login from '../auth/Login'
 import ForgotPassword from '../auth/ForgotPassword'
 import ResetPassword from '../auth/ResetPassword'
+import CompleteRegister from '../auth/com-register'
+
+import ExpiredLink from '../auth/expired'
 
 import OrganisationPublic from '../organisation-public/index'
 
@@ -20,6 +23,9 @@ const AppRoute = () => {
             <PublicRoutes exact path="/login" component={Login}/>
             <PublicRoutes exact path="/forgot-password" component={ForgotPassword}/>
             <PublicRoutes exact path="/password/reset" component={ResetPassword}/>
+            <PublicRoutes exact path="/account" component={CompleteRegister}/>
+            <PublicRoutes exact path="/expired" component={ExpiredLink}/>
+
             <PublicRoutes exact path="/create-organisation" component={OrganisationPublic}/>
             <PrivateRoute path="/admin" component={Home}/>
             <Route path="*" component={NotFound} />

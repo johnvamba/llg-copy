@@ -12,12 +12,13 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
     const [fieldErrors, setFieldErrors] = useState({});
     const [goal, setGoal] = useState(1);
     const [goalType, setGoalType] = useState('month')
+    const [campus, setCampus] = useState({})
     const [users, setUsers] = useState([]);
     const [fields, setFields] = useState({
         name: '',
         description: '',
         location: '',
-        address: '',
+        // address: '',
         privacy: '',
         photo: null,
         lat: null,
@@ -31,24 +32,29 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                 name: data.name,
                 description: data.description,
                 location: data.location,
-                address: data.address,
+                // address: data.address,
                 privacy: data.privacy,
                 photo: data.photo,
                 lat: data.lat,
                 lng: data.lng
             })
+            setCampus(data.campus || {})
             loadExtra()
         } else {
             setFields({
                 name: '',
                 description: '',
                 location: '',
+                // address: '',
                 privacy: '',
                 photo: null,
                 lat: null,
                 lng: null
             })
+            setCampus({})
         }
+        if(data.countTab)
+            setCountTab(data.countTab)
     }, [data])
 
     const handleTab = (tab = 1) => {
@@ -95,7 +101,10 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
     }
 
     const loadExtra = (cacheClear = false) => {
-
+        api.get(`/api/web/groups/${data.id}`)
+        .then(()=>{
+            
+        })
     }
 
     const attemptSubmit = () => {
@@ -103,18 +112,18 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
             setSubmitting(true)
             const params = {
                 ...fields,
-                address,
                 users,
+                campus,
                 goal
             }
             const submitPromise = !data.id ? 
                 api.post(`/api/web/groups`, params) : 
                 api.patch(`/api/web/groups/${data.id}`, params)
-
+            const data_id = data.id
             submitPromise.then(({data})=>{
                 setSubmitting(false)
                 handleForm({});
-                swalSuccess(data.id ? "Group has been updated" : "Group added successfully")
+                swalSuccess(data_id ? "Group has been updated" : "Group added successfully")
                 afterSubmit(data.data)
             }).catch(err=>{
                 if(err.response){
@@ -182,6 +191,8 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                         fields={fields}
                         onChangePhoto={onChangePhoto}
                         handleSelectPrivacy={handleSelectPrivacy}
+                        campus={campus}
+                        setCampus={setCampus}
                         data={data}
                     />
                 }
