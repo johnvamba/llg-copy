@@ -86,7 +86,7 @@ const Users = () => {
 
     const handleForm = (form = false, setting = null, data = null)=>{
         //change content of table here
-        console.log('form changed', form, data, setting)
+        // console.log('form changed', form, data, setting)
         if(setting == 'discard'){
             //discard Changes here
         }
@@ -121,7 +121,7 @@ const Users = () => {
             }
             {
                 showInfo &&
-                <UserInfo data={focus} closePanel={()=>showItem({})} handleForm={handleForm}/>
+                <UserInfo data={focus} showItem={showItem}  handleForm={handleForm}/>
             }
         </>
     )

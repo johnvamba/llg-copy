@@ -12,7 +12,7 @@ const CampusHeader = ({ setShowAdd, campus_count = 0 }) => {
                 <h1>Location{campus_count > 0 ? ` (${campus_count})` : ''}</h1>
             </div>
             {
-                (roles.name === 'admin' || roles.name === 'campus admin') &&
+                (roles.name === 'admin') && // || roles.name === 'campus admin'
                 <div className="flex flex-1 justify-end">
                     <button className="primary-btn flex rounded-sm" onClick={() => setShowAdd(true)}>
                         <OffersPlus />

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\URL;
 
 use App\Organization;
 use App\OrgInvites;
+
 class OrgInvitation extends Mailable
 {
     use Queueable, SerializesModels;

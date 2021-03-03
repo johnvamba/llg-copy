@@ -52,6 +52,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('organizations/async', 'OrganizationController@async');
         Route::get('organizations/{organization}/members', 'OrganizationController@members');
         Route::post('organizations/{organization}/members', 'OrganizationController@memberInvite');
+        Route::post('organizations/{organization}/approve', 'OrganizationController@approve');
+        Route::post('organizations/{organization}/reject', 'OrganizationController@reject');
         Route::get('organizations/{organization}/needs', 'OrganizationController@needs');
         Route::post('organizations/{organization}/access', 'OrganizationController@access');
         Route::get('organizations/credentials', 'OrganizationController@credentials');

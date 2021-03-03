@@ -5,33 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>Love Lives Generously</title>
+        <link href="https://fonts.googleapis.com/css?family=Inter:200,600" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppin:wght@500;600&display=swap" rel="stylesheet">
 
         <!-- Fonts -->
         <style type="text/css">
-            @font-face {
-                font-family: InterRegular;
-                src: url('{{ asset('fonts/Inter-Regular-slnt=0.ttf') }}');
-            }
-
-            @font-face {
-                font-family: InterMedium;
-                src: url('{{ asset('fonts/Inter-Regular-slnt=0.ttf') }}');
-            }
-
-            @font-face {
-                font-family: InterSemibold;
-                src: url('{{ asset('fonts/Inter-Regular-slnt=0.ttf') }}');
-            }
-
-            @font-face {
-                font-family: BrownStdRegular;
-                src: url('{{ asset('fonts/Inter-Regular-slnt=0.ttf') }}');
-            }
-
-            @font-face {
-                font-family: BrownStdBold;
-                src: url('{{ asset('fonts/Inter-Regular-slnt=0.ttf') }}');
-            }
             body {
                 margin: 0;
             }
@@ -40,7 +20,11 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/brands.min.css" integrity="sha512-AMDXrE+qaoUHsd0DXQJr5dL4m5xmpkGLxXZQik2TvR2VCVKT/XRPQ4e/LTnwl84mCv+eFm92UG6ErWDtGM/Q5Q==" crossorigin="anonymous" />
         <style type="text/css">
              * {
-                font-family: InterRegular;
+                font-family: 'Inter', sans-serif;
+            }
+            * li {
+                margin: 0px;
+                padding: 0px;
             }
             .receipt i.fab {
                 font-family: 'Font Awesome 5 Brands';
@@ -142,6 +126,97 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+            }
+        </style>
+        <style type="text/css">
+            .wrapper {
+                height: 100%;
+                background: #f2f2f2;
+                margin: 0 auto;
+            }
+
+            .container {
+                width: 60%;
+                margin: 0 auto;
+                padding-bottom: 20px;
+            }
+
+            .content {
+                background: white;
+                padding: 20px 30px;
+                border-radius: 8px;
+            }
+
+            .img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                padding: 50px 0;
+            }
+
+            strong {
+                color: #92A9AB;
+                font-size: 23px;
+                font-weight: bolder;
+            }
+
+            p {
+                font-size: 16px;
+                font-weight: normal;
+            }
+
+            p.note {
+                color: #c6c6c6;
+            }
+
+            button {
+                color: #fff;
+                background: #cf995f;
+                border: 1px solid #cf995f;
+                width: 400px;
+                padding: 15px 10px;
+                border-radius: 24px;
+                margin-top: 15px;
+                margin-bottom: 20px;
+            }
+
+            .social-icons {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 50px;
+                margin-bottom: 25px;
+            }
+
+            .social-icons img {
+                margin: 0 40px;
+            }
+
+            .divider {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+
+            .divider div {
+                width: 100%;
+                border: 2px solid #d4d4d4;
+                margin: 0 50px; 
+            }
+
+            h2 span { 
+                background:#fff; 
+                padding:0 10px; 
+            }
+
+            .bottom {
+                text-align: center;
+            }
+
+            .address {
+                margin-bottom: 50px;
             }
         </style>
         @stack('css')
