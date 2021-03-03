@@ -24,7 +24,7 @@ Route::group([
 	Route::get('group', 'TestControl@groupEmail');
 	Route::get('initreceipt', 'TestControl@sendEmail');
 	Route::get('password', 'TestControl@password');
-
+	Route::get('story', 'TestControl@story');
 });
 
 Route::get('/admin/invite', function () {
