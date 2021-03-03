@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 use App\Invoice;
 
-class TransactionReceipt extends Command
+class EmailReceipt extends Command
 {
     /**
      * The name and signature of the console command.
