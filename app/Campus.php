@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
 
+use App\Helper\Traits\CampusPortalTrait;
 
 class Campus extends Model implements HasMedia
 {
     use InteractsWithMedia;
+    use CampusPortalTrait;
+
     protected $guarded = [];
 
     public function organizations(){

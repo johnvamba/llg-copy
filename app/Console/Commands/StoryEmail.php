@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Story;
+use App\Mail\StoryPublished;
 
 class StoryEmail extends Command
 {
@@ -12,7 +13,7 @@ class StoryEmail extends Command
      *
      * @var string
      */
-    protected $signature = 'email:story {--email=} {--dispatch}';
+    protected $signature = 'email:story {--story_id=} {--email=} {--dispatch}';
 
     /**
      * The console command description.
@@ -39,7 +40,24 @@ class StoryEmail extends Command
     public function handle()
     {
         if($email = $this->option('email')) {
+            $story = Story::find($this->option('story_id')) ?? Story::first();
 
+            if(!$story){
+                $this->info('Missing story to send to user. Possibly nothing at all');
+                return;
+            }
+
+            if($this->option('dispatch')){
+                dispatch(fn() => Mail::to($email)->send(new StoryPublished($story))); //Run this on production but with dispatch
+            } else {
+                Mail::to($email)->send(new StoryPublished($story));
+            }
+
+            $this->info('Email for story sent');
+            return;
         }
+
+        $this->info('Email is not present');
+
     }
 }
