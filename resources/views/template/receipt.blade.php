@@ -28,9 +28,9 @@
 		@else
 		<ul>
 			@foreach($transacts as $key => $value)
-			<li><span>{{$key ?? 'Payment'}}</span><span>$ {{$value ?? number_format(0, 2)}}</span></li>
+			<li><span>{{$key ?? 'Payment'}}</span><span style="float: right">$ {{$value ?? number_format(0, 2)}}</span></li>
 			@endforeach
-			<li><span>Amount Paid</span><span>$ {{$paid ?? number_format(0, 2)}}</span></li>
+			<li><span>Amount Paid</span><span style="float: right">$ {{$paid ?? number_format(0, 2)}}</span></li>
 		</ul>
 		@endif
 	</div>

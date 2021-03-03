@@ -460,7 +460,7 @@ class OrganizationController extends Controller
                 $insUser = User::where('email', $user['email'] ?? '')->first();
 
                 if(!$insUser) {
-                    $intUser = $user['email'] ?? ''; // if user is missing then override to sendable mail.
+                    $insUser = $user['email'] ?? ''; // if user is missing then override to sendable mail.
                 }
 
                 $invite = OrgInvites::firstOrCreate([
@@ -469,12 +469,12 @@ class OrganizationController extends Controller
                 ]);
                 
                 $invite->update([
-                    'first_name' => $user['firstName'] ?? 'Invited',
-                    'last_name' => $user['lastName'] ?? 'User',
-                    'phone' => $user['phone'] ?? '00 0000 0000'
+                    'first_name' => optional($insUser)->first_name ?? $user['firstName'] ?? 'Invited',
+                    'last_name' => optional($insUser)->last_name ?? $user['lastName'] ?? 'User',
+                    'phone' => optional($insUser)->mobile_number ?? $user['phone'] ?? '00 0000 0000'
                 ]);
 
-                dispatch(fn() => Mail::to($intUser)->send(new OrgInvitation($org, $invite))); //Run this on production but with dispatch
+                dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($org, $invite))); //Run this on production but with dispatch
             }
 
             DB::commit();

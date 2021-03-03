@@ -15,7 +15,7 @@ class ManualInvite extends Command
      *
      * @var string
      */
-    protected $signature = 'invite:user {--email=} {--orgId=}';
+    protected $signature = 'invite:user {--email=} {--orgId=} {--dispatch}';
 
     /**
      * The console command description.
@@ -44,7 +44,12 @@ class ManualInvite extends Command
         $invitation = OrgInvites::with('organization')
             ->where('email', $this->option('email'))
             ->when($org = $this->option('orgId'), fn($q) => $q->where('org_id', $org))
-            ->firstOrFail();
+            ->first();
+
+        if(!$invitation) {
+            $this->info('No invitation initiated for any organization to email.');
+            return;
+        }
             
         $organization = $invitation->organization;
         $invitation->unsetRelation('organization');
@@ -55,7 +60,12 @@ class ManualInvite extends Command
             return ;
         }
 
-        Mail::to($email)->send(new OrgInvitation($organization, $invitation)); //Run this on production but with dispatch
+        if($this->option('dispatch')){
+            dispatch(fn() => Mail::to($email)->send(new OrgInvitation($organization, $invitation))); //Run this on production but with dispatch
+        } else {
+            Mail::to($email)->send(new OrgInvitation($organization, $invitation)); //Run this on production but with dispatch
+        }
+
         $this->info('Email sent to:' . $this->option('email'));
     }
 }

@@ -96,14 +96,14 @@
 	<div class="wrapper">
 		<div class="container">
 			<img 
-				src="{{asset('images/neuma-logo.png')}}"
+				src="https://admin.neuma.church/images/neuma-logo.png"
 				alt="image"
 				class="img"
 			/>
 
 			<div class="content">
 				<img 
-					src="{{asset('images/register.png')}}"
+					src="https://admin.neuma.church/images/register.png"
 					width="400"
 					height="250"
 					alt="image"
@@ -132,19 +132,19 @@
 
 			<div class="social-icons">
 				<img 
-					src="{{asset('images/icon-facebook.png')}}"
+					src="https://admin.neuma.church/images/icon-facebook.png"
 					with="35"
 					height="35"
 					alt="image"
 				/>
 				<img 
-					src="{{asset('images/icon-twitter.png')}}"
+					src="https://admin.neuma.church/images/icon-twitter.png"
 					with="35"
 					height="35"
 					alt="image"
 				/>
 				<img 
-					src="{{asset('images/icon-instagram.png')}}"
+					src="https://admin.neuma.church/images/icon-instagram.png"
 					with="35"
 					height="35"
 					alt="image"
@@ -154,7 +154,7 @@
 			<div class="divider">
 				<div></div>
 				<img 
-					src="{{asset('images/neuma-icon.png')}}"
+					src="https://admin.neuma.church/images/neuma-icon.png"
 					alt="image"
 				/>
 				<div></div>

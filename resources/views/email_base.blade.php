@@ -5,33 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>Love Lives Generously</title>
-
+        <link href="https://fonts.googleapis.com/css?family=Inter:200,600" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
         <!-- Fonts -->
         <style type="text/css">
-            @font-face {
-                font-family: InterRegular;
-                src: url('{{ asset('fonts/Inter-Regular-slnt=0.ttf') }}');
-            }
-
-            @font-face {
-                font-family: InterMedium;
-                src: url('{{ asset('fonts/Inter-Regular-slnt=0.ttf') }}');
-            }
-
-            @font-face {
-                font-family: InterSemibold;
-                src: url('{{ asset('fonts/Inter-Regular-slnt=0.ttf') }}');
-            }
-
-            @font-face {
-                font-family: BrownStdRegular;
-                src: url('{{ asset('fonts/Inter-Regular-slnt=0.ttf') }}');
-            }
-
-            @font-face {
-                font-family: BrownStdBold;
-                src: url('{{ asset('fonts/Inter-Regular-slnt=0.ttf') }}');
-            }
             body {
                 margin: 0;
             }
@@ -40,7 +18,11 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/brands.min.css" integrity="sha512-AMDXrE+qaoUHsd0DXQJr5dL4m5xmpkGLxXZQik2TvR2VCVKT/XRPQ4e/LTnwl84mCv+eFm92UG6ErWDtGM/Q5Q==" crossorigin="anonymous" />
         <style type="text/css">
              * {
-                font-family: InterRegular;
+                font-family: 'Inter', sans-serif;
+            }
+            * li {
+                margin: 0px;
+                padding: 0px;
             }
             .receipt i.fab {
                 font-family: 'Font Awesome 5 Brands';
