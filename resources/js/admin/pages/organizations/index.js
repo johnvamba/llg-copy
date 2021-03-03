@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useHistory } from 'react-router-dom';
 import * as OrganizationsActions from '../../../redux/organizations/actions';
 import Header from './header';
 import List from './list';
 import Form from './form';
 import OrgView from './info';
 import OrgInvite from './invite';
+import OrgPending from './pending';
+
 import LoadingScreen from '../../../components/LoadingScreen'
 
 import './organizations.css';
 
 
 const Organizations = () => {
+    const loc = useLocation();
+    const hist = useHistory();
     const [page, setPage] = useState(1);
     const [endPage, setEndPage] = useState(1);
     const [limit, setLimit] = useState(5);
@@ -23,6 +28,7 @@ const Organizations = () => {
     const [form, showForm] = useState(false);
     const [invite, showInvite] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
+    const [pending, setPending] = useState(false);
 
     const search = useSelector(({SearchReducer}) => SearchReducer.search);
     const dispatch = useDispatch();
@@ -38,10 +44,11 @@ const Organizations = () => {
     const loadTable = (clearCache = false) => {
         setLoading(true)
         const addFilter = {}; //for redux values
+        let requests = loc.pathname == '/organizations/requests';
         const token = axios.CancelToken.source();
         api.get(`/api/web/organizations`, {
             params: {
-                page, ...addFilter, search
+                page, ...addFilter, search, requests
             },
             cache: {
                 exclude: { query: false },
@@ -62,13 +69,14 @@ const Organizations = () => {
     //To always get fresh new ones
     const nextPage = (clearCache = true) => {
         const nextpage = page+1;
+        let requests = loc.pathname == '/organizations/requests';
         if(nextpage <= endPage && endPage > 1){
             const addFilter = {};
             const token = axios.CancelToken.source();
             api.get(`/api/web/organizations`, {
                 params: {
                     ...addFilter,
-                    page: nextpage, search
+                    page: nextpage, search, requests
                 },
                 cache: {
                     exclude: { query: false },
@@ -93,16 +101,22 @@ const Organizations = () => {
             //cancel api here
             ct.cancel('Resetting');
         }
-    }, [search]);
+    }, [search, loc]);
 
     const handlePanels = (data = {},  form = false, info = false, invite = false) => {
+        let requests = loc.pathname == '/organizations/requests';
         setInfo(data)
         showForm(form)
-        setShowInfo(info)
+        if(requests) {
+            setPending(info)
+        } else {
+            setShowInfo(info)
+        }
         showInvite(invite)
     }
 
     const afterSubmit = () =>{
+        hist.push('/organizations');
         loadTable(true)
     }
 
@@ -122,6 +136,14 @@ const Organizations = () => {
                     closePanel={handlePanels}
                     handleEdit={() => handlePanels(info, true)}
                     handleInvite={() => handlePanels(info, false, false, true)}
+                />
+            }
+            { 
+                pending && <OrgPending
+                    data={info}
+                    afterSubmit={afterSubmit}
+                    closePanel={handlePanels}
+                    handleEdit={() => handlePanels(info, true)}
                 />
             }
             {

@@ -65,6 +65,17 @@ class User extends Authenticatable
         return $this->hasOneThrough(Campus::class, CampusUser::class, 'user_id', 'id', 'id', 'campus_id');
     }
 
+    public function campuses()
+    {
+        //Technically if user can be on many campuses this should be hasManyThrough
+        return $this->belongsToMany(Campus::class, 'campus_users');//->using(CampusUser::class);
+    }
+
+    public function campus_user()
+    {
+        return $this->hasMany(CampusUser::class);
+    }
+
     public function organization()
     {
         //Technically if user can be on many orgs this should be hasManyThrough
@@ -99,6 +110,12 @@ class User extends Authenticatable
     public function group_pivots()
     {
         return $this->hasMany('App\GroupParticipant', 'user_id');
+    }
+
+    //Norman.
+    public function categories()
+    {
+        return $this->morphToMany("App\Category", "categorize", 'categorizes');
     }
     /**
      * Register new user
