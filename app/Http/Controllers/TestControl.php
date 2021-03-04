@@ -67,4 +67,10 @@ class TestControl extends Controller
 
     	return 'Email Sent!';
     }
+
+    public function tester() {
+        $story = Story::first();
+
+        // dd($story->to);
+    }
 }
