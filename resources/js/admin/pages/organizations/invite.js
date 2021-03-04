@@ -110,15 +110,15 @@ const OrgInviteForm = ({ data = {}, handleBackInvite }) => {
         setForm({ ...form, email })
         if(validateEmail(email)){
             removeError('email')
-            checkEmail(email, {type: 'user'})
-            .then(({data})=>{
-                if(form.email == data.email){
-                    if(data.status == 'free')
-                        removeError('email')
-                    else
-                        setErrors({...errors, email: 'Email already existed'})                    
-                }
-            })
+            // checkEmail(email, {type: 'user'})
+            // .then(({data})=>{
+            //     if(form.email == data.email){
+            //         if(data.status == 'free')
+            //             removeError('email')
+            //         else
+            //             setErrors({...errors, email: 'Email already existed'})                    
+            //     }
+            // })
         }
     }
 

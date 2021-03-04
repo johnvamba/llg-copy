@@ -361,45 +361,25 @@ class OrganizationController extends Controller
 
         DB::beginTransaction();
         try {
-            foreach ($request->get('users') as $key => $value) {
-                $user = User::firstOrCreate([
-                    'email' => $value['email'],
-                    'password' => bcrypt('temp_secret'),
-                    'name'  => $value['firstname']. ' ' .$value['lastname']
-                ]);
+            foreach ($request->get('users') as $key => $user) {
+                $insUser = User::where('email', $user['email'] ?? '')->first();
 
-                $profile = UserProfile::create([
-                    'age' => 18,
-                    'bio' => '',
-                    'location' => $organization->location ?? 'Sydney, Australia',
-                    'lat' => $organization->lat,
-                    'lng' => $organization->lng,
-                    'user_id' => $user->id,
-                    'first_name' =>$value['firstname'],
-                    'last_name' =>$value['lastname']
-                ]);
-
-                $user->syncRoles('user');
-
-                OrganizationMember::firstOrCreate([
-                    'model_type' => User::class,
-                    'model_id' => $user->id,
-                    'organization_id' => $organization->id
-                ]);
+                if(!$insUser) {
+                    $insUser = $user['email'] ?? ''; // if user is missing then override to sendable mail.
+                }
 
                 $invite = OrgInvites::firstOrCreate([
                     'org_id' => $organization->id,
-                    'email' => $value['email'],
-                ]);
-                $invite->update([
-                    'first_name' => $value['firstName'] ?? 'Invited',
-                    'last_name' => $value['lastName'] ?? 'User',
-                    'phone' => $value['phone'] ?? '00 0000 0000'
+                    'email' => $user['email'],
                 ]);
 
-                if($user) {
-                    dispatch(fn() => Mail::to($user)->send(new OrgInvitation($organization, $invite))); //Run this on production but with dispatch
-                }
+                $invite->update([
+                    'first_name' => optional($insUser)->first_name ?? $user['firstname'] ?? 'Invited',
+                    'last_name' => optional($insUser)->last_name ?? $user['lastname'] ?? 'User',
+                    'phone' => optional($insUser)->mobile_number ?? $user['phone'] ?? '00 0000 0000'
+                ]);
+
+                dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($organization, $invite))); //Run this on production but with dispatch
             }
 
             DB::commit();
