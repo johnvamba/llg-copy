@@ -24,6 +24,7 @@ use App\Http\Resources\Async\OrganizationResource as AsyncResource;
 
 use App\Http\Resources\Mini\UserResource;
 use App\Http\Resources\Mini\NeedResource;
+use App\Jobs\Mail\OrgInvite as JobOrgInvite;
 
 use App\OrgInvites;
 
@@ -379,7 +380,8 @@ class OrganizationController extends Controller
                     'phone' => optional($insUser)->mobile_number ?? $user['phone'] ?? '00 0000 0000'
                 ]);
 
-                dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($organization, $invite))); //Run this on production but with dispatch
+                dispatch(new JobOrgInvite($insUser, $organization, $invite)); //Run this on production but with dispatch
+                // dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($organization, $invite))); //Run this on production but with dispatch
             }
 
             DB::commit();
@@ -453,8 +455,9 @@ class OrganizationController extends Controller
                     'last_name' => optional($insUser)->last_name ?? $user['lastName'] ?? 'User',
                     'phone' => optional($insUser)->mobile_number ?? $user['phone'] ?? '00 0000 0000'
                 ]);
+                dispatch(new JobOrgInvite($insUser, $org, $invite)); //Run this on production but with dispatch
 
-                dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($org, $invite))); //Run this on production but with dispatch
+                // dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($org, $invite))); //Run this on production but with dispatch
             }
 
             DB::commit();
