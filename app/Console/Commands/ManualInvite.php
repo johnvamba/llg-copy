@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use App\OrgInvites;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrgInvitation;
+use App\Jobs\Mail\OrgInvite as JobOrgInvite;
 
 class ManualInvite extends Command
 {
@@ -53,15 +54,15 @@ class ManualInvite extends Command
             
         $organization = $invitation->organization;
         $invitation->unsetRelation('organization');
-        $email = ['email' => $this->option('email')];
+        $email = $this->option('email');
 
-        if(!$organization || !$email['email']){
+        if(!$organization || !$email){
             $this->info('Email invite not found or organization doesnt exist');
             return ;
         }
 
         if($this->option('dispatch')){
-            dispatch(fn() => Mail::to($email)->send(new OrgInvitation($organization, $invitation))); //Run this on production but with dispatch
+            dispatch(new JobOrgInvite($email, $organization, $invitation)); //Run this on production but with dispatch
         } else {
             Mail::to($email)->send(new OrgInvitation($organization, $invitation)); //Run this on production but with dispatch
         }

@@ -1,11 +1,13 @@
 import {
     SET_STORIES,
+    SET_NEED_ID,
     SET_ORG
 } from './types';
 
 let initialState = {
     stories: [],
     org: null,
+    need_id: null
 }
 
 export const reducer = (state = initialState, {type, payload}) => {
@@ -20,6 +22,11 @@ export const reducer = (state = initialState, {type, payload}) => {
             return {
                 ...state,
                 org: payload 
+            }
+        case SET_NEED_ID:
+            return {
+                ...state,
+                need_id: payload
             }
         default :
             return state;

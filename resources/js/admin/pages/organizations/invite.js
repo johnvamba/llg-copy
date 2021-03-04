@@ -168,7 +168,7 @@ const OrgInviteForm = ({ data = {}, handleBackInvite }) => {
                     <label>{name}</label>
                 </header>
                 <section className="org-invite__body">
-                    <h2 className="mb-4">Invite Members</h2>
+                    <h2 className="mb-4">Invite Staff</h2>
 
                     {/* <div className="org-invite__share">
                         <label>Share Link</label>

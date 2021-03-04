@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, connect } from 'react-redux';
 // import * as NeedsActions from '../../../redux/needs/actions';
-import { setOrg } from '../../../redux/stories/actions';
+import { setOrg, setNeedId } from '../../../redux/stories/actions';
 
 import Button from '../../../components/Button';
 import Paginator from '../../../components/Paginator';
@@ -95,10 +95,10 @@ const Needs = ({NeedsReducer}) => {
         setInfo(story ? {} : info) //dont set info?
         showForm(form)
         showStoryForm(story)
-
         switch(setting){
             case 'story':
             dispatch( setOrg(info) );
+            dispatch( setNeedId(info.id) );
             break;
             case 'discard':
             break;
@@ -152,7 +152,7 @@ const Needs = ({NeedsReducer}) => {
             }
             {
                 (info && bolInfo) && 
-                <NeedInfo toClose={e=>setInfo(null)} clickEdit={openForm} data={info} openStory={()=>handleForm(info.organization, false, 'story', true)}/>
+                <NeedInfo toClose={e=>setInfo(null)} clickEdit={openForm} data={info} openStory={()=>handleForm(info, false, 'story', true)}/>
             }
             {
                 story && //Open story here
