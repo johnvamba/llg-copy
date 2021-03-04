@@ -29,6 +29,17 @@ class CompleteAccount extends Controller
 	            'email' => $request->get('email'),
 	            'name'  => $invite->first_name. ' ' .$invite->last_name,
 	        ]); //If nalahi gani then stop access. like dili dapat duplicate ang email with differnet name. dapat insist siya nga same ang duha
+	        
+	        $message = 'Success';
+	        if(
+	        	in_array($user->email, [
+	        		env('ADMIN_EMAIL', 'admin@gmail.com'),
+	        		env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja')
+	        	])
+			) {
+	        	$message = 'Admin email has protection and thus removing invite';
+	        	goto skip;
+	        }
 
 	        //does not override password
 			$user->password = ($user->password == '') ? bcrypt($request->get('password')) : $user->password;
@@ -59,10 +70,10 @@ class CompleteAccount extends Controller
 		            ]
 		        );
 	        }
-
+	        skip:
 	        $invite->delete(); //Flush
 	        DB::commit();
-	        return response()->json(['message' => 'Success'], 200);
+	        return response()->json(['message' => $message], 200);
     	} catch (\Exception $e) {
     		DB::rollback();
     		return response()->json(['message' => $e->getMessage()], 400);
