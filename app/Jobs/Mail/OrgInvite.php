@@ -40,13 +40,13 @@ class OrgInvite implements ShouldQueue
      */
     public function handle()
     {
+        Log::channel('queues_error')->info("Logging email: ". $this->email);
         Mail::to($this->email)->send(new OrgInvitation($this->organization, $this->invitation));
     }
 
-    public function fail($exception)
+    public function failed($exception = null)
     {
-        // parent::fail($exception);
-        Log::channel('queues')
+        Log::channel('queues_error')
             ->info($exception->getMessage(), 
                 array('stacktrace' => $exception->getTrace()));
     }
