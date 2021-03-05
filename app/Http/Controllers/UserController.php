@@ -14,6 +14,7 @@ use App\CustomerCredential;
 use App\Organization;
 use App\OrganizationCredential;
 use App\Device;
+use App\CampusUser;
 use Carbon\Carbon;
 use DB;
 
@@ -353,5 +354,20 @@ class UserController extends Controller
         $cardCredential = $organization->customerCredential()->save($credential); 
 
         return response()->json($cardCredential, 202);
+    }
+
+    /**
+     * Get user campus
+     *
+     * @param request
+     * @return \Illuminate\Http\Response
+     */
+    public function getCampus(Request $request, User $user)
+    {
+        $campusUser = CampusUser::with('campus')
+            ->where('user_id', $user->id)
+            ->first();
+
+        return response()->json($campusUser);
     }
 }

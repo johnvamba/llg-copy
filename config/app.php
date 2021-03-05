@@ -177,6 +177,7 @@ return [
 
         Spatie\Permission\PermissionServiceProvider::class,
         LaravelFCM\FCMServiceProvider::class,
+        Aws\Laravel\AwsServiceProvider::class,
     ],
 
     /*
@@ -230,6 +231,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'FCM'      => LaravelFCM\Facades\FCM::class,
 	    'FCMGroup' => LaravelFCM\Facades\FCMGroup::class,
+        'AWS' => Aws\Laravel\AwsFacade::class,
     ],
 
 ];

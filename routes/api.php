@@ -37,6 +37,12 @@ Route::group(['middleware' => 'wpcors', 'prefix' => 'offsite', 'namespace' => 'A
     Route::post('stories/{story}', 'StoryController@share')->name('wp.story.share');
 });
 
+/** OTP resource module */
+Route::post('otps/sms', 'OTPController@sendOTP');
+Route::post('otps/sms/verify', 'OTPController@verifyOTP');
+Route::post('otps/sms/resend', 'OTPController@resendOTP');
+Route::resource('otps', 'OTPController');
+
 Route::post('account', 'Admin\CompleteAccount')->name('post.complete.account');
 
 Route::group(['middleware' => ['auth:api']], function () {
@@ -104,6 +110,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('user/me', 'UserController@getProfile');
     Route::get('user/me/update-profile', 'UserController@updateProfile');
     Route::get('user/stats', 'UserController@getUsersStatistics')->middleware('datafilter');
+    Route::get('user/{user}/campus', 'UserController@getCampus');
     Route::post('users/lists', 'UserController@getUsers');
     Route::post('user/add-card/{organization}', 'UserController@addCard');
     Route::post('user/cards', 'UserController@getCards');

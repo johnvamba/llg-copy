@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use App\UserProfile;
+use App\Device;
 use DB;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 
@@ -198,9 +199,14 @@ class AuthController extends Controller
         return response()->json('Password reset link sent!', 200);
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request) 
+    {
+        if ($request->platform == 'mobile') {
+            Device::removeFCMToken($request->fcmToken);
+        }
+
         session()->flush();
-        auth()->logout();
+        auth('web')->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
     }
