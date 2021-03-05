@@ -7,6 +7,7 @@ import OffersPlus from '../../../svg/offers-plus';
 import TabMembers from './tab-members';
 import TabActiveNeeds from './tab-active-needs';
 import LoadingScreen from '../../../components/LoadingScreen'
+import TabQuestions from './questions';
 
 const MemberItem = ({image = null}) => {
     return <li>
@@ -32,7 +33,9 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite }) => {
         data: [],
         meta: {}
     });
-    const [tab, setTab] = useState('active-needs');
+
+    const [questions, setQuestions ] = useState({ acnc: false, fundraiser: false, insured: false   });
+    const [tab, setTab] = useState('details');
     const [loading, setLoading] = useState(false);
     const [loadingMembers, setLoadingMembers] = useState(false);
     const [loadingNeedActives, setLoadingNeedActives] = useState(false);
@@ -49,7 +52,10 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite }) => {
             // cancelToken: token.token
         })
             .then(({data})=>{
+                const { details = { acnc: false, fundraiser: false, insured: false} } = data.data
                 //other info here
+                setQuestions({...details});
+
             }).finally(() => setLoading(false))
         // return token;
     }
@@ -207,12 +213,14 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite }) => {
                 </div>
                 <div className="org-view__tabs offer-edit__opts">
                     <ul>
-                        <li className={"offer-edit__opts-item w-1/3 " + ((tab === 'members') ? 'offer-edit__opts-item--active' : '')} onClick={()=>setTab('members')}><h3>Organisation Members ({ members_count || 0 })</h3></li>
-                        <li className={"offer-edit__opts-item w-1/3 " + ((tab === 'active-needs') ? 'offer-edit__opts-item--active' : '')} onClick={()=>setTab('active-needs')}><h3>Active Needs ({ active_needs || 0 })</h3></li>
-                        <li className={"offer-edit__opts-item w-1/3 " + ((tab === 'past-needs') ? 'offer-edit__opts-item--active' : '')} onClick={()=>setTab('past-needs')}><h3>Past Needs ({ past_needs || 0 })</h3></li>
+                        <li className={"offer-edit__opts-item w-1/4 " + ((tab === 'details') ? 'offer-edit__opts-item--active' : '')} onClick={()=>setTab('details')}><h3>Details</h3></li>
+                        <li className={"offer-edit__opts-item w-1/4 " + ((tab === 'members') ? 'offer-edit__opts-item--active' : '')} onClick={()=>setTab('members')}><h3>Organisation Members ({ members_count || 0 })</h3></li>
+                        <li className={"offer-edit__opts-item w-1/4 " + ((tab === 'active-needs') ? 'offer-edit__opts-item--active' : '')} onClick={()=>setTab('active-needs')}><h3>Active Needs ({ active_needs || 0 })</h3></li>
+                        <li className={"offer-edit__opts-item w-1/4 " + ((tab === 'past-needs') ? 'offer-edit__opts-item--active' : '')} onClick={()=>setTab('past-needs')}><h3>Past Needs ({ past_needs || 0 })</h3></li>
                     </ul>
                 </div>
                 <div className="offers-create-form__body">
+                    { (tab === 'details') && <TabQuestions {...questions}/>}
                     { (tab === 'members') && <TabMembers members={members} loading={loadingMembers}/>}
                     { (tab === 'active-needs') && <TabActiveNeeds needs={actives.data} loading={loadingNeedActives}/>}
                     { (tab === 'past-needs') && <TabActiveNeeds needs={pasts.data} loading={loadingNeedPasts}/>}

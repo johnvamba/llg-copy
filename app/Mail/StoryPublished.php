@@ -34,7 +34,11 @@ class StoryPublished extends Mailable
      */
     public function build()
     {
-        return $this->view('email.new_story', [
+         $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
+            ?? env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja')
+            ?? 'info@lovelivesgenerously.demosite.ninja';
+            
+        return $this->from($from)->view('email.new_story', [
             'story' => $this->story,
             'photo' => optional($this->story)->getFirstMediaUrl('photo'),
             'url' => 'url'

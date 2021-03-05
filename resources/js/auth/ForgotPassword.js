@@ -6,7 +6,8 @@ import formBackground from '../../assets/images/login-1.png';
 import mainBackground from '../../assets/images/login-2.jpg';
 import Logo from '../svg/logo';
 import './auth.css';
- 
+import { swalSuccess, swalError } from '../components/helpers/alerts';
+
 const ForgotPassword = () => {
     const [errors, setErrors] = useState({});
     const [email, setEmail] = useState(null);
@@ -25,7 +26,9 @@ const ForgotPassword = () => {
             setSent(true)
             setSubmit(false)
         }).catch(errors => {
-            // setErrors(errors)
+            setErrors(errors)
+            swalError('Missing account using email')
+            setSubmit(false)
         })
     }
 
