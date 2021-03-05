@@ -139,20 +139,20 @@ class OrganizationController extends Controller
             $org['cover_photo'] = $org->getFirstMediaUrl('cover_photo');
         } 
 
-        // $groups = Group::select('groups.*')
-        //     ->selectRaw('( 6371 * acos( cos( radians(?) ) 
-        //         * cos( radians( lat ) ) * cos( radians( lng ) 
-        //         - radians(?) ) + sin( radians(?) ) 
-        //         * sin( radians( lat ) ) ) ) AS distance', 
-        //         [$lat, $lng, $lat])
-        //     ->orderBy('distance')->get();
+        $groups = Group::select('groups.*')
+            ->selectRaw('( 6371 * acos( cos( radians(?) ) 
+                * cos( radians( lat ) ) * cos( radians( lng ) 
+                - radians(?) ) + sin( radians(?) ) 
+                * sin( radians( lat ) ) ) ) AS distance', 
+                [$lat, $lng, $lat])
+            ->orderBy('distance')->get();
         
-        // foreach($groups as $group) {
-        //     $group['type'] = 'church';
-        //     $group['photo'] = $group->getFirstMediaUrl('photo');
-        // } 
+        foreach($groups as $group) {
+            $group['type'] = 'church';
+            $group['photo'] = $group->getFirstMediaUrl('photo');
+        } 
 
-        $merged = $collections->merge($orgs);//->merge($groups);
+        $merged = $collections->merge($orgs)->merge($groups);
 
         $results = $merged->sortBy('distance');
 

@@ -26,7 +26,7 @@ class DeviceController extends Controller
     public function store(Request $request)
     {
         //
-        $device = Device::where(function ($query) {
+        $device = Device::where(function ($query) use ($request) {
                 $query->where('fcm_token',  $request->fcm_token)
                     ->where('user_id', auth()->user()->id);
             })
