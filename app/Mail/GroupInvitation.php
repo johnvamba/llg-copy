@@ -29,7 +29,7 @@ class GroupInvitation extends Mailable
      */
     public function build()
     {
-        return $this->from(env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja'))
+        return $this->from(config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja'))
             ->view('email.group_invite')
             ->with([
                 'group' => $this->group,
