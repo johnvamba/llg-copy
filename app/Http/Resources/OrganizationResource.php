@@ -32,7 +32,12 @@ class OrganizationResource extends JsonResource
             'campus' => $this->when($this->relationLoaded('campus'), $this->morphCampus()),
             'category' => $this->whenLoaded('categories', optional($this->categories)->pluck('name')),
             'accessable' => $this->when($this->accessable, $this->accessable),
-            'address' => $this->address
+            'address' => $this->address,
+            'details' => [
+                'acnc' => $this->acnc ?? false, 
+                'fundraiser' => $this->fundraiser ?? false, 
+                'insured' => $this->insured ?? false 
+            ]
         ];
     }
 

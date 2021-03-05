@@ -97,6 +97,11 @@ const Organizations = () => {
 
     useEffect(() => {
         const ct = loadTable();
+        setInfo({})
+        showForm(false)
+        setShowInfo(false)
+        showInvite(false)
+        setPending(false)
         return ()=>{
             //cancel api here
             ct.cancel('Resetting');
