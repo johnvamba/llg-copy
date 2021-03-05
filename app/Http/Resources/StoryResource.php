@@ -38,6 +38,7 @@ class StoryResource extends JsonResource
             'description' => $this->when($this->viewAll, $this->description),
             'categories' => $this->when($this->relationLoaded('categories') && $this->viewAll, optional($this->categories)->pluck('name')),
             'raw_draft_json' => $this->when($this->viewAll, $this->raw_draft_json),
+            'as_html' => $this->when($this->viewAll, $this->toHtml()),
             'organization' => $this->when($this->relationLoaded('organization') && $this->viewAll, $this->morphOrganization())
         ];
         // return parent::toArray($request);

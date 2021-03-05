@@ -24,6 +24,9 @@ use App\Http\Resources\Async\OrganizationResource as AsyncResource;
 
 use App\Http\Resources\Mini\UserResource;
 use App\Http\Resources\Mini\NeedResource;
+use App\Jobs\Mail\OrgInvite as JobOrgInvite;
+
+use App\OrgInvites;
 
 use DB;
 use Str;
@@ -55,7 +58,11 @@ class OrganizationController extends Controller
                 ->orWhere('email', 'like', '%'.$search.'%');
         }
 
-        return OrganizationResource::collection($mainQuery->paginate());
+        if($request->get('requests') == 'true')
+            $mainQuery->pending();
+        else $mainQuery->approved();
+
+        return OrganizationResource::collection($mainQuery->paginate(16));
     }
 
     /**
@@ -339,7 +346,7 @@ class OrganizationController extends Controller
      */
     public function members(Organization $organization)
     {
-        $users = User::whereHas('organizationMembers', function($query) use ($organization){
+        $users = User::unfilter()->whereHas('organizationMembers', function($query) use ($organization){
             $query->where('organization_id', $organization->id);
         });
 
@@ -355,37 +362,26 @@ class OrganizationController extends Controller
 
         DB::beginTransaction();
         try {
-            foreach ($request->get('users') as $key => $value) {
-                $user = User::firstOrCreate([
-                    'email' => $value['email'],
-                    'password' => bcrypt('temp_secret'),
-                    'name'  => $value['firstname']. ' ' .$value['lastname']
-                ]);
+            foreach ($request->get('users') as $key => $user) {
+                $insUser = User::where('email', $user['email'] ?? '')->first();
 
-                dd($user);
-
-                $profile = UserProfile::create([
-                    'age' => 18,
-                    'bio' => '',
-                    'location' => $organization->location ?? 'Sydney, Australia',
-                    'lat' => $organization->lat,
-                    'lng' => $organization->lng,
-                    'user_id' => $user->id,
-                    'first_name' =>$value['firstname'],
-                    'last_name' =>$value['lastname']
-                ]);
-
-                $user->syncRoles('user');
-
-                OrganizationMember::firstOrCreate([
-                    'model_type' => User::class,
-                    'model_id' => $user->id,
-                    'organization_id' => $organization->id
-                ]);
-
-                if($user) {
-                    dispatch(fn() => Mail::to($user)->send(new OrgInvitation($organization))); //Run this on production but with dispatch
+                if(!$insUser) {
+                    $insUser = $user['email'] ?? ''; // if user is missing then override to sendable mail.
                 }
+
+                $invite = OrgInvites::firstOrCreate([
+                    'org_id' => $organization->id,
+                    'email' => $user['email'],
+                ]);
+
+                $invite->update([
+                    'first_name' => optional($insUser)->first_name ?? $user['firstname'] ?? 'Invited',
+                    'last_name' => optional($insUser)->last_name ?? $user['lastname'] ?? 'User',
+                    'phone' => optional($insUser)->mobile_number ?? $user['phone'] ?? '00 0000 0000'
+                ]);
+
+                dispatch(new JobOrgInvite($insUser, $organization, $invite)); //Run this on production but with dispatch
+                // dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($organization, $invite))); //Run this on production but with dispatch
             }
 
             DB::commit();
@@ -399,6 +395,7 @@ class OrganizationController extends Controller
     public function needs(Request $request, Organization $organization)
     {
         $needs = Need::where('organization_id', $organization->id)
+            ->unfilter()
             ->when($status = $request->get('status'), function($sub) use ($status){
                 $sub
                     ->when($status == 'current', fn($need) => $need->whereRaw('raised < goal')->whereNotNull('approved_at') )
@@ -443,20 +440,24 @@ class OrganizationController extends Controller
             // $queryUsers
             foreach ($users as $key => $user) {
                 $insUser = User::where('email', $user['email'] ?? '')->first();
-                if($insUser) {
-                    OrganizationMember::firstOrCreate([
-                        'model_type' => User::class,
-                        'model_id' => $insUser->id,
-                        'organization_id' => $organization->id
-                    ]);
-                } else {
-                    $intUser = $user['email'] ?? '';
-                    //send invitation by email
+
+                if(!$insUser) {
+                    $insUser = $user['email'] ?? ''; // if user is missing then override to sendable mail.
                 }
 
-                if($insUser && $org) {
-                    dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($org))); //Run this on production but with dispatch
-                }
+                $invite = OrgInvites::firstOrCreate([
+                    'org_id' => $org->id,
+                    'email' => $user['email'],
+                ]);
+                
+                $invite->update([
+                    'first_name' => optional($insUser)->first_name ?? $user['firstName'] ?? 'Invited',
+                    'last_name' => optional($insUser)->last_name ?? $user['lastName'] ?? 'User',
+                    'phone' => optional($insUser)->mobile_number ?? $user['phone'] ?? '00 0000 0000'
+                ]);
+                dispatch(new JobOrgInvite($insUser, $org, $invite)); //Run this on production but with dispatch
+
+                // dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($org, $invite))); //Run this on production but with dispatch
             }
 
             DB::commit();
@@ -522,5 +523,36 @@ class OrganizationController extends Controller
         }
 
         return response()->json('No registered organization', 400);
+    }
+
+     public function approve(Organization $organization){
+        DB::beginTransaction();
+        try {
+            //Do validation here
+            $organization->fill([
+                'approved_by' => auth()->user()->id,
+                'approved_at' => now()
+            ]);
+            $organization->save();
+
+            DB::commit();
+            return response()->json(['Success'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error'=>$e->getMessage()], 400);
+        }
+    }
+
+    public function reject(Organization $organization){
+    DB::beginTransaction();
+        try {
+            $organization->delete();
+
+            DB::commit();
+            return response()->json(['Success'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error'=>$e->getMessage()], 400);
+        }
     }
 }

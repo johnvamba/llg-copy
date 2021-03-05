@@ -12,6 +12,7 @@ import './groups.css';
 const Groups = () => {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
+    const [endPage, setEndPage] = useState(1);
     const [showForm, setShowForm] = useState(false);
     const [view, setView] = useState(false);
     const [focus, setFocus] = useState({});
@@ -37,12 +38,38 @@ const Groups = () => {
             cancelToken: token.token
         }).then((res)=>{
             const { data } = res
-            setGroups( page == 1 ? data.data : [...groups, ...data.data])
+            setGroups( data.data)
             setCount( data.meta ? data.meta.total : 0)
         }).finally(()=>{
             setLoading(false)
         })
         return token; //for useEffect
+    }
+
+    const loadNextPage = (clearCache = false) => {
+        const _page = page + 1;
+        if(_page <= endPage && endPage > 1){
+            const token = axios.CancelToken.source();
+            api.get(`/api/web/groups`, {
+                params: {
+                    page: _page, search
+                },
+                cache: {
+                    exclude: { query: false },
+                }, 
+                clearCacheEntry: clearCache,
+                cancelToken: token.token
+            }).then((res)=>{
+                const { data } = res
+                setGroups( [...groups, ...data.data])
+                setPage( data.meta ? data.meta.current_page : 1)
+                setEndPage( data.meta ? data.meta.last_page : 1)
+                setCount( data.meta ? data.meta.total : 0)
+            }).finally(()=>{
+                setLoading(false)
+            })
+            return token; //for useEffect
+        }
     }
 
     const handleActionButtons = (row) => {
@@ -80,6 +107,7 @@ const Groups = () => {
                     handleForm={handleForm}
                     afterSubmit={afterSubmit}
                     handleActionButtons={handleActionButtons}
+                    triggerPage={loadNextPage}
                 />
             }
 

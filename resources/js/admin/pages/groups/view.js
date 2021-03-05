@@ -7,14 +7,6 @@ import OffersPlus from '../../../svg/offers-plus';
 import TabMembers from '../organizations/tab-members';
 import LoadingScreen from '../../../components/LoadingScreen'
 
-const MemberItem = ({image = null}) => {
-    return <li>
-        <img
-        className="rounded-full"
-        src={`${image || 'http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp'}`}
-        />
-    </li>
-}
 const GroupInfo = ({ data={}, closePanel, handleForm}) => {
     const { name, description, active_needs, past_needs, members_count, banner, photo } = data
     const [ subData, setSubData ] = useState({

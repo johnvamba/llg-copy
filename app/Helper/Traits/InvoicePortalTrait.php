@@ -10,4 +10,8 @@ trait InvoicePortalTrait
     {
         static::addGlobalScope(new InvoicePortalScope);
     }
+
+    public static function scopeUnfilter($query){
+    	return $query->withoutGlobalScope(InvoicePortalScope::class);
+    }
 }

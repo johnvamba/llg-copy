@@ -1075,3 +1075,9 @@ header .search-content .search-listing.searching {
 .overflow-visible {
 	overflow: visible !important;
 }
+
+.text-red-400 {
+	--text-opacity: 1 !important;
+    color: #fc8181 !important;
+    color: rgba(252, 129, 129, var(--text-opacity)) !important;
+}

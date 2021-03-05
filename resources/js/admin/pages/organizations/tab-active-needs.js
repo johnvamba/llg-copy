@@ -33,7 +33,7 @@ const NeedCard = ({ title, type, date, goal, ratio = 0, description = '' }) => {
                 <div className="content-bottom--progress">
                     <div className="relative">
                         <div className="w-full bg-gray-400 rounded-full">
-                            <div className={`bg-blue-400 rounded-full leading-none text-white`}></div>
+                            <div className={`bg-blue-400 rounded-full leading-none text-white`} style={{width: `${ratio}%`}}></div>
                         </div>
                     </div>
                     <span>{ratio}%</span>

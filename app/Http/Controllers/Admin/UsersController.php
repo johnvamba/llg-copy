@@ -6,10 +6,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\User;
 use App\UserProfile;
+use App\CampusUser;
+use Illuminate\Support\Facades\Storage;
 
+use App\Http\Resources\GroupResource;
 use App\Http\Resources\UserResource;
+
+use App\Need;
+use App\Http\Resources\NeedResource;
+
 use Spatie\Permission\Models\Role;
 use DB;
+use Str;
 
 class UsersController extends Controller
 {
@@ -28,7 +36,7 @@ class UsersController extends Controller
                 ->orWhere('name', 'like', '%'.$search.'%');
         }
 
-        if(false){
+        if($request->get('debug')){
             dd($users->get(), auth()->user()->hasRole('campus admin'), DB::getQueryLog(),session()->only(['filterOn','camp_id','org_id']));
         }
 
@@ -64,6 +72,7 @@ class UsersController extends Controller
             'bio' => 'required',
             // 'photo' => 'sometimes|required|image',
             'type' => 'required',
+            'mobile_number' => 'required'
         ]);
 
         DB::beginTransaction();
@@ -72,7 +81,8 @@ class UsersController extends Controller
             $user = User::create([
                 'email' => $request->get('email'),
                 'password' => bcrypt('temp_secret'),
-                'name'  => $request->get('firstName'). ' ' .$request->get('lastName')
+                'name'  => $request->get('firstName'). ' ' .$request->get('lastName'),
+                'mobile_number' => $request->get('mobile_number')
             ]);
 
             if($type = $request->get('type')){
@@ -82,12 +92,16 @@ class UsersController extends Controller
 
             if($organization = $request->get('organization')){
                 $user->organizationMembers()->create([
-                    'organization_id' => $organization['id'] || $organization['value'] || 0,
+                    'organization_id' => $organization['id'] ?? $organization['value'] ?? 0,
                     'status' => 'approved'
                 ]);
             }
 
-            $user->profile()->create(
+            if($campus = $request->get('campus')){
+                $user->campuses()->sync([$campus['id'] ?? $campus['value'] ?? $campus]);
+            }
+
+            $profile =$user->profile()->create(
                 $request->only('age','bio')
                 + [
                     'first_name' => $request->firstName,
@@ -97,6 +111,24 @@ class UsersController extends Controller
                     'lng' => $request->lng ?? 151.207583
                 ]
             );
+
+            if ($photo = $request->get('photo')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($photo))[1];
+
+                if (preg_match('/^data:image\/(\w+);base64,/', $photo)) {
+                    $data = substr($photo, strpos($photo, ',') + 1);
+                    $data = base64_decode($data);
+    
+                    Storage::disk(env('FILESYSTEM_DRIVER'))
+                        ->put($name.'.'.$extension, $data);
+
+                    $profile->avatar = Storage::disk(env('FILESYSTEM_DRIVER'))
+                    ->url($name.'.'.$extension);
+                }
+
+                $profile->save();
+            }
 
             DB::commit();
             return new UserResource($user);
@@ -114,9 +146,23 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
-        $user->loadMissing(['profile', 'roles', 'organization']);
+        $user->loadMissing(['profile', 'roles']);
+
+        if($user->hasRole('campus admin')){
+            $user->loadMissing('campus');
+        } else if ($user->hasRole('organization admin')){
+            $user->loadMissing('organization');
+        }
 
         return new UserResource($user);
+    }
+
+    public function showNeedMet(User $user) {
+        $needs = Need::unfilter()
+            ->whereHas('contributors', fn($q) => $q->unfilter()->where('model_id', $user->id) )
+            ->with(['contribution' => fn($q) => $q->where('need_mets.model_id', $user->id)->where('need_mets.model_type', 'App\User')]);
+
+        return NeedResource::collection($needs->paginate(5));
     }
 
     /**
@@ -140,13 +186,14 @@ class UsersController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'email' => 'required|email|unique:users',
+            // 'email' => 'required|email|unique:users',
             'firstName' => 'required',
             'lastName' => 'required',
             'age' => 'required',
             'bio' => 'required',
             // 'photo' => 'sometimes|required|image',
-            'type' => 'required'
+            'type' => 'required',
+            'mobile_number' => 'required'
         ]);
 
         DB::beginTransaction();
@@ -154,7 +201,8 @@ class UsersController extends Controller
             $user->fill([
                 'email' => $request->get('email'),
                 'password' => bcrypt('temp_secret'),
-                'name'  => $request->get('firstName'). ' ' .$request->get('lastName')
+                'name'  => $request->get('firstName'). ' ' .$request->get('lastName'),
+                'mobile_number' => $request->get('mobile_number')
             ]);
 
             if($type = $request->get('type')){
@@ -167,9 +215,13 @@ class UsersController extends Controller
                 $user->organizationMembers()->delete(); 
 
                 $user->organizationMembers()->create([
-                    'organization_id' => $organization['id'] || $organization['value'] || 0,
+                    'organization_id' => $organization['id'] ?? $organization['value'] ?? 0,
                     'status' => 'approved'
                 ]);
+            }
+
+            if($campus = $request->get('campus')){
+                $user->campuses()->sync([$campus['id'] ?? $campus['value'] ?? $campus]);
             }
 
             $user->save();
@@ -184,6 +236,26 @@ class UsersController extends Controller
                     'lng' => $request->lng ?? 151.207583
                 ]
             );
+
+            if ($photo = $request->get('photo')) {
+                if(strpos($photo, 'http') !== false)
+                    goto skipPhoto;
+
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($photo))[1];
+
+                if (preg_match('/^data:image\/(\w+);base64,/', $photo)) {
+                    $data = substr($photo, strpos($photo, ',') + 1);
+                    $data = base64_decode($data);
+    
+                    Storage::disk(env('FILESYSTEM_DRIVER'))
+                        ->put($name.'.'.$extension, $data);
+
+                    $user->profile->avatar = Storage::disk(env('FILESYSTEM_DRIVER'))
+                    ->url($name.'.'.$extension);
+                }
+            }
+            skipPhoto:
             $user->profile->save();
 
             DB::commit();
@@ -216,5 +288,14 @@ class UsersController extends Controller
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
+    }
+
+    public function groups(User $user)
+    {
+        $groups = $user->groups_member()
+            ->withCount('participants')
+            ->latest();
+
+        return GroupResource::collection( $groups->paginate(5) );
     }
 }

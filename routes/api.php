@@ -43,6 +43,8 @@ Route::post('otps/sms/verify', 'OTPController@verifyOTP');
 Route::post('otps/sms/resend', 'OTPController@resendOTP');
 Route::resource('otps', 'OTPController');
 
+Route::post('account', 'Admin\CompleteAccount')->name('post.complete.account');
+
 Route::group(['middleware' => ['auth:api']], function () {
 
     Route::group(['prefix'=>'web', 'namespace'=>'Admin', 'middleware' => 'datafilter'], function() {
@@ -56,6 +58,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('organizations/async', 'OrganizationController@async');
         Route::get('organizations/{organization}/members', 'OrganizationController@members');
         Route::post('organizations/{organization}/members', 'OrganizationController@memberInvite');
+        Route::post('organizations/{organization}/approve', 'OrganizationController@approve');
+        Route::post('organizations/{organization}/reject', 'OrganizationController@reject');
         Route::get('organizations/{organization}/needs', 'OrganizationController@needs');
         Route::post('organizations/{organization}/access', 'OrganizationController@access');
         Route::get('organizations/credentials', 'OrganizationController@credentials');
@@ -63,9 +67,12 @@ Route::group(['middleware' => ['auth:api']], function () {
 
         Route::resource('organizations', 'OrganizationController');
 
-        Route::resource('offers', 'OffersController');
         Route::post('offers/{offer}/approve', 'OffersController@approve');
         Route::post('offers/{offer}/disapprove', 'OffersController@disapprove');
+        Route::resource('offers', 'OffersController');
+
+        Route::get('users/{user}/groups', 'UsersController@groups');
+        Route::get('users/{user}/needs', 'UsersController@showNeedMet');
 
         Route::resource('users', 'UsersController');
 

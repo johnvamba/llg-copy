@@ -84,6 +84,10 @@ const OrgPub = () => {
 
     const validateTab = (newCount) => {
         let set = {} 
+        if(newCount < countTab){
+            setCountTab(newCount)
+            return;
+        }
         switch(countTab){
             case 1:
             set = {
@@ -151,7 +155,6 @@ const OrgPub = () => {
             })
         } else {
             swalError();
-            console.log('set', set)
         }
     }
 
@@ -165,8 +168,8 @@ const OrgPub = () => {
                         <img src={Logo} />
                     </div>
                     <div>
-                        <h2>Neuma Organisation</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur dolor</p>
+                        <h2>Welcome to Neuma Care.</h2>
+                        <p>Thanks for partnering with us to transform our city</p>
                     </div>
                 </section>
                 <section className="right">
@@ -198,7 +201,7 @@ const OrgPub = () => {
                         <div>
                             {
                                 countTab > 1 &&
-                                    <button className="primary-btn primary-btn--transparent" disabled={submitting} onClick={() => validateTab(countTab-1)}>Back</button>
+                                <button className="primary-btn primary-btn--transparent" disabled={submitting} onClick={() => validateTab(countTab-1)}>Back</button>
                             }
                             {
                                 (countTab < 3) 

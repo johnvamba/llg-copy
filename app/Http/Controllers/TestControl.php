@@ -7,9 +7,14 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\TransactionReceipt;
 use App\Mail\GroupInvitation;
 use App\Mail\OrgInvitation;
+use App\Mail\PasswordReset;
+use App\Mail\StoryPublished;
 
 use App\ReceiptTemplate;
 use App\Organization;
+use App\OrgInvites;
+use App\Story;
+
 use App\User;
 use App\Group;
 
@@ -32,7 +37,13 @@ class TestControl extends Controller
 
         $user = User::where('email', 'admin@gmail.com')->first();
 
-        return (new OrgInvitation($organization))->to('logicbase.amba@gmail.com');
+        return (new OrgInvitation($organization, new OrgInvites))->to('logicbase.amba@gmail.com');
+    }
+
+    public function story(){
+        $story = Story::first();
+
+        return (new StoryPublished($story))->to('logicbase.amba@gmail.com');
     }
 
     public function groupEmail(){
@@ -43,11 +54,23 @@ class TestControl extends Controller
         return (new GroupInvitation($group))->to('logicbase.amba@gmail.com');
     }
 
+    public function password() {
+        $user = User::where('email', 'admin@gmail.com')->first();
+
+        return (new PasswordReset('sample_token'))->toMail($user);
+    }
+
     public function sendEmail() {
         //tested and works for receipt email. //requires lower version of css for email setup
     	$organization = Organization::has('template')->with('template')->first();
     	dispatch(fn() =>  Mail::to('logicbase.amba@gmail.com')->send(new TransactionReceipt($organization, [  'Sample Transaction' => 200 ])) );
 
     	return 'Email Sent!';
+    }
+
+    public function tester() {
+        $story = Story::first();
+
+        // dd($story->to);
     }
 }

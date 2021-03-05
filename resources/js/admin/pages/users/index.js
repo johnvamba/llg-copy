@@ -10,6 +10,7 @@ import UsersHeader from './header';
 import UserTable from './table';
 import OffersPlus from '../../../svg/offers-plus';
 import UsersForm from './form';
+import UserInfo from './info';
 import './users.css';
 
 const Users = () => {
@@ -22,6 +23,7 @@ const Users = () => {
     const [count, setCount] = useState(0);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
     const [userData, setUserData] = useState({
         title: '',
         email: '',
@@ -76,14 +78,15 @@ const Users = () => {
         setPage(parseInt(page));
     }
 
-    const showItem = (data={}, showForm=false) => {
+    const showItem = (data={}, showForm=false, showInfo=false) => {
         setShowForm(showForm);
         setFocus(data);
+        setShowInfo(showInfo)
     }
 
     const handleForm = (form = false, setting = null, data = null)=>{
         //change content of table here
-        console.log('form changed', form, data, setting)
+        // console.log('form changed', form, data, setting)
         if(setting == 'discard'){
             //discard Changes here
         }
@@ -115,6 +118,10 @@ const Users = () => {
             {
                 showForm && 
                 <UsersForm data={focus} handleForm={handleForm} showItem={showItem} />
+            }
+            {
+                showInfo &&
+                <UserInfo data={focus} showItem={showItem}  handleForm={handleForm}/>
             }
         </>
     )

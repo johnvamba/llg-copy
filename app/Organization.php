@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use App\Helper\Traits\OrgPortalTrait;
+use App\Helper\Traits\OrgApprovedTrait;
 
 class Organization extends Model implements HasMedia
 {
     use InteractsWithMedia;
     use SoftDeletes;
-    use OrgPortalTrait;
+    use OrgPortalTrait, OrgApprovedTrait;
 
     protected $guarded = [];
 
@@ -43,7 +44,7 @@ class Organization extends Model implements HasMedia
     
     public function categoriesList()
     {
-        return $this->morphToMany("App\Category", "categorize", 'categorizes');;
+        return $this->morphToMany("App\Category", "categorize", 'categorizes');
     }
 
     public function members()

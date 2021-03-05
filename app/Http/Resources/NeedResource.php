@@ -42,7 +42,10 @@ class NeedResource extends JsonResource
             'description' => $this->description,
             'requirements' => $this->requirements,
             'raised' => $this->raised,
-            'address' => $this->address
+            'address' => $this->address,
+            // contribution loaded when search on one user. check Admin/UsersController
+            'contri_amount' => $this->whenLoaded('contribution', fn()=> optional($this->contribution)->amount),
+            'contri_date' => $this->whenLoaded('contribution', fn()=> optional($this->contribution)->created)
         ];
     }
 

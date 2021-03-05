@@ -86,7 +86,7 @@ class StoryController extends Controller
                 'user_id' => (auth()->user())->id, 
                 'organization_id' => optional($org)->id ?? 1,
                 'posted_at' => $request->get('saveAs') != 'draft' ? now() : null,
-            ] + $request->only('title', 'description', 'short_description', 'raw_draft_json') );
+            ] + $request->only('title', 'need_id', 'description', 'short_description', 'raw_draft_json') );
 
             if($category = $request->get('category')){
                 $cat_names = array_map(fn($cat) => ($cat['name'] ?? $cat['value'] ?? $cat['slug'] ?? null), $category ?? []);

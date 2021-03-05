@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import OffersFormCross from '../../../svg/offers-form-cross';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import AsyncSelect from 'react-select/async';
+import Select from 'react-select';
+import OffersFormCross from '../../../svg/offers-form-cross';
 
-import { selectStylePaddingZero, loadOrganization } from '../../../components/helpers/async_options';
+import { selectStylePaddingZero, loadOrganization, loadCampus } from '../../../components/helpers/async_options';
 import { validateEmail, isValidated } from '../../../components/helpers/validator';
 import { swalError } from '../../../components/helpers/alerts';
 import CircleImageForm from '../../../components/CircleImageForm';
 import LoadingScreen from '../../../components/LoadingScreen';
 
-import AsyncSelect from 'react-select/async';
-import Select from 'react-select';
+const selOption = [
+    { value: 'user', label: 'App User'},
+    { value: 'organization admin', label: 'Organization User'},
+    { value: 'campus admin', label: 'Location User'},
+    { value: 'admin', label: 'Super User'},
+];
 
 const UsersForm = ({ data, showItem, handleForm }) => {
     const label = data.id ? 'Edit User' : 'Add User';
-    const selectOptions = [
-        { value: 'user', label: 'App User'},
-        { value: 'organization admin', label: 'Organization User'},
-        { value: 'campus admin', label: 'Location User'},
-        { value: 'admin', label: 'Super User'},
-    ];
+    const [selectOptions, setSelectOptions] = useState([...selOption]);
     const [form, setForm] = useState({
         firstName: '',
         lastName: '',
         email: '',
         age: 0,
+        mobile_number: '(02) 0000 0000',
         bio: '',
     })
 
@@ -32,8 +35,25 @@ const UsersForm = ({ data, showItem, handleForm }) => {
     const [type, setType] = useState({ value: 'user', label: 'App User'});
     const [organization, setOrganization] = useState({});
     const [errors, setErrors] = useState({});
-
+    const [campus, setCampus] = useState({});
     const [submitting, setSubmitting] = useState(false);
+    const roles = useSelector(state => state.AuthUserReducer.roles);
+
+    useEffect(()=> {
+        switch (roles.name) {
+            case 'campus admin':
+            setSelectOptions(selOption.filter(i => i.value != 'admin'))
+            break;
+            case 'organization admin':
+            setSelectOptions(selOption.filter(i => i.value != 'admin' || i.value != 'campus admin'))
+            break;
+            case 'admin':
+            setSelectOptions([...selOption]);
+            break;
+            default:
+            break;
+        }
+    }, [roles])
 
     useEffect(()=>{
         if(data.id) {
@@ -56,21 +76,23 @@ const UsersForm = ({ data, showItem, handleForm }) => {
     }, [data])
 
     const loadData = () => {
-        const { firstName, lastName, email, age, bio } = data
+        const { firstName, lastName, email, age, bio, mobile_number } = data
         setForm({
             firstName:firstName || '', 
             lastName:lastName || '', 
             email:email || '', 
-            age:age || 0, 
+            age:age || 0,
+            mobile_number: mobile_number || '(02) 0000 0000',
             bio:bio || ''
         })
         setLoading(true)
         api.get(`/api/web/users/${data.id}`)
             .then(({data}) => {
-                const { photo, type, organization } = data.data
+                const { photo, type, organization, campus } = data.data
                 setPhoto(photo || '')
                 setType( selectOptions.find(i => i.value == type) )
                 setOrganization(organization || {})
+                setCampus(campus)
             }).catch(({response})=>{
                 setErrors({}) //set empty if success.
             }).finally(()=>{
@@ -101,8 +123,13 @@ const UsersForm = ({ data, showItem, handleForm }) => {
         removeError('organization')
     }
 
+    const handleCampus = (campus) => {
+        setCampus(campus)
+        removeError('campus')
+    }
+
     const validateSubmit = (e) => {
-        const { firstName, lastName, email, age, bio } = form
+        const { firstName, lastName, email, age, bio, mobile_number } = form
         const set = isValidated({
             firstName: firstName == '' ? "Missing first name" : null,
             lastName: lastName == '' ? "Missing last name" : null,
@@ -111,7 +138,9 @@ const UsersForm = ({ data, showItem, handleForm }) => {
             bio: bio == '' ? 'Missing bio content' : null,
             photo: !photo ? 'Missing photo' : null,
             type: _.isEmpty(type) ? "Missing type" : null,
-            organization: _.isEmpty(organization) ? "Missing organization" : null,
+            organization: (_.isEmpty(organization) && type.value == 'organization admin') ? "Missing organization" : null,
+            campus: (_.isEmpty(campus) && type.value == 'campus admin') ? "Missing location" : null,
+            mobile_number: mobile_number == '' ? "Missing mobile number" : null
         })
         setErrors({...set})
         return set;
@@ -125,6 +154,8 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                 ...form,
                 type,
                 organization,
+                campus,
+                photo
             }
             const submitPromise = !data.id ? 
                 api.post(`/api/web/users`, params) : 
@@ -258,6 +289,23 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                                 }
                             </div>
                         </div>
+                        <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
+                            <div className={`form-group ${errors.mobile_number && 'form-error'}`}>
+                                <label>Mobile Number</label>
+                                {/* check libphonenumber-js for this improvement */}
+                                <input
+                                    className="input-field"
+                                    type="string"
+                                    name="mobile_number"
+                                    placeholder="Enter Mobile Number"
+                                    value={form.mobile_number}
+                                    onChange={handleInput}
+                                />
+                                {
+                                    (errors.mobile_number || false) && <span className="text-xs pt-1 text-red-500 italic">Missing mobile number</span>
+                                }
+                            </div>
+                        </div>
                         <div className="w-full xl:w-full px-2">
                             <div className={`form-group ${errors.bio && 'form-error'}`}>
                                 <label>Bio</label>
@@ -297,7 +345,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                             </div>
                         }
                         {
-                            !loading && 
+                            (!loading && type.value == 'organization admin') && 
                             <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
                                 <div className={`form-group ${errors.organization && 'form-error'}`}>
                                     <label>Organization</label>
@@ -313,6 +361,26 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                                         />
                                     {
                                         (errors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        {
+                            (!loading && type.value == 'campus admin') && 
+                            <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
+                                <div className={`form-group ${errors.campus && 'form-error'}`}>
+                                    <label>Location</label>
+                                   <AsyncSelect
+                                        styles={selectStylePaddingZero}
+                                        loadOptions={loadCampus}
+                                        cacheOptions
+                                        defaultOptions
+                                        value={campus}
+                                        placeholder="Campus"
+                                        onChange={handleCampus}
+                                        />
+                                    {
+                                        (errors.campus || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Location</span>
                                     }
                                 </div>
                             </div>

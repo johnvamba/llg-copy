@@ -54,6 +54,13 @@ return [
             'days' => 14,
         ],
 
+        'queues_error' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/queues_error.log'),
+            'level' => 'debug',
+            'name' => 'queues_error',
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),

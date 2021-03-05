@@ -21,6 +21,7 @@ import { monetary } from '../needs/categorylist';
 const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
     const { roles } = AuthUserReducer;
     const org = useSelector(({StoriesReducer}) => StoriesReducer.org)
+    const need_id = useSelector(({StoriesReducer}) => StoriesReducer.need_id)
     const [hideOrg, setHideOrg] = useState(false);
     const [errors, setErrors] = useState({});
     const [tags, setTags] = useState([]);
@@ -91,6 +92,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
             raw_draft_json,
             category,
             organization,
+            need_id,
             short_description: description.slice(0, 100)
         }
         const submitPromise = !data.id ? 

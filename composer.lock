@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cde8e7b4bb776d95c8f9b6c4a8e44c3b",
+    "content-hash": "8837fc5a46f7bdb4f6626a07915ed791",
     "packages": [
         {
             "name": "apility/laravel-fcm",
@@ -3159,6 +3159,52 @@
                 }
             ],
             "time": "2020-12-17T05:42:04+00:00"
+        },
+        {
+            "name": "prezly/draft-php",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/prezly/draft-php.git",
+                "reference": "4731fdf286c8d7981b9d655d440c449e56b508b4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/prezly/draft-php/zipball/4731fdf286c8d7981b9d655d440c449e56b508b4",
+                "reference": "4731fdf286c8d7981b9d655d440c449e56b508b4",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5.6",
+                "prezly/code-style": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Prezly\\DraftPhp\\": "./lib",
+                    "Prezly\\DraftPhp\\Tests\\": "./tests"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ivan Voskoboinyk",
+                    "email": "ivan.voskoboinyk@gmail.com"
+                }
+            ],
+            "description": "PHP implementation of Draft.js ContentState model to allow server-side handling of Draft.js produced content.",
+            "support": {
+                "issues": "https://github.com/prezly/draft-php/issues",
+                "source": "https://github.com/prezly/draft-php/tree/master"
+            },
+            "time": "2017-03-23T15:48:30+00:00"
         },
         {
             "name": "psr/cache",
@@ -8686,5 +8732,5 @@
         "php": "^7.2.5"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }

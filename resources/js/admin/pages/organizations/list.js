@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
 const ListItem = ({data, handlePanels}) => {
     const { name, description, active_needs, past_needs, photo, banner, accessable } = data
@@ -17,18 +17,23 @@ const ListItem = ({data, handlePanels}) => {
             <span className="middle">.</span>
             <span className="past">{past_needs || 0} Past Needs</span>
             {
-                accessable && <>
+                accessable && <span>
                     <span className="middle">.</span>
                     <span className="accessable">Accessable</span>
-                </>
+                </span>
             }
         </footer>
     </li>)
 }
 
-const OrgList = ({ handlePanels, set = [] }) => {
+const OrgList = ({ handlePanels, set = [], triggerPage = () =>{} }) => {
+    const scrolling = ({ target }) => {
+        if(target.scrollTop + target.clientHeight >= target.scrollHeight)
+            triggerPage()
+    }
+
     return (
-        <section className="component-body org-list">
+        <section className="component-body org-list" onScroll={scrolling}>
             <ul>
                 {
                     set.length > 0 && set.map((i, key) => <ListItem key={key} data={i} handlePanels={handlePanels}/>)

@@ -10,4 +10,8 @@ trait StoryPortalTrait
     {
         static::addGlobalScope(new StoryPortalScope);
     }
+
+    public static function scopeUnfilter($query){
+    	return $query->withoutGlobalScope(StoryPortalScope::class);
+    }
 }

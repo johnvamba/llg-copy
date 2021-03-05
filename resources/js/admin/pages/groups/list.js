@@ -5,7 +5,7 @@ import UsersActionsEdit from '../../../svg/users-actions-edit';
 import UsersActionsDelete from '../../../svg/users-actions-delete';
 import { swalDelete2 } from '../../../components/helpers/alerts';
 
-const GroupsList = ({ data = [], handleForm, handleActionButtons, afterSubmit }) => {
+const GroupsList = ({ data = [], handleForm, handleActionButtons, afterSubmit, triggerPage }) => {
     const removeGroup = (obj = {})=>{
         if(obj.id)
         swalDelete2(obj.name)
@@ -21,8 +21,14 @@ const GroupsList = ({ data = [], handleForm, handleActionButtons, afterSubmit })
             })
         //add api here
     }
+
+    const scrolling = ({ target }) => {
+        if(target.scrollTop + target.clientHeight >= target.scrollHeight)
+            triggerPage()
+    }
+
     return (
-        <section className="component-body groups-list">
+        <section className="component-body groups-list" onScroll={scrolling}>
             <ul>
                 {data.map((obj) => 
                     <li key={obj.id}>
