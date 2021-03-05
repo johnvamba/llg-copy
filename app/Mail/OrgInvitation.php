@@ -40,10 +40,7 @@ class OrgInvitation extends Mailable
         $user = $this->to[0];
         $expires = now()->addWeek();
 
-        Log::channel('queues_error')->info("Emails: ", ['to' => $user['address'], 'from' => config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')] );
-
-        return $this->from(config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja'))
-            ->view('email.org_invite')
+        return $this->view('email.org_invite')
             ->subject('Account Invitation')
             ->with([
                 'org' => $this->org,
