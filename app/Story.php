@@ -10,6 +10,9 @@ use Carbon\Carbon;
 
 use App\Helper\Traits\StoryPortalTrait;
 
+use Prezly\DraftPhp\Converter as DraftConverter;
+use App\Custom\PhpDraftjsHtml\Converter;
+
 class Story extends Model implements HasMedia
 {
     use InteractsWithMedia;
@@ -79,5 +82,16 @@ class Story extends Model implements HasMedia
     public function getCreatedAttribute()
     {
         return Carbon::parse($this->attributes['created_at'])->diffForHumans();
+    }
+
+    public function toHtml(){
+        if(!is_null($this->raw_draft_json)){
+            $contentState = DraftConverter::convertFromRaw( json_decode($this->raw_draft_json) );
+            return (new Converter)
+                ->setState($contentState)
+                ->toHtml();
+        }
+
+        return '';
     }
 }

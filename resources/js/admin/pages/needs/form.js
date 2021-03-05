@@ -5,6 +5,7 @@ import { swalSuccess, swalDelete } from '../../../components/helpers/alerts';
 import { selectStyle, selectStylePaddingZero, loadOrganization } from '../../../components/helpers/async_options';
 import DatePicker from 'react-datepicker';
 import AsyncSelect from 'react-select/async';
+import CurrencyInput from 'react-currency-input-field';
 import { all } from '../needs/categorylist';
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -148,11 +149,8 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         setOrganization(org)
     }
 
-    const updateGoal = (value)=>{
-        if(value < 0)
-            setGoal(0);
-        else 
-            setGoal(value);
+    const updateGoal = (value, name)=>{
+        setGoal(value);
     }
 
     const handleCategories = (item, truth = false) => {
@@ -269,7 +267,20 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                             <label>Goal</label>
                             <div className="input-container">
                                 <span className="currency">$</span>
+                                <CurrencyInput
+                                  id="input-example"
+                                  className="input-field space-l"
+                                  name="goal"
+                                  placeholder="value"
+                                  defaultValue={goal}
+                                  decimalsLimit={2}
+                                  onValueChange={updateGoal}
+                                />
+                                {
+                                    /*
                                 <input className="input-field space-l" type="number" placeholder="0.00" value={goal} name="goal" onChange={e=>updateGoal(e.target.value)}/>
+                                    */
+                                }
                             </div>
                             {
                                 (errors.goal || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Goal</span>

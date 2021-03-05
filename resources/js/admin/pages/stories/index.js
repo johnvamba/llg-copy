@@ -10,7 +10,7 @@ import EditStory from './edit';
 import View from './view';
 import StoriesHeader from './header';
 import LoadingScreen from '../../../components/LoadingScreen'
-import { setOrg } from '../../../redux/stories/actions';
+import { setOrg, setNeedId } from '../../../redux/stories/actions';
 
 import './story.css';
 
@@ -106,6 +106,7 @@ const Stories = () => {
 
     useEffect(()=>{
         //redux defaults
+        dispatch( setNeedId(null) )
         dispatch( setOrg(null) )
     }, [])
 

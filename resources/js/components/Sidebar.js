@@ -33,6 +33,13 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
     );
 
     const dispatch = useDispatch();
+    const [show, setShow] = useState({
+        need: false,
+        story: false,
+        offer: false,
+        payment: false,
+        organizations: false
+    });
 
     useEffect(() => {
         async function fetchData() {
@@ -46,12 +53,11 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
         fetchData();
     }, []);
 
-    const [show, setShow] = useState({
-        need: false,
-        story: false,
-        offer: false,
-        payment: false,
-    });
+    // useEffect(()=>{
+    //     if(location){
+
+    //     }
+    // }, [location])
 
     const handleOpen = (key) => {
         let list = { ...show };
@@ -277,18 +283,61 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         )
                     }
 
-                    {(roles.name === 'admin' || roles.name === 'campus admin') &&
-                        (
-                            <div
-                                className={`mt-6 
-                                ${location.pathname == "/organizations" ? "text-yellow-400" : "text-gray-400"}`}
+                    { 
+                        (roles.name === 'admin' || roles.name === 'campus admin') ?
+                        <div className="mt-6 text-gray-400">
+                            <button
+                                onClick={() => handleOpen('organizations')}
+                                className={`relative w-full flex items-center focus:outline-none
+                                ${(location.pathname == "/organizations") || (location.pathname == "/organizations/requests") ? "text-blue-400" : "text-gray-400"}`}
                             >
-                                <Link to="/organizations" className="flex items-center">
-                                    <Organisations active={location.pathname == "/organizations" ? true : false} />
-                                    <span className="px-4">Organisations</span>
-                                </Link>
-                            </div>
-                        )
+                                <Organisations active={location.pathname == "/organizations" ? true : false} />
+                                <span className="px-4">Organizations</span>
+
+
+                                <div className="absolute inset-y-0 right-0 text-gray-400">
+                                    <svg
+                                        className="fill-current h-6 w-6"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                    </svg>
+                                </div>
+                            </button>
+
+                            {show.organizations &&
+                                <div className={`ml-8`}>
+                                    <div
+                                        className={`mt-4 
+                                        ${location.pathname == "/organizations" ? "text-blue-400" : "text-gray-400"}`}
+                                    >
+                                        <Link to="/organizations">
+                                            Approved
+                                        </Link>
+                                    </div>
+
+                                    <div
+                                    className={`mt-4 
+                                        ${location.pathname == "/organizations/requests" ? "text-blue-400" : "text-gray-400"}`}
+                                    >
+                                        <Link to="/organizations/requests">
+                                            Requests
+                                        </Link>
+                                    </div>
+                                </div>
+                            }
+                        </div> :
+                        <div
+                            className={`mt-6 
+                            ${location.pathname == "/organizations" ? "text-yellow-400" : "text-gray-400"}`}
+                        >
+                            <Link to="/organizations" className="flex items-center">
+                                <Organisations active={location.pathname == "/organizations" ? true : false} />
+                                <span className="px-4">Organisations</span>
+                            </Link>
+                        </div>
+                       
                     }
 
                     {(roles.name === 'admin' || roles.name === 'campus admin') &&
@@ -309,11 +358,11 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         (
                             <div
                                 className={`mt-6 
-                                ${location.pathname == "/push-notifications" ? "text-yellow-400" : "text-gray-400"}`}
+                                ${location.pathname == "/notifications" ? "text-yellow-400" : "text-gray-400"}`}
                             >
-                                <Link to="/push-notifications" className="flex items-center">
+                                <Link to="/notifications" className="flex items-center">
                                     {/* <i className="text-xl far fa-bell"></i> */}
-                                    <PushNotifications active={location.pathname == "/push-notifications" ? true : false} />
+                                    <PushNotifications active={location.pathname == "/notifications" ? true : false} />
                                     <span className="px-4">Push Notifications</span>
                                 </Link>
                             </div>

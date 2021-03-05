@@ -35,7 +35,6 @@ class TransactionReceipt extends Mailable
     public function build()
     {
         return $this->view('email.transact')
-            ->from(env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja')) // or use org email
             ->subject(optional($this->org->template)->subject ?? 'Payment Received!')
             ->with([
                 'org' => $this->org,

@@ -110,15 +110,15 @@ const OrgInviteForm = ({ data = {}, handleBackInvite }) => {
         setForm({ ...form, email })
         if(validateEmail(email)){
             removeError('email')
-            checkEmail(email, {type: 'user'})
-            .then(({data})=>{
-                if(form.email == data.email){
-                    if(data.status == 'free')
-                        removeError('email')
-                    else
-                        setErrors({...errors, email: 'Email already existed'})                    
-                }
-            })
+            // checkEmail(email, {type: 'user'})
+            // .then(({data})=>{
+            //     if(form.email == data.email){
+            //         if(data.status == 'free')
+            //             removeError('email')
+            //         else
+            //             setErrors({...errors, email: 'Email already existed'})                    
+            //     }
+            // })
         }
     }
 
@@ -168,7 +168,7 @@ const OrgInviteForm = ({ data = {}, handleBackInvite }) => {
                     <label>{name}</label>
                 </header>
                 <section className="org-invite__body">
-                    <h2 className="mb-4">Invite Members</h2>
+                    <h2 className="mb-4">Invite Staff</h2>
 
                     {/* <div className="org-invite__share">
                         <label>Share Link</label>

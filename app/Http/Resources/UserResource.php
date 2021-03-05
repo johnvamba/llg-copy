@@ -31,6 +31,7 @@ class UserResource extends JsonResource
 
             'type' => $this->when($this->relationLoaded('roles'), optional($this->getRoleNames())->first()),
             'organization' => $this->when($this->relationLoaded('organization'), $this->parseOrg()),
+            'campus' => $this->when($this->relationLoaded('campus'), $this->parseCamp()),
             'mobile_number' => $this->when(isset($this->mobile_number), $this->mobile_number),
         ];
     }
@@ -38,6 +39,19 @@ class UserResource extends JsonResource
     protected function parseOrg()
     {
         if(!$org = $this->organization)
+            return null;
+
+        return [
+            'id' => $org->id,
+            'value' => $org->id,
+            'label' => $org->name,
+            'name'  => $org->name
+        ];
+    }
+
+    protected function parseCamp()
+    {
+        if(!$org = $this->campus)
             return null;
 
         return [

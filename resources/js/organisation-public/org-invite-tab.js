@@ -96,15 +96,15 @@ const OrgInviteTab = ({ submitting, users, setUsers }) => {
         setForm({ ...form, email })
         if(validateEmail(email)){
             removeError('email')
-            checkEmail(email, {type: 'user'})
-            .then(({data})=>{
-                if(email == data.email){
-                    if(data.status == 'free')
-                        removeError('email')
-                    else
-                        setErrors({...errors, email: 'Email already existed'})
-                }
-            })
+            // checkEmail(email, {type: 'user'})
+            // .then(({data})=>{
+            //     if(email == data.email){
+            //         if(data.status == 'free')
+            //             removeError('email')
+            //         else
+            //             setErrors({...errors, email: 'Email already existed'})
+            //     }
+            // })
         } else {
             // setErrors({...form, email: 'Not proper email'})
         }

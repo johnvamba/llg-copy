@@ -112,46 +112,46 @@ const routes = [
         exact: true,
         component: () => <Users />
     },
-    {
-        path: '/users/create',
-        exact: true,
-        component: () => <CreateUser />
-    },
-    {
-        path: '/users/edit/:id',
-        exact: true,
-        component: () => <EditUser />
-    },
+    // {
+    //     path: '/users/create',
+    //     exact: true,
+    //     component: () => <CreateUser />
+    // },
+    // {
+    //     path: '/users/edit/:id',
+    //     exact: true,
+    //     component: () => <EditUser />
+    // },
     {
         path: '/groups',
         exact: true,
         component: () => <Groups />
     },
+    // {
+    //     path: '/groups/create',
+    //     exact: true,
+    //     component: () => <CreateGroup />
+    // },
+    // {
+    //     path: '/groups/edit/:id',
+    //     exact: true,
+    //     component: () => <EditGroup />
+    // },
     {
-        path: '/groups/create',
-        exact: true,
-        component: () => <CreateGroup />
-    },
-    {
-        path: '/groups/edit/:id',
-        exact: true,
-        component: () => <EditGroup />
-    },
-    {
-        path: '/organizations',
+        path: ['/organizations', '/organizations/requests'],
         exact: true,
         component: () => <Organizations />
     },
-    {
-        path: '/organizations/create',
-        exact: true,
-        component: () => <CreateOrganization />
-    },
-    {
-        path: '/organizations/edit/:id',
-        exact: true,
-        component: () => <EditOrganization />
-    },
+    // {
+    //     path: '/organizations/create',
+    //     exact: true,
+    //     component: () => <CreateOrganization />
+    // },
+    // {
+    //     path: '/organizations/edit/:id',
+    //     exact: true,
+    //     component: () => <EditOrganization />
+    // },
     {
         path: '/transactions',
         exact: true,
@@ -183,7 +183,7 @@ const routes = [
         component: () => <Campus />
     },
     // {
-    //     path: '/push-notifications',
+    //     path: ['/notifications', '/notifications/sent', '/notifications/scheduled'],
     //     exact: true,
     //     component: () => <PushNotification />
     // },

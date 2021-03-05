@@ -5,7 +5,7 @@ import PencilIcon from '../../../svg/pencil';
 import OffersPlus from '../../../svg/offers-plus';
 import LoadingScreen from '../../../components/LoadingScreen'
 
-const UserInfo = ({ data={}, closePanel, handleForm}) => {
+const UserInfo = ({ data={}, showItem}) => {
     const { title, bio, email, photo, mobile_number } = data
     const [loading, setLoading] = useState({
         user: false,
@@ -78,12 +78,12 @@ const UserInfo = ({ data={}, closePanel, handleForm}) => {
                 <div className="user-top">
                     <img className="user-img" src={photo || 'http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp'}/>
                     <div className="view-buttons">
-                        <button className="edit-btn" onClick={()=>handleForm(data, true)}>
+                        <button className="edit-btn" onClick={()=>showItem(data, true)}>
                             <i className="mr-2"><PencilIcon /></i>
                             Edit
                         </button>
                         <span className="ver-divider"></span>
-                        <button className="" onClick={closePanel}>
+                        <button className="" onClick={()=>showItem()}>
                             <i className="">
                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1 1L13 13" stroke="#98999B" strokeWidth="1.5"/>
@@ -143,7 +143,7 @@ const UserInfo = ({ data={}, closePanel, handleForm}) => {
                     <div className="needs-list">
                         {
                             needs.map((i, ind) => 
-                            <div className="need-item">
+                            <div key={'needs_'+i.ind} className="need-item">
                                 <img className="need-img" src={i.photo || 'http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp'}/>
                                 <div className="need-detail">
                                     <div className="need-title">

@@ -7,9 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\URL;
-
+use Illuminate\Support\Facades\Log;
 use App\Organization;
 use App\OrgInvites;
+
 class OrgInvitation extends Mailable
 {
     use Queueable, SerializesModels;
@@ -39,7 +40,11 @@ class OrgInvitation extends Mailable
         $user = $this->to[0];
         $expires = now()->addWeek();
 
-        return $this->from(env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja'))
+        $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
+            ?? env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja')
+            ?? 'info@lovelivesgenerously.demosite.ninja';
+            
+        return $this->from($from)
             ->view('email.org_invite')
             ->subject('Account Invitation')
             ->with([

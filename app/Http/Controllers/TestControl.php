@@ -8,10 +8,12 @@ use App\Mail\TransactionReceipt;
 use App\Mail\GroupInvitation;
 use App\Mail\OrgInvitation;
 use App\Mail\PasswordReset;
+use App\Mail\StoryPublished;
 
 use App\ReceiptTemplate;
 use App\Organization;
 use App\OrgInvites;
+use App\Story;
 
 use App\User;
 use App\Group;
@@ -38,6 +40,12 @@ class TestControl extends Controller
         return (new OrgInvitation($organization, new OrgInvites))->to('logicbase.amba@gmail.com');
     }
 
+    public function story(){
+        $story = Story::first();
+
+        return (new StoryPublished($story))->to('logicbase.amba@gmail.com');
+    }
+
     public function groupEmail(){
         $group = Group::first();
 
@@ -58,5 +66,11 @@ class TestControl extends Controller
     	dispatch(fn() =>  Mail::to('logicbase.amba@gmail.com')->send(new TransactionReceipt($organization, [  'Sample Transaction' => 200 ])) );
 
     	return 'Email Sent!';
+    }
+
+    public function tester() {
+        $story = Story::first();
+
+        // dd($story->to);
     }
 }
