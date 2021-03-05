@@ -83,6 +83,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('groups/invite', 'GroupController@initUserInvite');
         Route::resource('groups', 'GroupController');
 
+        Route::post('transacts/{transact}/resend', 'TransactionController@sendInvoice');
         Route::resource('transacts', 'TransactionController');
         Route::resource('payments', 'PaymentsController');
 

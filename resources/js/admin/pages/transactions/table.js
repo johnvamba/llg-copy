@@ -3,10 +3,12 @@ import Button from '../../../components/Button';
 // import CrossPlain from '../../../svg/cross-plain'
 import { usePopper } from 'react-popper';
 import { swalSuccess, swalError } from '../../../components/helpers/alerts';
+import Swal from 'sweetalert2';
+
 import UsersActionsEdit from '../../../svg/users-actions-edit';
 import Mail from '../../../svg/mail';
 
-const RowTable = ({invoice, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction}) => {
+const RowTable = ({invoice, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, sendEmail, popAction}) => {
     // const { title ="Untitled", email = 'N/A', age = 'N/A', bio = '', date = "Missing"} = organisation
     const [approveElement, setApproveElement] = useState(null);
     const [rejectElement, setRejectElement] = useState(null);
@@ -40,13 +42,16 @@ const RowTable = ({invoice, checkValue = false, checkChange, writeStory = ()=>{}
         </td>
 
         <td>
+        {
+            invoice.email &&
             <div className="actions row-actions">
-                <button onClick={onShowInfo}>
+                <button onClick={sendEmail}>
                     <i ref={setApproveElement}>
                     <Mail />
                     </i>
                 </button>
             </div>
+        }
         {/*
             <button onClick={onShowInfo}>
                 <i ref={setRejectElement}>
@@ -135,17 +140,36 @@ const TransactionTable = ({tab = null, data = [], handleForm, loading = false, l
     const executeButton = (execute)=>{
         //do axios here based on settings
         if(execute && popped.id){
-            const text = action == 'edit' ? "You successfully edited user" : "User has been deleted"
+            const text = "User has been deleted"
             setPopLoading(true)
-            api.delete(`/api/web/users/${popped.id}`)
+            api.delete(`/api/web/transacts/${popped.id}`)
                 .then(()=>{
                     loadTable(true)
-                    swalSuccess('User has been deleted!');
+                    swalSuccess('Transaction has been deleted!');
                     setPopLoading(false)
                 });
         }
         //
         setPopItem(null)//close box
+    }
+
+    const resentTransaction = (item) => {
+        if(item.email != '')
+            Swal.fire({
+                title: 'Are you sure you want to resend?',
+                text: `Resend Receipt`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Send it!',
+                cancelButtonText: 'No, nevermind'
+            }).then(()=>{
+                api.post(`/api/web/transacts/${item.id}/resend`)
+                .then(()=>{
+                    swalSuccess('Transaction resent to email!')
+                }).catch(()=>{
+
+                })
+            }).catch(()=>{})
     }
 
     return <>
@@ -177,6 +201,7 @@ const TransactionTable = ({tab = null, data = [], handleForm, loading = false, l
                         checkValue={i.checked}
                         checkChange={e=>handleRowCheckbox(i,e.target.checked)}
                         onShowInfo={()=>handleForm(i, true)}
+                        sendEmail={()=>resentTransaction(i)}
                         popAction={(button, type)=>togglePopItem(i, button, type)}/>
                     ) :
                     <tr>

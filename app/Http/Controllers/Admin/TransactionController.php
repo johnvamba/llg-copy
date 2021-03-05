@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Invoice as Transact;
 use Illuminate\Http\Request;
 use App\Http\Resources\TransactionResource;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TransactionReceipt;
 
 class TransactionController extends Controller
 {
@@ -16,14 +18,15 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        $transacts = Transact::with(['organization','user'])->latest();
+        $transacts = Transact::with(['organization','user' => fn($user)=>$user->withoutGlobalScopes()])->latest();
 
         if($search = $request->get('search')) {
-            $transacts->whereHas('organization', fn($org) => $org->where('organizations.name', 'like', '%'.$search.'%'))
-                ->orWhereHas('user', fn($user) => $user->where('users.name', 'like', '%'.$search.'%')->orWhere('users.email', 'like', '%'.$search.'%') );
+            $transacts->where('charge_id', 'like', '%'.$search.'%')
+                ->orWhereHas('organization', fn($org) => $org->where('organizations.name', 'like', '%'.$search.'%'))
+                ->orWhereHas('user', fn($user) => $user->where('users.name', 'like', '%'.$search.'%')->orWhere('users.email', 'like', '%'.$search.'%') )
+                ;
         }
 
-        // dd($transacts->get());
         return TransactionResource::collection($transacts->paginate($request->get('per_page') ?? 15));
     }
 
@@ -94,5 +97,25 @@ class TransactionController extends Controller
     public function destroy(Transact $transact)
     {
         // dd('deleting', $request->all());
+    }
+
+    public function sendInvoice(Transact $transact)
+    {
+        $organization = $transact->organization()->first();
+        $transact->loadMissing(['user' => fn($usr) => $usr->withoutGlobalScopes()]);
+
+        $transacts = 'Amount';
+
+        switch ($transact->model_type) {
+            case 'App\Need':
+                $transacts = 'Donation on need#'. $transact->model_id;
+                break;
+            default:
+                break;
+        }
+
+        dispatch(fn() => Mail::to($transact->user)->send(new TransactionReceipt($organization, [  $transacts => $transact->amount ?? 0 ])) );
+
+        return response()->json('Receipt will be sent to email shortly', 200);
     }
 }
