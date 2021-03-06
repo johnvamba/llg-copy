@@ -40,13 +40,13 @@ const BannerImage = ({
 		fileInput.current.click();
 	}
 
-    return <div className={`banner-photo ${className} ${!tempUrl ? 'banner-photo--empty' : ''}`} style={{height, width, backgroundImage: `url(${tempUrl || ''})`}}>
+    return <div className={`banner-photo ${className} ${!tempUrl ? 'banner-photo--empty' : ''}`} style={{height, width, backgroundImage: `url(${tempUrl || ''})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}}>
 		{
 			!props.children && <EmptyImg />
 		}
         <button className={`banner-button`} onClick={uploadInit}>
         	<Camera />
-        	Add Cover
+        	{src ? "Update" : "Add"} Cover
         </button>
         <input type="file" ref={fileInput} onChange={imageChange}/>
         { props.children }

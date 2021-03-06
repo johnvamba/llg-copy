@@ -434,6 +434,38 @@ class OrganizationController extends Controller
                 $org->categories()->sync($categories);
             }
 
+             if ($image = $request->get('photo')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($image))[1];
+                
+                $org 
+                    ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('photo');
+
+                $org->getMedia('photo');
+            }
+
+            if ($banner = $request->get('banner')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($banner))[1];
+                
+                $org 
+                    ->addMediaFromBase64($banner)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('banner');
+
+                $org->getMedia('banner');
+            }
+
             $users = $request->get('users') ?? [];
 
             // $queryUsers = User::whereIn('email', array_map(fn($item) => $item['email'] ?? '', $users))->get();

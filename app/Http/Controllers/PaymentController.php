@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActivityController;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TransactionReceipt;
 use App\User;
 use App\UserProfile;
 use App\Need;
