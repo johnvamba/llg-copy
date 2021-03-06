@@ -3,7 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Mail;
 
+use App\Mail\TransactionReceipt;
+use App\ReceiptTemplate;
+use App\Organization;
 use App\Invoice;
 
 class EmailReceipt extends Command
@@ -13,7 +17,7 @@ class EmailReceipt extends Command
      *
      * @var string
      */
-    protected $signature = 'email:receipts {--invoice_id=}';
+    protected $signature = 'email:receipts {--invoice_id=} {--charge_id=}';
 
     /**
      * The console command description.
@@ -39,13 +43,41 @@ class EmailReceipt extends Command
      */
     public function handle()
     {
+        $transact = Invoice::withoutGlobalScopes()
+            ->where('id', $this->option('invoice_id'))
+            ->orWhere('charge_id', $this->option('charge_id'))
+            ->with([
+                'user' => fn($usr) => $usr->withoutGlobalScopes(),
+                'organization' => fn($org) => $org->withoutGlobalScopes()->with('template') 
+            ])
+            ->first(); 
 
-        if($inv = $this->option('invoice_id')){
-            if($inv == 'test') {
-                
-            } else {
+        $organization = optional($transact)->organization;
 
-            }
+        if(!$transact || !$organization) {
+            $this->info('Transaction not found or organization doesnt exist');
+            return ;
         }
+
+        if(!$organization->template){
+            $organization->setRelation('template', new ReceiptTemplate);
+        }
+
+        $transact->loadMissing(['user' => fn($usr) => $usr->withoutGlobalScopes()]);
+
+        $transacts = 'Amount';
+
+        switch ($transact->model_type) {
+            case 'App\Need':
+                $transacts = 'Donation on need #'. $transact->model_id;
+                break;
+            default:
+                break;
+        }
+
+        Mail::to($transact->user)->send(new TransactionReceipt($organization, [  $transacts => $transact->amount ?? 0 ]));
+
+        $this->info('Transaction receipt will be sent shortly');
+
     }
 }
