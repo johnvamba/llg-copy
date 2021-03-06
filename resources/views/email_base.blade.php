@@ -7,10 +7,13 @@
         <title>Love Lives Generously</title>
         <link href="https://fonts.googleapis.com/css?family=Inter:200,600" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Poppin:wght@500;600&display=swap" rel="stylesheet">
-
+        <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap" rel="stylesheet"> -->
         <!-- Fonts -->
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap')
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap')
+        </style>
         <style type="text/css">
             body {
                 margin: 0;
@@ -154,7 +157,8 @@
                 padding: 50px 0;
             }
 
-            strong {
+            .content strong {
+                font-family: 'Poppins';
                 color: #92A9AB;
                 font-size: 23px;
                 font-weight: bolder;
