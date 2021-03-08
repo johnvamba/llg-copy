@@ -21,7 +21,7 @@ const swal = withReactContent(Swal);
 import SwalIcon from '../svg/swal-icon'
 import './org-pub.css';
 import { swalError } from '../components/helpers/alerts'
-import { isValidated } from '../components/helpers/validator'
+import { validateEmail, isValidated } from '../components/helpers/validator'
 
 import 'pretty-checkbox';
 
@@ -36,6 +36,13 @@ const OrgPub = () => {
     const [cropper, openCropper] = useState(null)
     //validators
     const [errors, setErrors] = useState({});
+    const [formErrors, setFormErrors] = useState({});
+    const [form, setForm] = useState({
+        email: '',
+        firstName: '',
+        lastName: '',
+        phone: ''
+    });
 
     const [orgInfoForm, setOrgInfoForm] = useState({
         name: '', 
@@ -74,6 +81,10 @@ const OrgPub = () => {
         setErrors(errors)
     }
 
+    const removeFormError= (name = '') => {
+        delete formErrors[name]
+        setFormErrors(formErrors)
+    }
 
     const showTabTitle = () => {
         switch(countTab){
@@ -82,7 +93,7 @@ const OrgPub = () => {
             case 2:
             return <h3>Upload your Logo & Banner</h3>
             case 3:
-            return <h3>Invite Staff</h3>
+            return <h3>Primary Contact</h3>
             case 4:
             return <h3>Please answer the questions below</h3>
             default:
@@ -114,6 +125,12 @@ const OrgPub = () => {
             }
             break;
             case 3:
+            set = {
+                users: (users.length == 0 && !validateEmail(form.email)) ? 'Missing primary contact or email invalid' : null
+            }
+            if(validateEmail(form.email)){
+                addUser()
+            }
             break;
             case 4:
             set = {
@@ -189,6 +206,41 @@ const OrgPub = () => {
         }
     }
 
+    const handleOrgInvite = ({target}) => {
+        setForm({ ...form, [target.name]: target.value })
+    }
+
+    const handleEmail = ({target})=>{
+        const email = target.value
+        setForm({ ...form, email })
+        if(validateEmail(email)){
+            removeError('email')
+        }
+    }
+
+    const addUser = () => {
+        if(!_.isEmpty(formErrors))
+            return;
+        if(form.email == ''){
+            setFormErrors({email: 'Missing email'})
+            return;
+        }
+        if(users.find(i => i.email == form.email)){
+            setFormErrors({ email: 'Email already included'})
+            return
+        }
+        if(!validateEmail(form.email)){
+            setFormErrors({ email: 'Invalid Email'})
+            return;
+        }
+        setUsers([...users, form])
+        setForm({
+            email: '',
+            firstName: '',
+            lastName: '',
+            phone: ''
+        })
+    }
     
 
     return (
@@ -221,8 +273,16 @@ const OrgPub = () => {
                         { showTabTitle() }
                         { countTab == 1 && <OrgInfoTab orgData={orgInfoForm} handleOrgInfo={handleOrgInfo} setOrgInfoForm={setOrgInfoForm} setErrors={setErrors} removeError={removeError} errors={errors}/>}
                         { countTab == 2 && <OrgLogos images={images} setImages={setImages} cropper={cropper} openCropper={openCropper} handleImages={handleImages} removeError={removeError} errors={errors}/>}
-                        { countTab == 3 && <OrgInviteTab users={users} submitting={submitting} setUsers={setUsers}/>}
-                        { countTab == 4 && <OrgQuestion answers={answers} updateAnswers={updateAnswers} errors={errors}/>}
+                        { countTab == 3 && <OrgInviteTab 
+                            users={users} 
+                            submitting={submitting} 
+                            setUsers={setUsers} 
+                            errors={{...formErrors, users:errors.users}} 
+                            form={form}
+                            handleOrgInvite={handleOrgInvite}
+                            handleEmail={handleEmail}
+                            addUser={addUser} />}
+                        { countTab == 4 && <OrgQuestion answers={answers} updateAnswers={updateAnswers} userError={errors.users}/>}
                     </div>
 
                     <div className={`create-org-pub__footer ${countTab == 5 ? 'create-org-pub__footer-cols-2' : ''} `}>

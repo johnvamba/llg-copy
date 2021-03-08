@@ -365,6 +365,16 @@
     line-height: 150%;
     color: #587B7F;
 }
+.org-view__details h2 span {
+    font-family: InterRegular;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 16px;
+    letter-spacing: 0.01em;
+    opacity: 0.7;
+    color: #231F20;
+}
 .org-view__info-with-icon--two .org-view__info-with-icon{
     margin-right: 24px;
 }

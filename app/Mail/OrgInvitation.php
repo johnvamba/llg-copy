@@ -41,7 +41,6 @@ class OrgInvitation extends Mailable
         $expires = now()->addWeek();
 
         $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
-            ?? env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja')
             ?? 'info@lovelivesgenerously.demosite.ninja';
             
         return $this->from($from)
