@@ -25,7 +25,7 @@ use App\Http\Resources\Async\OrganizationResource as AsyncResource;
 use App\Http\Resources\Mini\UserResource;
 use App\Http\Resources\Mini\NeedResource;
 use App\Jobs\Mail\OrgInvite as JobOrgInvite;
-
+use App\Jobs\Mail\OrgCreated;
 use App\OrgInvites;
 
 use DB;
@@ -152,15 +152,24 @@ class OrganizationController extends Controller
                 $org->getMedia('photo');
             }
 
-            if($campus = $request->get('campus')){
-                $camp_id = $campus['id'] ?? $campus['value'] ?? null;
-            } else if(auth()->user()->hasRole('campus admin')) {
-                $camp_id = session('camp_id');
-            }
+            if($campus = $request->get('campus')) {
+                $campus = array_map(fn($a) => $a['id'] ?? $a['value'], $campus);
+                //Sync doesnt work on hasManyThrough
+                // $organization->campuses()->sync($campus);
 
-            if(isset($camp_id)){
-                CampusOrganisation::firstOrCreate(['organization_id' => $org->id, 'campus_id' => $camp_id]);
+                foreach ($campus as $key => $value) {
+                    CampusOrganisation::firstOrCreate(['organization_id' => $organization->id, 'campus_id' => $value]);
+                }
             }
+            // if($campus = $request->get('campus')){
+            //     $camp_id = $campus['id'] ?? $campus['value'] ?? null;
+            // } else if(auth()->user()->hasRole('campus admin')) {
+            //     $camp_id = session('camp_id');
+            // }
+
+            // if(isset($camp_id)){
+            //     CampusOrganisation::firstOrCreate(['organization_id' => $org->id, 'campus_id' => $camp_id]);
+            // }
 
             if ($banner = $request->get('banner')) {
                 $name = time().'-'.Str::random(20);
@@ -205,7 +214,7 @@ class OrganizationController extends Controller
         // dd($organization->accessable, $organization->campus()->where('campus_organisations.campus_id', $camp_id)->first(), DB::getQueryLog());
 
         if(auth()->user()->hasRole('admin'))
-            $organization->loadMissing('campus');
+            $organization->loadMissing(['campus', 'campuses']);
 
         return new OrganizationResource($organization);
     }
@@ -260,6 +269,8 @@ class OrganizationController extends Controller
             }
             
             if ($image = $request->get('photo')) {
+                if(strpos($image, 'http') !== false)
+                    goto skipPhoto;
                 $name = time().'-'.Str::random(20);
                 $extension = explode('/', mime_content_type($image))[1];
                 
@@ -275,19 +286,32 @@ class OrganizationController extends Controller
 
                 $organization->getMedia('photo');
             }
+            skipPhoto:
 
-            if($campus = $request->get('campus')){
-                $camp_id = $campus['id'] ?? $campus['value'] ?? null;
-            } else if(auth()->user()->hasRole('campus admin')) {
-                $camp_id = session('camp_id');
-            }
+            if($campus = $request->get('campus')) {
+                $campus = array_map(fn($a) => $a['id'] ?? $a['value'], $campus);
+                CampusOrganisation::where('organization_id', $organization->id)->delete();
+                //Sync doesnt work on hasManyThrough
+                // $organization->campuses()->sync($campus);
 
-            if(isset($camp_id)){
-                CampusOrganisation::where('organization_id', $organization->id)->delete(); //remove all related
-                CampusOrganisation::firstOrCreate(['organization_id' => $organization->id, 'campus_id' => $camp_id]);
+                foreach ($campus as $key => $value) {
+                    CampusOrganisation::firstOrCreate(['organization_id' => $organization->id, 'campus_id' => $value]);
+                }
             }
+            // if($campus = $request->get('campus')){
+            //     $camp_id = $campus['id'] ?? $campus['value'] ?? null;
+            // } else if(auth()->user()->hasRole('campus admin')) {
+            //     $camp_id = session('camp_id');
+            // }
+
+            // if(isset($camp_id)){
+            //     CampusOrganisation::where('organization_id', $organization->id)->delete(); //remove all related
+            //     CampusOrganisation::firstOrCreate(['organization_id' => $organization->id, 'campus_id' => $camp_id]);
+            // }
 
             if ($banner = $request->get('banner')) {
+                if(strpos($banner, 'http') !== false)
+                    goto skipBanner;
                 $name = time().'-'.Str::random(20);
                 $extension = explode('/', mime_content_type($banner))[1];
                 
@@ -303,6 +327,7 @@ class OrganizationController extends Controller
 
                 $organization->getMedia('banner');
             }
+            skipBanner:
 
             if(auth()->user()->hasRole('admin'))
                 $organization->loadMissing('campus');
@@ -434,6 +459,38 @@ class OrganizationController extends Controller
                 $org->categories()->sync($categories);
             }
 
+             if ($image = $request->get('photo')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($image))[1];
+                
+                $org 
+                    ->addMediaFromBase64($image)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('photo');
+
+                $org->getMedia('photo');
+            }
+
+            if ($banner = $request->get('banner')) {
+                $name = time().'-'.Str::random(20);
+                $extension = explode('/', mime_content_type($banner))[1];
+                
+                $org 
+                    ->addMediaFromBase64($banner)
+                    ->addCustomHeaders([
+                        'ACL' => 'public-read'
+                    ])
+                    ->usingName($name)
+                    ->usingFileName($name.'.'.$extension)
+                    ->toMediaCollection('banner');
+
+                $org->getMedia('banner');
+            }
+
             $users = $request->get('users') ?? [];
 
             // $queryUsers = User::whereIn('email', array_map(fn($item) => $item['email'] ?? '', $users))->get();
@@ -459,6 +516,8 @@ class OrganizationController extends Controller
 
                 // dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($org, $invite))); //Run this on production but with dispatch
             }
+            
+            dispatch(new OrgCreated($org));
 
             DB::commit();
             return response()->json(['message'=>"Success", 'count' => count($users)], 200);

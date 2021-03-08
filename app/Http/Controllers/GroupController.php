@@ -93,7 +93,7 @@ class GroupController extends Controller
                 ['user_id', '!=', auth()->user()->id],
                 ['privacy', 'public']
             ])
-            ->whereIn('id', $groupParticipated)
+            ->whereNotIn('id', $groupParticipated)
             ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($groups as $group) {
@@ -576,6 +576,45 @@ class GroupController extends Controller
             $group['type'] = 'church';
             $group['photo'] = $group->getFirstMediaUrl('photo');
             $group['cover_photo'] = $group->getFirstMediaUrl('cover_photo');
+
+            $group['goal'] = Goal::whereHasMorph(
+                    'model',
+                    ['App\Group'],
+                    function(Builder $query) use ($group) {
+                        $query->where('model_id', $group->id);
+                    }
+                )
+                ->where('status', 'in progress')
+                ->latest()
+                ->first();
+
+            $date = Carbon::parse($group['goal']->created_at);
+
+            $participants = GroupParticipant::where([
+                    ['group_id', $group->id],
+                    ['status', 'approved'],
+                ])
+                ->pluck('user_id');
+
+            $participants->push($group->user_id);
+
+            $group['need_mets_count'] = NeedMet::whereHasMorph(
+                    'model',
+                    ['App\User'],
+                    function ($query) use ($participants) {
+                        $query->whereIn('model_id', $participants);
+                    }
+                )
+                ->whereBetween('created_at', [
+                    $date->copy()->toDateString(),
+                    $date->copy()->endOfMonth()->toDateString()
+                ])
+                ->count();
+
+            $group['members_count'] = GroupParticipant::where([
+                    ['group_id', $group->id],
+                    ['status', 'approved']
+                ])->count();
         } 
 
         return response()->json($groups->toArray(), 200);

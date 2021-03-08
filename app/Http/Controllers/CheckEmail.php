@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Organization;
+use App\OrgInvites;
+
 
 class CheckEmail extends Controller
 {
@@ -26,9 +28,13 @@ class CheckEmail extends Controller
             case 'organization':
             $query = Organization::query();
             break;
+            case 'invitation':
+            $query = OrgInvites::query();
+            break;
             case 'user':
             default:
             $query = User::query();
+
         }
 
         $email = $request->get('email');

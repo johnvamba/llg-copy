@@ -8,6 +8,8 @@ import TabMembers from './tab-members';
 import TabActiveNeeds from './tab-active-needs';
 import LoadingScreen from '../../../components/LoadingScreen'
 import TabQuestions from './questions';
+import { swalSuccess, swalError } from '../../../components/helpers/alerts';
+import Swal from 'sweetalert2';
 
 const MemberItem = ({image = null}) => {
     return <li>
@@ -17,8 +19,8 @@ const MemberItem = ({image = null}) => {
         />
     </li>
 }
-const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite }) => {
-    const { name, description, active_needs, past_needs, members_count, banner, photo } = data
+const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite, handleDelete }) => {
+    const { name, description, active_needs, past_needs, members_count, banner, photo, date_added } = data
     const [ subData, setSubData ] = useState({
         org_link: '',
         org_contact: '',
@@ -34,7 +36,7 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite }) => {
         meta: {}
     });
 
-    const [questions, setQuestions ] = useState({ acnc: false, fundraiser: false, insured: false   });
+    const [questions, setQuestions ] = useState({ acnc: false, fundraiser: false, insured: false, stripe:false });
     const [tab, setTab] = useState('details');
     const [loading, setLoading] = useState(false);
     const [loadingMembers, setLoadingMembers] = useState(false);
@@ -52,7 +54,7 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite }) => {
             // cancelToken: token.token
         })
             .then(({data})=>{
-                const { details = { acnc: false, fundraiser: false, insured: false} } = data.data
+                const { details = { acnc: false, fundraiser: false, insured: false, stripe: false} } = data.data
                 //other info here
                 setQuestions({...details});
 
@@ -156,6 +158,28 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite }) => {
         }
     }, [data])
 
+    const remove = () => {
+        setLoading(true)
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You will delete organisation named ${name}`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it'
+        }).then((result) => {
+            if (result.value) {
+                api.delete(`/api/web/organizations/${data.id}`).then((res) =>{
+                    handleDelete()
+                    setLoading(false)
+                    swalSuccess("Organization Removed")
+                }).catch(err=>{
+
+                })
+            }
+        })
+    }
+
     return (
         <section className="org-view create-form">
             <header>
@@ -166,13 +190,16 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite }) => {
                     <div className="org-form__rounded-img" style={{backgroundImage: `url(${photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}}></div>
                 </div>
                 <div className="org-view__edit">
+                    <button onClick={remove} className="text-red-500 mr-4">
+                        Delete
+                    </button>
                     <button onClick={handleEdit}>
                         <PencilIcon />
                         Edit
                     </button>
                 </div>
                 <div className='org-view__details'>
-                    <h2>{ name }</h2>
+                    <h2>{ name }<span className="float-right">Joined {date_added}</span></h2>
                     {
                         subData.org_link &&
                         <div className="org-view__info-with-icon">

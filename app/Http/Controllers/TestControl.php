@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\TransactionReceipt;
 use App\Mail\GroupInvitation;
 use App\Mail\OrgInvitation;
+use App\Mail\NewOrgEmail;
+
 use App\Mail\PasswordReset;
 use App\Mail\StoryPublished;
 
@@ -40,6 +42,12 @@ class TestControl extends Controller
         return (new OrgInvitation($organization, new OrgInvites))->to('logicbase.amba@gmail.com');
     }
 
+    public function orgNew(){
+        $organization = Organization::has('template')->with('template')->first();
+
+        return (new NewOrgEmail($organization))->to('logicbase.amba@gmail.com');
+    }
+
     public function story(){
         $story = Story::first();
 
@@ -69,8 +77,8 @@ class TestControl extends Controller
     }
 
     public function tester() {
-        $story = Story::first();
+        $users = User::unfilter()->role('admin')->get();
 
-        // dd($story->to);
+        dd($users);
     }
 }

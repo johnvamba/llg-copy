@@ -120,9 +120,25 @@ const Organizations = () => {
         showInvite(invite)
     }
 
-    const afterSubmit = () =>{
-        hist.push('/organizations');
+    const afterSubmit = (reload = false) =>{
+        if(reload) {
+            api.get(`/api/web/organizations`, {
+                params: {
+                    page, search
+                },
+                cache: {
+                    exclude: { query: false },
+                }, 
+                clearCacheEntry: true,
+            })
+        }
         loadTable(true)
+    }
+
+    const handleDelete = ()=>{
+        handlePanels({})
+        loadTable(true)
+        
     }
 
     return (
@@ -141,12 +157,13 @@ const Organizations = () => {
                     closePanel={handlePanels}
                     handleEdit={() => handlePanels(info, true)}
                     handleInvite={() => handlePanels(info, false, false, true)}
+                    handleDelete={handleDelete }
                 />
             }
             { 
                 pending && <OrgPending
                     data={info}
-                    afterSubmit={afterSubmit}
+                    afterSubmit={()=>afterSubmit(true)}
                     closePanel={handlePanels}
                     handleEdit={() => handlePanels(info, true)}
                 />

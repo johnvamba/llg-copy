@@ -5,12 +5,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <title>Love Lives Generously</title>
-        <link href="https://fonts.googleapis.com/css?family=Inter:200,600" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css?family=Inter:200,600" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Poppin:wght@500;600&display=swap" rel="stylesheet">
-
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;800&display=swap" rel="stylesheet">
         <!-- Fonts -->
+        <style>
+            /*
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap')
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap')
+            */
+        </style>
         <style type="text/css">
             body {
                 margin: 0;
@@ -20,7 +25,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/brands.min.css" integrity="sha512-AMDXrE+qaoUHsd0DXQJr5dL4m5xmpkGLxXZQik2TvR2VCVKT/XRPQ4e/LTnwl84mCv+eFm92UG6ErWDtGM/Q5Q==" crossorigin="anonymous" />
         <style type="text/css">
              * {
-                font-family: 'Inter', sans-serif;
+                font-family: 'Inter', 'Arial', sans-serif;
             }
             * li {
                 margin: 0px;
@@ -81,7 +86,7 @@
                 background: #F3F3F3;
             }
             .receipt > .receipt-summary ul li {
-                display: flex;
+                display: block;
                 align-items: center;
                 justify-content: space-between;
                 padding: 20px;
@@ -110,7 +115,7 @@
                 margin: 0 auto;
             }
             .receipt > .receipt-footer ul {
-                display: flex;
+                display: block;
                 margin: 0;
                 padding: 0;
                 align-items: center;
@@ -123,7 +128,7 @@
                 width: 100%;
                 max-width: 27.13px;
                 height: 27.13px;
-                display: flex;
+                display: block;
                 align-items: center;
                 justify-content: center;
             }
@@ -143,7 +148,7 @@
 
             .content {
                 background: white;
-                padding: 20px 30px;
+                padding: 20px 40px;
                 border-radius: 8px;
             }
 
@@ -154,7 +159,8 @@
                 padding: 50px 0;
             }
 
-            strong {
+            .content strong {
+                font-family: 'Poppins', 'Arial';
                 color: #92A9AB;
                 font-size: 23px;
                 font-weight: bolder;

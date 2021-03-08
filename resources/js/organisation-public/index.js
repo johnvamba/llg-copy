@@ -9,6 +9,7 @@ import PopupLogo from '../../assets/images/popup-logo.png';
 import containerImage from '../../assets/images/create-org.jpg';
 import mainBackground from '../../assets/images/login-2.jpg';
 import CategoryGrid from '../components/CategoryGrid'
+import OrgLogos from './org-logos';
 import OrgInfoTab from './org-info-tab';
 import OrgInviteTab from './org-invite-tab';
 import OrgQuestion from './org-question';
@@ -20,7 +21,7 @@ const swal = withReactContent(Swal);
 import SwalIcon from '../svg/swal-icon'
 import './org-pub.css';
 import { swalError } from '../components/helpers/alerts'
-import { isValidated } from '../components/helpers/validator'
+import { validateEmail, isValidated } from '../components/helpers/validator'
 
 import 'pretty-checkbox';
 
@@ -28,8 +29,20 @@ const OrgPub = () => {
     const [countTab, setCountTab] = useState(1);
     const [submitting, setSubmitting] = useState(false);
     const [users, setUsers] = useState([]);
+    const [images, setImages] = useState({
+        banner: null,
+        photo: null
+    })
+    const [cropper, openCropper] = useState(null)
     //validators
     const [errors, setErrors] = useState({});
+    const [formErrors, setFormErrors] = useState({});
+    const [form, setForm] = useState({
+        email: '',
+        firstName: '',
+        lastName: '',
+        phone: ''
+    });
 
     const [orgInfoForm, setOrgInfoForm] = useState({
         name: '', 
@@ -68,14 +81,20 @@ const OrgPub = () => {
         setErrors(errors)
     }
 
+    const removeFormError= (name = '') => {
+        delete formErrors[name]
+        setFormErrors(formErrors)
+    }
 
     const showTabTitle = () => {
         switch(countTab){
             case 1:
             return <h3>Organisation Information</h3>
             case 2:
-            return <h3>Invite Staff</h3>
+            return <h3>Upload your Logo & Banner</h3>
             case 3:
+            return <h3>Primary Contact</h3>
+            case 4:
             return <h3>Please answer the questions below</h3>
             default:
             return '';
@@ -100,9 +119,20 @@ const OrgPub = () => {
             }
             break;
             case 2:
-            //Skippable?
+            set = {
+                banner: images.banner == null ? 'Missing banner' : null,
+                photo: images.photo == null ? 'Missing logo' : null
+            }
             break;
             case 3:
+            set = {
+                users: (users.length == 0 && !validateEmail(form.email)) ? 'Missing primary contact or email invalid' : null
+            }
+            if(validateEmail(form.email)){
+                addUser()
+            }
+            break;
+            case 4:
             set = {
                 terms: answers.terms ? null : 'Missing terms' ,
             }
@@ -121,14 +151,32 @@ const OrgPub = () => {
         return isValidated(set);
     }
 
+    const handleImages = (file, type = 'photo', cropper = false) => {
+        const reader = new FileReader();
+        reader.onload = (e2) => {
+            if(cropper){
+                openCropper(e2.target.result)
+            } else {
+                openCropper(null);
+            }
+            setImages({
+                ...images,
+                [type]: e2.target.result
+            })
+            removeError(type)
+        }
+        reader.readAsDataURL(file)
+    }
+
     const submit = (includeUsers = true) => {
-        const set = validateTab(3);
+        const set = validateTab(4);
         if(_.isEmpty({...set})){
             setSubmitting(true)
 
             const params = {
                 ...orgInfoForm,
                 ...answers,
+                ...images,
                 users: includeUsers ? users : null,
             }
             api.post(`/api/org-create`, params)
@@ -158,6 +206,41 @@ const OrgPub = () => {
         }
     }
 
+    const handleOrgInvite = ({target}) => {
+        setForm({ ...form, [target.name]: target.value })
+    }
+
+    const handleEmail = ({target})=>{
+        const email = target.value
+        setForm({ ...form, email })
+        if(validateEmail(email)){
+            removeError('email')
+        }
+    }
+
+    const addUser = () => {
+        if(!_.isEmpty(formErrors))
+            return;
+        if(form.email == ''){
+            setFormErrors({email: 'Missing email'})
+            return;
+        }
+        if(users.find(i => i.email == form.email)){
+            setFormErrors({ email: 'Email already included'})
+            return
+        }
+        if(!validateEmail(form.email)){
+            setFormErrors({ email: 'Invalid Email'})
+            return;
+        }
+        setUsers([...users, form])
+        setForm({
+            email: '',
+            firstName: '',
+            lastName: '',
+            phone: ''
+        })
+    }
     
 
     return (
@@ -180,20 +263,29 @@ const OrgPub = () => {
                         <h2>Create Organisation</h2>
                         <div className="relative pt-1">
                             <div className="w-full bg-gray-400 rounded-full">
-                                <div className={`bg-blue-400 rounded-full leading-none py-1 text-white tab-${countTab}`}></div>
+                                <div className={`bg-blue-400 rounded-full leading-none py-1 text-white`} style={{background: '#587B7F', width: `${parseFloat((countTab/4)*100).toFixed(0)}%`}}></div>
                             </div>
-                            <p>{countTab} of 3</p>
+                            <p>{countTab} of 4</p>
                         </div>
                     </div>
 
                     <div className="offers-create-form__body">
                         { showTabTitle() }
                         { countTab == 1 && <OrgInfoTab orgData={orgInfoForm} handleOrgInfo={handleOrgInfo} setOrgInfoForm={setOrgInfoForm} setErrors={setErrors} removeError={removeError} errors={errors}/>}
-                        { countTab == 2 && <OrgInviteTab users={users} submitting={submitting} setUsers={setUsers}/>}
-                        { countTab == 3 && <OrgQuestion answers={answers} updateAnswers={updateAnswers} errors={errors}/>}
+                        { countTab == 2 && <OrgLogos images={images} setImages={setImages} cropper={cropper} openCropper={openCropper} handleImages={handleImages} removeError={removeError} errors={errors}/>}
+                        { countTab == 3 && <OrgInviteTab 
+                            users={users} 
+                            submitting={submitting} 
+                            setUsers={setUsers} 
+                            errors={{...formErrors, users:errors.users}} 
+                            form={form}
+                            handleOrgInvite={handleOrgInvite}
+                            handleEmail={handleEmail}
+                            addUser={addUser} />}
+                        { countTab == 4 && <OrgQuestion answers={answers} updateAnswers={updateAnswers} userError={errors.users}/>}
                     </div>
 
-                    <div className={`create-org-pub__footer ${countTab == 3 ? 'create-org-pub__footer-cols-2' : ''} `}>
+                    <div className={`create-org-pub__footer ${countTab == 5 ? 'create-org-pub__footer-cols-2' : ''} `}>
                         {
                             /*(countTab == 2 || countTab == 3) &&
                                 <span onClick={()=>submit(false)}>Skip and complete</span>*/
@@ -204,7 +296,7 @@ const OrgPub = () => {
                                 <button className="primary-btn primary-btn--transparent" disabled={submitting} onClick={() => validateTab(countTab-1)}>Back</button>
                             }
                             {
-                                (countTab < 3) 
+                                (countTab < 4) 
                                 ? (<button className="primary-btn" disabled={submitting} onClick={() => validateTab(countTab+1)}>Next</button>)
                                 : (<button className="primary-btn" disabled={submitting} onClick={submit}>{submitting? 'Submitting...': 'Create'}</button>)
                             }
