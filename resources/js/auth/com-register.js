@@ -45,16 +45,16 @@ const CompleteRegister = () => {
 
     useEffect(()=>{
         if(email != '' && EmailValidator(email) == '') {
-            checkEmail(email, {type: 'user'})
-            .then(({data})=>{
-                if(email == data.email){
-                    if(data.status == 'free'){
-                        delete errors.email;
-                        setErrors(errors)
-                    } else
-                        setErrors({...errors, email: 'User already existed'})
-                }
-            })
+            // checkEmail(email, {type: 'user'})
+            // .then(({data})=>{
+            //     if(email == data.email){
+            //         if(data.status == 'free'){
+            //             delete errors.email;
+            //             setErrors(errors)
+            //         } else
+            //             setErrors({...errors, email: 'User already existed'})
+            //     }
+            // })
 
         }
     }, [email])
