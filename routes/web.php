@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/password/reset', fn() => view('app'))->name('password.reset');
+Route::get('/admin/organizations/requests/{organization}', fn() => view('app'))->name('complete.organisation');
+
 Route::get('/account', fn() => view('app'))->middleware('signed')->name('complete.account');
 Route::get('/expired', fn() => view('app'))->name('web.expired');
 
@@ -22,6 +24,7 @@ Route::group([
 	Route::get('/', 'TestControl@tester');
 	Route::get('receipt', 'TestControl@receiptEmail');
 	Route::get('org', 'TestControl@orgEmail');
+	Route::get('neworg', 'TestControl@orgNew');
 	Route::get('group', 'TestControl@groupEmail');
 	Route::get('initreceipt', 'TestControl@sendEmail');
 	Route::get('password', 'TestControl@password');
