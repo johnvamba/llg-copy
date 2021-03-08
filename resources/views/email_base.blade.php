@@ -148,7 +148,7 @@
 
             .content {
                 background: white;
-                padding: 20px 30px;
+                padding: 20px 40px;
                 border-radius: 8px;
             }
 

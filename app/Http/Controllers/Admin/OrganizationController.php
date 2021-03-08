@@ -25,7 +25,7 @@ use App\Http\Resources\Async\OrganizationResource as AsyncResource;
 use App\Http\Resources\Mini\UserResource;
 use App\Http\Resources\Mini\NeedResource;
 use App\Jobs\Mail\OrgInvite as JobOrgInvite;
-
+use App\Jobs\Mail\OrgCreated;
 use App\OrgInvites;
 
 use DB;
@@ -516,6 +516,8 @@ class OrganizationController extends Controller
 
                 // dispatch(fn() => Mail::to($insUser)->send(new OrgInvitation($org, $invite))); //Run this on production but with dispatch
             }
+            
+            dispatch(new OrgCreated($org));
 
             DB::commit();
             return response()->json(['message'=>"Success", 'count' => count($users)], 200);
