@@ -68,71 +68,7 @@ const User = ({form}) => {
     </div>
 }
 
-const OrgInviteTab = ({ submitting, users, setUsers }) => {
-    const [form, setForm] = useState({
-        email: '',
-        firstName: '',
-        lastName: '',
-        phone: ''
-    });
-    const [errors, setErrors] = useState({});
-
-    useEffect(()=>{
-        if(submitting && form.email != '')
-            addUser()
-    }, [submitting])
-
-    const removeError= (name = '') => {
-        delete errors[name]
-        setErrors(errors)
-    }
-
-    const handleOrgInvite = ({target}) => {
-        setForm({ ...form, [target.name]: target.value })
-    }
-
-    const handleEmail = ({target})=>{
-        const email = target.value
-        setForm({ ...form, email })
-        if(validateEmail(email)){
-            removeError('email')
-            // checkEmail(email, {type: 'user'})
-            // .then(({data})=>{
-            //     if(email == data.email){
-            //         if(data.status == 'free')
-            //             removeError('email')
-            //         else
-            //             setErrors({...errors, email: 'Email already existed'})
-            //     }
-            // })
-        } else {
-            // setErrors({...form, email: 'Not proper email'})
-        }
-    }
-
-    const addUser = () => {
-        if(!_.isEmpty(errors))
-            return;
-        if(form.email == ''){
-            setErrors({email: 'Missing email'})
-            return;
-        }
-        if(users.find(i => i.email == form.email)){
-            setErrors({ email: 'Email already included'})
-            return
-        }
-        if(!validateEmail(form.email)){
-            setErrors({ email: 'Invalid Email'})
-            return;
-        }
-        setUsers([...users, form])
-        setForm({
-            email: '',
-            firstName: '',
-            lastName: '',
-            phone: ''
-        })
-    }
+const OrgInviteTab = ({ submitting, users, setUsers, form,errors, handleOrgInvite, handleEmail, addUser }) => {
 
     return (
         <>
@@ -215,6 +151,9 @@ const OrgInviteTab = ({ submitting, users, setUsers }) => {
                     <span className="action-text">Add Multiple at Once</span>
                 </div>
             </div>
+            {
+                (errors.users) && <span className="text-xs pt-1 mt-3 text-red-500 italic">Missing a primary contact</span>
+            }
         </>
     )
 
