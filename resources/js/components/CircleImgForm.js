@@ -37,10 +37,14 @@ const CircleImgForm = ({
 	}
 
 	return <div className={`logo-drop flex justify-center items-center`} onClick={uploadInit}>
-		<img 
+		{
+			tempUrl &&
+			<div className="rounded-full image w-full h-full bg-center bg-cover" style={{backgroundImage:  `url(${tempUrl})`}}></div>
+		}
+		{/*<img 
 			className="rounded-full image"
 			src={tempUrl}
-		/>
+		/>*/}
 		<input type="file" ref={fileInput} onChange={imageChange}/>
 		{
 			(droplogo && !src) && <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
