@@ -153,6 +153,8 @@ class CampusController extends Controller
             $campus->fill( $request->only('name', 'location', 'lng', 'lat') ); //add description here
             //add photo here
             if ($image = $request->get('photo')) {
+                if(strpos($image, 'http') !== false)
+                    goto skipPhoto;
                 $name = time().'-'.Str::random(20);
                 $extension = explode('/', mime_content_type($image))[1];
                 
@@ -168,6 +170,7 @@ class CampusController extends Controller
 
                 $campus->getMedia('photo');
             }
+            skipPhoto:
 
             $campus->save();
             DB::commit();

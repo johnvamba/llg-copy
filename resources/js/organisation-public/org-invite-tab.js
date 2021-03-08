@@ -210,7 +210,7 @@ const OrgInviteTab = ({ submitting, users, setUsers }) => {
             <div className="invite-tab-actions flex items-center" onClick={addUser}>
                 <PlusRounded />
                 <div >
-                    <span className="action-text">Add New</span>
+                    <span className="action-text">Additional Contacts</span>
                     <span className="action-or">or</span>
                     <span className="action-text">Add Multiple at Once</span>
                 </div>

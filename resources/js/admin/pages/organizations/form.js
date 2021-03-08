@@ -5,7 +5,7 @@ import Camera from '../../../svg/camera';
 import StoriesHouseIcon from '../../../svg/stories-house';
 import PencilIcon from '../../../svg/pencil';
 import CategoryScroll from '../../../components/CategoryScroll'
-import { swalError } from '../../../components/helpers/alerts';
+import { swalError, swalSuccess } from '../../../components/helpers/alerts';
 import { validateEmail, isValidated } from '../../../components/helpers/validator';
 import LoadingScreen from '../../../components/LoadingScreen'
 import CircleImageForm from '../../../components/CircleImageForm';
@@ -43,7 +43,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         lng: 151.207583
     })
     const [loading, setLoading] = useState(false);
-    const [campus, setCampus] = useState({});
+    const [campus, setCampus] = useState([]);
     //Loading data from table
     useEffect(()=>{
         if(data.id){
@@ -76,9 +76,9 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             clearCacheEntry: clearCache,
             cancelToken: token.token
         }).then(({ data })=>{
-            const { name, email, site, phone_number, description, category = [], campus, accessable, address } = data.data
+            const { name, email, site, phone_number, description, category = [], campuses, accessable, address } = data.data
             // setForm({...form, name, email, site, phone_number, description})
-            setCampus(campus)
+            setCampus(campuses)
             setCategory( all.filter(i => category.includes(i.name) ) );
             setLoading(false)
             setAccess(accessable || false)
@@ -273,6 +273,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                 styles={selectStylePaddingZero}
                                 loadOptions={loadCampus}
                                 defaultOptions
+                                isMulti
                                 cacheOptions
                                 value={campus}
                                 placeholder="Location"

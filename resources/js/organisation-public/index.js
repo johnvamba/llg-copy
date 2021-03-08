@@ -82,7 +82,7 @@ const OrgPub = () => {
             case 2:
             return <h3>Upload your Logo & Banner</h3>
             case 3:
-            return <h3>Invite Staff</h3>
+            return <h3>Primary Contact</h3>
             case 4:
             return <h3>Please answer the questions below</h3>
             default:
@@ -98,14 +98,14 @@ const OrgPub = () => {
         }
         switch(countTab){
             case 1:
-            set = {
-                name: orgInfoForm.name == '' ? 'Missing title' : null,
-                email: orgInfoForm.email == '' ? 'Missing Email' : null,
-                site: orgInfoForm.site == '' ? 'Missing Website' : null,
-                phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
-                description: orgInfoForm.description == '' ? 'Missing Description' : null,
-                location: orgInfoForm.location == '' ? 'Missing location' : null
-            }
+            // set = {
+            //     name: orgInfoForm.name == '' ? 'Missing title' : null,
+            //     email: orgInfoForm.email == '' ? 'Missing Email' : null,
+            //     site: orgInfoForm.site == '' ? 'Missing Website' : null,
+            //     phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
+            //     description: orgInfoForm.description == '' ? 'Missing Description' : null,
+            //     location: orgInfoForm.location == '' ? 'Missing location' : null
+            // }
             break;
             case 2:
             set = {

@@ -53,6 +53,8 @@ class ReceiptTemplateController extends Controller
             $template->save();
 
             if($image = $request->get('photo')){
+                if(strpos($image, 'http') !== false)
+                    goto skipPhoto;
                 $name = time().'-'.Str::random(20);
                 $extension = explode('/', mime_content_type($image))[1];
                 
@@ -68,7 +70,7 @@ class ReceiptTemplateController extends Controller
 
                 $template->getMedia('photo');
             }
-
+            skipPhoto:
 
             $template->loadMissing(['organization', 'media']);
 

@@ -22,6 +22,11 @@ class Organization extends Model implements HasMedia
         return $this->morphMany('App\CustomerCredential', 'model');
     }
 
+    public function credential()
+    {
+        return $this->hasOne('App\OrganizationCredential');
+    }
+
     public function activity()
     {
         return $this->morphMany('App\Activity', 'model');

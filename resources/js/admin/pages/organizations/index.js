@@ -125,6 +125,11 @@ const Organizations = () => {
         loadTable(true)
     }
 
+    const handleDelete = ()=>{
+        handlePanels({})
+        loadTable(true)
+    }
+
     return (
         <>
             <Header count={count} handlePanels={handlePanels} />
@@ -141,6 +146,7 @@ const Organizations = () => {
                     closePanel={handlePanels}
                     handleEdit={() => handlePanels(info, true)}
                     handleInvite={() => handlePanels(info, false, false, true)}
+                    handleDelete={handleDelete }
                 />
             }
             { 

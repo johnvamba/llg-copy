@@ -9,7 +9,7 @@ export default function ImageCropper({originalImage, aspect = 21/9, onImageCropp
   const [upImg, setUpImg] = useState();
   const imgRef = useRef(null);
   const previewCanvasRef = useRef(null);
-  const [crop, setCrop] = useState({aspect});
+  const [crop, setCrop] = useState({aspect, width: 100, unit: '%'});
   const [completedCrop, setCompletedCrop] = useState(null);
 
   const onLoad = useCallback((img) => {
@@ -57,6 +57,7 @@ export default function ImageCropper({originalImage, aspect = 21/9, onImageCropp
   return (
     <div className="image-cropper">
       <div className="cropper-container">
+        <p className="my-2 leading-relaxed text-base">Please crop your image to the right size by clicking and dragging the cross.</p>
         <ReactCrop
           src={originalImage}
           onImageLoaded={onLoad}
@@ -68,7 +69,7 @@ export default function ImageCropper({originalImage, aspect = 21/9, onImageCropp
           className="image-button"
           type="button"
           onClick={() => closeCropper(false)}
-        >Crop
+        >Save
         </button>
       </div>
     </div>

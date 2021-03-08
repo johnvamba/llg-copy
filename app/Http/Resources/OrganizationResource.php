@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Async\CampusResource;
 
 class OrganizationResource extends JsonResource
 {
@@ -30,15 +31,22 @@ class OrganizationResource extends JsonResource
             'past_needs' => $this->when(!is_null($this->past_needs), $this->past_needs ?? 0),
             'members_count' => $this->when(!is_null($this->members_count), $this->members_count ?? 0),
             'campus' => $this->when($this->relationLoaded('campus'), $this->morphCampus()),
+            'campuses' => CampusResource::collection($this->whenLoaded('campuses')),
             'category' => $this->whenLoaded('categories', optional($this->categories)->pluck('name')),
             'accessable' => $this->when($this->accessable, $this->accessable),
+            'date_added' => optional($this->created_at)->format('m/d/Y'),
             'address' => $this->address,
             'details' => [
                 'acnc' => $this->acnc ?? false, 
                 'fundraiser' => $this->fundraiser ?? false, 
-                'insured' => $this->insured ?? false 
+                'insured' => $this->insured ?? false,
+                'stripe' => $this->whenLoaded('credential', $this->cred(), false)
             ]
         ];
+    }
+
+    protected function cred() {
+        return isset($this->credential->secret_key) && isset($this->credential->publishable_key);
     }
 
     protected function morphCampus(){

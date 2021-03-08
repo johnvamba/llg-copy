@@ -457,7 +457,7 @@
     color: #98999B;
     padding: 6px 12px;
     border: 1px solid #D7DEE3;
-    
+    cursor: pointer;
 }
 .question-buttons span:first-child {
     border-right: 0;
@@ -522,4 +522,10 @@
 
 .upload-containers .logo-drop input{
     display: none;
+}
+
+.text-red-500 {
+    --text-opacity: 1;
+    color: #f56565 !important;
+    color: rgba(245, 101, 101, var(--text-opacity)) !important;
 }
