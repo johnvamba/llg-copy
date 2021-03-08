@@ -18,4 +18,8 @@ class OrgInvites extends Model
     public function organization(){
     	return $this->belongsTo('App\Organization', 'org_id');
     }
+
+    public static function scopeUnfilter($query) {
+        return $query;
+    }
 }

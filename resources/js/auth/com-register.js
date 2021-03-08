@@ -45,16 +45,16 @@ const CompleteRegister = () => {
 
     useEffect(()=>{
         if(email != '' && EmailValidator(email) == '') {
-            // checkEmail(email, {type: 'user'})
-            // .then(({data})=>{
-            //     if(email == data.email){
-            //         if(data.status == 'free'){
-            //             delete errors.email;
-            //             setErrors(errors)
-            //         } else
-            //             setErrors({...errors, email: 'User already existed'})
-            //     }
-            // })
+            checkEmail(email, {type: 'invitation'})
+            .then(({data})=>{
+                if(email == data.email){
+                    if(data.status == 'exists'){
+                        delete errors.email;
+                        setErrors(errors)
+                    } else
+                        setErrors({...errors, email: "Invitation has been claimed already or doesn't exists at all"})
+                }
+            })
 
         }
     }, [email])
@@ -79,6 +79,7 @@ const CompleteRegister = () => {
             history.push('/login');
         }).catch(()=>{
             swalError(`We're unable to process your account.`);
+            setErrors({email: 'Unverified token.'});
         })
     }
     
