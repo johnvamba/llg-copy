@@ -138,9 +138,9 @@ const routes = [
     //     component: () => <EditGroup />
     // },
     {
-        path: ['/organizations', '/organizations/requests'],
+        path: ['/organizations', '/organizations/requests', '/organizations/requests/:id'],
         exact: true,
-        component: () => <Organizations />
+        component: (props) => <Organizations {...props}/>
     },
     // {
     //     path: '/organizations/create',

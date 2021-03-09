@@ -43,7 +43,12 @@ const Login = () => {
             
             if (data.user.roles[0].name != 'user') {
                 Cookie.set("oToken_admin", data.token);
-
+                const oldpath = Cookie.get('pathname');
+                if(oldpath){
+                    Cookie.remove('pathname');
+                    window.location.href = oldpath;
+                    return;
+                }
                 window.location.href = '/admin';
             } else {
                 alert("user is not allowed to sign in here");
