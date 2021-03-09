@@ -118,11 +118,13 @@
 					It seems you forgot your password for your Neuma account. You can change your password by clicking the button below
 				</p>
 
-				<a href="{{ $url }}">
-				<button>
-					Reset Password
-				</button>
-				</a>
+				<div class="cta-container">
+					<a href="{{ $url }}">
+					<button>
+						Reset Password
+					</button>
+					</a>
+				</div>
 
 				<p class="note">
 					The above link is only meant for you. Please don’t share it with anyone. The link will expire in 24 hours.

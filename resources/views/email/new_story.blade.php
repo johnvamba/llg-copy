@@ -87,12 +87,14 @@
 				<p>
 					{{$story->short_description}}
 				</p>
-
-				<a href="{{ $url }}">
-				<button>
-					Continue Reading
-				</button>
-				</a>
+				
+				<div class="cta-container">
+					<a href="{{ $url }}">
+					<button>
+						Continue Reading
+					</button>
+					</a>
+				</div>
 			</div>
 
 			<div class="social-icons">

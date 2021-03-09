@@ -3,14 +3,13 @@
 <style type="text/css">
 
 	.table tbody tr td.first-td {
-		  text-align: left;
-		  font-family: Poppins, Arial;
+		text-align: left;
+		font-family: Poppins, Arial;
 		font-style: normal;
 		font-weight: normal;
 		font-size: 12px;
 		line-height: 170%;
-		/* or 20px */
-
+		vertical-align: text-top;
 		letter-spacing: 0.015em;
 		color: #000000;
 		opacity: 0.5;
@@ -26,8 +25,8 @@
 		color: #000000;
 		opacity: 0.7;
 	}
-	.table tbody tr {
-		padding-bottom: 15px;
+	.table {
+	    border-spacing: 0px 15px;
 	}
 	.table tbody tr td.register {
 		font-style: normal;
@@ -53,7 +52,7 @@
 
 			<div class="content">
 				<img 
-					src="https://admin.neuma.church/images/register.png"
+					src="https://admin.neuma.church/images/new-org.png"
 					width="400"
 					height="250"
 					alt="image"
@@ -111,11 +110,13 @@
 						</tr>
 					</tbody>
 				</table>
-				<a href="{{ $url }}">
-				<button>
-					Approve Account
-				</button>
-				</a>
+				<div class="cta-container">
+					<a href="{{ $url }}">
+					<button>
+						Approve Account
+					</button>
+					</a>
+				</div>
 
 				<div class="social-icons">
 					<img 
