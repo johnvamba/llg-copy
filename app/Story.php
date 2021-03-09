@@ -94,4 +94,8 @@ class Story extends Model implements HasMedia
 
         return '';
     }
+
+    public function getExternalUrlAttribute() {
+        return '/'. $this->id;
+    }
 }

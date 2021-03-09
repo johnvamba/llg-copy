@@ -40,7 +40,7 @@ class StoryPublished extends Mailable
         return $this->from($from)->view('email.new_story', [
             'story' => $this->story,
             'photo' => optional($this->story)->getFirstMediaUrl('photo'),
-            'url' => 'url'
+            'url' => $this->story->external_url ?? 'url'
         ]);
     }
 }

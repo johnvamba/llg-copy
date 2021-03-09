@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get('/password/reset', fn() => view('app'))->name('password.reset');
-Route::get('/admin/organizations/requests/{organization}', fn() => view('app'))->name('complete.organisation');
+Route::get('/admin/organizations/requests/{organization}', fn($organization) => view('app'))->name('complete.organisation');
 
 Route::get('/account', fn() => view('app'))->middleware('signed')->name('complete.account');
 Route::get('/expired', fn() => view('app'))->name('web.expired');
