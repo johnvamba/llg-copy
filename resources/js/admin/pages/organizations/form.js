@@ -76,8 +76,13 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             clearCacheEntry: clearCache,
             cancelToken: token.token
         }).then(({ data })=>{
-            const { name, email, site, phone_number, description, category = [], campuses, accessable, address } = data.data
+            const { name, email, site, phone_number, description, category = [], campuses, accessable, address, location, lng, lat } = data.data
             // setForm({...form, name, email, site, phone_number, description})
+            setLocation({
+                location,
+                lat, 
+                lng
+            })
             setCampus(campuses)
             setCategory( all.filter(i => category.includes(i.name) ) );
             setLoading(false)
