@@ -207,7 +207,7 @@ class UsersController extends Controller
 
             if($type = $request->get('type')){
                 $role = Role::where('name', $type['value'] ?? 'user')->first();
-                $user->assignRole( $role->name );
+                $user->syncRoles( $role->name );
             }
 
             if($organization = $request->get('organization')){
