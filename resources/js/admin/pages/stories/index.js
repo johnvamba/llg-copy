@@ -108,7 +108,7 @@ const Stories = () => {
         //redux defaults
         dispatch( setNeedId(null) )
         dispatch( setOrg(null) )
-    }, [])
+    }, [location])
 
     // const stories = useSelector(
     //         state => state.StoriesReducer.stories
