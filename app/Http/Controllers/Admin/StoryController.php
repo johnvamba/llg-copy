@@ -76,11 +76,11 @@ class StoryController extends Controller
         DB::beginTransaction();
         try {
             // $org = Organization::inRandomOrder()->first(); //Change me.
-            if(auth()->user()->hasRole('organization admin')){
-                $org = Organization::findOrFail(session('org_id'));
-            } else if( $orgForm = $request->get('organization') ) {
+            if( $orgForm = $request->get('organization') ) {
                 $id = $orgForm['id'] ?? $orgForm['value'] ?? null;
-                $org = Organization::findOrFail($id);
+                $org = Organization::unfilter()->findOrFail($id);
+            } else if(auth()->user()->hasRole('organization admin')){
+                $org = Organization::unfilter()->findOrFail(session('org_id'));
             }
             $story = Story::create([
                 'user_id' => (auth()->user())->id, 
@@ -170,13 +170,15 @@ class StoryController extends Controller
                 $categories = Category::where('name', $cat_names)->get();
                 $story->categories()->sync($categories);
             }
-
-            if(auth()->user()->hasRole('organization admin')){
-                $story->organization_id = session('org_id');
-            } else if( $orgForm = $request->get('organization') ) {
-                $story->organization_id = $orgForm['id'] ?? $orgForm['value'] ?? null;
-            }
             
+            if(!isset($story->organization_id)) {
+                if( $orgForm = $request->get('organization') ) {
+                    $story->organization_id = $orgForm['id'] ?? $orgForm['value'] ?? null;
+                } else if(auth()->user()->hasRole('organization admin')){
+                    $story->organization_id = session('org_id');
+                }
+            }
+
             if ($image = $request->get('photo')) {
                 if(strpos($image, 'http') !== false)
                     goto skipPhoto;

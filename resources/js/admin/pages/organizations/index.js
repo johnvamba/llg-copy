@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useHistory, useParams } from 'react-router-dom';
 import * as OrganizationsActions from '../../../redux/organizations/actions';
 import Header from './header';
 import List from './list';
@@ -14,9 +14,10 @@ import LoadingScreen from '../../../components/LoadingScreen'
 import './organizations.css';
 
 
-const Organizations = () => {
+const Organizations = (props) => {
     const loc = useLocation();
     const hist = useHistory();
+    const params = useParams();
     const [page, setPage] = useState(1);
     const [endPage, setEndPage] = useState(1);
     const [limit, setLimit] = useState(5);
@@ -44,7 +45,7 @@ const Organizations = () => {
     const loadTable = (clearCache = false) => {
         setLoading(true)
         const addFilter = {}; //for redux values
-        let requests = loc.pathname == '/organizations/requests';
+        let requests = loc.pathname.indexOf('/organizations/requests') == 0;
         const token = axios.CancelToken.source();
         api.get(`/api/web/organizations`, {
             params: {
@@ -69,7 +70,7 @@ const Organizations = () => {
     //To always get fresh new ones
     const nextPage = (clearCache = true) => {
         const nextpage = page+1;
-        let requests = loc.pathname == '/organizations/requests';
+        let requests = loc.pathname.indexOf('/organizations/requests') == 0;
         if(nextpage <= endPage && endPage > 1){
             const addFilter = {};
             const token = axios.CancelToken.source();
@@ -95,6 +96,7 @@ const Organizations = () => {
         }
     }
 
+
     useEffect(() => {
         const ct = loadTable();
         setInfo({})
@@ -108,8 +110,15 @@ const Organizations = () => {
         }
     }, [search, loc]);
 
+    useEffect(()=>{
+        console.log('id', params)
+        if(params.id) {
+            handlePanels(params, false, true);
+        }
+    }, [params])
+    
     const handlePanels = (data = {},  form = false, info = false, invite = false) => {
-        let requests = loc.pathname == '/organizations/requests';
+        let requests = loc.pathname.indexOf('/organizations/requests') == 0;
         setInfo(data)
         showForm(form)
         if(requests) {

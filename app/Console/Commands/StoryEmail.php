@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Story;
 use App\Mail\StoryPublished;
+use Illuminate\Support\Facades\Mail;
+
 
 class StoryEmail extends Command
 {

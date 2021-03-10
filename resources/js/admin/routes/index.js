@@ -52,31 +52,31 @@ const routes = [
         exact: true,
         component: () => <Requests />
     },
-    {
-        path: '/needs/create',
-        exact: true,
-        component: () => <CreateNeeds />
-    },
-    {
-        path: '/needs/edit/:id',
-        exact: true,
-        component: () => <EidtNeeds />
-    },
-    {
-        path: '/needs/category',
-        exact: true,
-        component: () => <NeedsCategory />
-    },
-    {
-        path: '/needs/category/create',
-        exact: true,
-        component: () => <CreateNeedsCategory />
-    },
-    {
-        path: '/needs/category/edit/:id',
-        exact: true,
-        component: () => <EditNeedsCategory />
-    },
+    // {
+    //     path: '/needs/create',
+    //     exact: true,
+    //     component: () => <CreateNeeds />
+    // },
+    // {
+    //     path: '/needs/edit/:id',
+    //     exact: true,
+    //     component: () => <EidtNeeds />
+    // },
+    // {
+    //     path: '/needs/category',
+    //     exact: true,
+    //     component: () => <NeedsCategory />
+    // },
+    // {
+    //     path: '/needs/category/create',
+    //     exact: true,
+    //     component: () => <CreateNeedsCategory />
+    // },
+    // {
+    //     path: '/needs/category/edit/:id',
+    //     exact: true,
+    //     component: () => <EditNeedsCategory />
+    // },
     {
         path: '/offers',
         exact: true,
@@ -87,11 +87,11 @@ const routes = [
         exact: true,
         component: () => <OfferRequests />
     },
-    {
-        path: '/offers/edit/:id',
-        exact: true,
-        component: () => <EditOffer />
-    },
+    // {
+    //     path: '/offers/edit/:id',
+    //     exact: true,
+    //     component: () => <EditOffer />
+    // },
     {
         path: ['/stories', '/stories/drafts'],
         exact: true,
@@ -102,11 +102,11 @@ const routes = [
     //     exact: true,
     //     component: () => <Stories />
     // },
-    {
-        path: '/stories/edit/:id',
-        exact: true,
-        component: () => <EditStory />
-    },
+    // {
+    //     path: '/stories/edit/:id',
+    //     exact: true,
+    //     component: () => <EditStory />
+    // },
     {
         path: '/users',
         exact: true,
@@ -138,9 +138,9 @@ const routes = [
     //     component: () => <EditGroup />
     // },
     {
-        path: ['/organizations', '/organizations/requests'],
+        path: ['/organizations', '/organizations/requests', '/organizations/requests/:id'],
         exact: true,
-        component: () => <Organizations />
+        component: (props) => <Organizations {...props}/>
     },
     // {
     //     path: '/organizations/create',

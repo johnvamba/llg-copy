@@ -29,11 +29,13 @@
 					Click this button bellow to create your account
 				</p>
 
-				<a href="{{ $url }}">
-				<button>
+				<div class="cta-container">
+					<a href="{{ $url }}">
+					<button>
 					Complete Your Account
-				</button>
-				</a>
+					</button>
+					</a>
+				</div>
 
 				<p class="note">
 					This invitation will expire on {{ $expires->format('jS M Y') }}

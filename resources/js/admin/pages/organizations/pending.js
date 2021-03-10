@@ -22,7 +22,8 @@ const MemberItem = ({image = null}) => {
     </li>
 }
 const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite, afterSubmit }) => {
-    const { name, description, active_needs, past_needs, members_count, banner, photo } = data
+    const [set, setData] = useState(data)
+    const { name, description, active_needs, past_needs, members_count, banner, photo } = set
     const [ subData, setSubData ] = useState({
         org_link: '',
         org_contact: '',
@@ -60,6 +61,7 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite, afterSubmit })
     })
 
 
+
     const loadItem = (clearCache = false) => {
         setLoading(true)
         // const token = axios.CancelToken.source();
@@ -71,8 +73,9 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite, afterSubmit })
             // cancelToken: token.token
         })
             .then(({data})=>{
-                const { details = { acnc: false, fundraiser: false, insured: false} } = data.data
+                const { details = { acnc: false, fundraiser: false, insured: false},  name, description, active_needs, past_needs, members_count, banner, photo } = data.data
                 //other info here
+                setData({...set,  name, description, active_needs, past_needs, members_count, banner, photo });
                 setQuestions({...details});
 
             }).finally(() => setLoading(false))

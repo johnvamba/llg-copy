@@ -201,12 +201,12 @@ class AuthController extends Controller
 
     public function logout(Request $request) 
     {
-        if ($request->platform == 'mobile') {
+        if (@$request->platform == 'mobile') {
             Device::removeFCMToken($request->fcmToken);
-        }
+        } 
 
         session()->flush();
-        auth('web')->logout();
+        auth()->user()->token()->revoke();
 
         return response()->json(['message' => 'Successfully logged out']);
     }

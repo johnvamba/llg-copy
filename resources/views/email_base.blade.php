@@ -163,12 +163,27 @@
                 font-family: 'Poppins', 'Arial';
                 color: #92A9AB;
                 font-size: 23px;
-                font-weight: bolder;
+                font-weight: 800;
+            }
+
+            .cta-container {
+                margin: auto;
+                width: min-content;
+            }
+
+            .cta-container a {
+/*                margin: 0;
+                position: relative;
+                top: 50%;
+                -ms-transform: translateY(-50%);
+                transform: translateY(-50%);*/
             }
 
             p {
                 font-size: 16px;
                 font-weight: normal;
+                color: #000000;
+                opacity: 0.7;
             }
 
             p.note {
@@ -187,11 +202,10 @@
             }
 
             .social-icons {
-                display: flex;
-                justify-content: center;
-                align-items: center;
+                margin: auto;
                 margin-top: 50px;
                 margin-bottom: 25px;
+                width: 355px;
             }
 
             .social-icons img {
@@ -210,6 +224,9 @@
                 width: 100%;
                 border: 2px solid #d4d4d4;
                 margin: 0 50px; 
+                height: 0px;
+                top: 50%;
+                background: #d4d4d4;
             }
 
             h2 span { 

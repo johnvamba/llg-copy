@@ -154,7 +154,7 @@ class UserController extends Controller
             $user->loc = optional($user->profile)->only('location', 'lng', 'lat');
         }
         
-        if($user->organization) {
+        if(optional($user->organization)->id) {
             $org = (new OrganizationResource($user->organization))->resolve();
             $user->unsetRelation('organization');
             $user->organization = $org;
