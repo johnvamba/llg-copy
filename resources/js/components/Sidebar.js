@@ -47,7 +47,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
 
             dispatch(AuthUserActions.setProfile(data));
             dispatch(AuthUserActions.setRoles(data.roles[0]));
-            dispatch(AuthUserActions.setOrg(data.organization.id ? data.organization : null));
+            dispatch(AuthUserActions.setOrg((data.organization && data.organization.id) ? data.organization : null));
         }
 
         fetchData();
