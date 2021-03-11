@@ -2,7 +2,7 @@ import React, { useState} from 'react';
 import Attachment from '../../../svg/attachment';
 import CrossPlain from '../../../svg/offers-plus';
 import { validateEmail, isValidated } from '../../../components/helpers/validator';
-import { swalDiscard, swalSuccess } from '../../../components/helpers/alerts';
+import { swalDiscard, swalSuccess, swalError } from '../../../components/helpers/alerts';
 import { checkEmail } from '../../../components/helpers/async_options';
 import LoadingScreen from '../../../components/LoadingScreen'
 
@@ -80,10 +80,10 @@ const OrgInviteForm = ({ data = {}, handleBackInvite }) => {
     const validateSubmit = () => {
         const { firstname, lastname, email, contact } = form
         const set = isValidated({
-            email: !validateEmail(email) ? "Missing email" : null,
-            contact: contact == '' ? "Missing contact" : null,
-            firstname: firstname == '' ? "Missing first name" : null,
-            lastname: lastname == '' ? "Missing last name" : null
+            email: !validateEmail(email) ? "Missing email" : null
+            // contact: contact == '' ? "Missing contact" : null,
+            // firstname: firstname == '' ? "Missing first name" : null,
+            // lastname: lastname == '' ? "Missing last name" : null
         })
         setErrors(set)
         return set;
@@ -136,16 +136,23 @@ const OrgInviteForm = ({ data = {}, handleBackInvite }) => {
     }
 
     const sendInvites = () => {
-        if(form.email != '')
-            addPerson()
+        let usr = {}
 
+        if(validateEmail(form.email)){
+            usr = {...form}
+        }
+        if(_.isEmpty(usr) && userSet.length == 0){
+            swalError('Missing invite list!')
+            return;
+        }
         setSubmit(true)
         if(data.id){
             api.post(`/api/web/organizations/${data.id}/members`, {
-                users: userSet
+                users: _.isEmpty(usr) ? userSet : [...userSet, usr]
             }).then(i=>{
                 swalSuccess('Users invited');
                 setSubmit(false)
+                handleBackInvite();
             }).catch(i=>{
                 setSubmit(false)
             })
