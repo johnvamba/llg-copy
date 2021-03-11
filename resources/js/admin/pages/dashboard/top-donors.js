@@ -34,7 +34,7 @@ const TopDonors = () => {
                         avatar={`http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp`}
                         avatarStyle="h-12 w-12"
                         title={donor.name}
-                        description={`to ${donor.organization.name}`}
+                        description={`to ${donor.organization ? donor.organization.name : 'some organisation'}`}
                         right={
                             <p className="text-xs">
                                 {`$${donor.donated}`}
