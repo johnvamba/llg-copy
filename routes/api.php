@@ -127,9 +127,9 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Need resource module */
     Route::post('need/lists', 'NeedsController@getNeeds');
-    Route::get('need/recent-added', 'NeedsController@getRecentAdded');
+    Route::get('need/recent-added', 'NeedsController@getRecentAdded')->middleware('datafilter');
     Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsController@nearby');
-    Route::get('needs/open/total', 'NeedsController@getTotalNeedsOpen');
+    Route::get('needs/open/total', 'NeedsController@getTotalNeedsOpen')->middleware('datafilter');
     Route::post('needs/organization/{organization}/page/{page}', 'NeedsController@getOrganizationNeeds');
     Route::post('need/{need}/volunteer', 'NeedsController@addVolunteer');
     Route::post('needs/page/{page}', 'NeedsController@index');
@@ -146,14 +146,14 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Needs Met resource module */
     Route::get('needs-mets/group/{group}', 'NeedsMetController@getGroupNeedsMet');
     Route::get('needs-mets/user/{user}', 'NeedsMetController@getUserNeedsMet');
-    Route::get('needs-mets/total', 'NeedsMetController@getTotalNeedsMet');
+    Route::get('needs-mets/total', 'NeedsMetController@getTotalNeedsMet')->middleware('datafilter');
     Route::get('needs-mets/{need}/volunteers', 'NeedsMetController@getNeedsVolunteer');
     Route::resource('needs-met', 'NeedsMetController');
 
     /** Service Offered resource module */
     Route::post('offer/lists', 'ServiceOfferController@getOffers');
     Route::get('service-offer/user', 'ServiceOfferController@getServiceOffered');
-    Route::get('service-offer/help/total', 'ServiceOfferController@getTotalOffers');
+    Route::get('service-offer/help/total', 'ServiceOfferController@getTotalOffers')->middleware('datafilter');
     Route::get('service-offer/user/request', 'ServiceOfferController@getServicesRequest');
     Route::post('service-offer/{serviceOffer}/request', 'ServiceOfferController@requestAction');
     Route::resource('service-offer', 'ServiceOfferController');
@@ -209,7 +209,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('organization/featured', 'OrganizationController@getFeaturedOrganizations');
     Route::get('organizations/{organization}/credential', 'OrganizationController@getCredential');
     Route::post('organizations/{organization}/credential', 'OrganizationController@addCredential');
-    Route::post('organizations/nearby/{lat}/{lng}', 'OrganizationController@nearby');
+    Route::post('organizations/nearby/{lat}/{lng}', 'OrganizationController@nearby')->middleware('datafilter');
     Route::get('organizations/page/{page?}', 'OrganizationController@index');
     Route::resource('organizations', 'OrganizationController');
 
@@ -220,9 +220,9 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Invoice resource module */
     Route::post('invoice/recent/donors', 'InvoiceController@getRecentDonors');
-    Route::get('invoice/donations', 'InvoiceController@getDonations');
-    Route::get('invoice/needs/donations', 'InvoiceController@getNeedsDonations');
-    Route::get('invoice/top-donors', 'InvoiceController@getTopDonors');
+    Route::get('invoice/donations', 'InvoiceController@getDonations')->middleware('datafilter');
+    Route::get('invoice/needs/donations', 'InvoiceController@getNeedsDonations')->middleware('datafilter');
+    Route::get('invoice/top-donors', 'InvoiceController@getTopDonors')->middleware('datafilter');
     Route::resource('invoices', 'InvoiceController');
 
     /** Activities resource module */
