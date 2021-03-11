@@ -60,7 +60,7 @@
 				/>
 				
 				<strong>
-					New Organization Signed Up
+					A new organisation has signed Up
 				</strong>
 
 				<p>

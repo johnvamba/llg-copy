@@ -43,7 +43,7 @@ class OrgInvitation extends Mailable
         $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
             ?? 'info@lovelivesgenerously.demosite.ninja';
             
-        return $this->from($from)
+        return $this//->from($from)
             ->view('email.org_invite')
             ->subject('Account Invitation')
             ->with([
