@@ -130,7 +130,7 @@ class InvoiceController extends Controller
      */
     public function getTopDonors(Request $request)
     {
-        $users = User::with(['invoice' => function($query) {
+        $users = User::has('invoice.organization')->with(['invoice' => function($query) {
                     $query->with('organization')
                     ->select(DB::raw('invoices.*, SUM(amount) as donations, count(*) as total'))
                     ->groupBy(['user_id', 'organization_id'])
