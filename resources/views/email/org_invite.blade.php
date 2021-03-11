@@ -25,8 +25,7 @@
 				</strong>
 
 				<p>
-					You are invited you to access {{ $org->name ?? 'an organization'}} on Love-Lives Generously. 
-					Click this button bellow to create your account
+					You have been invited to Neuma Care's app admin portal, to complete your account please click the link below
 				</p>
 
 				<div class="cta-container">
@@ -73,7 +72,7 @@
 			</div>
 
 			<div class="bottom">
-				<p>Long long address here please,</p>
+				<p>10 Griffiths St, Richmond VIC 3121,</p>
 				<p class="address">Melbourne, Australia</p>
 				<p>
 					Want to cancel your subscription? 

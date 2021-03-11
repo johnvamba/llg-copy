@@ -38,7 +38,8 @@ class TransactionReceipt extends Mailable
             ?? env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja')
             ?? 'info@lovelivesgenerously.demosite.ninja';
             
-        return $this->from($from)->view('email.transact')
+        return $this//->from($from)
+            ->view('email.transact')
             ->subject(optional($this->org->template)->subject ?? 'Payment Received!')
             ->with([
                 'org' => $this->org,

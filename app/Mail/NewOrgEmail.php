@@ -36,7 +36,9 @@ class NewOrgEmail extends Mailable
          $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
             ?? 'info@lovelivesgenerously.demosite.ninja';
         $organization = $this->org;
-        return $this->from($from)->view('email.org_new')
+        return $this//->from($from)
+            ->subject("A new organisation has signed up")
+            ->view('email.org_new')
             ->with([
                 'org' => $this->org,
                 'url' => route('complete.organisation', compact('organization')),
