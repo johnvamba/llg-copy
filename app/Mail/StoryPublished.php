@@ -37,7 +37,9 @@ class StoryPublished extends Mailable
          $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
             ?? 'info@lovelivesgenerously.demosite.ninja';
             
-        return $this->from($from)->view('email.new_story', [
+        return $this//->from($from)
+        ->subject('New Story was Published')
+        ->view('email.new_story', [
             'story' => $this->story,
             'photo' => optional($this->story)->getFirstMediaUrl('photo'),
             'url' => $this->story->external_url ?? 'url'

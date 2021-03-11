@@ -60,7 +60,7 @@
 				/>
 				
 				<strong>
-					New Organization Signed Up
+					A new organisation has signed Up
 				</strong>
 
 				<p>
@@ -149,7 +149,7 @@
 				</div>
 
 				<div class="bottom">
-					<p>Long long address here please,</p>
+					<p>10 Griffiths St, Richmond VIC 3121,</p>
 					<p class="address">Melbourne, Australia</p>
 					<p>
 						Want to cancel your subscription? 
