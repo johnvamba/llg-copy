@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch, connect } from 'react-redux';
 // import * as NeedsActions from '../../../redux/needs/actions';
 import { setOrg, setNeedId } from '../../../redux/stories/actions';
+import { swalSuccess, swalError } from '../../../components/helpers/alerts';
 
 import Button from '../../../components/Button';
 import Paginator from '../../../components/Paginator';
@@ -9,6 +10,7 @@ import Check from '../../../svg/check'
 import Cross from '../../../svg/cross'
 import Quill from '../../../svg/quill'
 import './needs.css';
+import Swal from 'sweetalert2';
 
 import NeedForm from './form'
 import NeedTable from './table'
@@ -110,6 +112,28 @@ const Needs = ({NeedsReducer}) => {
         }
     }
 
+    const remove = (item) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You will delete this need ${item.title}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it'
+        }).then((result) => {
+            if (result.value) {
+                handleForm();
+                api.delete(`/api/web/needs/${item.id}`)
+                .then(()=>{
+                    loadTable(true);
+                    swalSuccess('Need has been deleted');
+                }).catch(()=>{
+                    swalError("There's has been an error on deleting need");
+                })
+            }
+        })
+    }
+
     const handleInfo = (item) => {
         // console.log('haaa?', item)
         showForm(false);
@@ -143,7 +167,7 @@ const Needs = ({NeedsReducer}) => {
             </div>
 
             <div className="component-body flex flex-col p-8">
-                <NeedTable tab={tab} data={arrayNeeds} showInfo={handleInfo} handleForm={handleForm} loading={loading}/> 
+                <NeedTable tab={tab} data={arrayNeeds} removeNeed={remove} showInfo={handleInfo} handleForm={handleForm} loading={loading}/> 
                 <Paginator setLimit={setLimit} {...meta} clickedPage={setPage}/>
             </div>
             {
@@ -152,7 +176,7 @@ const Needs = ({NeedsReducer}) => {
             }
             {
                 (info && bolInfo) && 
-                <NeedInfo toClose={e=>setInfo(null)} clickEdit={openForm} data={info} openStory={()=>handleForm(info, false, 'story', true)}/>
+                <NeedInfo toClose={e=>setInfo(null)} delete={()=>remove(info)} clickEdit={openForm} data={info} openStory={()=>handleForm(info, false, 'story', true)}/>
             }
             {
                 story && //Open story here

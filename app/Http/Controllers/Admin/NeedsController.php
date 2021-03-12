@@ -336,12 +336,21 @@ class NeedsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  Organization $organization
      * @return \Illuminate\Http\Response
      */
     public function destroy(Need $need)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $need->delete();
+
+            DB::commit();
+            return response()->json('Deleted', 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['errors'=>$e->getMessage()], 400);
+        }
     }
 
     //Extra

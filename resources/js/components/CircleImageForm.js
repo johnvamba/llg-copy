@@ -66,13 +66,7 @@ const CircleImageForm = ({
 					</div>
 			}
 		</>
-
-			
-			
 		
-
-		
-
     return <div className={`photo-circle ${className}`}>
 		{
 			tempUrl 

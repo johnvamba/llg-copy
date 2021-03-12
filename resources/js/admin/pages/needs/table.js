@@ -6,8 +6,9 @@ import Cross from '../../../svg/cross'
 import Quill from '../../../svg/quill'
 import { usePopper } from 'react-popper';
 import { swalSuccess, swalError } from '../../../components/helpers/alerts';
+import UsersActionsDelete from '../../../svg/users-actions-delete';
 
-const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction, handleForm}) => {
+const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, removeItem, onShowInfo, popAction, handleForm}) => {
     const { title ="Untitled", type = "Donation", goal = "N/A", status = "achieved", date = "Missing", date_added, photo=null} = item
     const [approveElement, setApproveElement] = useState(null);
     const [rejectElement, setRejectElement] = useState(null);
@@ -79,17 +80,36 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
                         <Quill/>
                         Write a Story
                     </Button>
+                    <button className="ml-3" onClick={removeItem}>
+                        <i>
+                        <UsersActionsDelete />
+                        </i>
+                    </button>
                 </div>
             </td>
         }
     </tr>
 }
 //Button Popper and action 
-const ButtonPopper = ({buttonElement, actionClosure, btnAction, loading}) => {
+const ButtonPopper = ({buttonElement, actionClosure, removeItem, btnAction, loading}) => {
     const [popperElement, setPopperElement] = useState(null);
     const [arrowElement, setArrowElement] = useState(null);
     const [togglePopper, setToggle] = useState(false);
     const [popContent, setContent] = useState('approval')
+
+    const btnRender = ()=> {
+        switch(btnAction) {
+            case "approve":
+                return <p className="text-center mb-2">Are you sure you want to approve this request?</p>
+            case "reject":
+            case "disapprove":
+                return <p className="text-center mb-2 text-red-400">Are you sure you want to reject this request?</p>
+            case 'remove':
+                return <p className="text-center mb-2 text-red-400">Are you sure you want to remove this need?</p>
+            default:
+                return <p className="text-center mb-2 text-red-400">Are you sure?</p>
+        }
+    }
 
     const {styles, attributes} = usePopper(buttonElement, popperElement, {
         placement: 'bottom-end',
@@ -110,9 +130,10 @@ const ButtonPopper = ({buttonElement, actionClosure, btnAction, loading}) => {
             </div> : 
             <div className="button-container">
                 {
-                    btnAction == 'approve' ?
-                    <p className="text-center mb-2">Are you sure you want to approve this request?</p>
-                    : <p className="text-center mb-2 text-red-400">Are you sure you want to reject this request?</p>
+                    // btnAction == 'approve' ?
+                    // <p className="text-center mb-2">Are you sure you want to approve this request?</p>
+                    // : <p className="text-center mb-2 text-red-400">Are you sure you want to reject this request?</p>
+                    btnRender()
                 }
                 <div className="flex justify-between">
                     <Button onClick={()=>actionClosure(false)}>
@@ -129,7 +150,7 @@ const ButtonPopper = ({buttonElement, actionClosure, btnAction, loading}) => {
 
 // Proper content
 //click on row shows popper
-const NeedTable = ({tab = null, data = [], showInfo, loading = false, loadTable, handleForm=()=>{}})=> {
+const NeedTable = ({tab = null, data = [], showInfo, loading = false, removeNeed, loadTable, handleForm=()=>{}})=> {
     const [checkAll, setCheckAll] = useState(false)
     const [needs, setNeeds] = useState([])
     const [popped, setPopItem] = useState(null)
@@ -213,7 +234,9 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false, loadTable,
                         checkChange={e=>handleRowCheckbox(i,e.target.checked)}
                         handleForm={handleForm}
                         onShowInfo={()=>showInfo(i)}
-                        popAction={(button, type)=>togglePopItem(i, button, type)}/>
+                        popAction={(button, type)=>togglePopItem(i, button, type)}
+                        removeItem={()=> removeNeed(i)}
+                        />
                     ) :
                     <tr>
                         <td colSpan={7}>No data found</td>

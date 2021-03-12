@@ -5,16 +5,20 @@ import "react-image-crop/dist/ReactCrop.css";
 // Increase pixel density for crop preview quality on retina screens.
 const pixelRatio = window.devicePixelRatio || 1;
 
-export default function ImageCropper({originalImage, aspect = 21/9, onImageCropped, closeCropper}) {
+export default function ImageCropper({originalImage, aspect = 21/9, onImageCropped, closeCropper, circle = false}) {
   const [upImg, setUpImg] = useState();
   const imgRef = useRef(null);
   const previewCanvasRef = useRef(null);
-  const [crop, setCrop] = useState({aspect, width: 100, unit: '%'});
+  const [crop, setCrop] = useState({aspect: aspect, width: 100, unit: "%"});
   const [completedCrop, setCompletedCrop] = useState(null);
-
   const onLoad = useCallback((img) => {
     imgRef.current = img;
+    setCrop({ aspect, unit: '%', width:100})
   }, []);
+
+  // useEffect(()=>{
+  //   setCrop({aspect: aspect, width: 100, unit: '%'})
+  // }, [aspect])
 
   const cropImage = () => {
     const image = imgRef.current;
@@ -63,7 +67,8 @@ export default function ImageCropper({originalImage, aspect = 21/9, onImageCropp
           onImageLoaded={onLoad}
           crop={crop}
           onChange={setCrop}
-          onComplete={setCompletedCrop}
+          circularCrop={circle}
+          onComplete={(crops)=>setCompletedCrop(crops)}
         />      
         <button
           className="image-button"

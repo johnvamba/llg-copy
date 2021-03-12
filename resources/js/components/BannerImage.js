@@ -26,6 +26,7 @@ const BannerImage = ({
 	const imageChange = (e) => {
 		const { files } = e.target
 		if(typeof onChangeFile == 'function'){
+			console.log('called?');
 			onChangeFile(files[0])
 			return
 		}

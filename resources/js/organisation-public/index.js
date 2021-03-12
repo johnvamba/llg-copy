@@ -33,7 +33,10 @@ const OrgPub = () => {
         banner: null,
         photo: null
     })
-    const [cropper, openCropper] = useState(null)
+    const [cropper, openCropper] = useState({
+        url: null,
+        type: 'banner'
+    })
     //validators
     const [errors, setErrors] = useState({});
     const [formErrors, setFormErrors] = useState({});
@@ -109,14 +112,14 @@ const OrgPub = () => {
         }
         switch(countTab){
             case 1:
-            set = {
-                name: orgInfoForm.name == '' ? 'Missing title' : null,
-                email: orgInfoForm.email == '' ? 'Missing Email' : null,
-                site: orgInfoForm.site == '' ? 'Missing Website' : null,
-                phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
-                description: orgInfoForm.description == '' ? 'Missing Description' : null,
-                location: orgInfoForm.location == '' ? 'Missing location' : null
-            }
+            // set = {
+            //     name: orgInfoForm.name == '' ? 'Missing title' : null,
+            //     email: orgInfoForm.email == '' ? 'Missing Email' : null,
+            //     site: orgInfoForm.site == '' ? 'Missing Website' : null,
+            //     phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
+            //     description: orgInfoForm.description == '' ? 'Missing Description' : null,
+            //     location: orgInfoForm.location == '' ? 'Missing location' : null
+            // }
             break;
             case 2:
             set = {
@@ -154,11 +157,7 @@ const OrgPub = () => {
     const handleImages = (file, type = 'photo', cropper = false) => {
         const reader = new FileReader();
         reader.onload = (e2) => {
-            if(cropper){
-                openCropper(e2.target.result)
-            } else {
-                openCropper(null);
-            }
+            openCropper({ url: (cropper ? e2.target.result : null), type })
             setImages({
                 ...images,
                 [type]: e2.target.result
