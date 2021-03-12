@@ -5,19 +5,20 @@ import CircleImgForm from '../components/CircleImgForm';
 
 import EmptyImg from '../svg/empty-img';
 
-const OrgLogos = ({images, cropper, setImages, openCropper, handleImages, errors = {}, design = 1 }) => {
-    const handleBanner = (banner)=>{
+const OrgLogos = ({images, cropper = {}, setImages, openCropper, handleImages, errors = {}, design = 1 }) => {
+    const handleBanner = (image)=>{
         setImages({
             ...images,
-            banner
+            [cropper.type || 'banner']: image
         })
     }
-	if(cropper)
+    
+	if(cropper.url)
 	{
         return <div className="fixed inset-0 cropper">
-        <ImageCropper aspect={14/5} originalImage={cropper} 
+        <ImageCropper aspect={(cropper.type == 'banner') ? 14/5 : 1} originalImage={cropper.url} 
             onImageCropped={handleBanner}
-            closeCropper={()=>openCropper(null)} />
+            closeCropper={()=>openCropper({...cropper, url: null})} />
         </div>
     }
 
@@ -25,7 +26,7 @@ const OrgLogos = ({images, cropper, setImages, openCropper, handleImages, errors
 		return <div className="flex upload-containers mt-4">
 			<div className="flex flex-column flex-shrink mr-4" style={{width: '105px'}}>
 				<label>Your Logo</label>
-				<CircleImgForm ver2={true} src={images.photo} droplogo={true} onChangeFile={(file)=>handleImages(file, 'photo')}/>
+				<CircleImgForm ver2={true} src={images.photo} droplogo={true} onChangeFile={(file)=>handleImages(file, 'photo', true)}/>
 				{	
 					errors.photo && <p className="my-2 text-red-500">{errors.photo}</p>
 				}
