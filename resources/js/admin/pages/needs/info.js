@@ -165,7 +165,8 @@ const NeedInfo = ({data, clickEdit, toClose, openStory, remove = () => {}}) => {
                 	<div className="need-title">
                         {
                             photo ?
-                                <img className="need-img" src={photo} />
+                                <div className="need-img" style={{backgroundImage:`url(${photo})`}}></div>
+                                /*<img className="need-img" src={photo} />*/
                             : <div className="need-img-container"></div>
                         }
                         <h3>{data.title} <span>{data.date}</span> </h3>

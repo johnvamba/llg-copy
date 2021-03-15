@@ -158,7 +158,7 @@ class OrganizationController extends Controller
                 // $organization->campuses()->sync($campus);
 
                 foreach ($campus as $key => $value) {
-                    CampusOrganisation::firstOrCreate(['organization_id' => $organization->id, 'campus_id' => $value]);
+                    CampusOrganisation::firstOrCreate(['organization_id' => $org->id, 'campus_id' => $value]);
                 }
             }
             // if($campus = $request->get('campus')){

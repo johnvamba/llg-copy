@@ -106,7 +106,7 @@ const OfferRequests = () => {
             }
             {
                 showView && 
-                <OfferView data={focus} setShowOfferEdit={(e)=>showItem(focus, false, true)} />
+                <OfferView data={focus} setShowOfferEdit={(e)=>showItem(focus, false, true)} toClose={()=>showItem({}, false)}/>
             }
         </>
     )

@@ -79,11 +79,11 @@ const Offers = () => {
         setFocus(data)
     }
 
-    const showItem = (data, showView = true, showForm=false) => {
+    const showItem = (data = {}, showView = true, showForm=false) => {
         setShowView(showView);
         setShowForm(showForm);
         setFocus(data);
-        // console.log('show data?', showView, data)
+        console.log('show data?', showView, data)
     }
 
     return (
