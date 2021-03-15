@@ -165,8 +165,8 @@ class OffersController extends Controller
             'location' => 'required',
             'description' => 'required',
             'photo' => 'required',
-            'busName' => 'required',
-            'busContact' => 'required'
+            'business_name' => 'required',
+            'business_contact' => 'required'
             // 'address' => 'required'
         ]);
 

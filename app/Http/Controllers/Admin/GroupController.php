@@ -165,7 +165,7 @@ class GroupController extends Controller
             );
 
             if($campus = $request->get('campus')) {
-                $group->groupLocations()->delete(); //remove extra
+                $group->groupLocation()->delete(); //remove extra
 
                 GroupLocation::firstOrCreate([
                     'group_id' => $group->id,

@@ -41,7 +41,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const [location, setLocation] = useState({
-        location: 'Sydney, Australia',
+        location: '',
         lat: -33.868782, 
         lng: 151.207583
     })
@@ -81,6 +81,8 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         }).then(({ data })=>{
             const { name, email, site, phone_number, description, category = [], campuses, accessable, address, location, lng, lat } = data.data
             // setForm({...form, name, email, site, phone_number, description})
+            console.log('loaded?', lng, lat, location, campuses)
+
             setLocation({
                 location,
                 lat, 
