@@ -6,7 +6,7 @@ import OffersPlus from '../../../svg/offers-plus';
 import Paginator from '../../../components/Paginator';
 
 //As test icon only
-import OfferForm from './form';
+import OfferForm from './form2';
 import OfferView from './offer-view';
 import OfferTable from './table'
 
@@ -106,7 +106,7 @@ const OfferRequests = () => {
             }
             {
                 showView && 
-                <OfferView data={focus} setShowOfferEdit={(e)=>showItem(focus, false, true)} />
+                <OfferView data={focus} setShowOfferEdit={(e)=>showItem(focus, false, true)} toClose={()=>showItem({}, false)}/>
             }
         </>
     )

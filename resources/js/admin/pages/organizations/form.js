@@ -34,11 +34,14 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         banner: null,
         photo: null
     })
-    const [cropper, openCropper] = useState(null)
+    const [cropper, openCropper] = useState({
+        url: null,
+        cropTarget: 'banner'
+    })
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const [location, setLocation] = useState({
-        location: 'Sydney, Australia',
+        location: '',
         lat: -33.868782, 
         lng: 151.207583
     })
@@ -54,7 +57,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         } else {
             setForm({name: '', email: '',site: '', phone_number: '', description: '', address: ''})
             setImages({ banner: null, photo: null })
-            setCampus({})
+            setCampus([])
             setLoading(false)
             setSubmitting(false)
             setErrors({})
@@ -78,6 +81,8 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         }).then(({ data })=>{
             const { name, email, site, phone_number, description, category = [], campuses, accessable, address, location, lng, lat } = data.data
             // setForm({...form, name, email, site, phone_number, description})
+            console.log('loaded?', lng, lat, location, campuses)
+
             setLocation({
                 location,
                 lat, 
@@ -130,11 +135,10 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
     const handleImages = (file, type = 'photo', cropper = false) => {
         const reader = new FileReader();
         reader.onload = (e2) => {
-            if(cropper){
-                openCropper(e2.target.result)
-            } else {
-                openCropper(null);
-            }
+            openCropper({
+                url: (cropper) ? e2.target.result : null,
+                cropTarget: type
+            })
             setImages({
                 ...images,
                 [type]: e2.target.result
@@ -142,11 +146,13 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         }
         reader.readAsDataURL(file)
     }
-    const handleBanner = (banner)=>{
+
+    const handleBanner = (imageData)=>{
         setImages({
             ...images,
-            banner
+            [cropper.cropTarget || 'banner']: imageData
         })
+        // setCropTarget(null)
     }
 
     const handleCategories = (item, truth = false) => {
@@ -235,6 +241,10 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         })
     }
 
+    const closeCropper=()=>{
+        openCropper({url: null, cropTarget: 'photo'})
+    }
+
     return (
         <section className="form org-form">
             {
@@ -246,9 +256,10 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                 }/>
             }
             {
-                cropper && <ImageCropper aspect={14/5} originalImage={cropper} 
+                cropper.url && <ImageCropper aspect={cropper.cropTarget == 'banner' ?  (14/5) : 1} originalImage={cropper.url} 
                     onImageCropped={handleBanner}
-                    closeCropper={()=>openCropper(null)} />
+                    circle={ cropper.cropTarget == 'photo'}
+                    closeCropper={closeCropper} />
             }
             <div className="form-title create-story__header">
                 <h3>{data.id ? "Edit" : "Add"} Organisation</h3>
@@ -261,7 +272,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                     {
                         !images.banner && <EmptyImg />
                     }
-                    <CircleImageForm ver2={true} src={images.photo} onChangeFile={(file)=>handleImages(file, 'photo')}/>
+                    <CircleImageForm ver2={true} src={images.photo} onChangeFile={(file)=>handleImages(file, 'photo', true)}/>
                 </BannerImage>
                 <form>
                     <CategoryScroll 

@@ -12,7 +12,6 @@ const Location = ({
     defaultValue,
     ...props
 }) => {
-
     return (
         <div className={`form-group ${className}`} >
             <label>{ label || 'Address'}</label>

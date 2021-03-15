@@ -21,7 +21,7 @@ import TabMembers from './tab-volunteers';
 
 import './needs.css';
 
-const NeedInfo = ({data, clickEdit, toClose, openStory}) => {
+const NeedInfo = ({data, clickEdit, toClose, openStory, remove = () => {}}) => {
     const sampleSvg = all[0];
     const [loading, setLoading] = useState(false);
     const [ratio, setRatio] = useState(0);
@@ -143,6 +143,9 @@ const NeedInfo = ({data, clickEdit, toClose, openStory}) => {
             <div className="need-header">
             	<i className="circlet"><Circlet /></i>
             	<h4 className="need-status">{switchStatus()}</h4>
+                <button onClick={remove} className="text-red-500 mr-3">
+                    Delete
+                </button>
             	<button className="contents" onClick={clickEdit}>
                     <i className="ml-1"><Pencil/></i>
                     Edit</button>
@@ -162,7 +165,8 @@ const NeedInfo = ({data, clickEdit, toClose, openStory}) => {
                 	<div className="need-title">
                         {
                             photo ?
-                                <img className="need-img" src={photo} />
+                                <div className="need-img" style={{backgroundImage:`url(${photo})`}}></div>
+                                /*<img className="need-img" src={photo} />*/
                             : <div className="need-img-container"></div>
                         }
                         <h3>{data.title} <span>{data.date}</span> </h3>
