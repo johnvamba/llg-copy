@@ -26,7 +26,6 @@ const BannerImage = ({
 	const imageChange = (e) => {
 		const { files } = e.target
 		if(typeof onChangeFile == 'function'){
-			console.log('called?');
 			onChangeFile(files[0])
 			return
 		}
@@ -43,7 +42,7 @@ const BannerImage = ({
 
     return <div className={`banner-photo ${className} ${!tempUrl ? 'banner-photo--empty' : ''}`} style={{height, width, backgroundImage: `url(${tempUrl || ''})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}}>
 		{
-			!props.children && <EmptyImg />
+			(!props.children && (src == null || src == '')) && <EmptyImg />
 		}
         <button className={`banner-button`} onClick={uploadInit}>
         	<Camera />
