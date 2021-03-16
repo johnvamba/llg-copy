@@ -114,7 +114,12 @@ class NeedsController extends Controller
             'goal' => 'required',
             'description' => 'required',
             // 'address' => 'required',
-            'location' => 'required', //doesn't really work
+            'location' => ['required', function($att, $value, $fail) {
+                $loc = $value['formatted_address'] ?? $value['location'] ?? null;
+                if(!$loc) {
+                    $fail('Missing location field');
+                }
+            } ], //doesn't really work
             'photo' => 'required'
             // 'time'=> 'exclude_if:type,volunteer|required',
             // 'date'=> 'exclude_if:type,volunteer|required'
@@ -125,6 +130,7 @@ class NeedsController extends Controller
         try {
             $type = NeedsType::where('name', ucfirst( $request->get('type') ) )->firstOrFail();
 
+                dd(session('org_id'));
             if($org = $request->get('organization')) {
                 $organization = Organization::findOrFail($org['id'] ?? 0);
             } else if($session = session('org_id')) {

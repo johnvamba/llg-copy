@@ -122,7 +122,10 @@ const Needs = ({NeedsReducer}) => {
             cancelButtonText: 'No, keep it'
         }).then((result) => {
             if (result.value) {
-                handleForm();
+                setInfo(null);
+                showForm(false);
+                showStoryForm(false);
+                // handleForm();
                 api.delete(`/api/web/needs/${item.id}`)
                 .then(()=>{
                     loadTable(true);
@@ -176,7 +179,7 @@ const Needs = ({NeedsReducer}) => {
             }
             {
                 (info && bolInfo) && 
-                <NeedInfo toClose={e=>setInfo(null)} delete={()=>remove(info)} clickEdit={openForm} data={info} openStory={()=>handleForm(info, false, 'story', true)}/>
+                <NeedInfo toClose={e=>setInfo(null)} remove={()=>remove(info)} clickEdit={openForm} data={info} openStory={()=>handleForm(info, false, 'story', true)}/>
             }
             {
                 story && //Open story here
