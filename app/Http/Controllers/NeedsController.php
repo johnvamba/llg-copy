@@ -97,7 +97,7 @@ class NeedsController extends Controller
     public function getTotalNeedsOpen(Request $request)
     {
         //
-        $needs = Need::whereRaw('raised < goal')->count();
+        $needs = Need::whereRaw('raised < goal')->whereNotNull('approved_at')->count();
 
         return response()->json($needs);
     }

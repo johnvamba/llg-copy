@@ -82,7 +82,7 @@ class CampusController extends Controller
 
         DB::beginTransaction();
         try {
-            $campus = Campus::create( $request->only('name', 'location', 'lng', 'lat') ); //add description here
+            $campus = Campus::create( $request->only('name', 'location', 'lng', 'lat', 'description') ); //add description here
             //add photo here
             if ($image = $request->get('photo')) {
                 $name = time().'-'.Str::random(20);
@@ -150,7 +150,7 @@ class CampusController extends Controller
 
         DB::beginTransaction();
         try {
-            $campus->fill( $request->only('name', 'location', 'lng', 'lat') ); //add description here
+            $campus->fill( $request->only('name', 'location', 'lng', 'lat', 'description') ); //add description here
             //add photo here
             if ($image = $request->get('photo')) {
                 if(strpos($image, 'http') !== false)
