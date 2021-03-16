@@ -11,6 +11,8 @@
     margin-bottom: 25px;
     cursor: pointer;
     margin: 12.5px;
+    height: 200px;
+    max-height: 200px;
 }
 .campus-list ul li header > div{
     width: 100%;
