@@ -41,7 +41,7 @@ class NewOrgEmail extends Mailable
             ->view('email.org_new')
             ->with([
                 'org' => $this->org,
-                'url' => route('complete.organisation', compact('organization')),
+                'url' => \route('complete.organisation', compact('organization')),
                 'user' => $this->to
             ]);
     }
