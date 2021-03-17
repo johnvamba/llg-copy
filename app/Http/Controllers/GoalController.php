@@ -107,6 +107,12 @@ class GoalController extends Controller
             ->latest()
             ->first();
 
+        if (!$goal) {
+            return response()->json([
+                    'message' => 'You have not set your goal yet.'
+                ]);
+        }
+
         $date = Carbon::parse($goal->created_at);
         
         if ($goal->term == 'year') {
