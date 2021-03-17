@@ -33,7 +33,8 @@
             }
             .receipt i.fab {
                 font-family: 'Font Awesome 5 Brands';
-                    color: #8992A6;
+                color: #8992A6;
+                padding-top: 5px;
             }
             .receipt {
                 width: 100%;
@@ -114,23 +115,20 @@
                 max-width: 280px;       
                 margin: 0 auto;
             }
-            .receipt > .receipt-footer ul {
+            .receipt > .receipt-footer .receipt-link {
                 display: block;
-                margin: 0;
-                padding: 0;
-                align-items: center;
-                justify-content: center;
+                margin: auto;
+                text-align: center;
             }
-            .receipt > .receipt-footer ul li {
-                margin: 0 6px;
+            .receipt > .receipt-footer .receipt-link a {
+                display: inline-block;
                 background: rgba(137, 146, 166, 0.08);
                 border-radius: 50px;
                 width: 100%;
                 max-width: 27.13px;
                 height: 27.13px;
-                display: block;
-                align-items: center;
-                justify-content: center;
+                margin: auto;
+                margin-right: 20px;
             }
         </style>
         <style type="text/css">

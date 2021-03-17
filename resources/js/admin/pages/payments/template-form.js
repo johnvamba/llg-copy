@@ -5,8 +5,8 @@ import draftToHtml from 'draftjs-to-html';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import CircleImageForm from '../../../components/CircleImageForm';
 import LoadingScreen from '../../../components/LoadingScreen'
-import { tryParseJson } from '../../../components/helpers/validator';
-import { swalSuccess } from '../../../components/helpers/alerts';
+import { tryParseJson, validURL, isValidated } from '../../../components/helpers/validator';
+import { swalSuccess, swalError } from '../../../components/helpers/alerts';
 
 const TemplateForm = () => {
     const [photo, setPhoto] = useState(null);
@@ -23,6 +23,7 @@ const TemplateForm = () => {
         instagram: '',
         text: ''
     });
+    const [errors, setErrors] = useState({});
 
     const [bodyField, setBodyField] = useState({
         editorState: EditorState.createEmpty()
@@ -66,7 +67,11 @@ const TemplateForm = () => {
             clearCacheEntry: clearCache,
             cancelToken: token.token
         }).then(({ data })=>{
-            const { id, subject, html_content, raw_draft_json, org_name, org_location, photo } = data.data
+            const { id, subject, html_content, raw_draft_json, org_name, org_location, photo, facebook,
+                twitter,
+                instagram,
+                text } = data.data
+            setLinks({facebook, twitter, instagram, text})
             setForm({...form, id, subject})
             setPhoto(photo)
             setOrgDetails({org_name, org_location})
@@ -93,6 +98,14 @@ const TemplateForm = () => {
     }
 
     const updateLinks = ({target}) => {
+        if (!validURL(target.value)){
+            setErrors({...errors, [target.name]: 'Must be url!' })
+            // return;
+        } else {
+            let err = errors;
+            delete err[target.name];
+            setErrors({...err});
+        }
         setLinks({
             ...links,
             [target.name] : target.value
@@ -102,17 +115,26 @@ const TemplateForm = () => {
     const submit = () => {
         setSubmit(true)
         saveDraft();
+        if(!isValidated(errors)) {
+            swalError("There are errors on fields")
+            return;
+        }
         api.post(`/api/web/receipt/template`, {
             ...form,
             ...links,
             photo
         }).then(({ data })=>{
-            const { id, subject, html_content, raw_draft_json, org_name, org_location, photo } = data.data
+            const { id, subject, html_content, raw_draft_json, org_name, org_location, photo, 
+                facebook,
+                twitter,
+                instagram,
+                text
+            } = data.data
             swalSuccess('Receipt Template Updated!')
         }).finally(()=>{
             setSubmit(false);
         })
-        return token; //for useEffect
+        // return token; //for useEffect
     }
 
     return(
@@ -167,6 +189,7 @@ const TemplateForm = () => {
                                     onChange={updateLinks}
                                     placeholder="Enter Facebook Link"
                                 />
+                                { errors.facebook && <span className="text-red-400">Wrong format for facebook link</span>}
                                 <input
                                     className="input-field"
                                     type="text"
@@ -175,6 +198,7 @@ const TemplateForm = () => {
                                     onChange={updateLinks}
                                     placeholder="Enter Twitter Link"
                                 />
+                                { errors.twitter && <span className="text-red-400">Wrong format for twitter link</span>}
                                 <input
                                     className="input-field"
                                     type="text"
@@ -183,6 +207,8 @@ const TemplateForm = () => {
                                     onChange={updateLinks}
                                     placeholder="Enter Instagram Link"
                                 />
+                                { errors.instagram && <span className="text-red-400">Wrong format for instagram link</span>}
+
                             </div>
                             <div className="form-group form-input-text no-border-field">
                                 <label>Footer Text</label>
@@ -218,13 +244,13 @@ const TemplateForm = () => {
                     </header>
                     <section className="payment-r-template__right-body">
                         <header>
-                            <p><b>Dear Charles,</b></p>
+                            <p><b>Dear Donor,</b></p>
                         </header>
                         <section className="content">
                             <EditorDraft editorState={bodyField.editorState} readOnly={true} />
                         </section>
                         <section>
-                            <p><b>Organisation Name</b></p>
+                            <p><b>{orgDetails.org_name || 'Organisation'}</b></p>
                         </section>
                         <footer>
                             <label>Summary</label>
