@@ -39,21 +39,17 @@
 		optional($template)->twitter ||
 		optional($template)->text )
 	<div class="receipt-footer">
-		@if(optional($template)->facebook ||
-		optional($template)->instagram ||
-		optional($template)->twitter)
-		<ul>
+		<div class="receipt-link">
 			@if(optional($template)->facebook) 
-			<li><a target="_blank" href="{{ optional($template)->facebook}}"><i class="fab fa-facebook-f"></i></a></li> 
+			<a target="_blank" href="{{ optional($template)->facebook}}"><i class="fab fa-facebook-f"></i></a> 
 			@endif
 			@if(optional($template)->twitter) 
-			<li><a target="_blank" href="{{ optional($template)->twitter}}"><i class="fab fa-twitter"></i></a></li> 
+			<a target="_blank" href="{{ optional($template)->twitter}}"><i class="fab fa-twitter"></i></a> 
 			@endif
 			@if(optional($template)->instagram) 
-			<li><a target="_blank" href="{{ optional($template)->instagram}}"><i class="fab fa-instagram"></i></a></li> 
+			<a target="_blank" href="{{ optional($template)->instagram}}"><i class="fab fa-instagram"></i></a> 
 			@endif
-		</ul>
-		@endif
+		</div>
 		@if(optional($template)->text)
 			<p>{{ optional($template)->text }}</p>
 		@endif 
