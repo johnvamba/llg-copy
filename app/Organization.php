@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-//use App\Helper\Traits\OrgPortalTrait;
-//use App\Helper\Traits\OrgApprovedTrait;
+use App\Helper\Traits\OrgPortalTrait;
+use App\Helper\Traits\OrgApprovedTrait;
 
 class Organization extends Model implements HasMedia
 {
     use InteractsWithMedia;
     use SoftDeletes;
-    //use OrgPortalTrait, OrgApprovedTrait;
+    use OrgPortalTrait, OrgApprovedTrait;
 
     protected $guarded = [];
 

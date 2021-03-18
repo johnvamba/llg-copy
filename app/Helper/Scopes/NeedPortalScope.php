@@ -20,7 +20,7 @@ class NeedPortalScope implements Scope
         //Check FilterByUserType
         if(($user = auth()->user()) && session('filterOn', false)){
             if($user->hasRole('user')){
-                $builder->where('user_id', $user->id);
+                // $builder->where('user_id', $user->id);
             } else if($user->hasRole('organization admin')){
                 $builder->where('organization_id', session('org_id', 0));
             } else if($user->hasRole('campus admin')){

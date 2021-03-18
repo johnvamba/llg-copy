@@ -20,8 +20,8 @@ class OrgPortalScope implements Scope
         //Check FilterByUserType
         if(($user = auth()->user()) && session('filterOn', false)){
             if($user->hasRole('user')){
-                $builder->whereHasMorph('members', 
-                    ['App\User'], fn($member) => $member->where('users.id', $user->id));
+                // $builder->whereHasMorph('members', 
+                //     ['App\User'], fn($member) => $member->where('users.id', $user->id));
             } else if($user->hasRole('organization admin')){
                 $builder->where('organizations.id', session('org_id', 0));
             } else if($user->hasRole('campus admin')){
