@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('login', 'AuthController@login');
+Route::post('direct/login/{mobileNumber}', 'AuthController@directLogin');
 Route::post('password/forget', 'AuthController@sendResetLinkEmail');
 Route::post('password/reset', 'ResetPasswordController@reset');
 Route::post('register', 'AuthController@register');
