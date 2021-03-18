@@ -293,7 +293,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                 ${(location.pathname == "/organizations") || (location.pathname == "/organizations/requests") ? "text-blue-400" : "text-gray-400"}`}
                             >
                                 <Organisations active={location.pathname == "/organizations" ? true : false} />
-                                <span className="px-4">Organizations</span>
+                                <span className="px-4">Organisations</span>
 
 
                                 <div className="absolute inset-y-0 right-0 text-gray-400">

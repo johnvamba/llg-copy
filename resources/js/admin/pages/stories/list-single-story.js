@@ -14,6 +14,9 @@ const ListSingleStory = ({ set = [], handleForm }) => {
                         <div style={{width: '300px'}}>
                             <h2>{i.org_name || 'Missing-Org-Name'}</h2>
                             <span>{i.date || 'Missing-date'}</span>
+                            {
+                                i.author_org && <span className="text-xs float-right">From Org</span>
+                            }
                         </div>
                     </div>
                     <div className="list-single-story__body">

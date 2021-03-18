@@ -8,12 +8,14 @@ import { tryParseJson } from '../../../components/helpers/validator'
 import LoadingScreen from '../../../components/LoadingScreen'
 import { swalDelete2, swalSuccess } from '../../../components/helpers/alerts';
 import { monetary } from '../needs/categorylist';
+import { useSelector } from 'react-redux';
 
 const View = ({data = {}, handleForm, afterSubmit }) => {
     const { title, description, date_numb, raw_draft_json, photo } = data
     const [editorState, setEditorState] = useState( EditorState.createEmpty() );
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(null);
+    const roles = useSelector(({AuthUserReducer}) => AuthUserReducer.roles)
 
     useEffect(()=>{
         if(data.id){
@@ -78,7 +80,7 @@ const View = ({data = {}, handleForm, afterSubmit }) => {
                 <div className="view-story__header-right flex flex-wrap" >
                     <span className="delete" onClick={deleting}>Delete</span>
                     {
-                        data.released_at ? 
+                        (data.released_at && roles.name != 'organization admin') ? 
                         <span className="unpublished" onClick={togglePublish}>Unpublish</span> :
                         <span className="publish" onClick={togglePublish}>Publish</span>
                     }

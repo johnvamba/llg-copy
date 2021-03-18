@@ -77,10 +77,10 @@ const CompleteRegister = () => {
         }).then(({data}) => {
             swalSuccess('Account has been created. Please Log in!');
             history.push('/login');
-        }).catch(()=>{
-            swalError(`We're unable to process your account.`);
-            setErrors({email: 'Unverified token.'});
-        })
+        }).catch(({response})=>{
+            swalError(response.data ? response.data.message : "We're unable to process your account.", '25rem', 5000);
+            setErrors({email: 'Unverified token or account.'});
+        }).finally(() => setComplete(false))
     }
     
     if(completing) {
