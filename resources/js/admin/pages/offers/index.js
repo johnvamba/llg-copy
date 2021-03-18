@@ -4,6 +4,8 @@ import * as OffersAction from '../../../redux/offers/actions';
 import OffersEmployment from '../../../svg/offers-employment';
 import OffersPlus from '../../../svg/offers-plus';
 import Paginator from '../../../components/Paginator';
+import { swalSuccess, swalError } from '../../../components/helpers/alerts';
+import Swal from 'sweetalert2';
 
 //As test icon only
 import OfferForm from './form2';
@@ -83,7 +85,31 @@ const Offers = () => {
         setShowView(showView);
         setShowForm(showForm);
         setFocus(data);
-        console.log('show data?', showView, data)
+    }
+
+     const remove = (item) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `You will delete this offer ${item.title}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it'
+        }).then((result) => {
+            if (result.value) {
+                setFocus({});
+                setShowForm(false);
+                setShowView(false);
+                // handleForm();
+                api.delete(`/api/web/offers/${item.id}`)
+                .then(()=>{
+                    loadTable(true);
+                    swalSuccess('Offer has been deleted');
+                }).catch(()=>{
+                    swalError("There's has been an error on deleting Offer");
+                })
+            }
+        })
     }
 
     return (
@@ -111,7 +137,7 @@ const Offers = () => {
             }
             {
                 showView && 
-                <OfferView data={focus} setShowOfferEdit={(e)=>showItem(focus, false, true)} toClose={()=>showItem({}, false)} />
+                <OfferView data={focus} setShowOfferEdit={(e)=>showItem(focus, false, true)} remove={()=>remove(focus)} toClose={()=>showItem({}, false)} />
             }
         </>
     )
