@@ -28,6 +28,7 @@ class StoryController extends Controller
                 'organization', 
             ])
             ->withCount('appreciates', 'comments')
+            ->whereNotNull('posted_at')
             ->orderBy('created_at', 'desc')
             ->paginate(10, ['*'], 'stories', $page);
 
@@ -58,6 +59,7 @@ class StoryController extends Controller
                 'organization', 
             ])
             ->withCount('appreciates', 'comments')
+            ->whereNotNull('posted_at')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -123,6 +125,7 @@ class StoryController extends Controller
             //->where('featured_start_date', '<=', $date)
             //->where('featured_end_date', '>=', $date)
             ->inRandomOrder()
+            ->whereNotNull('posted_at')
             ->first();
 
         if ($story) {
@@ -149,7 +152,8 @@ class StoryController extends Controller
         if($search)
             $query->where('title', 'LIKE', '%'.strtolower($search).'%');
         
-        $stories = $query->orderBy('created_at', 'desc')
+        $stories = $query->whereNotNull('posted_at')
+            ->orderBy('created_at', 'desc')
             ->paginate(10, ['*'], 'needs', $page);
 
         foreach ($stories as $story) {
@@ -327,6 +331,7 @@ class StoryController extends Controller
                 'appreciates.user',
             )
             ->where('id', $story->id)
+            ->whereNotNull('posted_at')
             ->first();
 
         $result->getMedia('photo');
