@@ -50,6 +50,33 @@ class AuthController extends Controller
         ], 401);
     }
 
+    /**
+     * Direct login for user
+     * 
+     */
+    public function directLogin(Request $request, $mobileNumber)
+    {
+        $user = User::with('profile')
+            ->where('mobile_number', $mobileNumber)
+            ->first();
+
+        if (!$user) {
+            return response()->json([
+                'mobile_number' => 'The mobile number is not exist.'
+            ], 422);
+        }
+
+        $token = $user->createToken('api')->accessToken;
+        $user->getRoleNames();
+
+        $data = [
+            'data' => $user,
+            'token' => $token
+        ];
+
+        return response()->json($data, 202);
+    }
+
 
     /**  
      * Register a user
