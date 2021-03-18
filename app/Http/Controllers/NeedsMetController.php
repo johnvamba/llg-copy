@@ -116,6 +116,8 @@ class NeedsMetController extends Controller
      */
     public function getGroupNeedsMet(Request $request, Group $group)
     {
+        $date;
+
         $users = GroupParticipant::where([
                 ['group_id', $group->id],
                 ['status', 'approved']
@@ -134,7 +136,11 @@ class NeedsMetController extends Controller
             ->latest()
             ->first();
 
-        $date = Carbon::parse($goal->created_at);
+        if ($group['goal']) {
+            $date = Carbon::parse($group->created_at);
+        } else {
+            $date = Carbon::parse($group->created_at);
+        }
 
         $needsMet = NeedMet::whereHasMorph(
                 'model',
