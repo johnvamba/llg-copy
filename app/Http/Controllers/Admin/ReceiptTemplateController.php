@@ -21,12 +21,15 @@ class ReceiptTemplateController extends Controller
     public function show()
     {
         if($org = session('org_id')){
-            $template = ReceiptTemplate::with(['organization.media', 'media'])
+            $template = ReceiptTemplate::with([
+                'organization'=>fn($org)=>$org->unfilter()->with('media'), 
+                'media'])
                 ->firstOrNew(['organization_id' => $org]);
 
             if(!$template->exists){
-                $template->setRelation('organization', Organization::with('media')->findOrFail($org));
+                $template->setRelation('organization', Organization::unfilter()->with('media')->findOrFail($org));
             }
+            // dd($template, Organization::unfilter()->with('media')->findOrFail($org));
 
             return new ReceiptTemplateResource($template);
         }
@@ -45,12 +48,11 @@ class ReceiptTemplateController extends Controller
     {
         if($org = session('org_id')){
             $template = ReceiptTemplate::with('organization')->firstOrNew(['organization_id' => $org]);
-
+            // dd($request->all());
             $template->fill( $request->only('subject', 'html_content', 'facebook', 'twitter', 'instagram', 'text') + [
                 'raw_draft_json' => json_encode($request->get('raw_draft_json'))
             ] );
 
-            $template->save();
 
             if($image = $request->get('photo')){
                 if(strpos($image, 'http') !== false)
@@ -71,6 +73,8 @@ class ReceiptTemplateController extends Controller
                 $template->getMedia('photo');
             }
             skipPhoto:
+
+            $template->save();
 
             $template->loadMissing(['organization', 'media']);
 

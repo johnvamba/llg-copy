@@ -18,7 +18,9 @@ class FilterByUserType
     {
         if($user = auth()->user()){
             if(!$user->hasRole('admin') && !session()->has('filterOn')){
-                $user->loadMissing(['organization', 'campus']);
+                $user->loadMissing([
+                    'organization' => fn($q)=>$q->withoutGlobalScopes(), 
+                    'campus' => fn($q)=>$q->withoutGlobalScopes()]);
                 Session::put('filterOn', true);
                 Session::put('camp_id', optional($user->campus)->id);
                 Session::put('org_id', optional($user->organization)->id);

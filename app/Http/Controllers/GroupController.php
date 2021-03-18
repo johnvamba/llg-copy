@@ -107,6 +107,10 @@ class GroupController extends Controller
                 ->where('status', 'in progress')
                 ->latest()
                 ->first();
+            
+            if (!$group['goal']) {
+                break;
+            }
 
             $date = Carbon::parse($group['goal']->created_at);
 

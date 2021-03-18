@@ -139,8 +139,8 @@ class UserController extends Controller
     public function getProfile(Request $request)
     {
         $user = User::with(['profile', 
-                'organization'=> fn($org) => $org->select('location', 'lat', 'lng'),
-                'campus'=> fn($org) => $org->select('location', 'lat', 'lng')
+                'organization'=> fn($org) => $org->withoutGlobalScopes()->select('location', 'lat', 'lng'),
+                'campus'=> fn($org) => $org->withoutGlobalScopes()->select('location', 'lat', 'lng')
             ])
             ->find(auth()->user()->id);
 

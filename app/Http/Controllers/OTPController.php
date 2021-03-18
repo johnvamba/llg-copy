@@ -54,9 +54,10 @@ class OTPController extends Controller
                 'mobile_number' => $request->mobileNumber,
                 'otp' => bcrypt($code),
                 'status' => 'pending',
-                'expiry' => Carbon::now()->addMinutes(2)
+                'expiry' => Carbon::now()->addMinutes(15)
             ]) : $OTP->update([
-                    'otp' => bcrypt($code), 'expiry' => Carbon::now()->addMinutes(2)
+                    'otp' => bcrypt($code), 
+                    'expiry' => Carbon::now()->addMinutes(15)
                 ]);
 
         try {
@@ -138,7 +139,7 @@ class OTPController extends Controller
 
         $OTP->update([
                 'otp' => bcrypt($code), 
-                'expiry' => Carbon::now()->addMinutes(2)
+                'expiry' => Carbon::now()->addMinutes(15)
             ]);
 
         try {

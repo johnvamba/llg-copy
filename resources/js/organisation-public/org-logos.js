@@ -18,6 +18,7 @@ const OrgLogos = ({images, cropper = {}, setImages, openCropper, handleImages, e
         return <div className="fixed inset-0 cropper">
         <ImageCropper aspect={(cropper.type == 'banner') ? 14/5 : 1} originalImage={cropper.url} 
             onImageCropped={handleBanner}
+            circle={ cropper.type == 'photo'}
             closeCropper={()=>openCropper({...cropper, url: null})} />
         </div>
     }
