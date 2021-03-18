@@ -96,6 +96,6 @@ class Story extends Model implements HasMedia
     }
 
     public function getExternalUrlAttribute() {
-        return '/'. $this->id;
+        return config('app.landsite', 'https://app.neuma.church') . '/story/?id='. $this->id;
     }
 }
