@@ -228,7 +228,16 @@ class OffersController extends Controller
      */
     public function destroy(ServiceOffer $offer)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $offer->delete();
+
+            DB::commit();
+            return response()->json('Deleted', 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['errors'=>$e->getMessage()], 400);
+        }
     }
 
     public function approve(ServiceOffer $offer){
