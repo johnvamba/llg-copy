@@ -25,10 +25,16 @@ class CompleteAccount extends Controller
 	    		->where('token', $request->get('token'))
 	    		->firstOrFail();
 
-	        $user = User::firstOrCreate([
-	            'email' => $request->get('email'),
-	            'name'  => $invite->first_name. ' ' .$invite->last_name,
-	        ]); //If nalahi gani then stop access. like dili dapat duplicate ang email with differnet name. dapat insist siya nga same ang duha
+	    	if($user = User::unfilter()->where('email', $request->get('email'))->first()) {
+	    		if($user->name !== ($invite->first_name. ' ' .$invite->last_name))
+	    			throw new \Exception("User already exists but with different name. Please contact us if this wrong");
+	    	} else {
+		        $user = User::firstOrCreate([
+		            'email' => $request->get('email'),
+		            'name'  => $invite->first_name. ' ' .$invite->last_name,
+		        ]); 
+		        //If nalahi gani then stop access. like dili dapat duplicate ang email with differnet name. dapat insist siya nga same ang duha
+	    	}
 	        
 	        $message = 'Success';
 	        if(

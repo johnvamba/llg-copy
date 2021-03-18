@@ -34,7 +34,7 @@ class StoryResource extends JsonResource
             'photo' => $this->whenLoaded('media', $this->getFirstMediaUrl('photo')),
             'date' => optional($this->posted_at)->format('M j, Y'),
             'released_at' => $this->posted_at,
-
+            'author_org' => $this->when(isset($this->author_org), $this->author_org === 1),
             'description' => $this->when($this->viewAll, $this->description),
             'categories' => $this->when($this->relationLoaded('categories') && $this->viewAll, optional($this->categories)->pluck('name')),
             'raw_draft_json' => $this->when($this->viewAll, $this->raw_draft_json),

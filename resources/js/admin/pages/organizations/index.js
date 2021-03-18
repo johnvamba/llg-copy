@@ -130,10 +130,12 @@ const Organizations = (props) => {
     }
 
     const afterSubmit = (reload = false) =>{
-        if(reload) {
+        let requests = loc.pathname.indexOf('/organizations/requests') == 0;
+
+        if(reload && requests) {
             api.get(`/api/web/organizations`, {
                 params: {
-                    page, search
+                    page, search, requests: !requests,
                 },
                 cache: {
                     exclude: { query: false },
