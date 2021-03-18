@@ -445,6 +445,8 @@ class GroupController extends Controller
      */
     public function show($id)
     {
+        $date;
+
         $group = Group::with([
                 'user', 
             ])
@@ -473,8 +475,12 @@ class GroupController extends Controller
             ->where('status', 'in progress')
             ->latest()
             ->first();
-        
-        $date = Carbon::parse($group['goal']->created_at);
+
+        if ($group['goal']) {
+            $date = Carbon::parse($group['goal']->created_at);
+        } else {
+            $date = Carbon::parse($group->created_at);
+        }
 
         $group->getMedia();
         $group['photo'] = $group->getFirstMediaUrl('photo');

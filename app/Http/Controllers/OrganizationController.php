@@ -29,7 +29,7 @@ class OrganizationController extends Controller
 
         foreach ($orgs as $org) {
             $org['photo'] = $org->getFirstMediaUrl('photo');
-            $org['cover_photo'] = $org->getFirstMediaUrl('cover_photo');
+            $org['cover_photo'] = $org->getFirstMediaUrl('banner');
                 
             $org['activeNeeds'] = Need::where('organization_id', $org->id)
                 ->whereRaw('raised < goal')
@@ -82,7 +82,7 @@ class OrganizationController extends Controller
 
         foreach ($orgs as $org) {
             $org['photo'] = $org->getFirstMediaUrl('photo');
-            $org['cover_photo'] = $org->getFirstMediaUrl('cover_photo');
+            $org['cover_photo'] = $org->getFirstMediaUrl('banner');
                 
             $org['activeNeeds'] = Need::where('organization_id', $org->id)
                 ->whereRaw('raised < goal')
@@ -137,7 +137,7 @@ class OrganizationController extends Controller
         foreach($orgs as $org) {
             $org['type'] = 'organisation';
             $org['photo'] = $org->getFirstMediaUrl('photo');
-            $org['cover_photo'] = $org->getFirstMediaUrl('cover_photo');
+            $org['cover_photo'] = $org->getFirstMediaUrl('banner');
         } 
 
         $groups = Group::select('groups.*')

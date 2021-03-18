@@ -22,7 +22,7 @@ class NeedsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, $page = 1)
+    public function index(Request $request, $page)
     {
         $filters = $request->filters;
 
@@ -60,7 +60,11 @@ class NeedsController extends Controller
         // if (count($needIds) > 0)
         //     $needs->orWhereIn('id', $needIds);
         
-        $results = $needs->whereRaw('raised < goal')
+        $results = $needs
+            ->where(function($query) {
+                $query->whereNotNull('approved_by')
+                    ->whereRaw('raised < goal');
+            })
             ->latest()
             ->paginate(10, ['*'], 'needs', $page);
 
@@ -71,7 +75,7 @@ class NeedsController extends Controller
             $need->categories = $need->categoriesList; //reset?
 
             $need['photo'] = $need->organization->getFirstMediaUrl('photo');
-            $need['cover_photo'] = $need->organization->getFirstMediaUrl('cover_photo');
+            $need['cover_photo'] = $need->organization->getFirstMediaUrl('banner');
 
             $need['totalActiveNeeds'] = Need::where(
                     'organization_id', $need->organization_id
@@ -132,7 +136,7 @@ class NeedsController extends Controller
             $need->categories = $need->categoriesList; //reset?
 
             $need['photo'] = $need->organization->getFirstMediaUrl('photo');
-            $need['cover_photo'] = $need->organization->getFirstMediaUrl('cover_photo');
+            $need['cover_photo'] = $need->organization->getFirstMediaUrl('banner');
 
             $need['totalActiveNeeds'] = Need::where(
                     'organization_id', $need->organization_id

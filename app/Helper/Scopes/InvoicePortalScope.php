@@ -20,7 +20,7 @@ class InvoicePortalScope implements Scope
         //Check FilterByUserType
         if(($user = auth()->user()) && session('filterOn', false)){
             if($user->hasRole('user')){
-                $builder->where('id', $user->id); //technically 1.
+                // $builder->where('id', $user->id); //technically 1.
             } else if($user->hasRole('organization admin')){
                 $builder->whereHas('organization', fn($org)=> $org->where('organizations.id', session('org_id', 0)));
             } else if($user->hasRole('campus admin')){
