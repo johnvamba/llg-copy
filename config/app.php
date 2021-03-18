@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'landsite' => env('WORDPRESS_SITE', 'https://app.neuma.church'),
+    'ls_domain' => env('WORDPRESS_DOMAIN', '*'),
     /*
     |--------------------------------------------------------------------------
     | Application Environment

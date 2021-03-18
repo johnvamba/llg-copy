@@ -116,6 +116,7 @@ class OrganizationController extends Controller
      */
     public function nearby(Request $request, $lat, $lng)
     {
+        \DB::enableQueryLog();
         $collections = collect();
 
         $fetchOrgs = Organization::select('organizations.*')
@@ -127,8 +128,8 @@ class OrganizationController extends Controller
 
         if ($request->filter) {
             $fetchOrgs->whereHas('categories', function($query) use ($request) {
-                    $query->whereIn('organization_category_id', $request->filter);
-                });
+                $query->whereIn('categories.id', $request->filter);
+            })->with('categories');
         }
 
         $orgs = $fetchOrgs->orderBy('distance')->get();

@@ -10,7 +10,7 @@ import MapMini from '../../../components/helpers/map/index-mini';
 import { volunteer } from '../needs/categorylist';
 import { Other } from '../needs/categories'
 
-const OfferView = ({ setShowOfferEdit, data = {} , toClose}) => {
+const OfferView = ({ setShowOfferEdit, data = {}, remove=()=>{} , toClose}) => {
     // const [ title, setTitle ] = useState('')
     // const [ type, setType ] = useState('')
     // const [ location, setLocation ] = useState('')
@@ -71,6 +71,9 @@ const OfferView = ({ setShowOfferEdit, data = {} , toClose}) => {
                     <Circlet stroke={fillCirclet} />
                     {switchStatus()}
                 </div>
+                <button onClick={remove} className="text-red-500 mr-3">
+                    Delete
+                </button>
                 <div className="view-offer__header-right flex flex-wrap" onClick={() => setShowOfferEdit(true)} >
                     <OffersViewEdit />
                     <label>Edit</label>
