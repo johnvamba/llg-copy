@@ -21,7 +21,10 @@ class StoryController extends Controller
      */
     public function index(Request $request)
     {
-        $stories = Story::with(['categories:name', 'media', 'organization.media'])->withCount(['appreciates', 'comments'])->latest();
+        $stories = Story::with(['categories:name', 'media', 'organization.media'])
+        ->withCount(['appreciates', 'comments'])
+        ->authorRole()
+        ->latest();
         $type = '';
 
         if($type = $request->get('type'))
@@ -239,6 +242,11 @@ class StoryController extends Controller
     {
         DB::beginTransaction();
         try {
+            if(!$user = auth()->user())
+                throw new \Exception("Missing authenticated user");
+            if(!$user->hasRole(['campus admin', 'admin']))
+                throw new \Exception("Only admins and campus admin required ", 1);
+                
             $story->update([
                 'posted_at' => !isset($story->posted_at) ? now() : null
             ]);

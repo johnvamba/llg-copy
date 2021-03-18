@@ -64,6 +64,11 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
         }
     }, [data])
 
+    useEffect(() => {
+        if(roles.name == 'organization admin')
+            setSaveAs('draft');
+    }, [roles])
+
     const loadStory = () => {
         setLoading('Loading story...')
         api.get(`/api/web/stories/${data.id}`)
@@ -100,9 +105,10 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
             api.patch(`/api/web/stories/${data.id}`, { ...params })
         const data_id = data.id
         submitPromise.then(({data})=>{
+            const create = roles.name == 'organization admin' ? "Story has been submitted for eval" :'Story has been created!'; 
             setSubmitting(false)
             handleForm(); //cleardata
-            swalSuccess(data_id ? "Story has been updated!": 'Story has been created!')
+            swalSuccess(data_id ? "Story has been updated!": create)
             afterSubmit(data.data, saveAs)
         }).catch(err=>{
             if(err.response){
@@ -221,18 +227,22 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                 <button className="discard" onClick={()=> handleForm({}, true)}>Discard</button>
                 <div className="flex-grow-1"></div>
                 <button className={'preview'} onClick={toggle}>Preview</button>
-                <ButtonGroup className={'publish-btn'}>
-                    <Button className='primary-btn actual-btn' color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
-                    <ButtonDropdown className={'primary-btn btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
-                      <DropdownToggle tag="button">
-                        <StoriesPublishIcon />
-                      </DropdownToggle>
-                      <DropdownMenu>
-                        <DropdownItem onClick={()=>setSaveAs('draft')}>Draft</DropdownItem>
-                        <DropdownItem onClick={()=>setSaveAs('publish')}>Publish</DropdownItem>
-                      </DropdownMenu>
-                    </ButtonDropdown>
-                </ButtonGroup>
+                {
+                    roles.name == 'organization admin' ?
+                    <Button className='primary-btn actual-btn' color={'primary'} onClick={attemptSubmit}>Submit</Button> :
+                    <ButtonGroup className={'publish-btn'}>
+                        <Button className='primary-btn actual-btn' color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
+                        <ButtonDropdown className={'primary-btn btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
+                          <DropdownToggle tag="button">
+                            <StoriesPublishIcon />
+                          </DropdownToggle>
+                          <DropdownMenu>
+                            <DropdownItem onClick={()=>setSaveAs('draft')}>Draft</DropdownItem>
+                            <DropdownItem onClick={()=>setSaveAs('publish')}>Publish</DropdownItem>
+                          </DropdownMenu>
+                        </ButtonDropdown>
+                    </ButtonGroup>
+                }
             </section>
             {
                 modal &&

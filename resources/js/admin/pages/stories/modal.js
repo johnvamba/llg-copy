@@ -11,9 +11,7 @@ import TextEditor from '../../../components/TextEditor'
 import { Editor, EditorState, convertToRaw, convertFromHTML } from "draft-js";
 
 const StoriesModal = ({title, handleChange, photo, modal, toggle, editorState, setEditorState, setSaveAs, attemptSubmit, setTogglePub, togglePub, saveAs}) => {
-    const profile = useSelector(
-        state => state.AuthUserReducer.profile
-    );
+    const { roles, profile } = useSelector(state => state.AuthUserReducer);
     return (
         <section className="story-preview">
             <Modal isOpen={modal} toggle={toggle} className="story-preview__modal">
@@ -31,18 +29,22 @@ const StoriesModal = ({title, handleChange, photo, modal, toggle, editorState, s
                             </form>
                             <section className="story-preview__modal-footer">
                                 <div className="story-preview__modal-footer-container">
-                                    <ButtonGroup className={'publish-btn'}>
-                                        <Button className='primary-btn actual-btn' color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
-                                        <ButtonDropdown className={'primary-btn btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
-                                          <DropdownToggle tag="button">
-                                            <StoriesPublishIcon />
-                                          </DropdownToggle>
-                                          <DropdownMenu>
-                                            <DropdownItem onClick={()=>setSaveAs('draft')}>Draft</DropdownItem>
-                                            <DropdownItem onClick={()=>setSaveAs('publish')}>Publish</DropdownItem>
-                                          </DropdownMenu>
-                                        </ButtonDropdown>
-                                    </ButtonGroup>
+                                    {
+                                        roles.name == 'organization admin' ?
+                                        <Button className='primary-btn actual-btn' color={'primary'} onClick={attemptSubmit}>Submit</Button> :
+                                        <ButtonGroup className={'publish-btn'}>
+                                            <Button className='primary-btn actual-btn' color={'primary'} onClick={attemptSubmit}>{saveAs=='publish' ? 'Publish' : 'Draft'}</Button>
+                                            <ButtonDropdown className={'primary-btn btn btn-primary'} direction="up" onClick={()=>setTogglePub(!togglePub)} isOpen={togglePub} toggle={(e)=>{}}>
+                                              <DropdownToggle tag="button">
+                                                <StoriesPublishIcon />
+                                              </DropdownToggle>
+                                              <DropdownMenu>
+                                                <DropdownItem onClick={()=>setSaveAs('draft')}>Draft</DropdownItem>
+                                                <DropdownItem onClick={()=>setSaveAs('publish')}>Publish</DropdownItem>
+                                              </DropdownMenu>
+                                            </ButtonDropdown>
+                                        </ButtonGroup>
+                                    }
                                     <div>
                                         <button className="discard" onClick={toggle}>
                                             Close Preview
