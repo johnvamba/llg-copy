@@ -24,7 +24,7 @@ class OfferPortalScope implements Scope
         if(($user = auth()->user()) && session('filterOn', false)){
             if($user->hasRole('user')){
                 // $builder->where('user_id', $user->id) //as user
-                $builder->where('model_id', $user->id)->where('model_type', User::class);
+                // $builder->where('model_id', $user->id)->where('model_type', User::class);
             } else if($user->hasRole('organization admin')){
                 $builder->where('model_id', session('org_id'))->where('model_type', Organization::class); //force 0 output
             } else if($user->hasRole('campus admin')){
