@@ -9,15 +9,17 @@ const GroupsList = ({ data = [], handleForm, handleActionButtons, afterSubmit, t
     const removeGroup = (obj = {})=>{
         if(obj.id)
         swalDelete2(obj.name)
-            .then(()=> {
+            .then(({ value })=> {
                 // setLoading('Deleting Group...')
-                api.delete(`/api/web/groups/${obj.id}`)
-                .then(()=>{
-                    afterSubmit();
-                }).finally(()=>{
-                    // setLoading(null)
-                    handleForm()
-                })
+                if(value) {
+                    api.delete(`/api/web/groups/${obj.id}`)
+                    .then(()=>{
+                        afterSubmit();
+                    }).finally(()=>{
+                        // setLoading(null)
+                        handleForm()
+                    })
+                }
             })
         //add api here
     }

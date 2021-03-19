@@ -13,9 +13,12 @@ const ListSingleStory = ({ set = [], handleForm }) => {
                         <div className="list-single-story__rounded-img" style={{backgroundImage: `url(${i.org_photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}} ></div>
                         <div style={{width: '300px'}}>
                             <h2>{i.org_name || 'Missing-Org-Name'}</h2>
-                            <span>{i.date || 'Missing-date'}</span>
                             {
-                                i.author_org && <span className="text-xs float-right">From Org</span>
+                                i.date &&
+                                <span>{i.date}</span>
+                            }
+                            {
+                                i.author_org && <span className="text-xs ml-2">Posted by {i.orgname || "Organization"}</span>
                             }
                         </div>
                     </div>
