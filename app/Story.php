@@ -21,7 +21,7 @@ class Story extends Model implements HasMedia
 
     protected $guarded = [];
 
-    protected $appends = ['created'];
+    protected $appends = ['created', 'external_url'];
 
     protected $dates = ['posted_at'];
     
