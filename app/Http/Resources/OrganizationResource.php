@@ -40,6 +40,7 @@ class OrganizationResource extends JsonResource
                 'acnc' => $this->acnc ?? false, 
                 'fundraiser' => $this->fundraiser ?? false, 
                 'insured' => $this->insured ?? false,
+                'taxable' => $this->taxable ?? false,
                 'stripe' => $this->whenLoaded('credential', $this->cred(), false)
             ]
         ];

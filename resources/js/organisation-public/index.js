@@ -62,7 +62,8 @@ const OrgPub = () => {
         acnc: false,
         fundraiser: false,
         insured: false,
-        terms: false
+        terms: false,
+        taxable: false
     })
 
     const updateAnswers = (field = 'terms', state= false)=>{
