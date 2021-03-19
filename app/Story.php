@@ -23,7 +23,7 @@ class Story extends Model implements HasMedia
 
     protected $appends = ['created'];
 
-    protected $dates = ['posted_at'];
+    protected $dates = ['posted_at', 'submitted_at'];
     
     protected $with = ['tags'];
 

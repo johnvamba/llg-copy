@@ -27,9 +27,18 @@ class StoryController extends Controller
         ->latest();
         $type = '';
 
-        if($type = $request->get('type'))
-            $stories->when($type=='drafts', fn($sub) => $sub->whereNull('posted_at'))
-            ->when($type=='published', fn($sub) => $sub->whereNotNull('posted_at'));
+        if($request->get('type') == 'drafts'){
+            $stories->whereNull('posted_at')->whereNull('submitted_at');
+        } else if($request->get('type') == 'submissions') {
+            $stories->whereNotNull('submitted_at')->whereNull('posted_at');
+        } else {
+            $user = auth()->user();
+            if (optional($user)->hasRole('organization admin')){
+                $stories->whereNotNull('submitted_at');
+            } else if (optional($user)->hasRole(['campus admin','admin'])) {
+                $stories->whereNotNull('posted_at');
+            }
+        }
 
         if($string = $request->get('search')) {
             $stories->where('title', 'like', '%'.$string.'%');
@@ -88,7 +97,6 @@ class StoryController extends Controller
             $story = Story::create([
                 'user_id' => (auth()->user())->id, 
                 'organization_id' => optional($org)->id ?? 1,
-                'posted_at' => $request->get('saveAs') != 'draft' ? now() : null,
             ] + $request->only('title', 'need_id', 'description', 'short_description', 'raw_draft_json') );
 
             if($category = $request->get('category')){
@@ -98,8 +106,6 @@ class StoryController extends Controller
             }
 
             if ($image = $request->get('photo')) {
-
-                    
                 $name = time().'-'.Str::random(20);
                 $extension = explode('/', mime_content_type($image))[1];
                 
@@ -113,6 +119,17 @@ class StoryController extends Controller
                     ->toMediaCollection('photo');
 
                 $story->getMedia('photo');
+            }
+
+            if($user = auth()->user()){
+                if($user->hasRole('organization admin'))
+                    $story->update([
+                        'submitted_at' => $request->get('saveAs') != 'draft' ? now() : null,
+                    ]);
+                else if($user->hasRole(['campus admin','admin']))
+                    $story->update([
+                        'posted_at' => $request->get('saveAs') != 'draft' ? now() : null,
+                    ]);
             }
 
             DB::commit();
@@ -174,13 +191,9 @@ class StoryController extends Controller
                 $story->categories()->sync($categories);
             }
             
-            if(!isset($story->organization_id)) {
-                if( $orgForm = $request->get('organization') ) {
-                    $story->organization_id = $orgForm['id'] ?? $orgForm['value'] ?? null;
-                } else if(auth()->user()->hasRole('organization admin')){
-                    $story->organization_id = session('org_id');
-                }
-            }
+            if( $orgForm = $request->get('organization') ) {
+                $story->organization_id = $orgForm['id'] ?? $orgForm['value'] ?? null;
+            } 
 
             if ($image = $request->get('photo')) {
                 if(strpos($image, 'http') !== false)
@@ -202,6 +215,17 @@ class StoryController extends Controller
                 $story->getMedia('photo');
             }
             skipPhoto:
+
+            if($user = auth()->user()){
+                if($user->hasRole('organization admin'))
+                    $story->fill([
+                        'submitted_at' => $request->get('saveAs') != 'draft' ? now() : null,
+                    ]);
+                else if($user->hasRole(['campus admin','admin']))
+                    $story->fill([
+                        'posted_at' => $request->get('saveAs') != 'draft' ? now() : null,
+                    ]);
+            }
 
             $story->save();
             

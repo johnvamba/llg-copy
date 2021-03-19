@@ -15,10 +15,10 @@ const ListSingleStory = ({ set = [], handleForm }) => {
                             <h2>{i.org_name || 'Missing-Org-Name'}</h2>
                             {
                                 i.date &&
-                                <span>{i.date}</span>
+                                <span className="mr-2" title="Posted at">Post: {i.date}</span>
                             }
                             {
-                                i.author_org && <span className="text-xs ml-2">Posted by {i.orgname || "Organization"}</span>
+                                (i.submit_date) && <span className="text-xs" title="Submitted at">Sub: {i.submit_date}</span>
                             }
                         </div>
                     </div>
