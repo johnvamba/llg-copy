@@ -20,14 +20,15 @@ class CompleteAccount extends Controller
 	    		'password' => 'required|string|min:8'
 	    	]);
 
-	    	$invite = OrgInvites::with('organization')
+	    	$invite = OrgInvites::with(['organization'=>fn($org)=>$org->unfilter()])
 	    		->where('email', $request->get('email'))
 	    		->where('token', $request->get('token'))
 	    		->firstOrFail();
 
 	    	if($user = User::unfilter()->where('email', $request->get('email'))->first()) {
-	    		if($user->name !== ($invite->first_name. ' ' .$invite->last_name))
-	    			throw new \Exception("User already exists but with different name. Please contact us if this wrong");
+	    		// if($user->name !== ($invite->first_name. ' ' .$invite->last_name))
+	    		// 	$user->fill(['name' => $invite->first_name. ' ' .$invite->last_name ]);
+	    		// 	throw new \Exception("User already exists but with different name. Please contact us if this wrong");
 	    	} else {
 		        $user = User::firstOrCreate([
 		            'email' => $request->get('email'),
@@ -38,7 +39,8 @@ class CompleteAccount extends Controller
 	        
 	        $message = 'Success';
 	        if(
-	        	in_array($user->email, [
+	        	in_array(strtolower($user->email), [
+	        		'tamara.espinet26@gmail.com',
 	        		env('ADMIN_EMAIL', 'admin@gmail.com'),
 	        		env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja')
 	        	])
