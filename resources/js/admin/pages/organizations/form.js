@@ -47,6 +47,12 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
     })
     const [loading, setLoading] = useState(false);
     const [campus, setCampus] = useState([]);
+    const [answers, setAnswers] = useState({
+        acnc: false,
+        fundraiser: false,
+        insured: false,
+        taxable: false
+    })
     //Loading data from table
     useEffect(()=>{
         if(data.id){
@@ -69,6 +75,10 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         }
     }, [data])
 
+    const updateAnswers = (field = 'acnc', state = false)=>{
+        setAnswers({ ...answers, [field]: state })
+    }
+
     const loadAll = (clearCache = false) =>{
         setLoading(true)
         const token = axios.CancelToken.source();
@@ -79,10 +89,9 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             clearCacheEntry: clearCache,
             cancelToken: token.token
         }).then(({ data })=>{
-            const { name, email, site, phone_number, description, category = [], campuses, accessable, address, location, lng, lat } = data.data
+            const { name, email, site, phone_number, description, category = [], campuses, accessable, address, location, lng, lat, details } = data.data
             // setForm({...form, name, email, site, phone_number, description})
-            console.log('loaded?', lng, lat, location, campuses)
-
+            setAnswers({...details})
             setLocation({
                 location,
                 lat, 
@@ -184,6 +193,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                 ...form,
                 ...location,
                 ...images,
+                ...answers,
                 category,
                 campus
             }
@@ -397,6 +407,41 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                 {
                                     (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing about description</span>
                                 }
+                            </div>
+                        </div>
+                        <div className="w-full px-2 mb-4">
+                            <div className={`form-group`}>
+                                <label>Please answer these questions</label>
+                                <div className="org-questions">
+                                    <div className={'questions'}>
+                                        <p>Is your organisation registered with ACNC?</p>
+                                        <div className={`question-buttons ${answers.acnc ? 'active': ''}`}>
+                                            <span onClick={()=>updateAnswers('acnc',true)}>YES</span>
+                                            <span onClick={()=>updateAnswers('acnc',false)}>NO</span>
+                                        </div>
+                                    </div>
+                                    <div className={'questions'}>
+                                        <p>Are you registered for fundraising?</p>
+                                        <div className={`question-buttons ${answers.fundraiser ? 'active': ''}`}>
+                                            <span onClick={()=>updateAnswers('fundraiser',true)}>YES</span>
+                                            <span onClick={()=>updateAnswers('fundraiser',false)}>NO</span>
+                                        </div>
+                                    </div>
+                                    <div className={'questions'}>
+                                        <p>Do you have public liability insurance?</p>
+                                        <div className={`question-buttons ${answers.insured ? 'active': ''}`}>
+                                            <span onClick={()=>updateAnswers('insured',true)}>YES</span>
+                                            <span onClick={()=>updateAnswers('insured',false)}>NO</span>
+                                        </div>
+                                    </div>
+                                    <div className={'questions'}>
+                                        <p>Are you registered as a tax deductible gift recipient?</p>
+                                        <div className={`question-buttons ${answers.taxable ? 'active': ''}`}>
+                                            <span onClick={()=>updateAnswers('taxable',true)}>YES</span>
+                                            <span onClick={()=>updateAnswers('taxable',false)}>NO</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

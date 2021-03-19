@@ -123,7 +123,7 @@ class OrganizationController extends Controller
         DB::beginTransaction();
         try {
             $org = Organization::create( 
-                $request->only('name', 'email', 'phone_number', 'site', 'description', 'location', 'lat', 'lng' , 'address') 
+                $request->only('name', 'email', 'phone_number', 'site', 'description', 'location', 'lat', 'lng' , 'acnc', 'fundraiser', 'insured', 'taxable', 'address') 
                 + [
                     'short_description' => substr($request->get('description'), 0, 100)
                 ]);
@@ -255,7 +255,7 @@ class OrganizationController extends Controller
         DB::beginTransaction();
         try {
             $organization->fill( 
-                $request->only('name', 'email','phone_number', 'site', 'description', 'location', 'lat', 'lng', 'address') 
+                $request->only('name', 'email','phone_number', 'site', 'description', 'location', 'lat', 'lng', 'address', 'acnc', 'fundraiser', 'insured', 'taxable') 
                 + [
                     'short_description' => substr($request->get('description'), 0, 100)
                 ]);
@@ -446,7 +446,7 @@ class OrganizationController extends Controller
 
         try {
             $org = Organization::create( 
-                    $request->only('name', 'email', 'phone_number', 'site', 'description',  'acnc', 'fundraiser', 'insured', 'location', 'lat', 'lng') 
+                    $request->only('name', 'email', 'phone_number', 'site', 'description',  'acnc', 'fundraiser', 'insured', 'taxable', 'location', 'lat', 'lng') 
                     + [
                         'short_description' => substr($request->get('description'), 0, 100),
                     ]);
