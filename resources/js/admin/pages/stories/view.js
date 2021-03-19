@@ -44,7 +44,7 @@ const View = ({data = {}, handleForm, afterSubmit }) => {
                     setLoading('Deleting Story...')
                     api.delete(`/api/web/stories/${data.id}`)
                     .then(()=>{
-                        afterSubmit();
+                        afterSubmit(data, 'delete');
                         swalSuccess('Story Removed.')
                     }).finally(()=>{
                         setLoading(null)
@@ -59,9 +59,9 @@ const View = ({data = {}, handleForm, afterSubmit }) => {
         setLoading(data.released_at ? 'Unpublishing Story...' : 'Publishing Story...')
         api.post(`/api/web/stories/${data.id}/toggle`)
             .then(()=>{
-                afterSubmit();
+                afterSubmit(data, data.released_at ? 'unpublished' : 'published');
                 setLoading(null);
-                    swalSuccess(data.released_at ? 'Story Published' : 'Story Unpublished')
+                swalSuccess(data.released_at ? 'Story Published' : 'Story Unpublished')
                 handleForm()
             })
     }
@@ -78,11 +78,14 @@ const View = ({data = {}, handleForm, afterSubmit }) => {
                     <label>{data.released_at ? 'Published' : 'Draft' }</label>
                 </div>
                 <div className="view-story__header-right flex flex-wrap" >
-                    <span className="delete" onClick={deleting}>Delete</span>
+                    <span className="delete mr-2" onClick={deleting}>Delete</span>
+
                     {
-                        (data.released_at && roles.name != 'organization admin') ? 
-                        <span className="unpublished" onClick={togglePublish}>Unpublish</span> :
-                        <span className="publish" onClick={togglePublish}>Publish</span>
+                        roles.name != 'organization admin' && 
+                            ((data.released_at) ? 
+                            <span className="unpublished" onClick={togglePublish}>Unpublish</span> :
+                            <span className="publish" onClick={togglePublish}>Publish</span>)
+                            
                     }
                     <div onClick={() => handleForm(data, true)}>
                         <OffersViewEdit />
