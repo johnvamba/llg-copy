@@ -98,4 +98,10 @@ class Story extends Model implements HasMedia
     public function getExternalUrlAttribute() {
         return config('app.landsite', 'https://app.neuma.church') . '/story/?id='. $this->id;
     }
+
+    public static function scopeAuthorRole($query) {
+        return $query->withCount(['user as author_org' => function($user){
+            $user->unfilter()->whereHas('roles', fn($role) => $role->where('name', 'organization admin'));
+        }]);
+    }
 }

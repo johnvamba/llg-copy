@@ -20,8 +20,8 @@ class GroupPortalScope implements Scope
         //Check FilterByGroupType
         if(($user = auth()->user()) && session('filterOn', false)){
             if($user->hasRole('user')){
-                $builder->where('user_id', $user->id) //as user
-                ->orWhereHas('groups.participants', fn($participants) => $participants->where('user_id', $user->id)->where('status','approved') ); //As participant
+                // $builder->where('user_id', $user->id) //as user
+                // ->orWhereHas('groups.participants', fn($participants) => $participants->where('user_id', $user->id)->where('status','approved') ); //As participant
             } else if($user->hasRole('organization admin')){
                 //Group unfiltered
             } else if($user->hasRole('campus admin')){

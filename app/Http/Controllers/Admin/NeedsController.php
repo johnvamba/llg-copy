@@ -130,7 +130,6 @@ class NeedsController extends Controller
         try {
             $type = NeedsType::where('name', ucfirst( $request->get('type') ) )->firstOrFail();
 
-                dd(session('org_id'));
             if($org = $request->get('organization')) {
                 $organization = Organization::findOrFail($org['id'] ?? 0);
             } else if($session = session('org_id')) {
