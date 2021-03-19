@@ -115,7 +115,7 @@ const OrgPub = () => {
             case 1:
             set = {
                 name: orgInfoForm.name == '' ? 'Missing title' : null,
-                email: orgInfoForm.email == '' ? 'Missing Email' : null,
+                email: orgInfoForm.email == '' && !validateEmail(orgInfoForm.email) ? 'Missing Email' : null,
                 site: orgInfoForm.site == '' ? 'Missing Website' : null,
                 phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
                 description: orgInfoForm.description == '' ? 'Missing Description' : null,
@@ -144,10 +144,12 @@ const OrgPub = () => {
             default:
             return {};
         }
-        if(Object.values(set).filter(i=>i).length > 0){
+        const valid = isValidated(set);
+        // console.log('here', valid, set, errors)
+        if(!_.isEmpty(valid) || !_.isEmpty(errors)){
             setErrors({
                 ...errors,
-                ...set
+                ...valid
             })
         } else {
             setCountTab(newCount)
