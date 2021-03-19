@@ -272,7 +272,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                                   className="input-field space-l"
                                   name="goal"
                                   placeholder="value"
-                                  defaultValue={goal}
+                                  value={goal}
                                   decimalsLimit={2}
                                   onValueChange={updateGoal}
                                 />
