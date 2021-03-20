@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Carbon\Carbon;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 use App\Helper\Traits\StoryPortalTrait;
 
@@ -103,5 +104,18 @@ class Story extends Model implements HasMedia
         return $query->withCount(['user as author_org' => function($user){
             $user->unfilter()->whereHas('roles', fn($role) => $role->where('name', 'organization admin'));
         }]);
+    }
+
+    public function registerMediaConversions(Media $media=null) : void
+    {
+        $this->addMediaConversion('listing')
+            ->width(385)
+            ->performOnCollections('photo')
+            ->nonQueued();
+
+        $this->addMediaConversion('view')
+            ->width(520)
+            ->performOnCollections('photo')
+            ->nonQueued();
     }
 }

@@ -43,7 +43,7 @@ class StoryController extends Controller
         if($string = $request->get('search')) {
             $stories->where('title', 'like', '%'.$string.'%');
         }
-
+        StoryResource::setConversion('listing');
         return StoryResource::collection( $stories->paginate() );
     }
 
@@ -57,6 +57,8 @@ class StoryController extends Controller
         if($string = $request->get('search')) {
             $stories->where('title', 'like', '%'.$string.'%');
         }
+
+        StoryResource::setConversion('listing');
 
         return StoryResource::collection( $stories->paginate() );
     }
@@ -149,6 +151,9 @@ class StoryController extends Controller
     public function show(Story $story)
     {
         $story->loadMissing(['categories', 'media', 'organization']);
+
+        if(auth()->user())
+            StoryResource::setConversion('view');
 
         return new StoryResource($story, true);
     }

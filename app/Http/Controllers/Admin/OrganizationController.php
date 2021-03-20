@@ -62,6 +62,8 @@ class OrganizationController extends Controller
             $mainQuery->pending();
         else $mainQuery->approved();
 
+        OrganizationResource::setConversion('listing');
+
         return OrganizationResource::collection($mainQuery->paginate(16));
     }
 
@@ -216,6 +218,7 @@ class OrganizationController extends Controller
         if(auth()->user()->hasRole('admin'))
             $organization->loadMissing(['campus', 'campuses']);
 
+        OrganizationResource::setConversion('view');
         return new OrganizationResource($organization);
     }
 

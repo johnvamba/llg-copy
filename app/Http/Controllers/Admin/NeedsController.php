@@ -86,6 +86,9 @@ class NeedsController extends Controller
             DB::raw('sum(case when needs.approved_at is not null and goal > raised then 1 else 0 end) as current'),
             DB::raw('sum(case when needs.approved_at is not null and goal <= raised then 1 else 0 end) as past') )
             ->first();
+            
+        NeedResource::setConversion('listing');
+
         return NeedResource::collection( 
             $need->paginate($request->get('per_page') ?? 15)
                 // ->appends($request->except('page')) //Doenst need 
@@ -224,6 +227,8 @@ class NeedsController extends Controller
     public function show(Need $need)
     {
         $need->loadMissing('media', 'type', 'organization', 'categories');//->loadCount('contributors');
+
+        NeedResource::setConversion('view');
 
         return new NeedResource($need);
     }

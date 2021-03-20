@@ -19,7 +19,6 @@ class PaymentsController extends Controller
     {
         $transacts = Payment::with(['user'=>fn($user) => $user->withoutGlobalScopes(), 'model', 'organization' => fn($org)=>$org->unfilter()])
             ->hasMorph('model', ['App\Need'])
-
             ->latest();
 
         return TransactionResource::collection($transacts->paginate($request->get('per_page') ?? 15 ));

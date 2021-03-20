@@ -6,6 +6,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class NeedResource extends JsonResource
 {
+    static $convert = '';
+
+    public static function setConversion($convert = ''){
+        self::$convert = $convert;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -20,7 +26,7 @@ class NeedResource extends JsonResource
             'type' => $this->whenLoaded('type', optional($this->type)->name),
             'goal' => $this->goal,
             'date' => $this->created,
-            'photo' => $this->getFirstMediaUrl('photo'),
+            'photo' => $this->getFirstMediaUrl('photo', self::$convert),
             'ratio' => $this->getRatio(),
             'description' => $this->description,
             'raised' => $this->raised
