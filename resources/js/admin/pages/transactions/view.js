@@ -90,11 +90,17 @@ const TransactionsView = ({ data = {}, handleForm }) => {
                                         <div className="flex-grow-1">
                                             <h4 className="card-title">{data.need_title || 'missing-title'}</h4>
                                             <h5 className="card-subtitle">
-                                                <span className="photo" style={{backgroundImage: `url(${state.org_photo})`}}/>
+                                                {
+                                                    state.org_photo &&
+                                                    <span className="photo" style={{backgroundImage: `url(${state.org_photo})`}}/>
+                                                }
                                                 {data.org_name || 'missing-org'}
                                             </h5>
                                         </div>
-                                        <img className="need-image" style={{backgroundImage: `url(${state.need_photo})`}}/>
+                                        {
+                                            state.need_photo &&
+                                            <img className="need-image" style={{backgroundImage: `url(${state.need_photo})`}}/>
+                                        }
                                     </div>
                                     <label className="about mb-1">About</label>
                                     <p className="details">{state.need_desc}</p>

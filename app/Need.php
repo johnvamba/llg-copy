@@ -60,6 +60,14 @@ class Need extends Model implements HasMedia
         return $this->belongsTo('App\Organization', 'organization_id');
     }
 
+    public function getOnGoingAttribute(){
+        return $this->raised < $this->goal;
+    }
+
+    public static function scopeOnlyOnGoing($query) {
+        return $query->whereRaw('raised < goal')->whereNotNull('approved_at');
+    }
+
     public function campus()
     {
         return $this->hasOneThrough(Campus::class, 
