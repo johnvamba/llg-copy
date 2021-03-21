@@ -6,6 +6,12 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class CampusResource extends JsonResource
 {
+    static $convert = '';
+
+    public static function setConversion($convert = ''){
+        self::$convert = $convert;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -23,7 +29,7 @@ class CampusResource extends JsonResource
             'location' => $this->location,
             'lng' => $this->lng,
             'lat' => $this->lat,
-            'photo' => $this->whenLoaded('media', $this->getFirstMediaUrl('photo')),
+            'photo' => $this->whenLoaded('media', $this->getFirstMediaUrl('photo', self::$convert)),
             'accessed' => $this->when($this->accessed, $this->accessed),
             'address' => $this->address
             //load others stuff here

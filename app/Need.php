@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Carbon\Carbon;
 
@@ -60,6 +62,14 @@ class Need extends Model implements HasMedia
         return $this->belongsTo('App\Organization', 'organization_id');
     }
 
+    public function getOnGoingAttribute(){
+        return $this->raised < $this->goal;
+    }
+
+    public static function scopeOnlyOnGoing($query) {
+        return $query->whereRaw('raised < goal')->whereNotNull('approved_at');
+    }
+
     public function campus()
     {
         return $this->hasOneThrough(Campus::class, 
@@ -87,5 +97,28 @@ class Need extends Model implements HasMedia
     public function setShortDescriptionAttribute($value)
     {
         $this->attributes['short_description'] = substr($value, 0, 40).'...';
+    }
+
+    public function registerMediaConversions(Media $media=null) : void
+    {
+        $this->addMediaConversion('listing')
+            ->width(30)
+            // ->height(30)
+            ->performOnCollections('photo')
+            ->nonQueued();
+
+        $this->addMediaConversion('invoice')
+            ->width(85)
+            // ->height(60)
+            // ->sharpen(10)
+            ->performOnCollections('photo')
+            ->nonQueued();
+
+        $this->addMediaConversion('view') //default
+            ->width(390)
+            // ->height(150)
+            // ->sharpen(10)
+            ->performOnCollections('photo')
+            ->nonQueued();
     }
 }

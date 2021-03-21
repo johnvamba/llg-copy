@@ -36,6 +36,7 @@ class OffersController extends Controller
         if($search = $request->get('search')){
             $offers->where('title', 'like', '%'.$search.'%');
         }
+        OfferResource::setConversion('listing');
 
         return OfferResource::collection($offers->paginate($request->get('per_page') ?? 15));
     }
@@ -134,6 +135,9 @@ class OffersController extends Controller
     public function show(ServiceOffer $offer)
     {
         $offer->loadMissing(['serviceType']);
+
+        OfferResource::setConversion('view');
+
 
         return new OfferResource($offer);
     }

@@ -7,9 +7,10 @@ import Quill from '../../../svg/quill'
 import { usePopper } from 'react-popper';
 import { swalSuccess, swalError } from '../../../components/helpers/alerts';
 import UsersActionsDelete from '../../../svg/users-actions-delete';
+import { useSelector } from 'react-redux';
 
-const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, removeItem, onShowInfo, popAction, handleForm}) => {
-    const { title ="Untitled", type = "Donation", goal = "N/A", status = "achieved", date = "Missing", date_added, photo=null} = item
+const RowTable = ({item, roles, checkValue = false, checkChange, writeStory = ()=>{}, removeItem, onShowInfo, popAction, handleForm}) => {
+    const { title ="Untitled", type = "Donation", goal = "N/A", status = "achieved", date = "Missing", date_added, photo=null, organization = {}} = item
     const [approveElement, setApproveElement] = useState(null);
     const [rejectElement, setRejectElement] = useState(null);
 
@@ -42,12 +43,15 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, r
                 </span>
             </div>
         </td>
+        {
+            roles.name != 'organization admin' && <td className="organisation"><p>{!_.isEmpty(organization) ? organization.label : 'Missing Organization'}</p></td>
+        }
         <td>
             <p>{ type }</p>
         </td>
         <td className="col-currency">
             {
-                (type != 'Volunteer') ? ( <p><span className="currency">$</span>{parseFloat(goal).toFixed(2)}</p>) : <p>N/A</p>
+                (type != 'Volunteer') ? ( <p><span className="currency">$</span>{parseFloat(goal).toFixed(2)}</p>) : <p>{parseInt(goal)} {goal > 1 ? 'volunteers' : 'volunteer'}</p>
             }
         </td>
         <td>
@@ -59,18 +63,24 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, r
         {
             status == 'pending' ?
             <td>
-                <div className="actions row-actions">
-                    <button onClick={()=>popAction(approveElement, 'approve')}>
-                        <i ref={setApproveElement}>
-                        <Check />
-                        </i>
+                {
+                    roles.name != 'organization admin' ?
+                    <div className="actions row-actions">
+                        <button onClick={()=>popAction(approveElement, 'approve')}>
+                            <i ref={setApproveElement}>
+                            <Check />
+                            </i>
+                        </button>
+                        <button onClick={()=>popAction(rejectElement, 'disapprove')}>
+                            <i ref={setRejectElement}>
+                            <Cross/>
+                            </i>
+                        </button>
+                    </div>
+                    : <button className="ml-3" onClick={removeItem}>
+                        <i> <UsersActionsDelete /> </i>
                     </button>
-                    <button onClick={()=>popAction(rejectElement, 'disapprove')}>
-                        <i ref={setRejectElement}>
-                        <Cross/>
-                        </i>
-                    </button>
-                </div>
+                }
             </td> :
             <td>
                 <div className="actions row-actions">
@@ -151,6 +161,7 @@ const ButtonPopper = ({buttonElement, actionClosure, removeItem, btnAction, load
 // Proper content
 //click on row shows popper
 const NeedTable = ({tab = null, data = [], showInfo, loading = false, removeNeed, loadTable, handleForm=()=>{}})=> {
+    const roles = useSelector(({AuthUserReducer}) => AuthUserReducer.roles)
     const [checkAll, setCheckAll] = useState(false)
     const [needs, setNeeds] = useState([])
     const [popped, setPopItem] = useState(null)
@@ -213,6 +224,9 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false, removeNeed
                     <input type='checkbox' checked={checkAll} onChange={e=>handleCheckAll(e.target.checked)}/>
                 </th>
                 <th className="title">Title</th>
+                {
+                    roles.name != 'organization admin' && <th className="organisation">Organisation</th>
+                }
                 <th className="">Type of Need</th>
                 <th className="">Goal</th>
                 <th className="">Status</th>
@@ -223,12 +237,13 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false, removeNeed
         <tbody>
             { loading ?
                 <tr>
-                    <td colSpan={7}>Loading data</td>
+                    <td colSpan={roles.name != 'organization admin' ? 8 : 7}>Loading data</td>
                 </tr> :
                 (
                     ( needs.length > 0 ) ? 
                     needs.map((i, ind) => <RowTable key={ind} 
-                        tab={tab} 
+                        tab={tab}
+                        roles={roles} 
                         item={i} 
                         checkValue={i.checked}
                         checkChange={e=>handleRowCheckbox(i,e.target.checked)}
@@ -239,7 +254,7 @@ const NeedTable = ({tab = null, data = [], showInfo, loading = false, removeNeed
                         />
                     ) :
                     <tr>
-                        <td colSpan={7}>No data found</td>
+                        <td colSpan={ roles.name != 'organization admin' ? 8 : 7}>No data found</td>
                     </tr>
                 )
             }

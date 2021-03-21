@@ -6,6 +6,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class OfferResource extends JsonResource
 {
+    static $convert = '';
+
+    public static function setConversion($convert = ''){
+        self::$convert = $convert;
+    }
     /**
      * Transform the resource into an array.
      *
@@ -20,7 +25,7 @@ class OfferResource extends JsonResource
             'type' => $this->when($this->relationLoaded('serviceType'), optional($this->serviceType)->name),
             'status' => $this->status,
             'ucstatus' => ucfirst($this->status),
-            'photo' => $this->getFirstMediaUrl('photo'),
+            'photo' => $this->getFirstMediaUrl('photo', self::$convert),
             'description' => $this->description,
             'date' => $this->created_at->format('m/d/Y'),
             'location' => $this->location,

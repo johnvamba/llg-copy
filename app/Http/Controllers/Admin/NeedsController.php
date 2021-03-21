@@ -31,17 +31,25 @@ class NeedsController extends Controller
     public function index(Request $request)
     {
         DB::enableQueryLog();
-        $need = Need::with(['type', 'media', 'categories', 'organization'])
+        $need = Need::with(['type', 'media', 'categories', 'organization' => fn($org) => $org->unfilter()])
             ->latest();
-
+        $fullRaw = 'sum(case when needs.approved_at is not null then 1 else 0 end) as aggregate';
         if($user = auth()->user()){
             //filter by user here
+            if($user->hasRole('organization admin')){
+                $fullRaw = 'count(*) as aggregate';
+            }
         }
 
         if($tab = $request->get('tab')){
             $need->when($tab == 'request', fn($need) => $need->whereNull('approved_at') )
-                ->when($tab == 'all', fn($need) => $need->whereNotNull('approved_at') )
-                ->when($tab == 'current', fn($need) => $need->whereRaw('raised < goal')->whereNotNull('approved_at') )
+                ->when($tab == 'all', function($need) {
+                    if($user = auth()->user()){
+                        if(!$user->hasRole('organization admin'))
+                            $need->whereNotNull('approved_at');
+                    }
+                } )
+                ->when($tab == 'current', fn($need) => $need->onlyOnGoing() )
                 ->when($tab == 'past', fn($need) => $need->whereRaw('raised >= goal')->whereNotNull('approved_at') );
         }
 
@@ -74,10 +82,13 @@ class NeedsController extends Controller
 
         $additional = Need::select( 
             DB::raw('sum(case when needs.approved_at is null then 1 else 0 end) as requests'),
-            DB::raw('sum(case when needs.approved_at is not null then 1 else 0 end) as aggregate'),
+            DB::raw($fullRaw),
             DB::raw('sum(case when needs.approved_at is not null and goal > raised then 1 else 0 end) as current'),
             DB::raw('sum(case when needs.approved_at is not null and goal <= raised then 1 else 0 end) as past') )
             ->first();
+            
+        NeedResource::setConversion('listing');
+
         return NeedResource::collection( 
             $need->paginate($request->get('per_page') ?? 15)
                 // ->appends($request->except('page')) //Doenst need 
@@ -216,6 +227,8 @@ class NeedsController extends Controller
     public function show(Need $need)
     {
         $need->loadMissing('media', 'type', 'organization', 'categories');//->loadCount('contributors');
+
+        NeedResource::setConversion('view');
 
         return new NeedResource($need);
     }

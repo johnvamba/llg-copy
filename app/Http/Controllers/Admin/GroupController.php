@@ -32,6 +32,8 @@ class GroupController extends Controller
         if($search = $request->get('search'))
             $group->where('name', 'like', '%'.$search.'%');
 
+        GroupResource::setConversion('listing');
+
         return GroupResource::collection($group->paginate());
     }
 
@@ -120,6 +122,8 @@ class GroupController extends Controller
     {
         //load other parts here
         $group->loadMissing('campus');
+
+        GroupResource::setConversion('view');
 
         return new GroupResource($group);
     }

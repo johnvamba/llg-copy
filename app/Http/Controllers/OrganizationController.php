@@ -340,6 +340,11 @@ class OrganizationController extends Controller
     public function destroy(Organization $organization)
     {
         try {
+            if($user = auth()->user()){
+                if($user->hasRole('organization admin') && session('org_id') == $organization->id)
+                    throw new \Exception("Deleting controlled organization is rejected");
+            }
+
             $organization->delete();
             
             return response()->json([

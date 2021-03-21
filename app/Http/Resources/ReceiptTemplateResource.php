@@ -8,6 +8,11 @@ use App\Organization;
 
 class ReceiptTemplateResource extends JsonResource
 {
+    static $convert = '';
+
+    public static function setConversion($convert = ''){
+        self::$convert = $convert;
+    }
 
     /**
      * Transform the resource into an array.
@@ -28,7 +33,7 @@ class ReceiptTemplateResource extends JsonResource
             'twitter' => $this->twitter, 
             'instagram' => $this->instagram, 
             'text' => $this->text,
-            'photo' => $this->when($this->relationLoaded('media') || $this->relationLoaded('organization'), fn() => $this->getFirstMediaUrl('photo') ? $this->getFirstMediaUrl('photo') : optional($this->organization)->getFirstMediaUrl('photo'))
+            'photo' => $this->when($this->relationLoaded('media') || $this->relationLoaded('organization'), fn() => $this->getFirstMediaUrl('photo') ? $this->getFirstMediaUrl('photo', self::$convert) : optional($this->organization)->getFirstMediaUrl('photo', self::$convert))
         ];
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 //use App\Helper\Traits\GroupPortalTrait;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Group extends Model implements HasMedia
 {
@@ -74,5 +75,12 @@ class Group extends Model implements HasMedia
         return $query->withCount(['goals as goals_acheived'=>function($goalQuery) {
             $goalQuery->where('status', 'acheived');
         }, 'goals']);
+    }
+     public function registerMediaConversions(Media $media=null) : void
+    {
+        $this->addMediaConversion('listing')
+            ->width(50)
+            ->performOnCollections('photo')
+            ->nonQueued();
     }
 }

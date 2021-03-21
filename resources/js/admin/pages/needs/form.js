@@ -202,6 +202,11 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setSubmitting(false)
         })
     }
+    const onChangeDate = (date) => {
+        setDate(date)
+        setOpenDate(false)
+    }
+
     // console.log('handle form???', handleForm)
     return (
        <div className="form need-form">
@@ -276,11 +281,6 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                                   decimalsLimit={2}
                                   onValueChange={updateGoal}
                                 />
-                                {
-                                    /*
-                                <input className="input-field space-l" type="number" placeholder="0.00" value={goal} name="goal" onChange={e=>updateGoal(e.target.value)}/>
-                                    */
-                                }
                             </div>
                             {
                                 (errors.goal || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Goal</span>
@@ -307,14 +307,14 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                     <div className="flex-content">
                         <div className={`form-group w-full ${errors.description && 'form-error'}`}>
                             <label>Volunteer Opportunity Information</label>
-                            <input type="text" className="input-field" placeholder="Enter Information" value={about} onChange={e=>setAbout(e.target.value)}/>
+                            <textarea rows="3" className="input-field" placeholder="Enter Information" value={about} onChange={e=>setAbout(e.target.value)}/>
                             {
                                 (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Volunteer Opportunity Information</span>
                             }
                         </div>
                         <div className={`form-group w-full ${errors.requirements && 'form-error'}`}>
                             <label>Requirements</label>
-                            <textarea className="input-field" placeholder="Enter things to bring" value={bring} onChange={e=>setBring(e.target.value)}/>
+                            <textarea rows="3" className="input-field" placeholder="Enter things to bring" value={bring} onChange={e=>setBring(e.target.value)}/>
                             {
                                 (errors.requirements || false) && <span className="text-xs pt-1 text-red-500 italic">Missing what to bring</span>
                             }
@@ -328,7 +328,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                                     name="date" 
                                     showPopperArrow={false} 
                                     className="input-field"
-                                    onChange={(date)=>setDate(date)}
+                                    onChange={onChangeDate}
                                     onClickOutside={()=>setOpenDate(false)}
                                     onFocus={()=>setOpenDate(true)}
                                     open={openDate}
@@ -342,7 +342,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                             }
                         </div>
                         <div className={`form-group short-width ${errors.time && 'form-error'}`}>
-                            <label>Time</label>
+                            <label>Start Time</label>
                             <TimeInput value={time} onChange={setTime}/>
                             {
                                 (errors.time || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Time of Need</span>
