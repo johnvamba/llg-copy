@@ -40,6 +40,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     const [date, setDate] = useState(new Date());
     const [openDate, setOpenDate] = useState(false);
     const [time, setTime] = useState('09:00 AM');
+    const [endtime, setEndTime] = useState('10:00 AM');
     const [errors, setErrors] = useState({});
     // const [address, setAddress] = useState('');
     const [location, setLocation] = useState({
@@ -114,6 +115,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setDate(new Date)
             setOpenDate(false)
             setTime('09:00 AM')
+            setEndTime('10:00 AM')
             setErrors({})
             // setAddress('')
             setLocation({
@@ -179,7 +181,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     const submit = () => {
         setSubmitting(true)
         const submit = { 
-            title, type, category, goal, date, time, location, organization,
+            title, type, category, goal, date, time, endtime, location, organization,
             photo,//files.length > 0 ? photo : null,
             // address,
             description: about,
@@ -357,6 +359,13 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                             </div>
                             {
                                 (errors.goal || false) && <span className="text-xs pt-1 text-red-500 italic">Missing number of people</span>
+                            }
+                        </div>
+                        <div className={`form-group short-width ${errors.endtime && 'form-error'}`}>
+                            <label>End Time</label>
+                            <TimeInput value={endtime} onChange={setEndTime}/>
+                            {
+                                (errors.endtime || false) && <span className="text-xs pt-1 text-red-500 italic">Missing End Time of Need</span>
                             }
                         </div>
                         <Location 

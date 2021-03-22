@@ -175,12 +175,19 @@ class NeedsController extends Controller
                 ]
             );
 
-            if($request->has('date', 'time')){
+            if($request->has('date', 'time', 'endtime')){
                 $date = Carbon::parse($request->get('date'));
                 $time = Carbon::parse($request->get('time')); 
+                $endtime = Carbon::parse($request->get('endtime')); 
+
                 $need->scheduled_at = $date->setTime($time->hour, $time->minute);
+                $need->ended_at = (clone $date)->setTime($endtime->hour, $endtime->minute);
+                if($endtime->lessThan($time)) {
+                    $need->ended_at->addDay();
+                }
             } else {
                 $need->scheduled_at = now();
+                $need->ended_at = now();
             }
 
             $need->save();
@@ -274,6 +281,7 @@ class NeedsController extends Controller
         //->sometimes(['time', 'date'], 'required', fn($field) => $field == 'volunteer');
 
         DB::beginTransaction();
+
         try {
             $type = NeedsType::where('name', ucfirst( $request->get('type') ) )->firstOrFail();
 
@@ -318,11 +326,18 @@ class NeedsController extends Controller
 
             }
 
-            if($request->has('date', 'time')){
+            if($request->has('date', 'time', 'endtime')){
                 $date = Carbon::parse($request->get('date'));
                 $time = Carbon::parse($request->get('time')); 
+                $endtime = Carbon::parse($request->get('endtime')); 
+
                 $need->scheduled_at = $date->setTime($time->hour, $time->minute);
-            }
+                $need->ended_at = (clone $date)->setTime($endtime->hour, $endtime->minute);
+                if($endtime->lessThan($time)) {
+                    $need->ended_at->addDay();
+                }
+            } 
+
             //We can do better pd diri.
             if ( ($image = $request->get('photo')) && !preg_match('/^http/', $image) ) {
                 $name = time().'-'.Str::random(20);
