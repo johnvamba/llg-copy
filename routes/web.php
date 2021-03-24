@@ -29,6 +29,10 @@ Route::group([
 	Route::get('initreceipt', 'TestControl@sendEmail');
 	Route::get('password', 'TestControl@password');
 	Route::get('story', 'TestControl@story');
+	Route::get('needapprove', 'TestControl@needApprove');
+	Route::get('needreject', 'TestControl@needReject');
+	Route::get('orgapprove', 'TestControl@orgApprove');
+	Route::get('orgreject', 'TestControl@orgReject');
 });
 
 Route::get('/admin/invite', function () {
