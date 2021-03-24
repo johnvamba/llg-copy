@@ -26,6 +26,8 @@ use App\Http\Resources\Mini\UserResource;
 use App\Http\Resources\Mini\NeedResource;
 use App\Jobs\Mail\OrgInvite as JobOrgInvite;
 use App\Jobs\Mail\OrgCreated;
+use App\Jobs\Mail\OrgStatus;
+
 use App\OrgInvites;
 
 use DB;
@@ -596,7 +598,7 @@ class OrganizationController extends Controller
                 'approved_at' => now()
             ]);
             $organization->save();
-
+            dispatch(new OrgStatus($organization, true));
             DB::commit();
             return response()->json(['Success'], 200);
         } catch (\Exception $e) {
@@ -608,8 +610,8 @@ class OrganizationController extends Controller
     public function reject(Organization $organization){
     DB::beginTransaction();
         try {
+            dispatch(new OrgStatus($organization, false));
             $organization->delete();
-
             DB::commit();
             return response()->json(['Success'], 200);
         } catch (\Exception $e) {

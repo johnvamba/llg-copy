@@ -16,9 +16,8 @@ use App\NeedsType;
 use App\Need;
 use App\NeedMet;
 use App\Tag;
-
+use App\Jobs\Mail\NeedStatus;
 use App\Http\Resources\Mini\UserResource;
-
 use App\Http\Resources\NeedResource;
 use Carbon\Carbon;
 class NeedsController extends Controller
@@ -175,12 +174,19 @@ class NeedsController extends Controller
                 ]
             );
 
-            if($request->has('date', 'time')){
+            if($request->has('date', 'time', 'endtime')){
                 $date = Carbon::parse($request->get('date'));
                 $time = Carbon::parse($request->get('time')); 
+                $endtime = Carbon::parse($request->get('endtime')); 
+
                 $need->scheduled_at = $date->setTime($time->hour, $time->minute);
+                $need->ended_at = (clone $date)->setTime($endtime->hour, $endtime->minute);
+                if($endtime->lessThan($time)) {
+                    $need->ended_at->addDay();
+                }
             } else {
                 $need->scheduled_at = now();
+                $need->ended_at = now();
             }
 
             $need->save();
@@ -274,6 +280,7 @@ class NeedsController extends Controller
         //->sometimes(['time', 'date'], 'required', fn($field) => $field == 'volunteer');
 
         DB::beginTransaction();
+
         try {
             $type = NeedsType::where('name', ucfirst( $request->get('type') ) )->firstOrFail();
 
@@ -318,11 +325,18 @@ class NeedsController extends Controller
 
             }
 
-            if($request->has('date', 'time')){
+            if($request->has('date', 'time', 'endtime')){
                 $date = Carbon::parse($request->get('date'));
                 $time = Carbon::parse($request->get('time')); 
+                $endtime = Carbon::parse($request->get('endtime')); 
+
                 $need->scheduled_at = $date->setTime($time->hour, $time->minute);
-            }
+                $need->ended_at = (clone $date)->setTime($endtime->hour, $endtime->minute);
+                if($endtime->lessThan($time)) {
+                    $need->ended_at->addDay();
+                }
+            } 
+
             //We can do better pd diri.
             if ( ($image = $request->get('photo')) && !preg_match('/^http/', $image) ) {
                 $name = time().'-'.Str::random(20);
@@ -380,11 +394,15 @@ class NeedsController extends Controller
     public function approve(Need $need){
         DB::beginTransaction();
         try {
+            if(!optional(auth()->user())->hasRole(['admin', 'campus admin']))
+                throw new Exception("Could not approve request!");
+                
             //Do validation here
             $need->fill([
                 'approved_by' => auth()->user()->id,
                 'approved_at' => now()
             ]);
+            dispatch(new NeedStatus($need, true));
             $need->save();
 
             DB::commit();
@@ -398,6 +416,7 @@ class NeedsController extends Controller
     public function disapprove(Need $need){
     DB::beginTransaction();
         try {
+            dispatch(new NeedStatus($need, false));
             $need->delete();
 
             DB::commit();

@@ -200,7 +200,6 @@ class UsersController extends Controller
         try {
             $user->fill([
                 'email' => $request->get('email'),
-                'password' => bcrypt('temp_secret'),
                 'name'  => $request->get('firstName'). ' ' .$request->get('lastName'),
                 'mobile_number' => $request->get('mobile_number')
             ]);

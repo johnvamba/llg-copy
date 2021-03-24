@@ -7,7 +7,7 @@ import OffersFormCross from '../../../svg/offers-form-cross';
 
 import { selectStylePaddingZero, loadOrganization, loadCampus } from '../../../components/helpers/async_options';
 import { validateEmail, isValidated } from '../../../components/helpers/validator';
-import { swalError } from '../../../components/helpers/alerts';
+import { swalError, swalSuccess } from '../../../components/helpers/alerts';
 import CircleImageForm from '../../../components/CircleImageForm';
 import LoadingScreen from '../../../components/LoadingScreen';
 
@@ -160,9 +160,10 @@ const UsersForm = ({ data, showItem, handleForm }) => {
             const submitPromise = !data.id ? 
                 api.post(`/api/web/users`, params) : 
                 api.patch(`/api/web/users/${data.id}`, params )
-
+            const data_id = data.id
             submitPromise.then(({data})=>{
                 setSubmitting(false)
+                swalSuccess(data_id ? "User has been updated": 'User has been created!');
                 handleForm(false, 'submit', data.data);
             }).catch(err=>{
                 if(err.response){

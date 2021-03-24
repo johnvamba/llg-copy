@@ -9,7 +9,7 @@ use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Helper\Traits\UserPortalTrait;
-use App\Mail\PasswordReset\ResetPasswordNotification;
+use App\Mail\PasswordReset as ResetPasswordNotification;
 
 class User extends Authenticatable
 {
@@ -136,8 +136,8 @@ class User extends Authenticatable
         return $createdUser;
     }
 
-    // public function sendPasswordResetNotification($token)
-    // {
-    //     $this->notify(new ResetPasswordNotification($token));
-    // }
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
 }
