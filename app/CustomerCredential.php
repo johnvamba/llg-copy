@@ -8,4 +8,9 @@ class CustomerCredential extends Model
 {
     //
     protected $guarded = [];
+
+    public function model()
+    {
+        return $this->morphTo();
+    }
 }

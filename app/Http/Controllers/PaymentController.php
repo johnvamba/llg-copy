@@ -85,41 +85,18 @@ class PaymentController extends Controller
         ActivityController $activity, 
         Need $need
     ){
-        \Stripe\Stripe::setApiKey(env('MIX_STRIPE_SECRET_KEY'));
-        
-        if ($request->gateway == 'apple pay') {
-            $credential = CustomerCredential::where(function($query) use ($request) {
-                    $query->where('last_four_number', $request->last4)
-                        ->where('card_brand', $request->brand)
-                        ->where('is_apple_pay_card', $request->isApplePayCard);
-                })->first();
+        $key = OrganizationCredential::where(
+            'organization_id', $need->organization_id
+        )
+        ->first();
 
-            if (!$credential) {
-                try {
-                    $customer = \Stripe\Customer::create([
-                        'name' => auth()->user()->name,
-                        'source' => $request->tokenId
-                    ]);
-
-                    $credential = CustomerCredential::create([
-                        'customer_id' => $customer->id,
-                        'user_id' => auth()->user()->id,
-                        'name' => auth()->user()->name,
-                        'card_brand' => $request->brand,
-                        'last_four_number' => $request->last4,
-                        'expiry_month' => $request->expMonth,
-                        'expiry_year' => $request->expYear,
-                        'is_apple_pay_card' => $request->isApplePayCard
-                    ]);
-                    
-                    $request->merge(['customer_id' => $customer->id]);
-                } catch (\Exception $e) {
-                    \Log::info("Cannot create Stripe customer");
-                }
-            } else {
-                $request->merge(['customer_id' => $credential->customer_id]);
-            }
+        if (!$key) {
+            return response()->json([
+                'message' => "Key not found.",
+            ], 422);
         }
+
+        \Stripe\Stripe::setApiKey($key->secret_key);
 
         try {
             $result = DB::transaction(function () use ($request, $need, $activity) {
@@ -148,7 +125,7 @@ class PaymentController extends Controller
                 ]);
 
                 $charge = \Stripe\Charge::create([
-                    'customer' => $request->customer_id,
+                    'source' => $request->token,
                     'amount' => floatval($request->amount),
                     'currency' => 'usd',
                     'description' => $description
@@ -166,55 +143,25 @@ class PaymentController extends Controller
                 $invoice = $need->invoices()->save($initInvoice);
 
                 //Email receipt
-                $transacts = 'Donation on need#'. $need->id;
-                $organization = $need->organization;
-                if($organization && $transacts){
-                    dispatch(fn() =>  Mail::to(auth()->user())->send(new TransactionReceipt($organization, [  $transacts => $request->amount ?? 0 ])) );
-                }
+                // $transacts = 'Donation on need#'. $need->id;
+                // $organization = $need->organization;
+                // if($organization && $transacts){
+                //     dispatch(fn() =>  Mail::to(auth()->user())->send(new TransactionReceipt($organization, [  $transacts => $request->amount ?? 0 ])) );
+                // }
 
                 return $invoice;
             });
-
-            DB::commit();
 
             return response()->json([
                     'message' => 'Successfully donated.',
                     'data' => $result
                 ], 202);
                 
-        } catch (\Stripe\Exception\RateLimitException $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => 'Too many requests made, too quickly.',
-            ], 429);
-        } catch (\Stripe\Exception\InvalidRequestException $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => "Invalid parameters were supplied.",
-            ], 402);
-        } catch (\Stripe\Exception\AuthenticationException $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => "Authentication Failed",
-            ], 401);
-        } catch (\Stripe\Exception\ApiConnectionException $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => "Something went wrong, Please try again.",
-            ], 504);
-        } catch (\Stripe\Exception\ApiErrorException $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => "Something went wrong, Please try again.",
-            ], 500);
         } catch (Exception $e) {
-            DB::rollBack();
             return response()->json([
-                'message' => "Server error, Please try again.",
+                'message' => $e->getMessage(),
             ], 503);
         }
-
-
         // $key = OrganizationCredential::where(
         //             'organization_id', $need->organization_id
         //         )
