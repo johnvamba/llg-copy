@@ -43,6 +43,7 @@ class NeedsController extends Controller
 
         $needs = Need::with([
                 'organization',
+                'organization.credential',
                 'type', 
                 'categories',
             ]);
