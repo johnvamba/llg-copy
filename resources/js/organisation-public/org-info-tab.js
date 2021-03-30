@@ -111,6 +111,22 @@ const OrgInfoTab = ({ orgData, handleOrgInfo, setOrgInfoForm, setErrors, removeE
                     </div>
                 </div>
                 <div className="w-full xl:w-full px-2">
+                    <div className={`form-group ${errors.benevity_link && 'form-error'}`}>
+                        <label>Benevity Link</label>
+                        <input
+                            className="input-field"
+                            type="text"
+                            value={orgData.benevity_link}
+                            name="benevity_link"
+                            onChange={handleOrgInfo}
+                            placeholder="Enter Benevity Link"
+                        />
+                        {
+                            (errors.benevity_link || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Benevity Link</span>
+                        }
+                    </div>
+                </div>
+                <div className="w-full xl:w-full px-2">
                     <Location 
                         className={`short-width ${errors.location && 'form-error'}`}
                         name={'location'}

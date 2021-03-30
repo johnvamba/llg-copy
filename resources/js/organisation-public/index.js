@@ -51,6 +51,7 @@ const OrgPub = () => {
         name: '', 
         email: '',
         site: '', 
+        benevity_link: '',
         phone_number: '',
         description: '',
         location: '',
@@ -119,7 +120,8 @@ const OrgPub = () => {
                 site: orgInfoForm.site == '' ? 'Missing Website' : null,
                 phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
                 description: orgInfoForm.description == '' ? 'Missing Description' : null,
-                location: orgInfoForm.location == '' ? 'Missing location' : null
+                location: orgInfoForm.location == '' ? 'Missing location' : null,
+                benevity_link: orgInfoForm.benevity_link == '' ? 'Missing Link' : null,
             }
             break;
             case 2:

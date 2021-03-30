@@ -119,6 +119,7 @@ class OrganizationController extends Controller
             'description' => 'required',
             'category' => 'required',
             'location' => 'required',
+            'benevity_link' => 'required',
             // 'address' => 'required',
             'lat' => 'required',
             'lng' => 'required',
@@ -127,7 +128,7 @@ class OrganizationController extends Controller
         DB::beginTransaction();
         try {
             $org = Organization::create( 
-                $request->only('name', 'email', 'phone_number', 'site', 'description', 'location', 'lat', 'lng' , 'acnc', 'fundraiser', 'insured', 'taxable', 'address') 
+                $request->only('name', 'email', 'phone_number', 'site', 'description', 'location', 'lat', 'lng' , 'acnc', 'fundraiser', 'insured', 'taxable', 'address', 'benevity_link') 
                 + [
                     'short_description' => substr($request->get('description'), 0, 100)
                 ]);
@@ -251,6 +252,7 @@ class OrganizationController extends Controller
             'phone_number' => 'required',
             'description' => 'required',
             'category' => 'required',
+            'benevity_link' => 'required',
             // 'address' => 'required',
             'location' => 'required',
             'lat' => 'required',
@@ -260,7 +262,7 @@ class OrganizationController extends Controller
         DB::beginTransaction();
         try {
             $organization->fill( 
-                $request->only('name', 'email','phone_number', 'site', 'description', 'location', 'lat', 'lng', 'address', 'acnc', 'fundraiser', 'insured', 'taxable') 
+                $request->only('name', 'email','phone_number', 'site', 'description', 'location', 'lat', 'lng', 'address', 'acnc', 'fundraiser', 'insured', 'taxable', 'benevity_link') 
                 + [
                     'short_description' => substr($request->get('description'), 0, 100)
                 ]);
@@ -442,6 +444,7 @@ class OrganizationController extends Controller
             'email' => 'required|email|unique:organizations',
             'site' => 'required',
             'phone_number' => 'required',
+            'benevity_link' => 'required',
             'description' => 'required',
             'terms' => 'required',
             'location' => 'required'
@@ -451,7 +454,7 @@ class OrganizationController extends Controller
 
         try {
             $org = Organization::create( 
-                    $request->only('name', 'email', 'phone_number', 'site', 'description',  'acnc', 'fundraiser', 'insured', 'taxable', 'location', 'lat', 'lng') 
+                    $request->only('name', 'email', 'phone_number', 'site', 'description',  'acnc', 'fundraiser', 'insured', 'taxable', 'benevity_link','location', 'lat', 'lng') 
                     + [
                         'short_description' => substr($request->get('description'), 0, 100),
                     ]);
