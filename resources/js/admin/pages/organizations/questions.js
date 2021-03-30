@@ -11,7 +11,7 @@ const No = ()=> <svg width="29" height="28" viewBox="0 0 29 28" fill="none" xmln
   <path fillRule="evenodd" clipRule="evenodd" d="M11.0607 18.5607C11.2559 18.7559 11.5725 18.7559 11.7678 18.5607L19.5607 10.7678C19.7559 10.5725 19.7559 10.2559 19.5607 10.0607L18.8536 9.35355C18.6583 9.15829 18.3417 9.15829 18.1464 9.35355L10.3536 17.1464C10.1583 17.3417 10.1583 17.6583 10.3536 17.8536L11.0607 18.5607Z" fill="#98999B"/>
 </svg>
 
-const TabQuestions = ({ acnc= false, fundraiser= false, insured= false, stripe=false, taxable = false}) => {
+const TabQuestions = ({ acnc= false, fundraiser= false, insured= false, stripe=false, taxable = false, benevity = false}) => {
     return (
         <section className="tab-question">
            <ul>
@@ -34,6 +34,10 @@ const TabQuestions = ({ acnc= false, fundraiser= false, insured= false, stripe=f
                <li>
                   <p> Stripe details added </p>
                   { stripe ? <Yes /> : <No /> }
+               </li>
+               <li>
+                  <p> Benevity Verified </p>
+                  { benevity ? <Yes /> : <No /> }
                </li>
            </ul>
         </section>

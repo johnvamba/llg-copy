@@ -30,6 +30,7 @@ class OrganizationResource extends JsonResource
             'site' => $this->site,
             'lat' => $this->lat,
             'lng' => $this->lng,
+            'benevity_link' => $this->benevity_link,
             'photo' => $this->whenLoaded('media', $this->getFirstMediaUrl('photo', self::$convert)),
             'banner' => $this->whenLoaded('media', $this->getFirstMediaUrl('banner', self::$convert)),
             'active_needs' => $this->when(!is_null($this->active_needs), $this->active_needs ?? 0),
@@ -46,6 +47,7 @@ class OrganizationResource extends JsonResource
                 'fundraiser' => $this->fundraiser ?? false, 
                 'insured' => $this->insured ?? false,
                 'taxable' => $this->taxable ?? false,
+                'benevity' => !is_null($this->benevity_link) ?? false,
                 'stripe' => $this->whenLoaded('credential', $this->cred(), false)
             ]
         ];

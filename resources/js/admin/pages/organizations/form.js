@@ -28,7 +28,8 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         site: '', 
         phone_number: '',
         address: '',
-        description: ''
+        description: '',
+        benevity_link: ''
     })
     const [images, setImages] = useState({
         banner: null,
@@ -56,12 +57,12 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
     //Loading data from table
     useEffect(()=>{
         if(data.id){
-                const { name, email, site, phone_number, description, category, banner, photo, address } = data
-                setForm({ ...form, name, email, site, phone_number, description, address })
+                const { name, email, site, phone_number, description, category, banner, photo, address, benevity_link } = data
+                setForm({ ...form, name, email, site, phone_number, description, address, benevity_link })
                 setImages({banner, photo})
             loadAll()
         } else {
-            setForm({name: '', email: '',site: '', phone_number: '', description: '', address: ''})
+            setForm({name: '', email: '',site: '', phone_number: '', description: '', address: '', benevity_link: ''})
             setImages({ banner: null, photo: null })
             setCampus([])
             setLoading(false)
@@ -368,6 +369,22 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                 />
                                 {
                                     (errors.phone_number || false) && <span className="text-xs pt-1 text-red-500 italic">Missing phone number</span>
+                                }
+                            </div>
+                        </div>
+                        <div className="w-full px-2">
+                                <div className={`form-group ${errors.benevity_link && 'form-error'}`}>
+                                <label>Benevity Link</label>
+                                <input
+                                    className="input-field"
+                                    type="text"
+                                    value={form.benevity_link}
+                                    name="benevity_link"
+                                    onChange={handleInput}
+                                    placeholder="Enter Benevity Link"
+                                />
+                                {
+                                    (errors.benevity_link || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Benevity Link</span>
                                 }
                             </div>
                         </div>
