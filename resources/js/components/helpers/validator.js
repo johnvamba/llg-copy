@@ -21,6 +21,13 @@ export const tryParseJson = (jsonString = '') => {
 	return false
 }
 
+export const validBenevityLink = (link = '')=> {
+	if(validURL(link))
+		return link.match('causes.benevity.org');
+	
+	return false;
+}
+
 export const validURL = (str) => {
   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
