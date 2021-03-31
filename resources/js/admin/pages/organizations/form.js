@@ -6,7 +6,7 @@ import StoriesHouseIcon from '../../../svg/stories-house';
 import PencilIcon from '../../../svg/pencil';
 import CategoryScroll from '../../../components/CategoryScroll'
 import { swalError, swalSuccess } from '../../../components/helpers/alerts';
-import { validateEmail, isValidated } from '../../../components/helpers/validator';
+import { validateEmail, isValidated, validBenevityLink } from '../../../components/helpers/validator';
 import LoadingScreen from '../../../components/LoadingScreen'
 import CircleImageForm from '../../../components/CircleImageForm';
 import BannerImage from '../../../components/BannerImage';
@@ -174,11 +174,12 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
     }
 
     const validateSubmit = () => {
-        const { name, email, site, phone_number, description } = form
+        const { name, email, site, phone_number, description, benevity_link } = form
         const set = isValidated({
             name: name == '' ? "Missing name" : null,
             email: !validateEmail(email) ? "Missing email" : null,
             // site: site == '' ? "Missing site" : null,
+            benevity_link: !validBenevityLink(benevity_link) ? 'Wrong benevity_link' : null,
             phone_number: phone_number == '' ? "Missing phone_number" : null,
             description: description == '' ? "Missing description" : null,
             category: category.length == 0 ? "Missing category" : null,

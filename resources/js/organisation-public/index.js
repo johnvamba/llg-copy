@@ -21,7 +21,7 @@ const swal = withReactContent(Swal);
 import SwalIcon from '../svg/swal-icon'
 import './org-pub.css';
 import { swalError } from '../components/helpers/alerts'
-import { validateEmail, isValidated } from '../components/helpers/validator'
+import { validateEmail, isValidated, validBenevityLink } from '../components/helpers/validator'
 
 import 'pretty-checkbox';
 
@@ -121,7 +121,7 @@ const OrgPub = () => {
                 phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
                 description: orgInfoForm.description == '' ? 'Missing Description' : null,
                 location: orgInfoForm.location == '' ? 'Missing location' : null,
-                benevity_link: orgInfoForm.benevity_link == '' ? 'Missing Link' : null,
+                benevity_link: !validBenevityLink(orgInfoForm.benevity_link) ? 'Invalid Benevity Link' : null,
             }
             break;
             case 2:
