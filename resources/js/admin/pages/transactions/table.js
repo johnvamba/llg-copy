@@ -17,7 +17,7 @@ const RowTable = ({invoice, checkValue = false, checkChange, writeStory = ()=>{}
         <td className="checkbox">
             <input type='checkbox' checked={checkValue} onChange={checkChange}/>
         </td>
-        <td>
+        <td className="cursor-pointer" onClick={onShowInfo}>
             <p>{invoice.charge_id}</p>
         </td>
         <td className="title" onClick={onShowInfo}>
@@ -25,19 +25,19 @@ const RowTable = ({invoice, checkValue = false, checkChange, writeStory = ()=>{}
                 {invoice.org_name}
             </p>
         </td>
-        <td>
+        <td className="cursor-pointer" onClick={onShowInfo}>
             <p>{invoice.giversName}</p>
         </td>
-        <td>
+        <td className="cursor-pointer" onClick={onShowInfo}>
             <p>{invoice.email}</p>
         </td>
-        <td>
+        <td className="cursor-pointer" onClick={onShowInfo}>
             <p>
                 <span className="currency">$</span> 
                 {invoice.amount}
             </p>
         </td>
-        <td>
+        <td className="cursor-pointer" onClick={onShowInfo}>
             <p>{invoice.date}</p>
         </td>
 
