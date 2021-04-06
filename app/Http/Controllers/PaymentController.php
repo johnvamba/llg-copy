@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActivityController;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\TransactionReceipt;
+use App\Jobs\Mail\SendReceipt;
 use App\User;
 use App\UserProfile;
 use App\Need;
@@ -143,12 +142,7 @@ class PaymentController extends Controller
                 $invoice = $need->invoices()->save($initInvoice);
 
                 //Email receipt
-                
-                $transacts = 'Donation on need#'. $need->id;
-                $organization = $need->organization;
-                if($organization && $transacts){
-                    dispatch(fn() =>  Mail::to(auth()->user())->send(new TransactionReceipt($organization, [  $transacts => $request->amount ?? 0 ])) );
-                }
+                dispatch(new SendReceipt($need, auth()->user(), $request->amount));
 
                 return $invoice;
             });
@@ -158,7 +152,7 @@ class PaymentController extends Controller
                     'data' => $result
                 ], 202);
                 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
             ], 503);
