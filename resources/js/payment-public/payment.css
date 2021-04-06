@@ -1,0 +1,27 @@
+.offers-create-form__header h2 {
+    font-family: BrownStdBold;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 150%;
+    color: #587B7F;
+    margin-bottom: 14px;
+}
+
+#cardNumber, #expiry, #cvc{
+    border-bottom: 1px solid #D7DEE3;
+    font-size: 14px;
+    line-height: 24px;
+    padding: 10px 0px;
+    width: 100%;
+    display: block;
+    outline: none;
+    margin-bottom: 1rem;
+}
+.create-org-pub__container .offers-create-form__body form.ccard {
+     margin: 0 !important; 
+     max-height: auto !important; 
+     overflow: visible !important;
+    flex-grow: 2;
+    /* overflow-y: auto; */
+}

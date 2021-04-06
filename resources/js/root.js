@@ -4,13 +4,11 @@ import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
+// import { Elements } from '@stripe/react-stripe-js';
+// import { loadStripe } from '@stripe/stripe-js';
 import AppRoute from './routes/';
 import { messaging } from './services/firebase';
 import Cookie from 'js-cookie'
-
-const stripePromise = loadStripe(`${process.env.MIX_STRIPE_PUBLISHABLE_KEY}`);
 
 const Root = () => {
 
@@ -44,11 +42,9 @@ const Root = () => {
 
     return (
         <Provider store={store}>
-            <Elements stripe={stripePromise}>
-                <BrowserRouter>
-                    <Route component={AppRoute} />
-                </BrowserRouter>
-            </Elements>
+            <BrowserRouter>
+                <Route component={AppRoute} />
+            </BrowserRouter>
         </Provider>
     )
 }
