@@ -114,15 +114,22 @@ class NeedsController extends Controller
      */
     public function getOrganizationNeeds(Request $request, Organization $organization, $page = 1)
     {
-        $needs = Need::with('type', 'categories')
+        $needs = Need::with(
+                'type', 
+                'categories',
+                'organization',
+                'organization.credential'
+            )
             ->where('organization_id', $organization->id);
 
         switch($request->type) {
             case 'active':
-                $needs->whereRaw('raised < goal');
+                $needs->whereNotNull('approved_by')
+                    ->whereRaw('raised < goal');
                 break;
             case 'past':
-                $needs->whereRaw('raised >= goal');
+                $needs->whereNotNull('approved_by')
+                    ->whereRaw('raised >= goal');
                 break;
             default:
                 break;
