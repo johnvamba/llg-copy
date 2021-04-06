@@ -155,6 +155,7 @@ class PaymentController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
+                'amount' => $request->amount
             ], 503);
         }
         // $key = OrganizationCredential::where(

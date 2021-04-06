@@ -47,6 +47,7 @@ Route::resource('otps', 'OTPController');
 Route::post('account', 'Admin\CompleteAccount')->name('post.complete.account');
 
 Route::group(['middleware' => ['auth:api']], function () {
+    Route::get('/payneed', 'Admin\NeedsController@showWithCred');
 
     Route::group(['prefix'=>'web', 'namespace'=>'Admin', 'middleware' => 'datafilter'], function() {
         Route::get('needs/types', 'NeedsController@types');

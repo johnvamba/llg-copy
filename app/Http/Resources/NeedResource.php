@@ -51,6 +51,7 @@ class NeedResource extends JsonResource
             'requirements' => $this->requirements,
             'raised' => $this->raised,
             'address' => $this->address,
+            'pk' => $this->when(isset($this->pk), $this->pk),
             // contribution loaded when search on one user. check Admin/UsersController
             'contri_amount' => $this->whenLoaded('contribution', fn()=> optional($this->contribution)->amount),
             'contri_date' => $this->whenLoaded('contribution', fn()=> optional($this->contribution)->created)

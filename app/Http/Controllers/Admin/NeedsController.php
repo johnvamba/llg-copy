@@ -239,6 +239,29 @@ class NeedsController extends Controller
         return new NeedResource($need);
     }
 
+    public function showWithCred(Request $request)
+    {
+        $need = Need::with(['organization.credential', 'type', 'media'])->find($request->get('need'));
+
+        if(!$need)
+            return response()->json([ 'error' => 'Missing need!'], 400);
+
+        if(!$org = $need->organization)
+            return response()->json([ 'error' => 'Missing organization!'], 400);
+
+        if(!$cred = $org->credential)
+            return response()->json([ 'error' => 'Missing credential!'], 400);
+
+        if(!$key = $cred->publishable_key)
+            return response()->json([ 'error' => 'Missing stripe key!'], 400);
+
+        NeedResource::setConversion('invoice');
+
+        $need->pk = $key;
+
+        return new NeedResource($need);
+    }
+
     public function contributors(Need $need)
     {
         $need->loadMissing([
