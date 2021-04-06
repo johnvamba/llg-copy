@@ -32,10 +32,12 @@ class OrganizationController extends Controller
             $org['cover_photo'] = $org->getFirstMediaUrl('banner');
                 
             $org['activeNeeds'] = Need::where('organization_id', $org->id)
+                ->whereNotNull('approved_by')
                 ->whereRaw('raised < goal')
                 ->count();
 
             $org['pastNeeds'] = Need::where('organization_id', $org->id)
+                ->whereNotNull('approved_by')
                 ->whereRaw('raised >= goal')
                 ->count();
         }
@@ -85,10 +87,12 @@ class OrganizationController extends Controller
             $org['cover_photo'] = $org->getFirstMediaUrl('banner');
                 
             $org['activeNeeds'] = Need::where('organization_id', $org->id)
+                ->whereNotNull('approved_by')
                 ->whereRaw('raised < goal')
                 ->count();
 
             $org['pastNeeds'] = Need::where('organization_id', $org->id)
+                ->whereNotNull('approved_by')
                 ->whereRaw('raised >= goal')
                 ->count();
         }
