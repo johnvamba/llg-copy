@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Invoice as Transact;
 use Illuminate\Http\Request;
 use App\Http\Resources\TransactionResource;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\TransactionReceipt;
+// use Illuminate\Support\Facades\Mail;
+// use App\Mail\TransactionReceipt;
+use App\Jobs\Mail\SendReceipt;
 
 class TransactionController extends Controller
 {
@@ -102,19 +103,11 @@ class TransactionController extends Controller
     public function sendInvoice(Transact $transact)
     {
         $organization = $transact->organization()->first();
-        $transact->loadMissing(['user' => fn($usr) => $usr->withoutGlobalScopes()]);
+        $transact->loadMissing(['user' => fn($usr) => $usr->withoutGlobalScopes(), 'model']);
 
         $transacts = 'Amount';
 
-        switch ($transact->model_type) {
-            case 'App\Need':
-                $transacts = 'Donation on need#'. $transact->model_id;
-                break;
-            default:
-                break;
-        }
-
-        dispatch(fn() => Mail::to($transact->user)->send(new TransactionReceipt($organization, [  $transacts => $transact->amount ?? 0 ])) );
+        dispatch(new SendReceipt($transact->model, $transact->user, $transact->amount));
 
         return response()->json('Receipt will be sent to email shortly', 200);
     }
