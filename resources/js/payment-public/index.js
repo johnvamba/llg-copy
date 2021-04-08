@@ -23,6 +23,8 @@ import '../organisation-public/org-pub.css';
 import CurrencyInput from 'react-currency-input-field';
 import 'pretty-checkbox';
 import StripeElement from './stripeelement'
+import axios from 'axios'
+
 const auth_token = Cookie.get('oToken_admin') || Cookie.get('oToken_org_admin');
 
 const PublicPayment = () => {
@@ -34,6 +36,8 @@ const PublicPayment = () => {
     const [paymentSuccess, setSuccess] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [need, setNeed] = useState({})
+    const [authtoken, setAuthToken]= useState(false)
+    const [axiosState, setAxiosState] = useState(null);
     const location = useLocation();
 
     // const [card, setCard] = useState('');
@@ -42,11 +46,15 @@ const PublicPayment = () => {
     // const elements = useElements();
 
     useEffect(()=>{
+        console.log('somethign');
         const url = new URL(window.location.href)
         const need_id = url.searchParams.get('need_id');
-        const auth = url.searchParams.get('auth') || auth_token;
-        if(need_id && auth)
+        const auth = url.searchParams.get('token') || auth_token;
+        console.log('auth', url.searchParams.get('token'), auth_token)
+        if(need_id && auth){
+            setAuthToken(auth);
             loadAll(need_id, auth);
+        }
         // if(!email || EmailValidator(email) != ''){
         //     set.email = 'We could not proceed without a proper email';
         //     setErrors({...errors, ...set})
@@ -62,13 +70,16 @@ const PublicPayment = () => {
 
     const loadAll = (need_id, auth) => {
         //User cred from api
+        // console.log(axios, need_id, auth);
         setLoading(true)
-        api.get('/api/payneed', {
-            params: {
-                token: auth,
-                need: need_id
-            }
-        }).then(({data})=>{
+        axios.get('/api/payneed', {
+                params: {
+                    need: need_id
+                },
+                headers: {
+                    Authorization: `Bearer ${auth}`
+                }
+            }).then(({data})=>{
             setNeed(data.data)
             if(data.data.pk) {
                 /*stripe.setOptions({
@@ -102,9 +113,13 @@ const PublicPayment = () => {
         const {token, error} = await stripe.createToken( elements.getElement(CardNumberElement) );
         console.log('stripePromise', stripePromise, token, error, stripe);
         if(token) {
-            api.post(`api/payment/need/${need.id}`, {
+            axios.post(`api/payment/need/${need.id}`, {
                 amount,
                 token: token.id
+            }, {
+                headers: {
+                    Authorization: `Bearer ${authtoken}`
+                }
             }).then(()=> {
                 setSubmitting(false)
                 setSuccess(true)
