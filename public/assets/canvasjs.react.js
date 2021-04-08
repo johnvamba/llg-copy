@@ -2529,7 +2529,7 @@ var CanvasJSReact = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\Projects\neuma\resources\assets\canvasjs.react.js */"./resources/assets/canvasjs.react.js");
+module.exports = __webpack_require__(/*! /Users/normanamaro/Documents/Workplace/Sites/Neuma-web/resources/assets/canvasjs.react.js */"./resources/assets/canvasjs.react.js");
 
 
 /***/ })
