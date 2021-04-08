@@ -45,7 +45,6 @@ const PublicPayment = () => {
 
     // const elements = useElements();
 
-<<<<<<< HEAD
     useEffect(() => {
         console.log('somethign');
         const url = new URL(window.location.href)
@@ -53,13 +52,6 @@ const PublicPayment = () => {
         const auth = url.searchParams.get('token') || auth_token;
         console.log('auth', url.searchParams.get('token'), auth_token)
         if (need_id && auth) {
-=======
-    useEffect(()=>{
-        const url = new URL(window.location.href)
-        const need_id = url.searchParams.get('need_id');
-        const auth = url.searchParams.get('token') || auth_token;
-        if(need_id && auth){
->>>>>>> ae3c043a6f2ec3168c3d20a82af6e04ac42a3c31
             setAuthToken(auth);
             loadAll(need_id, auth);
         }
@@ -128,14 +120,9 @@ const PublicPayment = () => {
         // event.preventDefault()
         setSubmitting(true);
         const stripe = await stripePromise.then(stripe => stripe)
-<<<<<<< HEAD
         const { token, error } = await stripe.createToken(elements.getElement(CardNumberElement));
         console.log('stripePromise', stripePromise, token, error, stripe);
         if (token) {
-=======
-        const {token, error} = await stripe.createToken( elements.getElement(CardNumberElement) );
-        if(token) {
->>>>>>> ae3c043a6f2ec3168c3d20a82af6e04ac42a3c31
             axios.post(`api/payment/need/${need.id}`, {
                 amount,
                 token: token.id
