@@ -219,3 +219,12 @@ header .filter-header .filter-need {
 	background-size: contain;
 	background-position: center; 
 }*/
+.table tbody tr td.organisation {
+	width: 300px;
+}
+.table tbody tr td.organisation p {
+	width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

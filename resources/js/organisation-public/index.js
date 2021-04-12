@@ -21,7 +21,7 @@ const swal = withReactContent(Swal);
 import SwalIcon from '../svg/swal-icon'
 import './org-pub.css';
 import { swalError } from '../components/helpers/alerts'
-import { validateEmail, isValidated } from '../components/helpers/validator'
+import { validateEmail, isValidated, validBenevityLink } from '../components/helpers/validator'
 
 import 'pretty-checkbox';
 
@@ -51,6 +51,7 @@ const OrgPub = () => {
         name: '', 
         email: '',
         site: '', 
+        benevity_link: '',
         phone_number: '',
         description: '',
         location: '',
@@ -62,7 +63,8 @@ const OrgPub = () => {
         acnc: false,
         fundraiser: false,
         insured: false,
-        terms: false
+        terms: false,
+        taxable: false
     })
 
     const updateAnswers = (field = 'terms', state= false)=>{
@@ -112,14 +114,15 @@ const OrgPub = () => {
         }
         switch(countTab){
             case 1:
-            // set = {
-            //     name: orgInfoForm.name == '' ? 'Missing title' : null,
-            //     email: orgInfoForm.email == '' ? 'Missing Email' : null,
-            //     site: orgInfoForm.site == '' ? 'Missing Website' : null,
-            //     phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
-            //     description: orgInfoForm.description == '' ? 'Missing Description' : null,
-            //     location: orgInfoForm.location == '' ? 'Missing location' : null
-            // }
+            set = {
+                name: orgInfoForm.name == '' ? 'Missing title' : null,
+                email: orgInfoForm.email == '' && !validateEmail(orgInfoForm.email) ? 'Missing Email' : null,
+                site: orgInfoForm.site == '' ? 'Missing Website' : null,
+                phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
+                description: orgInfoForm.description == '' ? 'Missing Description' : null,
+                location: orgInfoForm.location == '' ? 'Missing location' : null,
+                benevity_link: !validBenevityLink(orgInfoForm.benevity_link) ? 'Invalid Benevity Link' : null,
+            }
             break;
             case 2:
             set = {
@@ -143,10 +146,12 @@ const OrgPub = () => {
             default:
             return {};
         }
-        if(Object.values(set).filter(i=>i).length > 0){
+        const valid = isValidated(set);
+        // console.log('here', valid, set, errors)
+        if(!_.isEmpty(valid) || !_.isEmpty(errors)){
             setErrors({
                 ...errors,
-                ...set
+                ...valid
             })
         } else {
             setCountTab(newCount)

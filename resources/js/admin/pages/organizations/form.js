@@ -6,7 +6,7 @@ import StoriesHouseIcon from '../../../svg/stories-house';
 import PencilIcon from '../../../svg/pencil';
 import CategoryScroll from '../../../components/CategoryScroll'
 import { swalError, swalSuccess } from '../../../components/helpers/alerts';
-import { validateEmail, isValidated } from '../../../components/helpers/validator';
+import { validateEmail, isValidated, validBenevityLink } from '../../../components/helpers/validator';
 import LoadingScreen from '../../../components/LoadingScreen'
 import CircleImageForm from '../../../components/CircleImageForm';
 import BannerImage from '../../../components/BannerImage';
@@ -28,7 +28,8 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         site: '', 
         phone_number: '',
         address: '',
-        description: ''
+        description: '',
+        benevity_link: ''
     })
     const [images, setImages] = useState({
         banner: null,
@@ -47,15 +48,21 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
     })
     const [loading, setLoading] = useState(false);
     const [campus, setCampus] = useState([]);
+    const [answers, setAnswers] = useState({
+        acnc: false,
+        fundraiser: false,
+        insured: false,
+        taxable: false
+    })
     //Loading data from table
     useEffect(()=>{
         if(data.id){
-                const { name, email, site, phone_number, description, category, banner, photo, address } = data
-                setForm({ ...form, name, email, site, phone_number, description, address })
+                const { name, email, site, phone_number, description, category, banner, photo, address, benevity_link } = data
+                setForm({ ...form, name, email, site, phone_number, description, address, benevity_link })
                 setImages({banner, photo})
             loadAll()
         } else {
-            setForm({name: '', email: '',site: '', phone_number: '', description: '', address: ''})
+            setForm({name: '', email: '',site: '', phone_number: '', description: '', address: '', benevity_link: ''})
             setImages({ banner: null, photo: null })
             setCampus([])
             setLoading(false)
@@ -69,6 +76,10 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         }
     }, [data])
 
+    const updateAnswers = (field = 'acnc', state = false)=>{
+        setAnswers({ ...answers, [field]: state })
+    }
+
     const loadAll = (clearCache = false) =>{
         setLoading(true)
         const token = axios.CancelToken.source();
@@ -79,10 +90,9 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             clearCacheEntry: clearCache,
             cancelToken: token.token
         }).then(({ data })=>{
-            const { name, email, site, phone_number, description, category = [], campuses, accessable, address, location, lng, lat } = data.data
+            const { name, email, site, phone_number, description, category = [], campuses, accessable, address, location, lng, lat, details } = data.data
             // setForm({...form, name, email, site, phone_number, description})
-            console.log('loaded?', lng, lat, location, campuses)
-
+            setAnswers({...details})
             setLocation({
                 location,
                 lat, 
@@ -164,11 +174,12 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
     }
 
     const validateSubmit = () => {
-        const { name, email, site, phone_number, description } = form
+        const { name, email, site, phone_number, description, benevity_link } = form
         const set = isValidated({
             name: name == '' ? "Missing name" : null,
             email: !validateEmail(email) ? "Missing email" : null,
             // site: site == '' ? "Missing site" : null,
+            benevity_link: !validBenevityLink(benevity_link) ? 'Wrong benevity_link' : null,
             phone_number: phone_number == '' ? "Missing phone_number" : null,
             description: description == '' ? "Missing description" : null,
             category: category.length == 0 ? "Missing category" : null,
@@ -184,6 +195,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                 ...form,
                 ...location,
                 ...images,
+                ...answers,
                 category,
                 campus
             }
@@ -362,6 +374,22 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                             </div>
                         </div>
                         <div className="w-full px-2">
+                                <div className={`form-group ${errors.benevity_link && 'form-error'}`}>
+                                <label>Benevity Link</label>
+                                <input
+                                    className="input-field"
+                                    type="text"
+                                    value={form.benevity_link}
+                                    name="benevity_link"
+                                    onChange={handleInput}
+                                    placeholder="Enter Benevity Link"
+                                />
+                                {
+                                    (errors.benevity_link || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Benevity Link</span>
+                                }
+                            </div>
+                        </div>
+                        <div className="w-full px-2">
                         {/*
                             <div className={`form-group ${errors.address && 'form-error'}`}>
                                 <label>Street Address</label>
@@ -397,6 +425,41 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                 {
                                     (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing about description</span>
                                 }
+                            </div>
+                        </div>
+                        <div className="w-full px-2 mb-4">
+                            <div className={`form-group`}>
+                                <label>Please answer these questions</label>
+                                <div className="org-questions">
+                                    <div className={'questions'}>
+                                        <p>Is your organisation registered with ACNC?</p>
+                                        <div className={`question-buttons ${answers.acnc ? 'active': ''}`}>
+                                            <span onClick={()=>updateAnswers('acnc',true)}>YES</span>
+                                            <span onClick={()=>updateAnswers('acnc',false)}>NO</span>
+                                        </div>
+                                    </div>
+                                    <div className={'questions'}>
+                                        <p>Are you registered for fundraising?</p>
+                                        <div className={`question-buttons ${answers.fundraiser ? 'active': ''}`}>
+                                            <span onClick={()=>updateAnswers('fundraiser',true)}>YES</span>
+                                            <span onClick={()=>updateAnswers('fundraiser',false)}>NO</span>
+                                        </div>
+                                    </div>
+                                    <div className={'questions'}>
+                                        <p>Do you have public liability insurance?</p>
+                                        <div className={`question-buttons ${answers.insured ? 'active': ''}`}>
+                                            <span onClick={()=>updateAnswers('insured',true)}>YES</span>
+                                            <span onClick={()=>updateAnswers('insured',false)}>NO</span>
+                                        </div>
+                                    </div>
+                                    <div className={'questions'}>
+                                        <p>Are you registered as a tax deductible gift recipient?</p>
+                                        <div className={`question-buttons ${answers.taxable ? 'active': ''}`}>
+                                            <span onClick={()=>updateAnswers('taxable',true)}>YES</span>
+                                            <span onClick={()=>updateAnswers('taxable',false)}>NO</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

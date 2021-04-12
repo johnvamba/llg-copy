@@ -7,6 +7,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\HasMedia;
 
 use App\Helper\Traits\CampusPortalTrait;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Campus extends Model implements HasMedia
 {
@@ -36,5 +37,18 @@ class Campus extends Model implements HasMedia
     public function groups()
     {
         return $this->morphedByMany('App\Group', 'location', 'group_locations');
+    }
+
+     public function registerMediaConversions(Media $media=null) : void
+    {
+        $this->addMediaConversion('listing')
+            ->width(370)
+            ->performOnCollections('photo')
+            ->nonQueued();
+
+        $this->addMediaConversion('view')
+            ->width(605)
+            ->performOnCollections('photo')
+            ->nonQueued();
     }
 }

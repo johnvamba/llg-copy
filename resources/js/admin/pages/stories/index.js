@@ -15,15 +15,26 @@ import { setOrg, setNeedId } from '../../../redux/stories/actions';
 import './story.css';
 
 const Stories = () => {
-
     const [page, setPage] = useState(1);
+    const [edited, setEdited] = useState(false);
     const [counts, setCounts] = useState({
         published: 0,
-        drafts: 0
+        drafts: 0,
+        submissions: 0
     })
-        const [endPage, setEndPage] = useState(1);
+    const roles = useSelector(({AuthUserReducer}) => AuthUserReducer.roles);
+    const [storyData, setStoryData] = useState({
+        data: [],
+        meta: {
+            current_page: 1,
+            last_page: 1,
+            per_page: 15,
+            total: 0,
+        }
+    })
 
     const [publishes, setPublishes] = useState([])
+    const [submissions, setSubs] = useState([])
     const [drafts, setDrafts] = useState([])
 
     const [focus, setFocus] = useState({});
@@ -39,92 +50,74 @@ const Stories = () => {
     const search = useSelector(({SearchReducer}) => SearchReducer.search);
     const dispatch = useDispatch();
 
-    const loadPublished = (clearCache = false) => {
-        setLoading(true)
-        const addFilter = {}; //for redux values
-        const token = axios.CancelToken.source();
-        api.get(`/api/web/stories`, {
-            params: {
-                page, ...addFilter,
-                type: 'published',
-                search
-            },
-            cache: {
-                exclude: { query: false },
-            }, 
-            clearCacheEntry: clearCache,
-            cancelToken: token.token
-        }).then((res)=>{
-            const { data } = res
-            setPublishes(data.data || [])
-            setCounts({
-                ...counts,
-                published: data.meta ? data.meta.total : 0
-            })
-            setLoading(false)
-        }).finally(()=>{
-        })
-        return token; //for useEffect
-    }
-    const loadDrafts = (clearCache = false) => {
-        setLoading(true)
-        const addFilter = {}; //for redux values
-        const token = axios.CancelToken.source();
-        api.get(`/api/web/stories`, {
-            params: {
-                page, ...addFilter,
-                type: 'drafts',
-                search
-            },
-            cache: {
-                exclude: { query: false },
-            }, 
-            clearCacheEntry: clearCache,
-            cancelToken: token.token
-        }).then((res)=>{
-            const { data } = res
-            setDrafts(data.data || [])
-            setCounts({
-                ...counts,
-                drafts: data.meta ? data.meta.total : 0
-            })
-            setLoading(false)
-        }).finally(()=>{
-        })
-        return token; //for useEffect
-    }
-
-
-    useEffect(()=>{
-        const c = loadPublished()
-        const d = loadDrafts()
-        return ()=>{
-            c.cancel('reset');
-            d.cancel('reset');
+    const getType = ()=>{
+        switch(location.pathname){
+            case '/stories/submissions':
+            return 'submissions';
+            case '/stories/drafts':
+            return 'drafts';
+            default:
+            return;
         }
-    }, [search])
+    }
+
+    const apiLoad = (options = {})=>{
+        return api.get(`/api/web/stories`, options)
+    }
+
+    const getTitle = ()=>{
+        const count = storyData.meta.total;
+        if(location.pathname == '/stories' && roles.name == 'organization admin')
+            return `Submissions (${count})`;
+
+        switch(location.pathname){
+            case '/stories/submissions':
+            return `Submissions (${count})`;
+            case '/stories/drafts':
+            return `Drafts (${count})`;
+            case '/stories':
+            return `Published (${count})`;
+            default:
+            return `Stories (${count})`;
+        }
+    }
+
+    const loadStories = (clearCache = false, type = null) => {
+        setLoading(true)
+        const addFilter = {}; //for redux values
+        const token = axios.CancelToken.source();
+        apiLoad({
+            params: {
+                page, ...addFilter,
+                type: type || getType(),
+                search
+            },
+            cache: {
+                exclude: { query: false },
+            }, 
+            clearCacheEntry: clearCache,
+            cancelToken: token.token
+        }).then((res)=>{
+            const { data } = res
+            setStoryData({ 
+                ...storyData,
+                data: data.data,
+                meta: data.meta
+            })
+            setLoading(false)
+        }).finally(()=>{
+        })
+        return token; //for useEffect
+    }
 
     useEffect(()=>{
         //redux defaults
+        loadStories(edited);
         dispatch( setNeedId(null) )
         dispatch( setOrg(null) )
+        if(edited)
+            setEdited(false)
     }, [location])
-
-    // const stories = useSelector(
-    //         state => state.StoriesReducer.stories
-    //     )
-
-
-    // useEffect(() => {
-    //     async function fetchData() {
-    //         let {data} = await axios.post('/api/story/lists', {
-    //                 'limit': limit
-    //             });
-
-    //         dispatch(StoriesActions.setStories(data));
-    //     }
-    //     fetchData();
-    // }, [limit])
 
     //disable scrolling if there is any modal/popup
     if (windowWidth < 1024) {
@@ -134,11 +127,6 @@ const Stories = () => {
             : document.body.style.overflow = 'auto'; 
         }, [showCreateStory, showViewStory, showEditStory])
     }
-    
-
-    // const handleLimitChange = (limit) => {
-    //     setLimit(parseInt(limit));
-    // }
 
     const handleChangePage = (page) => {
         setPage(parseInt(page));
@@ -151,48 +139,38 @@ const Stories = () => {
     }
 
     const afterSubmit = (data = {}, type = 'draft') => {
-        // console.log('afterSubmit',type,data)
-        // switch(type){
-        //     case 'draft':
-        //     loadDrafts(true);
-        //     break;
+        loadStories(true)
+        // switch(type) {
         //     case 'publish':
-        //     loadPublished(true);
+        //     break;
+        //     case 'submit':
+        //     break;
+        //     case 'draft':
+        //     break;
+        //     case 'unpublished':
+        //     break;
+        //     case 'published':
+        //     break;
         //     default:
+        //     break;
         // }
-        loadDrafts(true);
-        loadPublished(true);
-        // if(type == 'draft'){
-        //     loadDrafts(true)
-        //     // setDrafts([data, ...drafts])
-        //     // setCounts({
-        //     //     ...counts,
-        //     //     drafts: counts.drafts+1
-        //     // })
-        // } else {
-        //     loadPublished(true)
-        //     // setPublishes([data, ...publishes])
-        //     // setCounts({
-        //     //     ...counts,
-        //     //     published: counts.published+1
-        //     // })
-        // }
+        setEdited(true);
     }
 
     return (
         <>
             <section className="stories">
-                <StoriesHeader title={(location.pathname == "/stories") ? `Published (${counts.published || 0})` : `Draft (${counts.drafts || 0})`} setState={setShowCreateStory} />
+                <StoriesHeader title={getTitle()} setState={setShowCreateStory} />
                 {
                     loading ? <LoadingScreen title={'Loading Stories'}/> :
-                    <List set={(location.pathname == "/stories") ? publishes : drafts} handleForm={handleForm} />
-                    // : <StoriesDrafts set={} setShowCreateStory={setShowCreateStory} />
+                    <List set={storyData.data || []} handleForm={handleForm} />
                 }
             </section>
             { showCreateStory && <StoriesForm data={focus} handleForm={handleForm} afterSubmit={afterSubmit} /> }
             { showViewStory && <View data={focus} handleForm={handleForm} afterSubmit={afterSubmit} /> }
         </>
     )
+
 }
 
 export default Stories;

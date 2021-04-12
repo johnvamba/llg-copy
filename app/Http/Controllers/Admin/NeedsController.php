@@ -16,9 +16,8 @@ use App\NeedsType;
 use App\Need;
 use App\NeedMet;
 use App\Tag;
-
+use App\Jobs\Mail\NeedStatus;
 use App\Http\Resources\Mini\UserResource;
-
 use App\Http\Resources\NeedResource;
 use Carbon\Carbon;
 class NeedsController extends Controller
@@ -31,17 +30,25 @@ class NeedsController extends Controller
     public function index(Request $request)
     {
         DB::enableQueryLog();
-        $need = Need::with(['type', 'media', 'categories', 'organization'])
+        $need = Need::with(['type', 'media', 'categories', 'organization' => fn($org) => $org->unfilter()])
             ->latest();
-
+        $fullRaw = 'sum(case when needs.approved_at is not null then 1 else 0 end) as aggregate';
         if($user = auth()->user()){
             //filter by user here
+            if($user->hasRole('organization admin')){
+                $fullRaw = 'count(*) as aggregate';
+            }
         }
 
         if($tab = $request->get('tab')){
             $need->when($tab == 'request', fn($need) => $need->whereNull('approved_at') )
-                ->when($tab == 'all', fn($need) => $need->whereNotNull('approved_at') )
-                ->when($tab == 'current', fn($need) => $need->whereRaw('raised < goal')->whereNotNull('approved_at') )
+                ->when($tab == 'all', function($need) {
+                    if($user = auth()->user()){
+                        if(!$user->hasRole('organization admin'))
+                            $need->whereNotNull('approved_at');
+                    }
+                } )
+                ->when($tab == 'current', fn($need) => $need->onlyOnGoing() )
                 ->when($tab == 'past', fn($need) => $need->whereRaw('raised >= goal')->whereNotNull('approved_at') );
         }
 
@@ -74,10 +81,13 @@ class NeedsController extends Controller
 
         $additional = Need::select( 
             DB::raw('sum(case when needs.approved_at is null then 1 else 0 end) as requests'),
-            DB::raw('sum(case when needs.approved_at is not null then 1 else 0 end) as aggregate'),
+            DB::raw($fullRaw),
             DB::raw('sum(case when needs.approved_at is not null and goal > raised then 1 else 0 end) as current'),
             DB::raw('sum(case when needs.approved_at is not null and goal <= raised then 1 else 0 end) as past') )
             ->first();
+            
+        NeedResource::setConversion('listing');
+
         return NeedResource::collection( 
             $need->paginate($request->get('per_page') ?? 15)
                 // ->appends($request->except('page')) //Doenst need 
@@ -164,12 +174,19 @@ class NeedsController extends Controller
                 ]
             );
 
-            if($request->has('date', 'time')){
+            if($request->has('date', 'time', 'endtime')){
                 $date = Carbon::parse($request->get('date'));
                 $time = Carbon::parse($request->get('time')); 
+                $endtime = Carbon::parse($request->get('endtime')); 
+
                 $need->scheduled_at = $date->setTime($time->hour, $time->minute);
+                $need->ended_at = (clone $date)->setTime($endtime->hour, $endtime->minute);
+                if($endtime->lessThan($time)) {
+                    $need->ended_at->addDay();
+                }
             } else {
                 $need->scheduled_at = now();
+                $need->ended_at = now();
             }
 
             $need->save();
@@ -217,6 +234,31 @@ class NeedsController extends Controller
     {
         $need->loadMissing('media', 'type', 'organization', 'categories');//->loadCount('contributors');
 
+        NeedResource::setConversion('view');
+
+        return new NeedResource($need);
+    }
+
+    public function showWithCred(Request $request)
+    {
+        $need = Need::with(['organization.credential', 'type', 'media'])->find($request->get('need'));
+
+        if(!$need)
+            return response()->json([ 'error' => 'Missing need!'], 400);
+
+        if(!$org = $need->organization)
+            return response()->json([ 'error' => 'Missing organization!'], 400);
+
+        if(!$cred = $org->credential)
+            return response()->json([ 'error' => 'Missing credential!'], 400);
+
+        if(!$key = $cred->publishable_key)
+            return response()->json([ 'error' => 'Missing stripe key!'], 400);
+
+        NeedResource::setConversion('invoice');
+
+        $need->pk = $key;
+
         return new NeedResource($need);
     }
 
@@ -261,6 +303,7 @@ class NeedsController extends Controller
         //->sometimes(['time', 'date'], 'required', fn($field) => $field == 'volunteer');
 
         DB::beginTransaction();
+
         try {
             $type = NeedsType::where('name', ucfirst( $request->get('type') ) )->firstOrFail();
 
@@ -305,11 +348,18 @@ class NeedsController extends Controller
 
             }
 
-            if($request->has('date', 'time')){
+            if($request->has('date', 'time', 'endtime')){
                 $date = Carbon::parse($request->get('date'));
                 $time = Carbon::parse($request->get('time')); 
+                $endtime = Carbon::parse($request->get('endtime')); 
+
                 $need->scheduled_at = $date->setTime($time->hour, $time->minute);
-            }
+                $need->ended_at = (clone $date)->setTime($endtime->hour, $endtime->minute);
+                if($endtime->lessThan($time)) {
+                    $need->ended_at->addDay();
+                }
+            } 
+
             //We can do better pd diri.
             if ( ($image = $request->get('photo')) && !preg_match('/^http/', $image) ) {
                 $name = time().'-'.Str::random(20);
@@ -367,11 +417,15 @@ class NeedsController extends Controller
     public function approve(Need $need){
         DB::beginTransaction();
         try {
+            if(!optional(auth()->user())->hasRole(['admin', 'campus admin']))
+                throw new Exception("Could not approve request!");
+                
             //Do validation here
             $need->fill([
                 'approved_by' => auth()->user()->id,
                 'approved_at' => now()
             ]);
+            dispatch(new NeedStatus($need, true));
             $need->save();
 
             DB::commit();
@@ -385,6 +439,7 @@ class NeedsController extends Controller
     public function disapprove(Need $need){
     DB::beginTransaction();
         try {
+            dispatch(new NeedStatus($need, false));
             $need->delete();
 
             DB::commit();

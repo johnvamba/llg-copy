@@ -8,7 +8,7 @@ import { swalSuccess, swalError } from '../../../components/helpers/alerts';
 import Swal from 'sweetalert2';
 
 //As test icon only
-import OfferForm from './form2';
+import OfferForm from './form';
 import OfferView from './offer-view';
 import OfferTable from './table'
 

@@ -108,6 +108,10 @@
 							<td class="first-td">Liability Insured: </td>
 							<td class="register">{{$org->insured ? 'YES' : 'NO'}}</td>
 						</tr>
+						<tr>
+							<td class="first-td">Tax Deductable Gift Recipient: </td>
+							<td class="register">{{$org->taxable ? 'YES' : 'NO'}}</td>
+						</tr>
 					</tbody>
 				</table>
 				<div class="cta-container">

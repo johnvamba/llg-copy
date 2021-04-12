@@ -327,33 +327,34 @@ class UserController extends Controller
 
         \Stripe\Stripe::setApiKey($key->secret_key);
 
-        $credential = new CustomerCredential;
-    
-        if (!$credential->customer_id) {
+        DB::beginTransaction();
+        try {
             $createdCustomer = \Stripe\Customer::create([
                     'name' => $request->name,
                 ]);
 
-            $credential->customer_id = $createdCustomer->id;
-        }
-
-        if (!$credential->card_id) {
             $card = \Stripe\Customer::createSource(
-                    $credential->customer_id,
+                    $createdCustomer->id,
                     ['source' => $request->token]
                 );
 
-            $credential->card_id = $card->id;
+            $credential = CustomerCredential::create([
+                    'customer_id' => $createdCustomer->id,
+                    'card_id' => $card->id,
+                    'user_id' => auth()->user()->id,
+                    'name' => $request->name,
+                    'card_brand' => $request->brand,
+                    'last_four_number' => $request->last4
+                ]);
+
+            DB::commit();
+            return response()->json($credential, 202);
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return response()->json([
+                    'message' => $ex->getMessage()
+                ], 500);
         }
-
-        $credential->user_id = auth()->user()->id;
-        $credential->name = $request->name;
-        $credential->card_brand = $request->brand;
-        $credential->last_four_number = $request->last4;
-
-        $cardCredential = $organization->customerCredential()->save($credential); 
-
-        return response()->json($cardCredential, 202);
     }
 
     /**

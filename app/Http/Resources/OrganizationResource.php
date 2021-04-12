@@ -7,6 +7,11 @@ use App\Http\Resources\Async\CampusResource;
 
 class OrganizationResource extends JsonResource
 {
+    static $convert = '';
+
+    public static function setConversion($convert = ''){
+        self::$convert = $convert;
+    }
     /**
      * Transform the resource into an array.
      *
@@ -25,8 +30,9 @@ class OrganizationResource extends JsonResource
             'site' => $this->site,
             'lat' => $this->lat,
             'lng' => $this->lng,
-            'photo' => $this->whenLoaded('media', $this->getFirstMediaUrl('photo')),
-            'banner' => $this->whenLoaded('media', $this->getFirstMediaUrl('banner')),
+            'benevity_link' => $this->benevity_link,
+            'photo' => $this->whenLoaded('media', $this->getFirstMediaUrl('photo', self::$convert)),
+            'banner' => $this->whenLoaded('media', $this->getFirstMediaUrl('banner', self::$convert)),
             'active_needs' => $this->when(!is_null($this->active_needs), $this->active_needs ?? 0),
             'past_needs' => $this->when(!is_null($this->past_needs), $this->past_needs ?? 0),
             'members_count' => $this->when(!is_null($this->members_count), $this->members_count ?? 0),
@@ -40,6 +46,8 @@ class OrganizationResource extends JsonResource
                 'acnc' => $this->acnc ?? false, 
                 'fundraiser' => $this->fundraiser ?? false, 
                 'insured' => $this->insured ?? false,
+                'taxable' => $this->taxable ?? false,
+                'benevity' => !is_null($this->benevity_link) ?? false,
                 'stripe' => $this->whenLoaded('credential', $this->cred(), false)
             ]
         ];

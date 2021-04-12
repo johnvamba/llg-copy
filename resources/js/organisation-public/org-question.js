@@ -23,6 +23,13 @@ const OrgQuestions = ({answers = {}, updateAnswers = {}, errors = {}}) => {
 				<span onClick={()=>updateAnswers('insured',false)}>NO</span>
 			</div>
 		</div>
+		<div className={'questions'}>
+			<p>Are you registered as a tax deductible gift recipient?</p>
+			<div className={`question-buttons ${answers.taxable ? 'active': ''}`}>
+				<span onClick={()=>updateAnswers('taxable',true)}>YES</span>
+				<span onClick={()=>updateAnswers('taxable',false)}>NO</span>
+			</div>
+		</div>
 		<label className="check-container">
 			Create an account means you're okay with our <a href="/agreement.pdf" download>Terms of Service</a>
 			<input type="checkbox" name='terms' checked={answers.terms} onChange={e=>updateAnswers('terms', e.target.checked)} />

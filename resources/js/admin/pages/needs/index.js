@@ -23,10 +23,14 @@ const Needs = ({NeedsReducer}) => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(15);
     const [tab, setTab] = useState('all'); //current or past
+    const search = useSelector(({SearchReducer}) => SearchReducer.search);
+    const roles = useSelector(({AuthUserReducer}) => AuthUserReducer.roles);
+
     const [tabCounts, setTabCounts] = useState({
         aggregate: 0,
         current: 0,
         past: 0,
+        requests: 0,
     })
     const [meta, setMeta] = useState({});
     const [form, showForm] = useState(false); //false
@@ -43,7 +47,6 @@ const Needs = ({NeedsReducer}) => {
 
     const dispatch = useDispatch();
 
-    const search = useSelector(({SearchReducer}) => SearchReducer.search);
 
     useEffect(() => {
         setLoading(true)
@@ -70,10 +73,10 @@ const Needs = ({NeedsReducer}) => {
             cancelToken: token.token
         }).then((res)=>{
             const { data } = res
-            const { aggregate, current, past} = data
+            const { aggregate, current, past, requests, meta } = data
             setNeeds(data.data)
-            setMeta(data.meta)
-            setTabCounts({ aggregate, current, past})
+            setMeta(meta)
+            setTabCounts({ aggregate, current, past, requests})
             setLoading(false)
         }).finally(()=>{
         })
@@ -160,6 +163,10 @@ const Needs = ({NeedsReducer}) => {
             <div className="h-16 flex flex-row justify-between items-center border-b bg-white px-12">
                 <ul className="nav-tab">
                     <li className={`nav-tab-item ${tab=='all' ? 'active' : ''}`} onClick={()=>handleTab('all')}>All ({ tabCounts.aggregate || 0 })</li>
+                    {
+                        roles.name == 'organization admin' &&                     
+                            <li className={`nav-tab-item ${tab=='request' ? 'active' : ''}`} onClick={()=>handleTab('request')}>Pending ({ tabCounts.requests || 0 })</li>
+                    }
                     <li className={`nav-tab-item ${tab=='current' ? 'active' : ''}`} onClick={()=>handleTab('current')}>Current ({ tabCounts.current || 0 })</li>
                     <li className={`nav-tab-item ${tab=='past' ? 'active' : ''}`} onClick={()=>handleTab('past')}>Past ({ tabCounts.past || 0 })</li>
                 </ul>

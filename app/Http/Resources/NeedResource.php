@@ -9,10 +9,18 @@ use App\Http\Resources\Async\OrganizationResource;
 class NeedResource extends JsonResource
 {
     protected $complete = false;
+
+    static $convert = '';
+
     public function __construct($need, $complete = false)
     {
         parent::__construct($need);
         $this->complete = $complete;
+    }
+
+    public static function setConversion($convert = ''){
+        self::$convert = $convert;
+        // return self;
     }
     /**
      * Transform the resource into an array.
@@ -37,12 +45,13 @@ class NeedResource extends JsonResource
             'lng' => (float) $this->lng,
             'location' => $this->location,
             'category' => $this->whenLoaded('categories', $this->categories->pluck('name')),
-            'photo' => $this->getFirstMediaUrl('photo'),
+            'photo' => $this->getFirstMediaUrl('photo', static::$convert),
             'ratio' => $this->getRatio(),
             'description' => $this->description,
             'requirements' => $this->requirements,
             'raised' => $this->raised,
             'address' => $this->address,
+            'pk' => $this->when(isset($this->pk), $this->pk),
             // contribution loaded when search on one user. check Admin/UsersController
             'contri_amount' => $this->whenLoaded('contribution', fn()=> optional($this->contribution)->amount),
             'contri_date' => $this->whenLoaded('contribution', fn()=> optional($this->contribution)->created)

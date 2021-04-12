@@ -36,7 +36,7 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite, handleDelete }
         meta: {}
     });
 
-    const [questions, setQuestions ] = useState({ acnc: false, fundraiser: false, insured: false, stripe:false });
+    const [questions, setQuestions ] = useState({ acnc: false, fundraiser: false, insured: false, stripe:false, benevity: false });
     const [tab, setTab] = useState('details');
     const [loading, setLoading] = useState(false);
     const [loadingMembers, setLoadingMembers] = useState(false);
@@ -54,7 +54,7 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite, handleDelete }
             // cancelToken: token.token
         })
             .then(({data})=>{
-                const { details = { acnc: false, fundraiser: false, insured: false, stripe: false} } = data.data
+                const { details = { acnc: false, fundraiser: false, insured: false, stripe: false, benevity: false} } = data.data
                 //other info here
                 setQuestions({...details});
 

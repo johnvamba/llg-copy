@@ -26,6 +26,8 @@ use App\Http\Resources\Mini\UserResource;
 use App\Http\Resources\Mini\NeedResource;
 use App\Jobs\Mail\OrgInvite as JobOrgInvite;
 use App\Jobs\Mail\OrgCreated;
+use App\Jobs\Mail\OrgStatus;
+
 use App\OrgInvites;
 
 use DB;
@@ -61,6 +63,8 @@ class OrganizationController extends Controller
         if($request->get('requests') == 'true')
             $mainQuery->pending();
         else $mainQuery->approved();
+
+        OrganizationResource::setConversion('listing');
 
         return OrganizationResource::collection($mainQuery->paginate(16));
     }
@@ -115,6 +119,7 @@ class OrganizationController extends Controller
             'description' => 'required',
             'category' => 'required',
             'location' => 'required',
+            'benevity_link' => 'required',
             // 'address' => 'required',
             'lat' => 'required',
             'lng' => 'required',
@@ -123,7 +128,7 @@ class OrganizationController extends Controller
         DB::beginTransaction();
         try {
             $org = Organization::create( 
-                $request->only('name', 'email', 'phone_number', 'site', 'description', 'location', 'lat', 'lng' , 'address') 
+                $request->only('name', 'email', 'phone_number', 'site', 'description', 'location', 'lat', 'lng' , 'acnc', 'fundraiser', 'insured', 'taxable', 'address', 'benevity_link') 
                 + [
                     'short_description' => substr($request->get('description'), 0, 100)
                 ]);
@@ -216,6 +221,7 @@ class OrganizationController extends Controller
         if(auth()->user()->hasRole('admin'))
             $organization->loadMissing(['campus', 'campuses']);
 
+        OrganizationResource::setConversion('view');
         return new OrganizationResource($organization);
     }
 
@@ -246,6 +252,7 @@ class OrganizationController extends Controller
             'phone_number' => 'required',
             'description' => 'required',
             'category' => 'required',
+            'benevity_link' => 'required',
             // 'address' => 'required',
             'location' => 'required',
             'lat' => 'required',
@@ -255,7 +262,7 @@ class OrganizationController extends Controller
         DB::beginTransaction();
         try {
             $organization->fill( 
-                $request->only('name', 'email','phone_number', 'site', 'description', 'location', 'lat', 'lng', 'address') 
+                $request->only('name', 'email','phone_number', 'site', 'description', 'location', 'lat', 'lng', 'address', 'acnc', 'fundraiser', 'insured', 'taxable', 'benevity_link') 
                 + [
                     'short_description' => substr($request->get('description'), 0, 100)
                 ]);
@@ -437,6 +444,7 @@ class OrganizationController extends Controller
             'email' => 'required|email|unique:organizations',
             'site' => 'required',
             'phone_number' => 'required',
+            'benevity_link' => 'required',
             'description' => 'required',
             'terms' => 'required',
             'location' => 'required'
@@ -446,7 +454,7 @@ class OrganizationController extends Controller
 
         try {
             $org = Organization::create( 
-                    $request->only('name', 'email', 'phone_number', 'site', 'description',  'acnc', 'fundraiser', 'insured', 'location', 'lat', 'lng') 
+                    $request->only('name', 'email', 'phone_number', 'site', 'description',  'acnc', 'fundraiser', 'insured', 'taxable', 'benevity_link','location', 'lat', 'lng') 
                     + [
                         'short_description' => substr($request->get('description'), 0, 100),
                     ]);
@@ -593,7 +601,7 @@ class OrganizationController extends Controller
                 'approved_at' => now()
             ]);
             $organization->save();
-
+            dispatch(new OrgStatus($organization, true));
             DB::commit();
             return response()->json(['Success'], 200);
         } catch (\Exception $e) {
@@ -605,8 +613,8 @@ class OrganizationController extends Controller
     public function reject(Organization $organization){
     DB::beginTransaction();
         try {
+            dispatch(new OrgStatus($organization, false));
             $organization->delete();
-
             DB::commit();
             return response()->json(['Success'], 200);
         } catch (\Exception $e) {

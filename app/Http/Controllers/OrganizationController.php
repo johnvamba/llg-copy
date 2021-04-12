@@ -32,10 +32,12 @@ class OrganizationController extends Controller
             $org['cover_photo'] = $org->getFirstMediaUrl('banner');
                 
             $org['activeNeeds'] = Need::where('organization_id', $org->id)
+                ->whereNotNull('approved_by')
                 ->whereRaw('raised < goal')
                 ->count();
 
             $org['pastNeeds'] = Need::where('organization_id', $org->id)
+                ->whereNotNull('approved_by')
                 ->whereRaw('raised >= goal')
                 ->count();
         }
@@ -85,10 +87,12 @@ class OrganizationController extends Controller
             $org['cover_photo'] = $org->getFirstMediaUrl('banner');
                 
             $org['activeNeeds'] = Need::where('organization_id', $org->id)
+                ->whereNotNull('approved_by')
                 ->whereRaw('raised < goal')
                 ->count();
 
             $org['pastNeeds'] = Need::where('organization_id', $org->id)
+                ->whereNotNull('approved_by')
                 ->whereRaw('raised >= goal')
                 ->count();
         }
@@ -340,6 +344,11 @@ class OrganizationController extends Controller
     public function destroy(Organization $organization)
     {
         try {
+            if($user = auth()->user()){
+                if($user->hasRole('organization admin') && session('org_id') == $organization->id)
+                    throw new \Exception("Deleting controlled organization is rejected");
+            }
+
             $organization->delete();
             
             return response()->json([

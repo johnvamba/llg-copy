@@ -30,9 +30,9 @@ const FormServiceInfo = ({service, updateService, errors, fileList}) => {
                 </div>
                 <div className={`form-group ${errors.desc && 'form-error'}`}>
                     <label>About</label>
-                        <input className="input-field" type="text" value={service.desc || ''} onChange={(e)=>updateService({...service, desc: e.target.value})} placeholder="Say something about this need" />
+                        <textarea rows="3" className="input-field" value={service.desc || ''} onChange={(e)=>updateService({...service, desc: e.target.value})} placeholder="Say something about this offer" />
                     {
-                        //<textarea className="input-field" value={service.desc || ''} onChange={(e)=>updateService({...service, desc: e.target.value})} placeholder="Say something about this offer" />
+                        // <input className="input-field" type="text" value={service.desc || ''} onChange={(e)=>updateService({...service, desc: e.target.value})} placeholder="Say something about this need" />
                     }
                     {
                         (errors.desc || false) && <span className="text-xs pt-1 text-red-500 italic">Missing About description</span>

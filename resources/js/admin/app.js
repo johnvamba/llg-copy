@@ -66,7 +66,7 @@ const Home = () => {
             return 'Location Portal';
             case 'organization admin':
             default: 
-            return "Organization Portal";
+            return "Organisation Portal";
         }
     }
 

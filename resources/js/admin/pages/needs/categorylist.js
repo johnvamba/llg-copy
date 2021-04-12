@@ -24,7 +24,12 @@ import {
 	Driver,
 	Cook,
 	Hairdresser,
-	Other
+	Other,
+	Prison,
+	Senior,
+	Migrants,
+	Homelessness,
+	Fostercare
 } from './categories'
 
 export const monetary = [
@@ -77,7 +82,28 @@ export const monetary = [
 		name: 'Youth',
 		slug: 'youth',
 		svg_class: Youth
+	},{
+		name: 'Prison',
+		slug: 'prison',
+		svg_class: Prison
+	},{
+		name: 'Seniors',
+		slug: 'seniors',
+		svg_class: Senior
+	},{
+		name: 'Migrants',
+		slug: 'migrants',
+		svg_class: Migrants
+	},{
+		name: 'Homeless',
+		slug: 'homelessness',
+		svg_class: Homelessness
+	},{
+		name: 'Fostercare',
+		slug: 'fostercare',
+		svg_class: Fostercare
 	}
+
 ];
 
 export const volunteer = [

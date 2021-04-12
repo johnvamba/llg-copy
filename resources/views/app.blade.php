@@ -8,8 +8,8 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-<!--         <link href="{!! asset('images/favicon.ico') !!}" rel="icon" type="image/gif" sizes="16x16">
- -->
+        <link href="{!! asset('images/favicon.png') !!}" rel="icon" type="image/png" sizes="50x50">
+
         <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
 
         <script src="{{ mix('assets/canvasjs.min.js') }}"></script>

@@ -28,6 +28,9 @@ class CampusController extends Controller
                 $query->withCount(['organizations as accessed' => fn($q) => $q->where('organizations.id', $org_id)])
                     ->orderBy('accessed', 'desc');
             })->latest()->get();
+
+        CampusResource::setConversion('view');
+
         return CampusResource::collection($campus);
     }
 

@@ -239,9 +239,21 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                     ${(location.pathname == "/stories") ? "text-yellow-400" : "text-gray-400"}`}
                                 >
                                     <Link to="/stories">
-                                        Published
+                                        { roles.name == 'organization admin' ? 'Submission' : 'Published'}
                                     </Link>
                                 </div>
+                                {
+                                    roles.name == 'campus admin' || roles.name == 'admin' &&
+                                    <div
+                                        className={`mt-4
+                                        ${(location.pathname == "/stories/submissions") ? "text-yellow-400" : "text-gray-400"}`}
+                                    >
+                                        <Link to="/stories/submissions">
+                                            Submission
+                                        </Link>
+                                    </div>
+                                }
+                                
                                 <div
                                     className={`mt-4
                                     ${(location.pathname == "/stories/drafts") ? "text-yellow-400" : "text-gray-400"}`}

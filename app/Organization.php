@@ -8,6 +8,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use App\Helper\Traits\OrgPortalTrait;
 use App\Helper\Traits\OrgApprovedTrait;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Organization extends Model implements HasMedia
 {
@@ -87,5 +88,28 @@ class Organization extends Model implements HasMedia
     public function setShortDescriptionAttribute($value)
     {
         $this->attributes['short_description'] = substr($value, 0, 40).'...';
+    }
+
+    public function registerMediaConversions(Media $media=null) : void
+    {
+        $this->addMediaConversion('listing')
+            ->width(50)
+            ->performOnCollections('photo')
+            ->nonQueued();
+
+        $this->addMediaConversion('listing')
+            ->width(380)
+            ->performOnCollections('banner')
+            ->nonQueued();
+
+        $this->addMediaConversion('view')
+            ->width(100)
+            ->performOnCollections('photo')
+            ->nonQueued();
+
+        $this->addMediaConversion('view')
+            ->width(610)
+            ->performOnCollections('banner')
+            ->nonQueued();
     }
 }

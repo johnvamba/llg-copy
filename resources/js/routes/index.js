@@ -10,6 +10,7 @@ import CompleteRegister from '../auth/com-register'
 import ExpiredLink from '../auth/expired'
 
 import OrganisationPublic from '../organisation-public/index'
+import Payment from '../payment-public/index'
 
 import PrivateRoute from './private-routes'
 import Home from '../admin/app';
@@ -25,9 +26,9 @@ const AppRoute = () => {
             <PublicRoutes exact path="/password/reset" component={ResetPassword}/>
             <PublicRoutes exact path="/account" component={CompleteRegister}/>
             <PublicRoutes exact path="/expired" component={ExpiredLink}/>
-
             <PublicRoutes exact path="/create-organisation" component={OrganisationPublic}/>
             <PrivateRoute path="/admin" component={Home}/>
+            <Route exact path="/payment" component={Payment}/>
             <Route path="*" component={NotFound} />
         </Switch>
     )

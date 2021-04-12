@@ -93,7 +93,7 @@ const routes = [
     //     component: () => <EditOffer />
     // },
     {
-        path: ['/stories', '/stories/drafts'],
+        path: ['/stories', '/stories/drafts', '/stories/submissions'],
         exact: true,
         component: () => <Stories />
     },

@@ -219,68 +219,68 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
         }
     }
 
+    if(loading || submitting)
+    return <div className="offer-form absolute flex flex-column h-full top-0 right-0">
+        <LoadingScreen title={
+            (loading && 'Loading offer...') ||
+            (submitting && (data.id ? 'Updating Offer' : 'Creating Offer')) ||
+            'Please wait'
+        }/>
+    </div>
+
     return (
-        <div className="offers-create-form">
-            {
-                (loading || submitting) &&
-                <LoadingScreen title={
-                    (loading && 'Loading offer...') ||
-                    (submitting && (data.id ? 'Updating Offer' : 'Creating Offer')) ||
-                    'Please wait'
-                }/>
-            }
-            <div className="offers-create-form__header">
+        <div className="offer-form absolute flex flex-column h-full top-0 right-0">
+            <div className="header flex px-4 py-4 items-center">
                 <h2>{editing ? 'Edit' : 'Create'} Offer</h2>
-                {
-                    !editing &&
-                    <div className="relative pt-1">
-                        <div className="w-full bg-gray-400 rounded-full">
-                            <div className={`bg-blue-400 rounded-full leading-none py-1 text-white tab-${countTab}`}></div>
-                        </div>
-                        <p>{countTab} of 3</p>
-                    </div>
-                }
                 <button className="offers-create-form__close" type="button" onClick={()=>handleForm(false)}>
                     <OffersFormCross />
                 </button>
             </div>
             {
-                editing && <div className="offer-edit__opts">
-                    <ul>
-                        <li className={"offer-edit__opts-item w-1/3 " + (countTab == 1 ? 'offer-edit__opts-item--active' : '')} onClick={()=>validateTab(1)}><h3>Select Category</h3></li>
-                        <li className={"offer-edit__opts-item w-1/3 " + (countTab == 2 ? 'offer-edit__opts-item--active' : '')} onClick={()=>validateTab(2)}><h3>Service Information</h3></li>
-                        <li className={"offer-edit__opts-item w-1/3 " + (countTab == 3 ? 'offer-edit__opts-item--active' : '')} onClick={()=>validateTab(3)}><h3>Business Information</h3></li>
-                    </ul>
+                !editing &&
+                <div className="relative pt-1 px-4">
+                    <div className="w-full bg-gray-400 rounded-full">
+                        <div className={`bg-blue-400 rounded-full leading-none py-1 text-white tab-${countTab}`}></div>
+                    </div>
+                    <p>{countTab} of 3</p>
                 </div>
             }
-            
-            <div className="offers-create-form__body">
-                {showTabTitle()}
-                { countTab == 1 && <CategoryGrid selectedCategories={category} handleCategories={handleCategories} errors={errors.category}/>}
-                { countTab == 2 && <FormServiceInfo service={{title, desc, location, photo}} updateService={updateService} fileList={(e)=>console.log('filepond files', e)} errors={errors}/>}
-                { countTab == 3 && <FormBusinessInfo service={{business_name, business_site, business_contact}} updateBusiness={updateBusiness}  errors={errors}/>}
-            </div>
-
-             <section className="offers-category-opt">
-                <div className="offers-category-opt__container flex">
-                    <button className="discard" onClick={()=>handleForm(true, 'discard', {})}>Discard</button>
-                    {
-                        editing ? <button className="next" disabled={submitting} onClick={submit}>{submitting? 'Submitting...' :'Submit'}</button> 
-                        : <div>
-                            {
-                                countTab > 1 &&
-                                <button className="back" disabled={submitting} onClick={() => validateTab(countTab-1)}>Back</button>
-                            }
-                            {
-                                (countTab < 3) 
-                                ? (<button className="primary-btn next" disabled={submitting} onClick={() => validateTab(countTab+1)}>Next</button>)
-                                : (<button className="next" disabled={submitting} onClick={submit}>{submitting? 'Submitting...': 'Create'}</button>)
-                            }
-                        </div>
-                    }
+            <div className="body flex flex-column flex-grow">
+                {
+                    editing && <div className="offer-edit__opts">
+                        <ul>
+                            <li className={"offer-edit__opts-item w-1/3 " + (countTab == 1 ? 'offer-edit__opts-item--active' : '')} onClick={()=>validateTab(1)}><h3>Select Category</h3></li>
+                            <li className={"offer-edit__opts-item w-1/3 " + (countTab == 2 ? 'offer-edit__opts-item--active' : '')} onClick={()=>validateTab(2)}><h3>Service Information</h3></li>
+                            <li className={"offer-edit__opts-item w-1/3 " + (countTab == 3 ? 'offer-edit__opts-item--active' : '')} onClick={()=>validateTab(3)}><h3>Business Information</h3></li>
+                        </ul>
+                    </div>
+                }
+                <div className="offers-create-form__body h-full px-4 overflow-y-scroll">
+                    {showTabTitle()}
+                    { countTab == 1 && <CategoryGrid selectedCategories={category} handleCategories={handleCategories} errors={errors.category}/>}
+                    { countTab == 2 && <FormServiceInfo service={{title, desc, location, photo}} updateService={updateService} fileList={(e)=>console.log('filepond files', e)} errors={errors}/>}
+                    { countTab == 3 && <FormBusinessInfo service={{business_name, business_site, business_contact}} updateBusiness={updateBusiness}  errors={errors}/>}
                 </div>
-            </section>
+            </div>
+            <div className="footer flex px-4 py-3 justify-between">
+                <button className="discard" onClick={()=>handleForm(true, 'discard', {})}>Discard</button>
+                {
+                    editing ? <button className="next" disabled={submitting} onClick={submit}>{submitting? 'Submitting...' :'Submit'}</button> 
+                    : <div>
+                        {
+                            countTab > 1 &&
+                            <button className="back" disabled={submitting} onClick={() => validateTab(countTab-1)}>Back</button>
+                        }
+                        {
+                            (countTab < 3) 
+                            ? (<button className="primary-btn next" disabled={submitting} onClick={() => validateTab(countTab+1)}>Next</button>)
+                            : (<button className="next" disabled={submitting} onClick={submit}>{submitting? 'Submitting...': 'Create'}</button>)
+                        }
+                    </div>
+                }
+            </div>
         </div>
+        
     )
 }
 

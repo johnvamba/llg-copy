@@ -8,6 +8,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Carbon\Carbon;
 use App\Helper\Traits\OfferPortalTrait;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ServiceOffer extends Model implements HasMedia
 {
@@ -60,5 +61,18 @@ class ServiceOffer extends Model implements HasMedia
     public function getCreatedAttribute()
     {
         return Carbon::parse($this->attributes['created_at'])->diffForHumans();
+    }
+
+    public function registerMediaConversions(Media $media=null) : void
+    {
+        $this->addMediaConversion('listing')
+            ->width(30)
+            ->performOnCollections('photo')
+            ->nonQueued();
+
+        $this->addMediaConversion('view')
+            ->width(485)
+            ->performOnCollections('photo')
+            ->nonQueued();
     }
 }

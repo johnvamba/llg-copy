@@ -9,6 +9,11 @@ use App\Mail\GroupInvitation;
 use App\Mail\OrgInvitation;
 use App\Mail\NewOrgEmail;
 
+use App\Mail\NeedApproved;
+use App\Mail\NeedRejected;
+use App\Mail\OrgAccepted;
+use App\Mail\OrgRejected;
+
 use App\Mail\PasswordReset;
 use App\Mail\StoryPublished;
 
@@ -16,6 +21,8 @@ use App\ReceiptTemplate;
 use App\Organization;
 use App\OrgInvites;
 use App\Story;
+use App\Need;
+
 
 use App\User;
 use App\Group;
@@ -32,6 +39,26 @@ class TestControl extends Controller
     	return new TransactionReceipt($organization, 
     		[ 'Sample Transaction' => 200 ]
     	);
+    }
+
+    public function needApprove(){
+        $need = Need::first();
+        return new NeedApproved($need);
+    }
+
+    public function needReject(){
+        $need = Need::first();
+        return new NeedRejected($need);
+    }
+
+    public function orgApprove(){
+        $need = Organization::find(29);
+        return new OrgAccepted($need);
+    }
+
+    public function orgReject(){
+        $need = Organization::first();
+        return new OrgRejected($need);
     }
 
     public function orgEmail(){
@@ -77,8 +104,12 @@ class TestControl extends Controller
     }
 
     public function tester() {
-        $users = User::unfilter()->role('admin')->get();
+        $need = Need::find(17);
+        optional($need)->loadMissing(['organization'=>function($org){
+            $org->withoutGlobalScopes()->with(['members' => fn($m) => $m->unfilter()]);
+        }]);
+        // $users = User::unfilter()->role('admin')->get();
 
-        dd($users);
+        dd($need);
     }
 }
