@@ -46,6 +46,11 @@ Route::resource('otps', 'OTPController');
 
 Route::post('account', 'Admin\CompleteAccount')->name('post.complete.account');
 
+Route::get('needs/{type}/categories', 'NeedsCategoryController@index');
+
+/** Needs Types resource module */
+Route::resource('needs-types', 'NeedsTypeController');
+
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/payneed', 'Admin\NeedsController@showWithCred');
 
@@ -139,11 +144,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Needs Categories resource module */
     Route::post('needs-category/lists', 'NeedsCategoryController@getCategories');
-    Route::get('needs/{type}/categories', 'NeedsCategoryController@index');
     Route::resource('needs-categories', 'NeedsCategoryController');
-
-    /** Needs Types resource module */
-    Route::resource('needs-types', 'NeedsTypeController');
     
     /** Needs Met resource module */
     Route::get('needs-mets/group/{group}', 'NeedsMetController@getGroupNeedsMet');
