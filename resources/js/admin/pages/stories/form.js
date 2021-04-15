@@ -196,7 +196,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                     {
                         //Set user priveledges here.. campus users will need to know what organization is asking for need.
                         ((roles.name == 'admin' || roles.name == 'campus admin') && !hideOrg) && <div className={`form-group w-full ${errors.organization && 'form-error'}`}>
-                            <label>Organization</label>
+                            <label>Organisation</label>
                             <AsyncSelect
                                 styles={selectStylePaddingZero}
                                 loadOptions={loadOrganization}

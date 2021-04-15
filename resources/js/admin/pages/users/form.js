@@ -13,7 +13,7 @@ import LoadingScreen from '../../../components/LoadingScreen';
 
 const selOption = [
     { value: 'user', label: 'App User'},
-    { value: 'organization admin', label: 'Organization User'},
+    { value: 'organization admin', label: 'Organisation User'},
     { value: 'campus admin', label: 'Location User'},
     { value: 'admin', label: 'Super User'},
 ];

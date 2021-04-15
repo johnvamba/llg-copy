@@ -75,17 +75,7 @@ const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPriva
                     <div className="w-full xl:w-full">
                         <div className={`form-group ${fieldErrors.description ? 'form-error' : ''}`}>
                             <label>Group Description</label>
-                            {/*
                             <textarea className="input-field" placeholder="Enter description" name="description" onChange={handleInputChange} value={fields.description}/>
-                            */}
-                            <input
-                                className="input-field"
-                                type="text"
-                                placeholder="Enter description"
-                                name="description"
-                                onChange={handleInputChange}
-                                value={fields.description}
-                            />
                         </div>
                         {
                             (fieldErrors.description || false) && <span className="text-xs pt-1 text-red-500 italic">{fieldErrors.description}</span>

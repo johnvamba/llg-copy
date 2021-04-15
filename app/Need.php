@@ -88,7 +88,7 @@ class Need extends Model implements HasMedia
      */
     public function getCreatedAttribute()
     {
-        return Carbon::parse($this->attributes['created_at'])->diffForHumans();
+        return Carbon::parse($this->created_at)->diffForHumans();
     }
 
     /**

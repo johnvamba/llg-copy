@@ -33,12 +33,15 @@ class StoryController extends Controller
             ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($stories as $story) {
+            $appreciate = 0;
             $story['photo'] = $story->getFirstMediaUrl('photo');
 
-            $appreciate = StoryAppreciate::where([
-                ['user_id', auth()->user()->id],
-                ['story_id', $story->id]
-            ])->count();
+            if (auth()->check()) {
+                $appreciate = StoryAppreciate::where([
+                    ['user_id', auth()->user()->id],
+                    ['story_id', $story->id]
+                ])->count();
+            }
 
             $story['appreciated'] = $appreciate ? true  : false;
         }
@@ -64,12 +67,15 @@ class StoryController extends Controller
             ->get();
 
         foreach ($stories as $story) {
+            $appreciate = 0;
             $story['photo'] = $story->getFirstMediaUrl('photo');
 
-            $appreciate = StoryAppreciate::where([
-                ['user_id', auth()->user()->id],
-                ['story_id', $story->id]
-            ])->count();
+            if (auth()->check()) {
+                $appreciate = StoryAppreciate::where([
+                    ['user_id', auth()->user()->id],
+                    ['story_id', $story->id]
+                ])->count();
+            }
 
             $story['appreciated'] = $appreciate ? true  : false;
         }
