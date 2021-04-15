@@ -28,4 +28,10 @@ class GroupParticipant extends Model
     {
         return Carbon::parse($this->attributes['created_at'])->diffForHumans();
     }
+
+    public static function scopeHasUser($query, $id = null, $status = 'approved') 
+    {
+        return $query->where('user_id', $id)
+            ->where('status', $status);
+    }
 }

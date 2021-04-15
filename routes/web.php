@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/password/reset', fn() => view('app'))->name('password.reset');
-Route::get('/admin/organizations/requests/{organization}', fn($organization) => view('app'))->name('complete.organisation');
+Route::get('/password/reset', 'Admin\AppFile')->name('password.reset');
+Route::get('/admin/organizations/requests/{organization}', 'Admin\AppFile')->name('complete.organisation');
 
-Route::get('/account', fn() => view('app'))->middleware('signed')->name('complete.account');
-Route::get('/expired', fn() => view('app'))->name('web.expired');
+Route::get('/account', 'Admin\AppFile')->middleware('signed')->name('complete.account');
+Route::get('/expired', 'Admin\AppFile')->name('web.expired');
 
 Route::group([
 	'prefix' => 'test'
@@ -43,6 +43,4 @@ Route::get('/needs/print', 'Admin\Dashboard');
 
 Route::view('/{path1?}/{path2?}/{path3?}/{path4?}/{path5?}', 'app');
 
-Route::any('*', function(){
-	return view('app');
-});
+Route::any('*', 'Admin\AppFile');

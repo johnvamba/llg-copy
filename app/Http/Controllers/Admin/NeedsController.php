@@ -20,6 +20,8 @@ use App\Jobs\Mail\NeedStatus;
 use App\Http\Resources\Mini\UserResource;
 use App\Http\Resources\NeedResource;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+
 class NeedsController extends Controller
 {
     /**
@@ -449,4 +451,34 @@ class NeedsController extends Controller
             return response()->json(['error'=>$e->getMessage()], 400);
         }
     }
+
+    public function needCountOnMonths() 
+    {
+        $now = Carbon::now();
+        $start = (clone $now)->subYear();
+        $period = CarbonPeriod::create($start, '1 month', $now)->toArray();
+
+        $needs = Need::whereBetween('needs.created_at', [$start, $now])
+            ->leftJoin('needs_types', 'needs_types.id', 'needs.needs_type_id')
+            ->selectRaw("needs_types.name as need_type, count(needs.id) as data, YEAR(needs.created_at) year, MONTH(needs.created_at) month")
+            ->groupBy('need_type')//;
+            ->groupBy('year')
+            ->groupBy('month')
+            ->get();
+        
+        $output = array_reduce($period, function($carry, $item) use ($needs) {
+            $carry['donation'][] = $needs->first(fn($need, $key) => $need->year == $item->year && $need->month == $item->month && $need->need_type =='Donation')['data'] ?? 0;
+            $carry['fundraise'][] = $needs->first(fn($need, $key) => $need->year == $item->year && $need->month == $item->month  && $need->need_type =='Fundraise')['data'] ?? 0;
+            $carry['volunteer'][] = $needs->first(fn($need, $key) => $need->year == $item->year && $need->month == $item->month  && $need->need_type =='Volunteer')['data'] ?? 0;
+            $carry['categories'][] = $item->format('M Y');
+            return $carry;
+        }, [
+            'donation' => [],
+            'fundraise' => [],
+            'volunteer' => [],
+            'year' => $now->year
+        ]);
+
+        return response()->json($output, 200);
+    }   
 }

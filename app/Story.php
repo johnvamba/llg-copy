@@ -63,6 +63,11 @@ class Story extends Model implements HasMedia
         return $this->hasMany('App\CommentStory');
     }
 
+    public static function scopeFeatured($query)
+    {
+        return $query->whereNotNull('featured_start_date');
+    }
+
     //Categories
     public function categories()
     {

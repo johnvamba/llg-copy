@@ -397,6 +397,11 @@ section.invites li div.member-item button.invite-button.invited{
     border: 0;
     color: #fff;
 }
+section.invites li div.member-item button.invite-button.denied{
+    background: #f56565;
+    border: 0;
+    color: #fff;
+}
 
 .group-view {
     width: 544px;
@@ -489,4 +494,95 @@ section.invites li div.member-item button.invite-button.invited{
 }
 .invite-button button svg path{
     stroke: #CF995F;
+}
+
+.group-form {
+    width: 100%;
+    max-width: 544px;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #FFFFFF;
+    border: 1px solid #E7EAEF;
+    /*padding: 29px;*/
+    display: flex;
+    flex-direction: column;
+}
+.group-header {
+    margin-top: 29px;
+}
+.group-form > section {
+    padding: 0 29px;
+}
+.group-body {
+    margin-bottom: 15px;
+    max-height: calc(100vh - 255px);
+    height: 100%;
+    flex-grow: 1;
+    overflow-y: scroll;
+    overflow: auto;
+}
+.group-body h3 {
+    font-family: InterMedium;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 21px;
+    letter-spacing: 0.01em;
+    color: #98999B;
+    margin: 10px 0;
+}
+.group-header, .group-footer {
+    flex-shrink: 1;
+}
+
+.group-header h2 {
+    margin-bottom: 14px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    letter-spacing: 0.01em;
+    color: #3C5A77;
+    font-family: BrownStdBold;
+}
+
+.group-header p {
+     font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 24px;
+    color: rgba(74, 108, 140, 0.56);
+    margin-top: 10px;
+}
+.group-footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    box-sizing: border-box;
+    left: 0;
+    right: 0;
+    padding: 15px 29px !important;
+    border-top: 1.5px solid rgba(156, 174, 185, 0.2);
+}
+.group-footer button {
+    padding: 15px 42px;
+    box-sizing: border-box;
+    font-family: "Lato", sans-serif;
+    border-radius: 4px;
+    background-color: rgba(181, 193, 204, 0.12);
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 19px;
+    text-align: center;
+    letter-spacing: 0.01em;
+    color: #91A5B7;
+    outline: none;
+}
+.group-footer button.next {
+    font-family: InterMedium;
+    background-color: #CF995F;
+    color: #fff;
 }

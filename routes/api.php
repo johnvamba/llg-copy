@@ -82,6 +82,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     Route::group(['prefix'=>'web', 'namespace'=>'Admin', 'middleware' => 'datafilter'], function() {
         Route::get('needs/types', 'NeedsController@types');
+        Route::get('needs/graph', 'NeedsController@needCountOnMonths');
 
         Route::resource('needs', 'NeedsController');
         Route::get('needs/{need}/contributors', 'NeedsController@contributors');

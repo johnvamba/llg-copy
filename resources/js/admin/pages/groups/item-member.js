@@ -12,13 +12,21 @@ const ItemMember = ({ id, photo, name, invite_status = 'uninvited', handleInvite
             return <button className={`invite-button invited`} disabled={true}>
                 Invited
             </button>
+            case 'denied':
+            return <button className={`invite-button denied`} disabled={true}>
+                Denied
+            </button>
             case 'sending':
             return <button className={`invite-button`} disabled={true}>
                 Sending...
             </button>
+            case 'tobesent':
+            return <button className={`invite-button`} disabled={true} title="To be sent after creating group process">
+                To be Sent*
+            </button>
             case 'uninvited':
             default:
-            return <button className={`invite-button`} onClick={()=>handleInvite({id, name, invite_status})}>
+            return <button className={`invite-button`} onClick={()=>handleInvite({id, name, invite_status, photo})}>
                 Invite
             </button>
         }

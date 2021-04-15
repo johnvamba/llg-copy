@@ -9,6 +9,7 @@ use App\Http\Resources\Mini\UserResource;
 use Illuminate\Support\Facades\Mail;
 
 use App\Group;
+use App\Goal;
 use App\GroupLocation;
 use App\GroupParticipant;
 use App\User;
@@ -81,6 +82,14 @@ class GroupController extends Controller
                 ]
             );
 
+            $goal = Goal::firstOrCreate([
+                'model_type' => Group::class,
+                'model_id' => $group->id
+            ], [
+                'term' => $request->get('term'),
+                'need' => $request->get('goal')
+            ]);
+
             $campus = $request->get('campus') ?? [];
             GroupLocation::firstOrCreate([
                 'group_id' => $group->id,
@@ -102,6 +111,24 @@ class GroupController extends Controller
                     ->toMediaCollection('photo');
 
                 $group->getMedia('photo');
+            }
+
+            if($users = $request->get('users')) {
+                foreach ($users as $key => $value) {
+                    //Reject if participating other group
+                    if(GroupParticipant::hasUser( $value['id'] ?? null )->exists() && array_key_exists('id', $value))
+                        continue;
+
+                    //Remove pending
+                    GroupParticipant::hasUser($value['id'] ?? null, 'pending')
+                        ->where('group_id', '!=', $group->id)
+                        ->delete();
+
+                    GroupParticipant::firstOrCreate([
+                        'group_id' => $group->id,
+                        'user_id' => $value
+                    ]);
+                }
             }
 
             DB::commit();
@@ -177,6 +204,15 @@ class GroupController extends Controller
                     'location_id' => $campus['id'] ?? session('camp_id')
                 ]);
             }
+            $goal = Goal::firstOrCreate([
+                'model_type' => Group::class,
+                'model_id' => $group->id
+            ]);
+
+            $goal->update([
+                'term' => $request->get('term'),
+                'need' => $request->get('goal')
+            ]);
 
             //We can do better pd diri.
             if ($image = $request->get('photo')) {
@@ -261,8 +297,16 @@ class GroupController extends Controller
 
         $gp = null;
         if($user && $group) {
-            $gp = GroupParticipant::firstOrCreate( $request->only('group_id', 'user_id') );
-            // dispatch(fn() => Mail::to($user)->send(new GroupInvitation($group))); //Run this on production but with dispatch
+            $gp = GroupParticipant::hasUser($request->get('user_id'))->first(); 
+
+            if(!is_null(optional($gp)->group_id) && optional($gp)->group_id !== $group->id){
+                return reponse()->json('Participating user on other group already', 400);
+            }
+
+            if(!$gp)
+                $gp = GroupParticipant::firstOrCreate( $request->only('group_id', 'user_id') );
+            
+            dispatch(fn() => Mail::to($user)->send(new GroupInvitation($group))); //Run this on production but with dispatch
         }
 
         if(is_null($gp))

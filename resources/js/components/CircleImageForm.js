@@ -27,8 +27,17 @@ const CircleImageForm = ({
 			return
 		}
 		const reader = new FileReader();
+		const img = new Image();
+		img.onload = () => {
+			if(img.width < 300 || img.height < 300){
+				alert("'Images should be atleast 300 x 300 px in png or jpeg file");
+				return;
+			}
+			console.log('img', img.width, img.height);
+			setTempUrl( img.src );
+		}
 		reader.onload = (e2) => {
-			setTempUrl(e2.target.result)
+			img.src = e2.target.result
 		}
 		reader.readAsDataURL(files[0])
 	}
