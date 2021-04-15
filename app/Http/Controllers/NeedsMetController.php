@@ -207,8 +207,10 @@ class NeedsMetController extends Controller
             ->get();
         
         foreach($needsMets['volunteers'] as $met) {
-            if ($met->model->profile->id == auth()->user()->id) 
-            $needsMets['volunteered'] = true;
+            if (auth()->check()) {
+                if ($met->model->profile->id == auth()->user()->id) 
+                    $needsMets['volunteered'] = true;
+            }
             $met->model->profile;
         }
 
