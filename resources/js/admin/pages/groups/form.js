@@ -11,7 +11,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
     const [activeTab, setActiveTab] = useState('category');
     const [fieldErrors, setFieldErrors] = useState({});
     const [goal, setGoal] = useState(1);
-    const [goalType, setGoalType] = useState('month')
+    const [term, setGoalType] = useState('month')
     const [campus, setCampus] = useState({})
     const [users, setUsers] = useState([]);
     const [fields, setFields] = useState({
@@ -114,6 +114,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                 ...fields,
                 users,
                 campus,
+                term,
                 goal
             }
             const submitPromise = !data.id ? 
@@ -133,21 +134,29 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                 setSubmitting(false)
             })
         } else {
-            swalError();
+            swalError("Error occured on submit");
         }
     }
 
     const onChangePhoto = (file) => {
         const reader = new FileReader();
-        reader.onload = (e2) => {
+        const img = new Image();
+        img.onload = () => {
+            if(img.width < 300 || img.height < 300) {
+                swalError("Image size is lower than 300")
+                return;
+            }
             setFieldErrors({...fieldErrors, photo : '' });
-            setFields({...fields, photo: e2.target.result})
+            setFields({...fields, photo: img.src})
+        }
+        reader.onload = (e2) => {
+            img.src = e2.target.result
         }
         reader.readAsDataURL(file)
     }
 
     return (
-        <div className="offers-create-form">
+        <div className="group-form">
             {
                 (submitting) &&
                 <LoadingScreen title={
@@ -155,12 +164,12 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                     'Please wait'
                 }/>
             }
-            <button className="offers-create-form__close" type="button" disabled={submitting} onClick={()=>handleForm({})}>
-                <OffersFormCross />
-            </button>
             {
                 !data.id ? 
-                <div className="offers-create-form__header">
+                <section className="group-header">
+                    <button className="offers-create-form__close" type="button" disabled={submitting} onClick={()=>handleForm({})}>
+                        <OffersFormCross />
+                    </button>
                     <h2>Add Group</h2>
                     <div className="relative pt-1">
                         <div className="w-full bg-gray-400 rounded-full">
@@ -168,8 +177,11 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                         </div>
                     </div>
                     <p>{countTab} of 3</p>
-                </div> :
-                <div className="offers-create-form__header">
+                </section> :
+                <section className="group-header">
+                    <button className="offers-create-form__close" type="button" disabled={submitting} onClick={()=>handleForm({})}>
+                        <OffersFormCross />
+                    </button>
                     <h2>Edit Group</h2>
                     <div className="offer-edit__opts">
                         <ul>
@@ -178,11 +190,11 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                             <li className={"offer-edit__opts-item w-1/3 " + (countTab == 3 ? 'offer-edit__opts-item--active' : '')} onClick={()=>handleTab(3)}><h3>Set your Group Goal</h3></li>
                         </ul>
                     </div>
-                </div>
+                </section>
 
             }
             
-            <div className="offers-create-form__body">
+            <section className="group-body">
                 { countTab == 1 && 
                     <FormTabInfo
                         handleInputChange={handleInputChange}
@@ -197,30 +209,26 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                     />
                 }
                 { countTab == 2 && <FormTabInvite data={data} users={users} setUsers={setUsers} />}
-                { countTab == 3 && <FormTabGoal goal={goal} setGoal={setGoal} goalType={goalType} setGoalType={setGoalType}/>}
-            </div>
+                { countTab == 3 && <FormTabGoal goal={goal} setGoal={setGoal} goalType={term} setGoalType={setGoalType}/>}
+            </section>
 
-             <section className="offers-category-opt">
+             <section className="group-footer">
                 {
                     submitting ? 
                     <div className="offers-category-opt__container flex">
-                        <div>
-                            <button className="back" onClick={() => console.log('submitting')} disabled>Submitting</button>
-                        </div>
+                        <button className="back" onClick={() => console.log('submitting')} disabled>Submitting</button>
                     </div> : 
                     <div className="offers-category-opt__container flex">
                         <button className="discard" onClick={()=>handleForm({}, true)} disabled={submitting} >Discard</button>
-                        <div>
-                            {
-                                countTab > 1 &&
-                                <button className="back" onClick={() => handleTab(countTab-1)} disabled={submitting} >Back</button>
-                            }
-                            {
-                                (countTab !== 3) 
-                                ? (<button className="next" onClick={()=>handleTab(countTab+1)} disabled={submitting} >Next</button>)
-                                : (<button className="next" onClick={attemptSubmit} disabled={submitting} >{data.id ? 'Edit' : 'Create'}</button>)
-                            }
-                        </div>
+                        {
+                            countTab > 1 &&
+                            <button className="back" onClick={() => handleTab(countTab-1)} disabled={submitting} >Back</button>
+                        }
+                        {
+                            (countTab !== 3) 
+                            ? (<button className="next" onClick={()=>handleTab(countTab+1)} disabled={submitting} >Next</button>)
+                            : (<button className="next" onClick={attemptSubmit} disabled={submitting} >{data.id ? 'Edit' : 'Create'}</button>)
+                        }
                     </div>
                 }
             </section>

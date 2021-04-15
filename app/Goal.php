@@ -13,4 +13,9 @@ class Goal extends Model
     {
         return $this->morphTo();
     }
+
+    public static function scopePending($query) 
+    {
+    	return $query->whereNotIn('status', ['achieved']);
+    }
 }

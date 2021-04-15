@@ -78,13 +78,13 @@ const View = ({data = {}, handleForm, afterSubmit }) => {
                     <label>{data.released_at ? 'Published' : 'Draft' }</label>
                 </div>
                 <div className="view-story__header-right flex flex-wrap" >
-                    <span className="delete mr-2" onClick={deleting}>Delete</span>
+                    <span className="delete mr-2 cursor-pointer" onClick={deleting}>Delete</span>
 
                     {
                         roles.name != 'organization admin' && 
                             ((data.released_at) ? 
-                            <span className="unpublished" onClick={togglePublish}>Unpublish</span> :
-                            <span className="publish" onClick={togglePublish}>Publish</span>)
+                            <span className="unpublished cursor-pointer" onClick={togglePublish}>Unpublish</span> :
+                            <span className="publish cursor-pointer" onClick={togglePublish}>Publish</span>)
                             
                     }
                     <div onClick={() => handleForm(data, true)}>
