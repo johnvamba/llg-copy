@@ -6,11 +6,12 @@ const DonationGraph = () => {
         donation: [],
         fundraise: [],
         volunteer: [],
+        categories: [],
     });
 
     useEffect(() => {
         async function fetchData() {
-            let {data} = await axios.get('/api/invoice/needs/donations');
+            let {data} = await axios.get('/api/web/needs/graph');
             setData(data)
         }
 
@@ -74,7 +75,8 @@ const DonationGraph = () => {
                 colors: ['transparent']
             },
             xaxis: {
-                categories: ['Jan '+data.year, 'Feb '+data.year, 'Mar '+data.year, 'Apr '+data.year, 'May '+data.year, 'Jun '+data.year, 'Jul '+data.year, 'Aug '+data.year, 'Setp '+data.year, 'Oct '+data.year, 'Nov '+data.year, 'Dec '+data.year],
+                categories: data.categories
+                // categories: ['Jan '+data.year, 'Feb '+data.year, 'Mar '+data.year, 'Apr '+data.year, 'May '+data.year, 'Jun '+data.year, 'Jul '+data.year, 'Aug '+data.year, 'Setp '+data.year, 'Oct '+data.year, 'Nov '+data.year, 'Dec '+data.year],
             },
             fill: {
                 opacity: 1

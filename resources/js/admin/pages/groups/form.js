@@ -227,7 +227,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                         {
                             (countTab !== 3) 
                             ? (<button className="next" onClick={()=>handleTab(countTab+1)} disabled={submitting} >Next</button>)
-                            : (<button className="next" onClick={attemptSubmit} disabled={submitting} >{data.id ? 'Edit' : 'Create'}</button>)
+                            : (<button className="next" onClick={attemptSubmit} disabled={submitting} >{data.id ? 'Save' : 'Create'}</button>)
                         }
                     </div>
                 }
