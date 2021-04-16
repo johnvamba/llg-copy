@@ -45,6 +45,7 @@ const FormTabInvite = ({data = {}, users = [], setUsers}) => {
                 swalSuccess('User has been invited!')
             })
         } else {
+            item.invite_status = 'tobesent';
             setUsers([...users, item]);
         }
     }

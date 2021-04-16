@@ -24,6 +24,13 @@ class Group extends Model implements HasMedia
         return $this->morphMany('App\Goal', 'model');
     }
 
+    public function goal()
+    {
+        return $this->hasOne('App\Goal', 'model_id')
+            ->where('model_type', static::class)
+            ->latest();
+    }
+
     public function tags()
     {
         return $this->morphMany('App\Tag', 'model');
@@ -76,7 +83,14 @@ class Group extends Model implements HasMedia
             $goalQuery->where('status', 'acheived');
         }, 'goals']);
     }
-     public function registerMediaConversions(Media $media=null) : void
+
+    public static function scopeUnfilter($query)
+    {
+        //add unfilters here
+        return $query;
+    }
+
+    public function registerMediaConversions(Media $media=null) : void
     {
         $this->addMediaConversion('listing')
             ->width(50)

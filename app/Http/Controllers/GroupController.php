@@ -84,16 +84,23 @@ class GroupController extends Controller
      */
     public function getDiscoverGroups(Request $request, $page = 1)
     {
-        $groupParticipated = GroupParticipant::where(function($query) {
-                $query->where('user_id', auth()->user()->id)
-                    ->where('status', 'approved');
-            })->pluck('group_id');
+        $groupParticipated = [];
+        $groups = [];
 
-        $groups = Group::where([
-                ['user_id', '!=', auth()->user()->id],
-                ['privacy', 'public']
-            ])
-            ->whereNotIn('id', $groupParticipated)
+        if (auth()->check()) {
+            $groupParticipated = GroupParticipant::where(function($query) {
+                    $query->where('user_id', auth()->user()->id)
+                        ->where('status', 'approved');
+                })->pluck('group_id');
+        }
+
+        $groups = Group::where('privacy', 'public');
+        
+        if (auth()->check()) {
+            $groups = $groups->where('user_id', '!=', auth()->user()->id);
+        }
+
+        $groups = $groups->whereNotIn('id', $groupParticipated)
             ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($groups as $group) {
@@ -459,11 +466,17 @@ class GroupController extends Controller
             ->where('id', $id)
             ->first();
 
-        $group['isJoined'] = GroupParticipant::where([
-                ['group_id', $group->id],
-                ['user_id', auth()->user()->id],
-                ['status', 'approved']
-            ])->count();
+        if ($group) {
+            $group['isJoined'] = 0;
+        }
+
+        if (auth()->check()) {
+            $group['isJoined'] = GroupParticipant::where([
+                    ['group_id', $group->id],
+                    ['user_id', auth()->user()->id],
+                    ['status', 'approved']
+                ])->count();
+        }
 
         $group['goal'] = Goal::whereHasMorph(
                 'model',
@@ -598,7 +611,9 @@ class GroupController extends Controller
                 ->latest()
                 ->first();
 
-            $date = Carbon::parse($group['goal']->created_at);
+            $date = $group['goal'] 
+                ? Carbon::parse($group['goal']->created_at)
+                : $group->created_at;
 
             $participants = GroupParticipant::where([
                     ['group_id', $group->id],

@@ -46,11 +46,43 @@ Route::resource('otps', 'OTPController');
 
 Route::post('account', 'Admin\CompleteAccount')->name('post.complete.account');
 
+/** Need */
+Route::get('needs/{type}/categories', 'NeedsCategoryController@index');
+Route::post('needs/page/{page}', 'NeedsController@index');
+Route::post('needs/organization/{organization}/page/{page}', 'NeedsController@getOrganizationNeeds');
+
+/** Need type */
+Route::resource('needs-types', 'NeedsTypeController');
+
+/** Needs Met */
+Route::get('needs-mets/group/{group}', 'NeedsMetController@getGroupNeedsMet');
+Route::get('needs-mets/{need}/volunteers', 'NeedsMetController@getNeedsVolunteer');
+
+/** Organization */
+Route::get('organization/featured', 'OrganizationController@getFeaturedOrganizations');
+Route::post('organizations/nearby/{lat}/{lng}', 'OrganizationController@nearby')->middleware('datafilter');
+Route::get('organizations/page/{page?}', 'OrganizationController@index');
+
+/** Story */
+Route::get('featured/stories', 'StoryController@featuredStory');
+Route::get('stories/recommended', 'StoryController@recommended');
+Route::get('stories/page/{page?}', 'StoryController@index');
+Route::get('stories/{story}/comments', 'StoryController@getComments');
+
+/** Group */
+Route::get('groups/discover/page/{page?}', 'GroupController@getDiscoverGroups');
+Route::post('groups/suggested/nearby/{lat}/{lng}', 'GroupController@suggestedNearby');
+Route::resource('groups', 'GroupController');
+
+/** Invoice */
+Route::post('invoice/recent/donors', 'InvoiceController@getRecentDonors');
+
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/payneed', 'Admin\NeedsController@showWithCred');
 
     Route::group(['prefix'=>'web', 'namespace'=>'Admin', 'middleware' => 'datafilter'], function() {
         Route::get('needs/types', 'NeedsController@types');
+        Route::get('needs/graph', 'NeedsController@needCountOnMonths');
 
         Route::resource('needs', 'NeedsController');
         Route::get('needs/{need}/contributors', 'NeedsController@contributors');
@@ -132,24 +164,16 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('need/recent-added', 'NeedsController@getRecentAdded')->middleware('datafilter');
     Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsController@nearby');
     Route::get('needs/open/total', 'NeedsController@getTotalNeedsOpen')->middleware('datafilter');
-    Route::post('needs/organization/{organization}/page/{page}', 'NeedsController@getOrganizationNeeds');
     Route::post('need/{need}/volunteer', 'NeedsController@addVolunteer');
-    Route::post('needs/page/{page}', 'NeedsController@index');
     Route::resource('needs', 'NeedsController');
 
     /** Needs Categories resource module */
     Route::post('needs-category/lists', 'NeedsCategoryController@getCategories');
-    Route::get('needs/{type}/categories', 'NeedsCategoryController@index');
     Route::resource('needs-categories', 'NeedsCategoryController');
 
-    /** Needs Types resource module */
-    Route::resource('needs-types', 'NeedsTypeController');
-    
     /** Needs Met resource module */
-    Route::get('needs-mets/group/{group}', 'NeedsMetController@getGroupNeedsMet');
     Route::get('needs-mets/user/{user}', 'NeedsMetController@getUserNeedsMet');
     Route::get('needs-mets/total', 'NeedsMetController@getTotalNeedsMet')->middleware('datafilter');
-    Route::get('needs-mets/{need}/volunteers', 'NeedsMetController@getNeedsVolunteer');
     Route::resource('needs-met', 'NeedsMetController');
 
     /** Service Offered resource module */
@@ -165,13 +189,9 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Stories resource module */
     Route::post('story/lists', 'StoryController@getStories');
-    Route::get('featured/stories', 'StoryController@featuredStory');
     Route::post('stories/{story}/appreciate', 'StoryController@Appreciate');
     Route::get('stories/search/{keyword}/page/{page?}', 'StoryController@searchStory');
-    Route::get('stories/{story}/comments', 'StoryController@getComments');
     Route::post('stories/{story}/comments', 'StoryController@addComment');
-    Route::get('stories/recommended', 'StoryController@recommended');
-    Route::get('stories/page/{page?}', 'StoryController@index');
     Route::resource('stories', 'StoryController');
 
     /** Group invite resource module */
@@ -194,9 +214,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('groups/{group}/join-request', 'GroupController@getJoinRequest');
     Route::get('groups/messages/{group}', 'GroupController@messages');
     Route::post('groups/message/{group}', 'GroupController@addMessage');
-    Route::get('groups/discover/page/{page?}', 'GroupController@getDiscoverGroups');
-    Route::post('groups/suggested/nearby/{lat}/{lng}', 'GroupController@suggestedNearby');
-    Route::resource('groups', 'GroupController');
 
     /** Orgnization Categories resource module */
     Route::resource('organizations-categories', 'OrganizationCategoryController');
@@ -208,11 +225,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Orgnization resource module */
     Route::post('organization/lists', 'OrganizationController@getOrganizations');
-    Route::get('organization/featured', 'OrganizationController@getFeaturedOrganizations');
     Route::get('organizations/{organization}/credential', 'OrganizationController@getCredential');
     Route::post('organizations/{organization}/credential', 'OrganizationController@addCredential');
-    Route::post('organizations/nearby/{lat}/{lng}', 'OrganizationController@nearby')->middleware('datafilter');
-    Route::get('organizations/page/{page?}', 'OrganizationController@index');
     Route::resource('organizations', 'OrganizationController');
 
     /** Payment resource module */
@@ -221,7 +235,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('payments', 'PaymentController');
 
     /** Invoice resource module */
-    Route::post('invoice/recent/donors', 'InvoiceController@getRecentDonors');
     Route::get('invoice/donations', 'InvoiceController@getDonations')->middleware('datafilter');
     Route::get('invoice/needs/donations', 'InvoiceController@getNeedsDonations')->middleware('datafilter');
     Route::get('invoice/top-donors', 'InvoiceController@getTopDonors')->middleware('datafilter');
