@@ -7,7 +7,7 @@ use App\Http\Resources\StoryResource;
 use App\Http\Controllers\Controller;
 use DB;
 use Str;
-
+use App\Jobs\Mail\StoryPublishing;
 use App\Story;
 use App\Organization;
 use App\Category;
@@ -281,6 +281,11 @@ class StoryController extends Controller
             $story->update([
                 'posted_at' => !isset($story->posted_at) ? now() : null
             ]);
+
+            if(isset($story->posted_at)) {
+                dispatch(new StoryPublishing($story));
+            }
+
             DB::commit();
             return response()->json(['Successfully updated'], 200);
         } catch (\Exception $e) {

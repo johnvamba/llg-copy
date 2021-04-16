@@ -29,6 +29,7 @@ const OrgPub = () => {
     const [countTab, setCountTab] = useState(1);
     const [submitting, setSubmitting] = useState(false);
     const [users, setUsers] = useState([]);
+    const [phoneUnparse, setPhone] = useState(null);
     const [images, setImages] = useState({
         banner: null,
         photo: null
@@ -75,16 +76,17 @@ const OrgPub = () => {
 
     const handleOrgInfo = (e) => {
         const { name, value } = e.target
+        let parsed = null;
         // if(name == 'phone_number') {
-        //     let parsed = parsePhone(value);
-        //     let unparsed = parsePhone(parsed, true);
+        //     let unparsed = parsePhone(value, true);
+        //     parsed = parsePhone(unparsed);
+        //     setPhone(parsed);
         //     let test = validPhone(parsed);
-        //     console.log('validate number', test, parsed, unparsed, value);
-        //     if(value.length > 10)
+        //     if(unparsed.length > 11)
         //         return;
         // }
         setOrgInfoForm({ ...orgInfoForm,
-            [name]: value
+            [name]: parsed || value
         })
         removeError(name)
     }
