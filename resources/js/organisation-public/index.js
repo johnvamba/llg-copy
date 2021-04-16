@@ -21,7 +21,7 @@ const swal = withReactContent(Swal);
 import SwalIcon from '../svg/swal-icon'
 import './org-pub.css';
 import { swalError } from '../components/helpers/alerts'
-import { validateEmail, isValidated, validBenevityLink } from '../components/helpers/validator'
+import { validateEmail, isValidated, validBenevityLink, parsePhone, validPhone } from '../components/helpers/validator'
 
 import 'pretty-checkbox';
 
@@ -75,6 +75,14 @@ const OrgPub = () => {
 
     const handleOrgInfo = (e) => {
         const { name, value } = e.target
+        // if(name == 'phone_number') {
+        //     let parsed = parsePhone(value);
+        //     let unparsed = parsePhone(parsed, true);
+        //     let test = validPhone(parsed);
+        //     console.log('validate number', test, parsed, unparsed, value);
+        //     if(value.length > 10)
+        //         return;
+        // }
         setOrgInfoForm({ ...orgInfoForm,
             [name]: value
         })

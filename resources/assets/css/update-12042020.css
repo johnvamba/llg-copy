@@ -1,26 +1,26 @@
 @font-face {
     font-family: InterRegular;
-    src: url('../fonts/Inter/Inter-Regular-slnt=0.ttf');
+    src: url('../fonts/Inter-Regular-slnt=0.ttf');
 }
 
 @font-face {
     font-family: InterMedium;
-    src: url('../fonts/Inter/Inter-Medium-slnt=0.ttf');
+    src: url('../fonts/Inter-Medium-slnt=0.ttf');
 }
 
 @font-face {
     font-family: InterSemibold;
-    src: url('../fonts/Inter/Inter-SemiBold-slnt=0.ttf');
+    src: url('../fonts/Inter-SemiBold-slnt=0.ttf');
 }
 
 @font-face {
     font-family: BrownStdRegular;
-    src: url('../fonts/BrownStd/BrownStd-Regular.otf');
+    src: url('../fonts/BrownStd-Regular.otf');
 }
 
 @font-face {
     font-family: BrownStdBold;
-    src: url('../fonts/BrownStd/BrownStd-Bold.otf');
+    src: url('../fonts/BrownStd-Bold.otf');
 }
 
 p {
