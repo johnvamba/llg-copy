@@ -88,6 +88,7 @@ class StoryController extends Controller
             'short_description' => 'required',
         ]);
         DB::beginTransaction();
+        // dd($request->get('feature'));
         try {
             // $org = Organization::inRandomOrder()->first(); //Change me.
             if( $orgForm = $request->get('organization') ) {
@@ -99,6 +100,7 @@ class StoryController extends Controller
             $story = Story::create([
                 'user_id' => (auth()->user())->id, 
                 'organization_id' => optional($org)->id ?? 1,
+
             ] + $request->only('title', 'need_id', 'description', 'short_description', 'raw_draft_json') );
 
             if($category = $request->get('category')){

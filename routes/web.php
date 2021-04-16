@@ -35,9 +35,7 @@ Route::group([
 	Route::get('orgreject', 'TestControl@orgReject');
 });
 
-Route::get('/admin/invite', function () {
-    return view('email.org_invite');
-});
+Route::get('/admin/invite', 'Admin\EmailController@orgInvite');
 
 Route::get('/needs/print', 'Admin\Dashboard');
 
