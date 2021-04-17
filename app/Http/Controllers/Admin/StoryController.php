@@ -7,7 +7,7 @@ use App\Http\Resources\StoryResource;
 use App\Http\Controllers\Controller;
 use DB;
 use Str;
-
+use App\Jobs\Mail\StoryPublishing;
 use App\Story;
 use App\Organization;
 use App\Category;
@@ -88,6 +88,7 @@ class StoryController extends Controller
             'short_description' => 'required',
         ]);
         DB::beginTransaction();
+        // dd($request->get('feature'));
         try {
             // $org = Organization::inRandomOrder()->first(); //Change me.
             if( $orgForm = $request->get('organization') ) {
@@ -99,6 +100,7 @@ class StoryController extends Controller
             $story = Story::create([
                 'user_id' => (auth()->user())->id, 
                 'organization_id' => optional($org)->id ?? 1,
+
             ] + $request->only('title', 'need_id', 'description', 'short_description', 'raw_draft_json') );
 
             if($category = $request->get('category')){
@@ -279,6 +281,11 @@ class StoryController extends Controller
             $story->update([
                 'posted_at' => !isset($story->posted_at) ? now() : null
             ]);
+
+            if(isset($story->posted_at)) {
+                dispatch(new StoryPublishing($story));
+            }
+
             DB::commit();
             return response()->json(['Successfully updated'], 200);
         } catch (\Exception $e) {

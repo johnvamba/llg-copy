@@ -11,6 +11,7 @@ use App\User;
 use App\Campus;
 use App\Organization;
 
+use App\Jobs\Mail\OfferMail;
 use App\Http\Resources\OfferResource;
 use DB;
 use Str;
@@ -254,6 +255,7 @@ class OffersController extends Controller
                 'approved_at' => now()
             ]);
             $offer->save();
+            dispatch(new OfferMail($offer, true));
 
             DB::commit();
             return response()->json(['Success'], 200);
@@ -271,6 +273,7 @@ class OffersController extends Controller
                 'approved_by' => auth()->user()->id,
             ]);
             $offer->save();
+            dispatch(new OfferMail($offer, false));
 
             DB::commit();
             return response()->json(['Success'], 200);
