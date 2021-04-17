@@ -7,6 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+// use App\ServiceOffer;
+
 class OfferApprove extends Mailable
 {
     use Queueable, SerializesModels;
@@ -18,7 +20,7 @@ class OfferApprove extends Mailable
      *
      * @return void
      */
-    public function __construct(ServiceOffer $offer, $accepted = true)
+    public function __construct($offer, $accepted = true)
     {
         $this->offer = $offer;
         $this->accepted = $accepted;

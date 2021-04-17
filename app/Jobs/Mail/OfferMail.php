@@ -45,7 +45,8 @@ class OfferMail implements ShouldQueue
         $this->offer->loadMissing('model');
 
         if($model = $this->offer->model) {
-            $sendto = collect();
+            $sendto = collect([]);
+
             switch (get_class($model)) {
                 case Campus::class:
                 $sendto = $model->users; //load users
@@ -63,9 +64,22 @@ class OfferMail implements ShouldQueue
                     break;
             }
 
-            $sendto->each(function($user) {
-                dispatch(fn() => Mail::to($user)->send( new OfferApprove($this->offer, $this->accepted) ) );
+            $offer = $this->offer;
+            $accepted = $this->accepted;
+
+            // Log::channel('queues_error')
+            //     ->info("status", $sendto->toArray() );
+
+            $sendto->each(function($user) use ($offer, $accepted) {
+                dispatch(fn() => Mail::to($user)->send(new OfferApprove($offer, $accepted)) );
             });
         }
+    }
+
+    public function failed($exception = null)
+    {
+        Log::channel('queues_error')
+            ->info($exception->getMessage(), 
+                array('stacktrace' => $exception->getTrace()));
     }
 }
