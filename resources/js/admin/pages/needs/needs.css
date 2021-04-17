@@ -85,8 +85,11 @@
 	flex:2 ;
 	color:#7690A8;
 }
+.need-info .need-content {
+	overflow-y: scroll;
+	height: calc(100% - 60px);
+}
 .need-info .need-content, .need-info .need-footer {
-	/*height: calc(100% - 60px);*/
 	padding: 0 20px;
 }
 .need-info .need-footer {
