@@ -10,6 +10,7 @@ import { validateEmail, isValidated } from '../../../components/helpers/validato
 import { swalError, swalSuccess } from '../../../components/helpers/alerts';
 import CircleImageForm from '../../../components/CircleImageForm';
 import LoadingScreen from '../../../components/LoadingScreen';
+import ImageCropper from '../../../components/ImageCropper'
 
 const selOption = [
     { value: 'user', label: 'App User'},
@@ -38,6 +39,10 @@ const UsersForm = ({ data, showItem, handleForm }) => {
     const [campus, setCampus] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const roles = useSelector(state => state.AuthUserReducer.roles);
+    const [cropper, openCropper] = useState({
+        url: null,
+        cropTarget: 'banner'
+    })
 
     useEffect(()=> {
         switch (roles.name) {
@@ -181,9 +186,19 @@ const UsersForm = ({ data, showItem, handleForm }) => {
     const onChangePhoto = (file) => {
         const reader = new FileReader();
         reader.onload = (e2) => {
+            openCropper({ url: e2.target.result, cropTarget: 'photo' })
             setPhoto(e2.target.result)
         }
         reader.readAsDataURL(file)
+    }
+
+    const handlePhoto = (imageData = null)=>{
+        setPhoto(imageData);
+        // setCropTarget(null)
+    }
+
+    const closeCropper=()=>{
+        openCropper({url: null, cropTarget: 'photo'})
     }
 
     const reset = () => {
@@ -209,6 +224,12 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                     (submitting && (data.id ? 'Updating User' : 'Creating User')) ||
                     'Please wait'
                 }/>
+            }
+            {
+                cropper.url && <ImageCropper aspect={cropper.cropTarget == 'banner' ?  (14/5) : 1} originalImage={cropper.url} 
+                    onImageCropped={handlePhoto}
+                    circle={ cropper.cropTarget == 'photo'}
+                    closeCropper={closeCropper} />
             }
             <header className="form-title mb-0">
                 <h2>{label}</h2>

@@ -104,12 +104,18 @@ class TestControl extends Controller
     }
 
     public function tester() {
-        $need = Need::find(17);
-        optional($need)->loadMissing(['organization'=>function($org){
-            $org->withoutGlobalScopes()->with(['members' => fn($m) => $m->unfilter()]);
-        }]);
+        $organization = Organization::find(3);
+
+        $users = User::unfilter()
+            ->role('admin')
+            ->orWhereHas('campus', function($camp) use ($organization){
+                $camp->whereHas('organizations', fn($org) => $org->where('organizations.id', $organization->id));
+            })->get();
+        // optional($need)->loadMissing(['organization'=>function($org){
+        //     $org->withoutGlobalScopes()->with(['members' => fn($m) => $m->unfilter()]);
+        // }]);
         // $users = User::unfilter()->role('admin')->get();
 
-        dd($need);
+        dd($users);
     }
 }

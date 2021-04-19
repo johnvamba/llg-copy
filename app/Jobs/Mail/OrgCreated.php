@@ -36,9 +36,14 @@ class OrgCreated implements ShouldQueue
      */
     public function handle()
     {
-        $users = User::unfilter()->role('admin')->get();
         $organization = $this->organization;
-        
+
+        $users = User::unfilter()
+            ->role('admin')
+            ->orWhereHas('campus', function($camp) use ($organization){
+                $camp->whereHas('organizations', fn($org) => $org->where('organizations.id', $organization->id));
+            })->get();
+        // $campus
         $users->each(function($user) use ($organization){
             dispatch(fn() => Mail::to($user)->send(new NewOrgEmail($organization)) );
         });

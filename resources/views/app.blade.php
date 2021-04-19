@@ -19,6 +19,8 @@
     </head>
     <body>
         <div id="app"></div>
+        <link href="{{ asset('css/general.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/update-12042020.css') }}" rel="stylesheet">
 
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <script src="{{ mix('js/app.js') }}"></script>
