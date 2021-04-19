@@ -43,6 +43,7 @@
         "filepond": "^4.21.1",
         "filepond-plugin-image-preview": "^4.6.4",
         "firebase": "^7.21.1",
+        "imask": "^6.0.7",
         "js-cookie": "^2.2.1",
         "moment": "^2.27.0",
         "pretty-checkbox": "^3.0.3",

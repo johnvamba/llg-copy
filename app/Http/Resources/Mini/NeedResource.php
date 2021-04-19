@@ -29,6 +29,7 @@ class NeedResource extends JsonResource
             'photo' => $this->getFirstMediaUrl('photo', self::$convert),
             'ratio' => $this->getRatio(),
             'description' => $this->description,
+            'need_link' => $this->need_link,
             'raised' => $this->raised
         ];
     }
