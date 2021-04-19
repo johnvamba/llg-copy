@@ -89,6 +89,9 @@
 	overflow-y: scroll;
 	height: calc(100% - 60px);
 }
+.need-info .need-content.writestory {
+	height: calc(100% - 130px);
+}
 .need-info .need-content, .need-info .need-footer {
 	padding: 0 20px;
 }
