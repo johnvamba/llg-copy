@@ -118,7 +118,7 @@ class StoryController extends Controller
      */
     public function featuredStory()
     {
-        //$date = Carbon::now()->toDateString();
+        $date = Carbon::now()->toDateString();
 
         $story = Story::with(
                 'user', 
@@ -128,10 +128,11 @@ class StoryController extends Controller
                 //'appreciates.user',
             )
             ->withCount('appreciates', 'comments')
-            //->where('featured_start_date', '<=', $date)
-            //->where('featured_end_date', '>=', $date)
-            ->inRandomOrder()
-            ->whereNotNull('posted_at')
+            ->where(function($query) use ($date) {
+                $query->whereNotNull('posted_at')
+                    ->whereDate('featured_start_date', '<=', $date);
+            })
+            ->latest()
             ->first();
 
         if ($story) {
