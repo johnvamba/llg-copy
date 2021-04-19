@@ -255,6 +255,10 @@ const OrgPub = () => {
             setFormErrors({ email: 'Invalid Email'})
             return;
         }
+        if(!validPhone(form.phone) || form.phone == ''){
+            setFormErrors({phone: 'Invalid or missing phone'})
+            return;
+        }
         setUsers([...users, form])
         setForm({
             email: '',
