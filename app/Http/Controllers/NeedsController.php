@@ -58,9 +58,6 @@ class NeedsController extends Controller
             if ($filters['filterAmount']) 
                 $needs->where('goal', '<=', floatval($filters['amount']));
         }
-
-        // if (count($needIds) > 0)
-        //     $needs->orWhereIn('id', $needIds);
         
         $results = $needs
             ->where(function($query) {
@@ -77,7 +74,7 @@ class NeedsController extends Controller
             $need->categories = $need->categoriesList; //reset?
 
             $need['photo'] = $need->organization->getFirstMediaUrl('photo');
-            $need['cover_photo'] = $need->organization->getFirstMediaUrl('banner');
+            $need['cover_photo'] = $need->getFirstMediaUrl('photo');
 
             $need['totalActiveNeeds'] = Need::where(
                     'organization_id', $need->organization_id
@@ -145,7 +142,7 @@ class NeedsController extends Controller
             $need->categories = $need->categoriesList; //reset?
 
             $need['photo'] = $need->organization->getFirstMediaUrl('photo');
-            $need['cover_photo'] = $need->organization->getFirstMediaUrl('banner');
+            $need['cover_photo'] = $need->getFirstMediaUrl('photo');
 
             $need['totalActiveNeeds'] = Need::where(
                     'organization_id', $need->organization_id
