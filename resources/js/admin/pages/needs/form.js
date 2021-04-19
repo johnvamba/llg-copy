@@ -42,6 +42,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     const [time, setTime] = useState('09:00 AM');
     const [endtime, setEndTime] = useState('10:00 AM');
     const [errors, setErrors] = useState({});
+    const [need_link, setUrl] = useState('');
     // const [address, setAddress] = useState('');
     const [location, setLocation] = useState({
         formatted_address: '',
@@ -76,10 +77,12 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 date,
                 time,
                 // address,
+                need_link,
                 location,
                 lng,
                 lat
             } = data.data
+            setUrl(need_link ||'')
             setTitle(title || '');
             setAbout(about || description || '');
             setBring(requirements || '');
@@ -114,6 +117,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         } else {
             setTitle('')
             setAbout('')
+            setUrl('')
             setBring('')
             setCategory([])
             setPhoto(null)
@@ -190,6 +194,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             title, type, category, goal, date, time, endtime, location, organization,
             photo,//files.length > 0 ? photo : null,
             // address,
+            need_link,
             description: about,
             requirements: bring
         }
@@ -398,6 +403,13 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                         
                     </div>
                 }
+                <div className={`form-group`}>
+                    <label>Additional Information about this need</label>
+                    <input type='text' className="input-field" placeholder="Enter valid link to this need" value={need_link} onChange={e=>setUrl(e.target.value)}/>
+                    {
+                        (errors.need_link || false) && <span className="text-xs pt-1 text-red-500 italic">Invalid Link</span>
+                    }
+                </div>
                 <Imagepond photo={photo} cropped={cropper.cropped} imageSelected={handlePhoto} errors={errors.photo}/>
             </div>
             <div className="form-footer">
