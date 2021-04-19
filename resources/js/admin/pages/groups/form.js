@@ -5,6 +5,7 @@ import FormTabInvite from './form-tab-invite';
 import FormTabGoal from './form-tab-goal';
 import { swalSuccess, swalError } from '../../../components/helpers/alerts';
 import LoadingScreen from '../../../components/LoadingScreen';
+import ImageCropper from '../../../components/ImageCropper'
 
 const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
     const [countTab, setCountTab] = useState(1);
@@ -24,6 +25,10 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
         lat: null,
         lng: null
     });
+    const [cropper, openCropper] = useState({
+        url: null,
+        cropTarget: 'banner'
+    })
     const [submitting, setSubmitting] = useState(false)
 
     useEffect(()=>{
@@ -146,6 +151,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                 swalError("Image size is lower than 300")
                 return;
             }
+            openCropper({ url: img.src, cropTarget: 'photo' })
             setFieldErrors({...fieldErrors, photo : '' });
             setFields({...fields, photo: img.src})
         }
@@ -153,6 +159,10 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
             img.src = e2.target.result
         }
         reader.readAsDataURL(file)
+    }
+
+    const closeCropper=()=>{
+        openCropper({url: null, cropTarget: 'photo'})
     }
 
     return (
@@ -163,6 +173,12 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                     (submitting && (data.id ? 'Updating Group' : 'Creating Group')) ||
                     'Please wait'
                 }/>
+            }
+            {
+                cropper.url && <ImageCropper aspect={cropper.cropTarget == 'banner' ?  (14/5) : 1} originalImage={cropper.url} 
+                    onImageCropped={(photo)=>setFields({...fields, photo})}
+                    circle={ cropper.cropTarget == 'photo'}
+                    closeCropper={closeCropper} />
             }
             {
                 !data.id ? 
