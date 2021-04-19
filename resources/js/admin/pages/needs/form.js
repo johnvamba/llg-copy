@@ -22,7 +22,7 @@ import CategoryScroll from '../../../components/CategoryScroll'
 import Imagepond from '../../../components/Imagepond'
 import LoadingScreen from '../../../components/LoadingScreen'
 import TimeInput from '../../../components/TimeInput'
-
+import ImageCropper from '../../../components/ImageCropper'
 import { connect, useSelector } from 'react-redux';
 
 const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
@@ -48,6 +48,12 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         lat: -37.8180604,
         lng: 145.0001764
     })
+    const [cropper, openCropper] = useState({
+        url: null,
+        cropped: false,
+        cropTarget: 'banner'
+    })
+
     const [organization, setOrganization] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -204,6 +210,15 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setSubmitting(false)
         })
     }
+    const handlePhoto = (imageData = null)=>{
+        setPhoto(imageData);
+        openCropper({url: imageData, cropTarget: 'photo'});
+    }
+
+    const closeCropper=()=>{
+        openCropper({url: null, cropped: true, cropTarget: 'photo'})
+    }
+
     const onChangeDate = (date) => {
         setDate(date)
         setOpenDate(false)
@@ -219,6 +234,11 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                     (submitting && (data.id ? 'Updating Need' : 'Creating Need')) ||
                     'Please wait'
                 }/>
+            }
+            {
+                cropper.url && <ImageCropper aspect={7/4} originalImage={cropper.url} 
+                    onImageCropped={setPhoto}
+                    closeCropper={closeCropper} />
             }
             <div className="form-title">
                 <h3>{data.id ? 'Edit' : 'Create'} Need</h3>
@@ -378,7 +398,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                         
                     </div>
                 }
-                <Imagepond photo={photo} imageSelected={setPhoto} errors={errors.photo}/>
+                <Imagepond photo={photo} cropped={cropper.cropped} imageSelected={handlePhoto} errors={errors.photo}/>
             </div>
             <div className="form-footer">
                 <Button className="btn btn-secondary" onClick={()=>handleForm({}, true, 'discard')} disabled={submitting}>Discard</Button>

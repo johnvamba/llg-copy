@@ -16,6 +16,7 @@ const Imagepond = ({
     updateFiles,
     className = '',
     errors,
+    cropped = false,
     reloadFiles = [],
     ...props
 }) => {
@@ -31,7 +32,11 @@ const Imagepond = ({
             reader.readAsDataURL(update ? file : file.file);
         }
     }
-
+    useEffect(() => {
+        if(cropped) {
+            setFiles([]);
+        }
+    }, [cropped])
 
     return (
         <div className={`form-group  ${errors && 'form-error'} ${className} `} >
