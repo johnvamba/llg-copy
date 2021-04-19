@@ -6,6 +6,7 @@ import Cookie from 'js-cookie'
 import PlusRounded from '../svg/plus-rounded'
 import { validateEmail, isValidated } from '../components/helpers/validator';
 import {  checkEmail } from '../components/helpers/async_options';
+import {IMaskInput} from 'react-imask';
 
 import './org-pub.css';
 
@@ -54,7 +55,7 @@ const User = ({form}) => {
         </div>
         <div className="w-full sm:w-full md:w-full xl:w-1/4 px-2">
             <div className={`form-group`}>
-                <label>Last Name</label>
+                <label>Phone Number</label>
                 <input
                     className="input-field"
                     type="text"
@@ -68,8 +69,8 @@ const User = ({form}) => {
     </div>
 }
 
-const OrgInviteTab = ({ submitting, users, setUsers, form,errors, handleOrgInvite, handleEmail, addUser }) => {
-
+const OrgInviteTab = ({ submitting, users, setUsers, form,errors, handleOrgInvite, handleOrgInvitePhone, handleEmail, addUser }) => {
+    const [inputRef, setNumbRef] = useState(null);
     return (
         <>
             <form>
@@ -127,15 +128,24 @@ const OrgInviteTab = ({ submitting, users, setUsers, form,errors, handleOrgInvit
                     </div>
                     <div className="w-full sm:w-full md:w-full xl:w-1/4 px-2">
                         <div className={`form-group ${errors.phone && 'form-error'}`}>
-                            <label>Phone (Optional)</label>
-                            <input
+                            <label>Phone</label>
+                            <IMaskInput
+                            className="input-field"
+                              mask={'(00) 000000 000'}
+                              value={form.phone || ''}
+                              unmask={false} 
+                              inputRef={setNumbRef}
+                              onComplete={handleOrgInvitePhone}
+                              placeholder='Enter number here'
+                            />
+                            {/*<input
                                 className="input-field"
                                 type="text"
                                 value={form.phone}
                                 name="phone"
                                 onChange={handleOrgInvite}
                                 placeholder="Enter Phone Contact"
-                            />
+                            />*/}
                             {
                                 (errors.phone || false) && <span className="text-xs pt-1 text-red-500 italic">Missing phone</span>
                             }

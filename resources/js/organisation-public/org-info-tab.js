@@ -10,12 +10,14 @@ import CategoryGrid from '../components/CategoryGrid'
 import Location from '../components/Location'
 import { validateEmail, isValidated } from '../components/helpers/validator';
 import {  checkEmail } from '../components/helpers/async_options';
+import {IMaskInput} from 'react-imask';
 
 import './org-pub.css';
 
 import 'pretty-checkbox';
 
-const OrgInfoTab = ({ orgData, handleOrgInfo, setOrgInfoForm, setErrors, removeError, errors }) => {
+const OrgInfoTab = ({ orgData, handleOrgInfo, handlePhone, setOrgInfoForm, setErrors, removeError, errors }) => {
+    const [numbRef, setNumbRef] = useState(null);
 
     const handleEmail = (e, blur = false) => {
         const email = e.target.value
@@ -97,14 +99,23 @@ const OrgInfoTab = ({ orgData, handleOrgInfo, setOrgInfoForm, setErrors, removeE
                     </div>
                     <div className={`form-group ${errors.phone_number && 'form-error'}`}>
                         <label>Phone Number</label>
-                        <input
+                        <IMaskInput
+                            className="input-field"
+                          mask={'(00) 000000 000'}
+                          value={orgData.phone_number || ''}
+                          unmask={false} 
+                          inputRef={setNumbRef}
+                          onComplete={handlePhone}
+                          placeholder='Enter number here'
+                        />
+                       {/* <input
                             className="input-field"
                             type="text"
                             value={orgData.phone_number}
                             name="phone_number"
                             onChange={handleOrgInfo}
                             placeholder="Enter Phone Number"
-                        />
+                        />*/}
                         {
                             (errors.phone_number || false) && <span className="text-xs pt-1 text-red-500 italic">Missing phone number</span>
                         }

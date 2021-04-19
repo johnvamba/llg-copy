@@ -21,7 +21,7 @@ const swal = withReactContent(Swal);
 import SwalIcon from '../svg/swal-icon'
 import './org-pub.css';
 import { swalError } from '../components/helpers/alerts'
-import { validateEmail, isValidated, validBenevityLink, parsePhone, validPhone } from '../components/helpers/validator'
+import { validateEmail, isValidated, validBenevityLink, parsePhone, validURL, validPhone } from '../components/helpers/validator'
 
 import 'pretty-checkbox';
 
@@ -127,8 +127,8 @@ const OrgPub = () => {
             set = {
                 name: orgInfoForm.name == '' ? 'Missing title' : null,
                 email: orgInfoForm.email == '' && !validateEmail(orgInfoForm.email) ? 'Missing Email' : null,
-                site: orgInfoForm.site == '' ? 'Missing Website' : null,
-                phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
+                // site: orgInfoForm.site ? 'Missing Website' : null,
+                phone_number: !validPhone(orgInfoForm.phone_number) ? 'Missing Phone Number' : null,
                 description: orgInfoForm.description == '' ? 'Missing Description' : null,
                 location: orgInfoForm.location == '' ? 'Missing location' : null,
                 benevity_link: !validBenevityLink(orgInfoForm.benevity_link) ? 'Invalid Benevity Link' : null,
@@ -223,6 +223,14 @@ const OrgPub = () => {
     const handleOrgInvite = ({target}) => {
         setForm({ ...form, [target.name]: target.value })
     }
+    const handleOrgInvitePhone = (phone) => {
+        setForm({ ...form, phone })
+    }
+
+    const handlePhone = (phone_number, mask) => {
+        removeError('phone_number');
+        setOrgInfoForm({...orgInfoForm, phone_number})
+    }
 
     const handleEmail = ({target})=>{
         const email = target.value
@@ -285,7 +293,7 @@ const OrgPub = () => {
 
                     <div className="offers-create-form__body">
                         { showTabTitle() }
-                        { countTab == 1 && <OrgInfoTab orgData={orgInfoForm} handleOrgInfo={handleOrgInfo} setOrgInfoForm={setOrgInfoForm} setErrors={setErrors} removeError={removeError} errors={errors}/>}
+                        { countTab == 1 && <OrgInfoTab orgData={orgInfoForm} handleOrgInfo={handleOrgInfo} handlePhone={handlePhone} setOrgInfoForm={setOrgInfoForm} setErrors={setErrors} removeError={removeError} errors={errors}/>}
                         { countTab == 2 && <OrgLogos images={images} setImages={setImages} cropper={cropper} openCropper={openCropper} handleImages={handleImages} removeError={removeError} errors={errors}/>}
                         { countTab == 3 && <OrgInviteTab 
                             users={users} 
@@ -295,6 +303,7 @@ const OrgPub = () => {
                             form={form}
                             handleOrgInvite={handleOrgInvite}
                             handleEmail={handleEmail}
+                            handleOrgInvitePhone={handleOrgInvitePhone}
                             addUser={addUser} />}
                         { countTab == 4 && <OrgQuestion answers={answers} updateAnswers={updateAnswers} userError={errors.users}/>}
                     </div>

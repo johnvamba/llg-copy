@@ -52,6 +52,6 @@ export const parsePhone = (number, unparse = false) => {
 };
 
 export const validPhone = number => {
-	var pattern = new RegExp(/\(\d{2}\)\s\d{5}\-\d{4}/, 'g');
+	var pattern = new RegExp(/\(\d{2}\)\s\d{6}\s\d{3}/, 'g');
 	return !!pattern.test(number);
 }

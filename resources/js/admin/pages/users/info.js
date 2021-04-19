@@ -126,7 +126,7 @@ const UserInfo = ({ data={}, showItem}) => {
                     <label>Group</label>
                     {
                         groups.map((i,ind) =>
-                        <div key={'group_'+i.ind} className="group-item">
+                        <div key={'group_'+ind} className="group-item">
                             <img className="group-img" src={i.photo || 'http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp'}/>
                             <div className="group-details">
                                 <h4>{i.name}</h4>
