@@ -132,7 +132,8 @@ class NeedsController extends Controller
                     $fail('Missing location field');
                 }
             } ], //doesn't really work
-            'photo' => 'required'
+            'photo' => 'required',
+            'need_link' => 'url',
             // 'time'=> 'exclude_if:type,volunteer|required',
             // 'date'=> 'exclude_if:type,volunteer|required'
         ]);
@@ -165,7 +166,8 @@ class NeedsController extends Controller
                     'goal',
                     'description',
                     'requirements',
-                    'address'
+                    'address',
+                    'need_link'
                 ]) +
                 //dynamic details
                 [
@@ -298,6 +300,7 @@ class NeedsController extends Controller
             'type'  => 'required',
             'goal' => 'required',
             'description' => 'required',
+            'need_link' => 'url',
             // 'address' => 'required',
             // 'time'=> 'exclude_if:type,volunteer|required',
             // 'date'=> 'exclude_if:type,volunteer|required'
@@ -330,7 +333,8 @@ class NeedsController extends Controller
                     'goal',
                     'description',
                     'requirements',
-                    'address'
+                    'address',
+                    'need_link'
                 ]) +
                 //dynamic details
                 [
