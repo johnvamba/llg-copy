@@ -33,7 +33,7 @@ const CircleImageForm = ({
 				alert("'Images should be atleast 300 x 300 px in png or jpeg file");
 				return;
 			}
-			console.log('img', img.width, img.height);
+			// console.log('img', img.width, img.height);
 			setTempUrl( img.src );
 		}
 		reader.onload = (e2) => {

@@ -6,7 +6,7 @@ import StoriesHouseIcon from '../../../svg/stories-house';
 import PencilIcon from '../../../svg/pencil';
 import CategoryScroll from '../../../components/CategoryScroll'
 import { swalError, swalSuccess } from '../../../components/helpers/alerts';
-import { validateEmail, isValidated, validBenevityLink } from '../../../components/helpers/validator';
+import { validateEmail, isValidated, validBenevityLink, validPhone } from '../../../components/helpers/validator';
 import LoadingScreen from '../../../components/LoadingScreen'
 import CircleImageForm from '../../../components/CircleImageForm';
 import BannerImage from '../../../components/BannerImage';
@@ -16,12 +16,15 @@ import { connect } from 'react-redux';
 import { selectStyle, selectStylePaddingZero, loadCampus, checkEmail } from '../../../components/helpers/async_options';
 import { all } from '../needs/categorylist';
 import Location from '../../../components/Location'
+import {IMaskInput} from 'react-imask';
+
 
 const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer }) => {
     const { roles } = AuthUserReducer;
 
     const [category, setCategory] = useState([]);
     const [accessable, setAccess] = useState(false);
+    const [numbRef, setNumbRef] = useState(null);
     const [form, setForm] = useState({
         name: '', 
         email: '',
@@ -180,7 +183,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             email: !validateEmail(email) ? "Missing email" : null,
             // site: site == '' ? "Missing site" : null,
             benevity_link: !validBenevityLink(benevity_link) ? 'Wrong benevity_link' : null,
-            phone_number: phone_number == '' ? "Missing phone_number" : null,
+            phone_number: !validPhone(phone_number) ? "Missing phone_number" : null,
             description: description == '' ? "Missing description" : null,
             category: category.length == 0 ? "Missing category" : null,
         })
@@ -255,6 +258,11 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
 
     const closeCropper=()=>{
         openCropper({url: null, cropTarget: 'photo'})
+    }
+
+    const setNumber = (phone_number, mask) => {
+        removeError('phone_number');
+        setForm({...form, phone_number})
     }
 
     return (
@@ -360,14 +368,23 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                             </div>
                             <div className={`form-group ${errors.phone_number && 'form-error'}`}>
                                 <label>Phone Number</label>
-                                <input
+                                <IMaskInput
+                                    className="input-field"
+                                  mask={'(00) 000000 000'}
+                                  value={form.phone_number || ''}
+                                  unmask={false} 
+                                  inputRef={setNumbRef}
+                                  onComplete={setNumber}
+                                  placeholder='Enter number here'
+                                />
+                               {/* <input
                                     className="input-field"
                                     type="text"
                                     value={form.phone_number}
                                     name="phone_number"
                                     onChange={handleInput}
                                     placeholder="Enter Phone Number"
-                                />
+                                />*/}
                                 {
                                     (errors.phone_number || false) && <span className="text-xs pt-1 text-red-500 italic">Missing phone number</span>
                                 }

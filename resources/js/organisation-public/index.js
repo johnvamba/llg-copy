@@ -21,7 +21,7 @@ const swal = withReactContent(Swal);
 import SwalIcon from '../svg/swal-icon'
 import './org-pub.css';
 import { swalError } from '../components/helpers/alerts'
-import { validateEmail, isValidated, validBenevityLink, parsePhone, validPhone } from '../components/helpers/validator'
+import { validateEmail, isValidated, validBenevityLink, parsePhone, validURL, validPhone } from '../components/helpers/validator'
 
 import 'pretty-checkbox';
 
@@ -127,11 +127,11 @@ const OrgPub = () => {
             set = {
                 name: orgInfoForm.name == '' ? 'Missing title' : null,
                 email: orgInfoForm.email == '' && !validateEmail(orgInfoForm.email) ? 'Missing Email' : null,
-                site: orgInfoForm.site == '' ? 'Missing Website' : null,
-                phone_number: orgInfoForm.phone_number == '' ? 'Missing Phone Number' : null,
+                // site: orgInfoForm.site ? 'Missing Website' : null,
+                phone_number: !validPhone(orgInfoForm.phone_number) ? 'Missing Phone Number' : null,
                 description: orgInfoForm.description == '' ? 'Missing Description' : null,
                 location: orgInfoForm.location == '' ? 'Missing location' : null,
-                benevity_link: !validBenevityLink(orgInfoForm.benevity_link) ? 'Invalid Benevity Link' : null,
+                // benevity_link: !validBenevityLink(orgInfoForm.benevity_link) ? 'Invalid Benevity Link' : null,
             }
             break;
             case 2:
@@ -196,13 +196,14 @@ const OrgPub = () => {
             api.post(`/api/org-create`, params)
                 .then(({data})=>{
                 setSubmitting(false)
+                const message = 'Please wait until one of our team can look over and approve your organisation. Once this occurs you will be notified via the email provided with your login details to access your account. In the meantime please head to www.stripe.com to sign up if you are wanting to receive financial donations. For more information how to do this please visit the website https://app.neuma.church/';
                 swal.fire({
-                    text: `You successfully created "${orgInfoForm.name}"${users.length > 0 ? ' and invited ' + users.length + ' members' : ''}`,
+                    text: `You successfully created "${orgInfoForm.name}"${users.length > 0 ? ' and invited ' + users.length + ' members' : ''}. ${message}`,
                     imageUrl: PopupLogo,
                     title: 'Created New Organisation!',
                     showConfirmButton: false,
                     showCancelButton: false,
-                    timer: 2000,
+                    timer: 60000,
                     onClose: () => {
                         window.location = '/login';
                     }
@@ -222,6 +223,14 @@ const OrgPub = () => {
 
     const handleOrgInvite = ({target}) => {
         setForm({ ...form, [target.name]: target.value })
+    }
+    const handleOrgInvitePhone = (phone) => {
+        setForm({ ...form, phone })
+    }
+
+    const handlePhone = (phone_number, mask) => {
+        removeError('phone_number');
+        setOrgInfoForm({...orgInfoForm, phone_number})
     }
 
     const handleEmail = ({target})=>{
@@ -245,6 +254,10 @@ const OrgPub = () => {
         }
         if(!validateEmail(form.email)){
             setFormErrors({ email: 'Invalid Email'})
+            return;
+        }
+        if(!validPhone(form.phone) || form.phone == ''){
+            setFormErrors({phone: 'Invalid or missing phone'})
             return;
         }
         setUsers([...users, form])
@@ -285,7 +298,7 @@ const OrgPub = () => {
 
                     <div className="offers-create-form__body">
                         { showTabTitle() }
-                        { countTab == 1 && <OrgInfoTab orgData={orgInfoForm} handleOrgInfo={handleOrgInfo} setOrgInfoForm={setOrgInfoForm} setErrors={setErrors} removeError={removeError} errors={errors}/>}
+                        { countTab == 1 && <OrgInfoTab orgData={orgInfoForm} handleOrgInfo={handleOrgInfo} handlePhone={handlePhone} setOrgInfoForm={setOrgInfoForm} setErrors={setErrors} removeError={removeError} errors={errors}/>}
                         { countTab == 2 && <OrgLogos images={images} setImages={setImages} cropper={cropper} openCropper={openCropper} handleImages={handleImages} removeError={removeError} errors={errors}/>}
                         { countTab == 3 && <OrgInviteTab 
                             users={users} 
@@ -295,6 +308,7 @@ const OrgPub = () => {
                             form={form}
                             handleOrgInvite={handleOrgInvite}
                             handleEmail={handleEmail}
+                            handleOrgInvitePhone={handleOrgInvitePhone}
                             addUser={addUser} />}
                         { countTab == 4 && <OrgQuestion answers={answers} updateAnswers={updateAnswers} userError={errors.users}/>}
                     </div>

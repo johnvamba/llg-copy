@@ -12,7 +12,7 @@ const PrivateRoute = ({component: Component, ...rest}) => {
 		}
 	}, [loc]);
 
-	console.log('rest?', rest)
+	// console.log('rest?', rest)
     return (
         <Route {...rest} render={props => (
             oToken ?

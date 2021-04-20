@@ -273,7 +273,7 @@ class OrganizationController extends Controller
      */
     public function show($id)
     {
-        $org = Organization::with('categories', 'categories.category')
+        $org = Organization::with('categories', 'categories')
             ->where('id', $id)
             ->first();
 

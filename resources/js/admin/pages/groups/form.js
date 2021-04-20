@@ -232,7 +232,7 @@ const GroupsForm = ({ data ={}, handleForm, afterSubmit }) => {
                 {
                     submitting ? 
                     <div className="offers-category-opt__container flex">
-                        <button className="back" onClick={() => console.log('submitting')} disabled>Submitting</button>
+                        <button className="back" disabled>Submitting</button>
                     </div> : 
                     <div className="offers-category-opt__container flex">
                         <button className="discard" onClick={()=>handleForm({}, true)} disabled={submitting} >Discard</button>
