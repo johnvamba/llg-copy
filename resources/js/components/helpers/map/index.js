@@ -14,9 +14,9 @@ import Style from './style';
 const defaultMapOptions = {
     fullscreenControl: false,
     mapTypeControl: false,
-    zoomControl: false,
+    zoomControl: true,
     streetViewControl: false,
-    scrollwheel: false,
+    scrollwheel: true,
     styles: Style.mapStyle
 };
 
@@ -70,7 +70,7 @@ const ordNulls = {
     lat: null,
 }
 
-const displayMap = ({markers, lat, lng, ...props}) => {
+const displayMap = ({markers, lat, lng, options = {}, ...props}) => {
     const [showItem, setShowItem] = useState({...ordNulls});
     const [org, setOrg] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -93,9 +93,9 @@ const displayMap = ({markers, lat, lng, ...props}) => {
         <GoogleMap
             id="nearby-organization"
             mapContainerStyle={containerStyle}
-            options={defaultMapOptions}
+            options={{...defaultMapOptions, ...options}}
             zoom={14}
-            center={{lat: lat, lng: lng}}
+            center={{lat: parseFloat(lat), lng: parseFloat(lng)}}
         >
             {
                 (showItem.lat && showItem.lng && org) && <InfoWindow
