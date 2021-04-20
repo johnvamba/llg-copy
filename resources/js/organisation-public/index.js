@@ -131,7 +131,7 @@ const OrgPub = () => {
                 phone_number: !validPhone(orgInfoForm.phone_number) ? 'Missing Phone Number' : null,
                 description: orgInfoForm.description == '' ? 'Missing Description' : null,
                 location: orgInfoForm.location == '' ? 'Missing location' : null,
-                benevity_link: !validBenevityLink(orgInfoForm.benevity_link) ? 'Invalid Benevity Link' : null,
+                // benevity_link: !validBenevityLink(orgInfoForm.benevity_link) ? 'Invalid Benevity Link' : null,
             }
             break;
             case 2:
@@ -196,13 +196,14 @@ const OrgPub = () => {
             api.post(`/api/org-create`, params)
                 .then(({data})=>{
                 setSubmitting(false)
+                const message = 'Please wait until one of our team can look over and approve your organisation. Once this occurs you will be notified via the email provided with your login details to access your account. In the meantime please head to www.stripe.com to sign up if you are wanting to receive financial donations. For more information how to do this please visit the website https://app.neuma.church/';
                 swal.fire({
-                    text: `You successfully created "${orgInfoForm.name}"${users.length > 0 ? ' and invited ' + users.length + ' members' : ''}`,
+                    text: `You successfully created "${orgInfoForm.name}"${users.length > 0 ? ' and invited ' + users.length + ' members' : ''}. ${message}`,
                     imageUrl: PopupLogo,
                     title: 'Created New Organisation!',
                     showConfirmButton: false,
                     showCancelButton: false,
-                    timer: 2000,
+                    timer: 60000,
                     onClose: () => {
                         window.location = '/login';
                     }

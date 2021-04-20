@@ -121,7 +121,7 @@ const OrgInfoTab = ({ orgData, handleOrgInfo, handlePhone, setOrgInfoForm, setEr
                         }
                     </div>
                 </div>
-                <div className="w-full xl:w-full px-2">
+                {/*<div className="w-full xl:w-full px-2">
                     <div className={`form-group ${errors.benevity_link && 'form-error'}`}>
                         <label>Benevity Link</label>
                         <input
@@ -136,7 +136,7 @@ const OrgInfoTab = ({ orgData, handleOrgInfo, handlePhone, setOrgInfoForm, setEr
                             (errors.benevity_link || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Benevity Link</span>
                         }
                     </div>
-                </div>
+                </div>*/}
                 <div className="w-full xl:w-full px-2">
                     <Location 
                         className={`short-width ${errors.location && 'form-error'}`}

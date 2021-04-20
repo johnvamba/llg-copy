@@ -444,7 +444,7 @@ class OrganizationController extends Controller
             'email' => 'required|email|unique:organizations',
             'site' => 'required',
             'phone_number' => 'required',
-            'benevity_link' => 'required',
+            // 'benevity_link' => 'required',
             'description' => 'required',
             'terms' => 'required',
             'location' => 'required'
