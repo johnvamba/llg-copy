@@ -66,7 +66,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
         if(data.id) {
             loadData()
         } else {
-            console.log('Error??')
+            // console.log('Error??')
             setForm({
                 firstName: '',
                 lastName: '',
@@ -182,7 +182,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
             })
         } else {
             setErrors({...set})
-            console.log('Errorlist', set)
+            // console.log('Errorlist', set)
             swalError('Invalid field content')
         }
     }

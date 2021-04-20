@@ -21,7 +21,7 @@ const Dashboard = ({ ...props }) => {
     const roles = useSelector(state => state.AuthUserReducer.roles);
     const [filterElement, setFilterElement] = useState(null);
     const [toggleFilter, showFilter] = useState(false);
-    const [organization, setOrganization] = useState(null);
+    // const [organization, setOrganization] = useState(null);
     const [popperElement, setPopperElement] = useState(null);
     const [arrowElement, setArrowElement] = useState(null);
     const [options, setOptions] = useState({});
