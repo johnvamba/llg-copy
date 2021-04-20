@@ -25,3 +25,20 @@
     flex-grow: 2;
     /* overflow-y: auto; */
 }
+
+.info_container {
+    background-color: #CF995F;
+}
+
+.active-donation-type {
+    color: #ffffff;
+    background-color: #CF995F;
+}
+
+.progress {
+    background-color: #a06628 !important;
+}
+
+.progress-bar {
+    background-color: #ffffff !important;
+}

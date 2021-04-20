@@ -1,91 +1,140 @@
 import React from 'react'
 import {
-  // CardElement,
-  CardNumberElement,
-  CardCvcElement,
-  CardExpiryElement,
-  Elements,
-  useStripe,
-  useElements,
+    // CardElement,
+    CardNumberElement,
+    CardCvcElement,
+    CardExpiryElement,
+    Elements,
+    useStripe,
+    useElements,
 } from '@stripe/react-stripe-js';
 import CurrencyInput from 'react-currency-input-field';
 import LoadingScreen from '../components/LoadingScreen'
 
 
 const ELEMENT_OPTIONS = {
-  style: {
-    base: {
-      fontSize: '18px',
-      color: '#424770',
-      letterSpacing: '0.025em',
-      '::placeholder': {
-        color: '#aab7c4',
-      },
+    style: {
+        base: {
+            fontSize: '18px',
+            color: '#424770',
+            letterSpacing: '0.025em',
+            '::placeholder': {
+                color: '#aab7c4',
+            },
+        },
+        invalid: {
+            color: '#9e2146',
+        },
     },
-    invalid: {
-      color: '#9e2146',
-    },
-  },
 };
-const logEvent=(event)=>{
+
+const logEvent = (event) => {
     console.log(event)
 }
 
-const StripeElement = ({need, stripePromise, presubmit, loading, amount, setAmount, errors })=> {
+const StripeElement = ({
+    need,
+    stripePromise,
+    presubmit,
+    loading,
+    amount,
+    setAmount,
+    amountType,
+    setAmountType,
+    total,
+    setTotal,
+    cardHolder,
+    setCardHolder,
+    errors,
+    onClose
+}) => {
+
     const elements = useElements();
+    console.log(need);
 
-	if(loading)
-		return <LoadingScreen title="Loading Credentials"/>
+    if (loading)
+        return <LoadingScreen title="Loading Credentials" />
 
-	return <form> 
-            <div className="offers-create-form__header">
-                <h2>Make a Donation</h2>
-            </div>
+    const onChangeDonationType = (charge = amount, type) => {
+        setAmountType(charge, type)
+    }
 
-            <div className={`form-group`}>
-                <label>Need Details</label> 
-                <div className="card-details">
-                    <div className="flex mb-1">
-                        <div className="flex-grow-1">
-                            <h4 className="card-title">{need.title || 'missing-title'}</h4>
-                            <h5 className="card-subtitle">
-                                {need.organization && (need.organization.label || 'missing-org')}
-                            </h5>
+    const progress = () => {
+        return (Math.floor(need.raised * 100) / need.goal).toFixed(2) + '%';
+    }
+
+    return (
+        <form>
+            <div className="info_container px-3 pt-3 pb-3 pt-5">
+                <div className="flex flex-row items-center offers-create-form__header py-3">
+                    <div className="flex-1"></div>
+                    <div className="flex-1 text-center">
+                        <h2 className="text-white">Make a Donation</h2>
+                    </div>
+                    <div className="flex-1 text-right">
+                        <i className="fa fa-times text-white text-xl mr-2" aria-hidden="true" onClick={() => onClose('cancel')}></i>
+                    </div>
+                </div>
+
+                <div className={`form-group`}>
+                    <div>
+                        <div className="flex mb-3">
+                            <div className="flex-grow-1">
+                                <h4 className="card-title text-white">{need.title || 'missing-title'}</h4>
+                                <h5 className="card-subtitle text-gray-200 text-sm">
+                                    by {need.organization && (need.organization.label || 'missing-org')}
+                                </h5>
+                            </div>
+                            {
+                                need.photo &&
+                                <img className="need-image" style={{ backgroundImage: `url(${need.photo})` }} />
+                            }
                         </div>
-                        {
-                            need.photo &&
-                            <img className="need-image" style={{backgroundImage: `url(${need.photo})`}}/>
-                        }
-                    </div>
-                    <label className="about mb-1">About</label>
-                    <p className="details">{need.need_desc}</p>
-                    <div className="progress mb-1">
-                        <div className="progress-bar" style={{width: `${need.raised /(need.goal != 0 ? need.goal : 1)}%`}}></div>
-                    </div>
-                    <div className="flex justify-between">
-                        <p className="raised">Raised: $ {need.raised}</p>
-                        <p>Goal: $ {need.goal}</p>
+                        {/* <label className="about mb-1">About</label>
+                        <p className="details overflow-ellipsis">{need.description}</p> */}
+                        <div className="progress mb-1">
+                            {/* <div className="progress-bar" style={{ width: `${need.raised / (need.goal != 0 ? need.goal : 1)}%` }}></div> */}
+                            <div className="progress-bar" style={{ width: progress() }}></div>
+                        </div>
+                        <div className="flex justify-between">
+                            <p className="raised text-white">Raised: $ {need.raised}</p>
+                            <p className="text-white">Goal: $ {need.goal}</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div className='offers-create-form__body'>
+            <div className='offers-create-form__body px-3'>
                 <div className="flex flex-wrap ">
                     <div className="w-full">
                         <div className={`form-group`}>
-                            <label>Amount</label>
-                            <div className="input-container">
-                                <span className="currency">$</span>
-                                <CurrencyInput
-                                  id="input-example"
-                                  className="input-field space-l"
-                                  name="amount"
-                                  placeholder="value"
-                                  value={amount}
-                                  decimalsLimit={2}
-                                  onValueChange={setAmount}
-                                />
-                            </div>
+                            <label>Donation Amount</label>
+                            {need.type == 'Fundraise' ? (
+                                <div className="input-container">
+                                    <CurrencyInput
+                                        id="input-example"
+                                        className="input-field"
+                                        name="amount"
+                                        placeholder="value"
+                                        defaultValue={amount}
+                                        value={amount}
+                                        decimalsLimit={2}
+                                        onValueChange={(value) => onChangeDonationType(value, amountType)}
+                                    />
+                                    <span
+                                        onClick={() => onChangeDonationType(10, 'percentage')}
+                                        className={`absolute right-0 border ${amountType == 'percentage' && 'active-donation-type'}  rounded-full py-2 px-3`}
+                                    >%</span>
+                                    <span
+                                        onClick={() => onChangeDonationType(50, 'fixed')}
+                                        className={`absolute right-0 border ${amountType == 'fixed' && 'active-donation-type'} border-gray-400 rounded-full py-2 px-3 mr-12`}
+                                    >$</span>
+                                </div>
+                            ) : (
+                                <div className="input-container">
+                                    <h3>$ {need.goal}</h3>
+                                </div>
+                            )}
                         </div>
                     </div>
                     <div className="w-full">
@@ -94,37 +143,58 @@ const StripeElement = ({need, stripePromise, presubmit, loading, amount, setAmou
                             <CardNumberElement
                                 id="cardNumber"
                                 options={ELEMENT_OPTIONS}
-                              />
+                            />
                         </div>
                     </div>
                     <div className="w-full">
                         <div className={`form-group`}>
-                            <label  htmlFor="expiry">Expiry Date</label>
+                            <label htmlFor="expiry">Expiry Date</label>
                             <CardExpiryElement
                                 id="expiry"
                                 options={ELEMENT_OPTIONS}
-                              />
+                            />
                         </div>
                     </div>
                     <div className="w-full">
-                        <div className={`form-group`}>
-                            <label htmlFor="cvc">CVC</label>
+                        <div className={`form-group border-b border-gray-400`}>
+                            <label htmlFor="expiry">Name on Card</label>
+                            <input 
+                                defaultValue={cardHolder}
+                                value={cardHolder}
+                                onChange={e => setCardHolder(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                    <div className="w-full">
+                        <div className={`form-group border-b border-gray-400`}>
+                            <label htmlFor="cvc">Security Code (CVV)</label>
                             <CardCvcElement
-                                options={ELEMENT_OPTIONS}
-                              />
+                                options={{ placeholder: 'CVV', ...ELEMENT_OPTIONS }}
+                            />
                         </div>
                     </div>
                 </div>
                 {
-                    errors.length > 0 && errors.map((i,k)=><p className="text-red-400" key={`error-${k}`}>{i}</p>)
+                    errors.length > 0 && errors.map((i, k) => <p className="text-red-400" key={`error-${k}`}>{i}</p>)
                 }
-                <div className={`create-org-pub__footer create-org-pub__footer-cols-2`}>
-                    <div>
-                        <button className="primary-btn" type="button" onClick={()=>presubmit(elements)} disabled={!stripePromise}>Checkout</button>
-                    </div>
+            </div>
+
+            <div className="px-3 py-4">
+                <div className="flex justify-between py-4">
+                    <p className="raised text-base">Total Charge: </p>
+                    <p className="text-base">$ {total}</p>
+                </div>
+                <div>
+                    <button
+                        className="primary-btn w-full rounded-lg p-2 text-base"
+                        type="button"
+                        onClick={() => presubmit(elements)}
+                        disabled={!stripePromise}
+                    >Checkout</button>
                 </div>
             </div>
         </form>
+    )
 }
 
 export default StripeElement
