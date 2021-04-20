@@ -67,7 +67,7 @@ const Needs = ({NeedsReducer}) => {
             const { data } = res
             setNeeds(data.data)
             if(clearCache){
-                console.log('clearCache true')
+                // console.log('clearCache true')
             }
             setMeta(data.meta)
             setTabCount(data.requests || 0);

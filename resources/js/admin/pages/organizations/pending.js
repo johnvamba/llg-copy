@@ -60,8 +60,6 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite, afterSubmit })
         modifiers: [{name: 'arrow', options: {element: arrowElement } }],
     })
 
-
-
     const loadItem = (clearCache = false) => {
         setLoading(true)
         // const token = axios.CancelToken.source();

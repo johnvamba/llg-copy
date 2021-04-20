@@ -27,7 +27,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
 
     useEffect(()=>{
         const { name, description, location, lng, lat, photo } = data;
-        console.log('dataa', data)
+        // console.log('dataa', data)
         setCover(photo)
         setForm({name:name || '', description:description || ''})
         setLocation({ location, lat, lng })

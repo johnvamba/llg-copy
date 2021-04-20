@@ -135,6 +135,7 @@ const NearbyOrganizations = ({...props}) => {
 
                 <Map 
                     {...center}
+                    setCenter={setCenter}
                     markers={markers}
                     {...props}
                 />

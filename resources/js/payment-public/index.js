@@ -46,11 +46,11 @@ const PublicPayment = () => {
     // const elements = useElements();
 
     useEffect(() => {
-        console.log('somethign');
+        // console.log('somethign');
         const url = new URL(window.location.href)
         const need_id = url.searchParams.get('need_id');
         const auth = url.searchParams.get('token') || auth_token;
-        console.log('auth', url.searchParams.get('token'), auth_token)
+        // console.log('auth', url.searchParams.get('token'), auth_token)
         if (need_id && auth) {
             setAuthToken(auth);
             loadAll(need_id, auth);
@@ -121,7 +121,7 @@ const PublicPayment = () => {
         setSubmitting(true);
         const stripe = await stripePromise.then(stripe => stripe)
         const { token, error } = await stripe.createToken(elements.getElement(CardNumberElement));
-        console.log('stripePromise', stripePromise, token, error, stripe);
+        // console.log('stripePromise', stripePromise, token, error, stripe);
         if (token) {
             axios.post(`api/payment/need/${need.id}`, {
                 amount,

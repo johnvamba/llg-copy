@@ -13,7 +13,7 @@ const Content = ({
     data = {},
     currentPage = 0,
 }) => {
-    console.log(data);
+    // console.log(data);
 
     if (data.length === 0) {
         return (

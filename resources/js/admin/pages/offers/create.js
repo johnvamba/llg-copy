@@ -31,7 +31,7 @@ const CreateOffer = () => {
     useEffect(() => {
         async function fetchTypes() {
             let { data } = await axios.get('/api/offers-types');
-            console.log(data);
+            // console.log(data);
             setTypes(data);
         }
 

@@ -32,7 +32,7 @@ const CreateUser = () => {
 
         try {
             let response = await axios.post('/api/users', form)
-            console.log(response);
+            // console.log(response);
 
             await swalCreate("/admin/users")
         } catch (err) {
