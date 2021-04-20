@@ -29,6 +29,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
     const [modal, setModal] = useState(false);
     const [category, setCategory] = useState([]);
     const [photo, setPhoto] = useState(null);
+    const [feature,setChecked] = useState(false);
     // const [oldContent, setOldContent] = useState('');
     const [editorState, setEditorState] = useState( EditorState.createEmpty() );
     const [saveAs, setSaveAs] = useState('publish');
@@ -98,6 +99,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
             category,
             organization,
             need_id,
+            feature,
             short_description: description.slice(0, 100)
         }
         const submitPromise = !data.id ? 
@@ -232,6 +234,15 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                     { !modal &&
                         <TextEditor className={''} editorState={editorState} handleEditorState={setEditorState} />
                     }
+
+                    <div className="form-group">
+                        <label>Set Featured</label>
+                        <div className="form-check ml-4 mt-1">
+                            <input type="checkbox" className="form-check-input" id="mets" 
+                            checked={feature} onChange={e=>setChecked(e.target.checked)}/>
+                            <label className="form-check-label mt-1" htmlFor="mets">Check to set story as featured</label>
+                        </div>
+                    </div>
                     
                     <Imagepond photo={photo} imageSelected={setPhoto} errors={errors.photo}/>
                 </form>

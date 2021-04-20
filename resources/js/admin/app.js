@@ -6,8 +6,8 @@ import Content from './content';
 import { useSelector } from 'react-redux';
 import OrganizationView from './pages/organizations/view';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../assets/css/general.css';
-import '../../assets/css/update-12042020.css';
+// import '../../assets/css/general.css';
+// import '../../assets/css/update-12042020.css';
 import Filter from '../svg/filter';
 import MainFilter from './filter'
 

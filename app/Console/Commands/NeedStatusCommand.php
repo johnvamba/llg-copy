@@ -50,9 +50,9 @@ class NeedStatusCommand extends Command
         $need = Need::find($this->option('need')) ?? Need::first();
 
         if($this->option('type') == 'reject') {
-            Mail::to($this->option('email'))->send(new NeedRejected($org));
+            Mail::to($this->option('email'))->send(new NeedRejected($need));
         } else {
-            Mail::to($this->option('email'))->send(new NeedApproved($org));
+            Mail::to($this->option('email'))->send(new NeedApproved($need));
         }
     
         $this->info('Email sent to:' . $this->option('email'));

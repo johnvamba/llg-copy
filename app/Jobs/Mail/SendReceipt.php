@@ -10,6 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\TransactionReceipt;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\Mail\NeedMetMailer;
 
 class SendReceipt implements ShouldQueue
 {
@@ -29,6 +30,8 @@ class SendReceipt implements ShouldQueue
         $this->need = $need;
         $this->user = $user;
         $this->amount = $amount;
+
+        dispatch(new NeedMetMailer($need, $user, $amount));
     }
 
     /**

@@ -84,7 +84,15 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('needs/types', 'NeedsController@types');
         Route::get('needs/graph', 'NeedsController@needCountOnMonths');
 
-        Route::resource('needs', 'NeedsController');
+        Route::resource('needs', 'NeedsController')->names([
+            'index' => 'adminneeds.index',
+            'create' => 'adminneeds.create',
+            'store' => 'adminneeds.store',
+            'show' => 'adminneeds.show',
+            'edit' => 'adminneeds.edit',
+            'update' => 'adminneeds.update',
+            'destroy' => 'adminneeds.destroy'
+        ]);
         Route::get('needs/{need}/contributors', 'NeedsController@contributors');
         Route::post('needs/{need}/approve', 'NeedsController@approve');
         Route::post('needs/{need}/disapprove', 'NeedsController@disapprove');
@@ -99,7 +107,15 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('organizations/credentials', 'OrganizationController@credentials');
         Route::post('organizations/credentials', 'OrganizationController@postCred');
 
-        Route::resource('organizations', 'OrganizationController');
+        Route::resource('organizations', 'OrganizationController')->names([
+            'index' => 'adminorg.index',
+            'create' => 'adminorg.create',
+            'store' => 'adminorg.store',
+            'show' => 'adminorg.show',
+            'edit' => 'adminorg.edit',
+            'update' => 'adminorg.update',
+            'destroy' => 'adminorg.destroy'
+        ]);
 
         Route::post('offers/{offer}/approve', 'OffersController@approve');
         Route::post('offers/{offer}/disapprove', 'OffersController@disapprove');
@@ -108,24 +124,64 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('users/{user}/groups', 'UsersController@groups');
         Route::get('users/{user}/needs', 'UsersController@showNeedMet');
 
-        Route::resource('users', 'UsersController');
+        Route::resource('users', 'UsersController')->names([
+            'index' => 'adminusers.index',
+            'create' => 'adminusers.create',
+            'store' => 'adminusers.store',
+            'show' => 'adminusers.show',
+            'edit' => 'adminusers.edit',
+            'update' => 'adminusers.update',
+            'destroy' => 'adminusers.destroy'
+        ]);
 
         Route::get('campuses/async', 'CampusController@async');
         Route::get('campuses/{campus}/orgs', 'CampusController@orgs');
         Route::get('campuses/{campus}/teams', 'CampusController@teams');
-        Route::resource('campuses', 'CampusController');
+        Route::resource('campuses', 'CampusController')->names([
+            'index' => 'admincampus.index',
+            'create' => 'admincampus.create',
+            'store' => 'admincampus.store',
+            'show' => 'admincampus.show',
+            'edit' => 'admincampus.edit',
+            'update' => 'admincampus.update',
+            'destroy' => 'admincampus.destroy'
+        ]);
 
-        Route::resource('stories', 'StoryController');
+        Route::resource('stories', 'StoryController')->names([
+            'index' => 'adminstories.index',
+            'create' => 'adminstories.create',
+            'store' => 'adminstories.store',
+            'show' => 'adminstories.show',
+            'edit' => 'adminstories.edit',
+            'update' => 'adminstories.update',
+            'destroy' => 'adminstories.destroy'
+        ]);
         Route::post('stories/{story}/toggle', 'StoryController@toggle');
 
         Route::get('groups/invite', 'GroupController@searchUserInvite');
         Route::get('groups/{group}/members', 'GroupController@members');
         Route::post('groups/invite', 'GroupController@initUserInvite');
-        Route::resource('groups', 'GroupController');
+        Route::resource('groups', 'GroupController')->names([
+            'index' => 'admingroups.index',
+            'create' => 'admingroups.create',
+            'store' => 'admingroups.store',
+            'show' => 'admingroups.show',
+            'edit' => 'admingroups.edit',
+            'update' => 'admingroups.update',
+            'destroy' => 'admingroups.destroy'
+        ]);
 
         Route::post('transacts/{transact}/resend', 'TransactionController@sendInvoice');
         Route::resource('transacts', 'TransactionController');
-        Route::resource('payments', 'PaymentsController');
+        Route::resource('payments', 'PaymentsController')->names([
+            'index' => 'adminpayments.index',
+            'create' => 'adminpayments.create',
+            'store' => 'adminpayments.store',
+            'show' => 'adminpayments.show',
+            'edit' => 'adminpayments.edit',
+            'update' => 'adminpayments.update',
+            'destroy' => 'adminpayments.destroy'
+        ]);
 
         Route::get('receipt/template', 'ReceiptTemplateController@show');
         Route::post('receipt/template', 'ReceiptTemplateController@update');

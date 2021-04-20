@@ -22,7 +22,7 @@ import CategoryScroll from '../../../components/CategoryScroll'
 import Imagepond from '../../../components/Imagepond'
 import LoadingScreen from '../../../components/LoadingScreen'
 import TimeInput from '../../../components/TimeInput'
-
+import ImageCropper from '../../../components/ImageCropper'
 import { connect, useSelector } from 'react-redux';
 
 const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
@@ -42,12 +42,19 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     const [time, setTime] = useState('09:00 AM');
     const [endtime, setEndTime] = useState('10:00 AM');
     const [errors, setErrors] = useState({});
+    const [need_link, setUrl] = useState('');
     // const [address, setAddress] = useState('');
     const [location, setLocation] = useState({
         formatted_address: '',
         lat: -37.8180604,
         lng: 145.0001764
     })
+    const [cropper, openCropper] = useState({
+        url: null,
+        cropped: false,
+        cropTarget: 'banner'
+    })
+
     const [organization, setOrganization] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -70,10 +77,12 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                 date,
                 time,
                 // address,
+                need_link,
                 location,
                 lng,
                 lat
             } = data.data
+            setUrl(need_link ||'')
             setTitle(title || '');
             setAbout(about || description || '');
             setBring(requirements || '');
@@ -108,6 +117,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
         } else {
             setTitle('')
             setAbout('')
+            setUrl('')
             setBring('')
             setCategory([])
             setPhoto(null)
@@ -184,6 +194,7 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             title, type, category, goal, date, time, endtime, location, organization,
             photo,//files.length > 0 ? photo : null,
             // address,
+            need_link,
             description: about,
             requirements: bring
         }
@@ -204,6 +215,15 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setSubmitting(false)
         })
     }
+    const handlePhoto = (imageData = null)=>{
+        setPhoto(imageData);
+        openCropper({url: imageData, cropTarget: 'photo'});
+    }
+
+    const closeCropper=()=>{
+        openCropper({url: null, cropped: true, cropTarget: 'photo'})
+    }
+
     const onChangeDate = (date) => {
         setDate(date)
         setOpenDate(false)
@@ -219,6 +239,11 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                     (submitting && (data.id ? 'Updating Need' : 'Creating Need')) ||
                     'Please wait'
                 }/>
+            }
+            {
+                cropper.url && <ImageCropper aspect={7/4} originalImage={cropper.url} 
+                    onImageCropped={setPhoto}
+                    closeCropper={closeCropper} />
             }
             <div className="form-title">
                 <h3>{data.id ? 'Edit' : 'Create'} Need</h3>
@@ -378,7 +403,14 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
                         
                     </div>
                 }
-                <Imagepond photo={photo} imageSelected={setPhoto} errors={errors.photo}/>
+                <div className={`form-group`}>
+                    <label>Additional Information about this need</label>
+                    <input type='text' className="input-field" placeholder="Enter valid link to this need" value={need_link} onChange={e=>setUrl(e.target.value)}/>
+                    {
+                        (errors.need_link || false) && <span className="text-xs pt-1 text-red-500 italic">Invalid Link</span>
+                    }
+                </div>
+                <Imagepond photo={photo} cropped={cropper.cropped} imageSelected={handlePhoto} errors={errors.photo}/>
             </div>
             <div className="form-footer">
                 <Button className="btn btn-secondary" onClick={()=>handleForm({}, true, 'discard')} disabled={submitting}>Discard</Button>

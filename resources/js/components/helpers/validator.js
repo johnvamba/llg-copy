@@ -37,3 +37,21 @@ export const validURL = (str) => {
     '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
   return !!pattern.test(str);
 }
+
+export const parsePhone = (number, unparse = false) => {
+	if(unparse)
+		return number.replace(/\D/g, "");
+	let replacable = "$1";
+
+	if(number.length >= 2) {
+		replacable = "($1) $2";
+	} else if(number.length >= 7) {
+		replacable = "($1) $2-$3"
+	}
+	return number.replace(/(\d{1,2})(\d{0,5})(\d{0,2})/,replacable);
+};
+
+export const validPhone = number => {
+	var pattern = new RegExp(/\(\d{2}\)\s\d{5}\-\d{4}/, 'g');
+	return !!pattern.test(number);
+}

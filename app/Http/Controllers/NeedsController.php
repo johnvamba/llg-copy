@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use App\Http\Requests\NeedsStoreRequest;
 use App\Http\Requests\NeedsUpdateRequest;
 use Illuminate\Http\Request;
+use App\Jobs\Mail\NeedMetMailer;
 use App\Organization;
 use App\NeedsCategory;
 use App\Categorizes;
@@ -57,9 +58,6 @@ class NeedsController extends Controller
             if ($filters['filterAmount']) 
                 $needs->where('goal', '<=', floatval($filters['amount']));
         }
-
-        // if (count($needIds) > 0)
-        //     $needs->orWhereIn('id', $needIds);
         
         $results = $needs
             ->where(function($query) {
@@ -76,7 +74,7 @@ class NeedsController extends Controller
             $need->categories = $need->categoriesList; //reset?
 
             $need['photo'] = $need->organization->getFirstMediaUrl('photo');
-            $need['cover_photo'] = $need->organization->getFirstMediaUrl('banner');
+            $need['cover_photo'] = $need->getFirstMediaUrl('photo');
 
             $need['totalActiveNeeds'] = Need::where(
                     'organization_id', $need->organization_id
@@ -144,7 +142,7 @@ class NeedsController extends Controller
             $need->categories = $need->categoriesList; //reset?
 
             $need['photo'] = $need->organization->getFirstMediaUrl('photo');
-            $need['cover_photo'] = $need->organization->getFirstMediaUrl('banner');
+            $need['cover_photo'] = $need->getFirstMediaUrl('photo');
 
             $need['totalActiveNeeds'] = Need::where(
                     'organization_id', $need->organization_id
@@ -341,6 +339,7 @@ class NeedsController extends Controller
 
     /**
      * Volunteer to needs
+     * 
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -348,6 +347,7 @@ class NeedsController extends Controller
     public function addVolunteer(Request $request, Need $need)
     {
         $result = DB::transaction(function () use ($request, $need) {
+                //bad code here. haha
                 Need::find($need->id)
                     ->update([
                         'raised' => ($need->raised + 1)
@@ -359,6 +359,8 @@ class NeedsController extends Controller
                 ]);
 
                 $needMet = auth()->user()->needsMet()->save($makeNeedMet);
+
+                dispatch(new NeedMetMailer($need, auth()->user(), 1));
 
                 return $needMet;
             });
