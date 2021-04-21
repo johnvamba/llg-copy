@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncSelect from 'react-select/async';
@@ -6,8 +6,9 @@ import Select from 'react-select';
 import OffersFormCross from '../../../svg/offers-form-cross';
 
 import { selectStylePaddingZero, loadOrganization, loadCampus } from '../../../components/helpers/async_options';
-import { validateEmail, isValidated } from '../../../components/helpers/validator';
+import { validateEmail, isValidated, validPhone } from '../../../components/helpers/validator';
 import { swalError, swalSuccess } from '../../../components/helpers/alerts';
+import {IMaskInput} from 'react-imask';
 import CircleImageForm from '../../../components/CircleImageForm';
 import LoadingScreen from '../../../components/LoadingScreen';
 import ImageCropper from '../../../components/ImageCropper'
@@ -27,7 +28,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
         lastName: '',
         email: '',
         age: 0,
-        mobile_number: '(02) 0000 0000',
+        mobile_number: '(02) 00000-0000',
         bio: '',
     })
 
@@ -39,6 +40,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
     const [campus, setCampus] = useState({});
     const [submitting, setSubmitting] = useState(false);
     const roles = useSelector(state => state.AuthUserReducer.roles);
+    const [numbRef, setNumbRef] = useState(null);
     const [cropper, openCropper] = useState({
         url: null,
         cropTarget: 'banner'
@@ -64,11 +66,13 @@ const UsersForm = ({ data, showItem, handleForm }) => {
         if(data.id) {
             loadData()
         } else {
+            // console.log('Error??')
             setForm({
                 firstName: '',
                 lastName: '',
                 email: '',
                 age: 0,
+                mobile_number: '(02) 00000-0000',
                 bio: '',
             })
             setLoading(false)
@@ -145,9 +149,8 @@ const UsersForm = ({ data, showItem, handleForm }) => {
             type: _.isEmpty(type) ? "Missing type" : null,
             organization: (_.isEmpty(organization) && type.value == 'organization admin') ? "Missing organization" : null,
             campus: (_.isEmpty(campus) && type.value == 'campus admin') ? "Missing location" : null,
-            mobile_number: mobile_number == '' ? "Missing mobile number" : null
+            mobile_number: !validPhone(mobile_number)  ? "Missing mobile number" : null
         })
-        setErrors({...set})
         return set;
     }
 
@@ -178,7 +181,8 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                 setSubmitting(false)
             })
         } else {
-            console.log('Errorlist', set)
+            setErrors({...set})
+            // console.log('Errorlist', set)
             swalError('Invalid field content')
         }
     }
@@ -213,6 +217,11 @@ const UsersForm = ({ data, showItem, handleForm }) => {
         // setErrors({})
         // setType({ value: 'app user', label: 'App User'})
         // setOrganization({})
+    }
+
+    const setNumber = (mobile_number, mask) => {
+        removeError('mobile_number');
+        setForm({...form, mobile_number})
     }
 
     return (
@@ -315,16 +324,25 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                             <div className={`form-group ${errors.mobile_number && 'form-error'}`}>
                                 <label>Mobile Number</label>
                                 {/* check libphonenumber-js for this improvement */}
-                                <input
+                                <IMaskInput
+                                    className="input-field"
+                                  mask={'(00) 000000 000'}
+                                  value={form.mobile_number || ''}
+                                  unmask={false} 
+                                  inputRef={setNumbRef}
+                                  onComplete={setNumber}
+                                  placeholder='Enter number here'
+                                />
+                                {/*<input
                                     className="input-field"
                                     type="string"
                                     name="mobile_number"
                                     placeholder="Enter Mobile Number"
                                     value={form.mobile_number}
                                     onChange={handleInput}
-                                />
+                                />*/}
                                 {
-                                    (errors.mobile_number || false) && <span className="text-xs pt-1 text-red-500 italic">Missing mobile number</span>
+                                    (errors.mobile_number || false) && <span className="text-xs pt-1 text-red-500 italic">Missing or wrong mobile number</span>
                                 }
                             </div>
                         </div>

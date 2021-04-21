@@ -38,6 +38,9 @@ const PublicPayment = () => {
     const [need, setNeed] = useState({})
     const [authtoken, setAuthToken] = useState(false)
     const [axiosState, setAxiosState] = useState(null);
+    const [amountType, setAmountType] = useState('fixed');
+    const [total, setTotal] = useState(0);
+    const [cardHolder, setCardHolder] = useState(null);
     const location = useLocation();
 
     // const [card, setCard] = useState('');
@@ -46,11 +49,11 @@ const PublicPayment = () => {
     // const elements = useElements();
 
     useEffect(() => {
-        console.log('somethign');
+        // console.log('somethign');
         const url = new URL(window.location.href)
         const need_id = url.searchParams.get('need_id');
         const auth = url.searchParams.get('token') || auth_token;
-        console.log('auth', url.searchParams.get('token'), auth_token)
+        // console.log('auth', url.searchParams.get('token'), auth_token)
         if (need_id && auth) {
             setAuthToken(auth);
             loadAll(need_id, auth);
@@ -68,6 +71,22 @@ const PublicPayment = () => {
     //     }
     // }, [stripe])
 
+    const changeDonationType = (charge = amount, type) => {
+        if (type == 'percentage') {
+            setAmount(charge);
+            setAmountType('percentage');
+
+            if (need.hasOwnProperty('goal')) {
+                let amnt = need.goal * (amount / 100);
+                setTotal(parseFloat(amnt).toFixed(2));
+            }
+        } else {
+            setAmount(charge);
+            setAmountType('fixed');
+            setTotal(charge);
+        }
+    }
+
     const loadAll = (need_id, auth) => {
         //User cred from api
         // console.log(axios, need_id, auth);
@@ -81,6 +100,15 @@ const PublicPayment = () => {
             }
         }).then(({ data }) => {
             setNeed(data.data)
+
+            if (data.data.type == 'Donation') {
+                setAmount(data.data.goal);
+                setTotal(data.data.goal);
+            } else {
+                setAmount(50);
+                setTotal(50);
+            }
+
             if (data.data.pk) {
                 /*stripe.setOptions({
                     publishableKey:data.data.pk 
@@ -118,13 +146,15 @@ const PublicPayment = () => {
 
     const presubmit = async (elements) => {
         // event.preventDefault()
+
         setSubmitting(true);
         const stripe = await stripePromise.then(stripe => stripe)
         const { token, error } = await stripe.createToken(elements.getElement(CardNumberElement));
-        console.log('stripePromise', stripePromise, token, error, stripe);
+        // console.log('stripePromise', stripePromise, token, error, stripe);
         if (token) {
             axios.post(`api/payment/need/${need.id}`, {
-                amount,
+                amount: parseFloat(total),
+                name: cardHolder,
                 token: token.id
             }, {
                 headers: {
@@ -155,7 +185,7 @@ const PublicPayment = () => {
                 }
             })
         } else if (error) {
-            setErrors([error]);
+            setErrors([error.message]);
         }
     }
 
@@ -197,16 +227,36 @@ const PublicPayment = () => {
 
 
     return (
-        <section className="create-org-pub flex items-center justify-center" style={{ backgroundImage: `url(${mainBackground})` }}>
-            <section className="create-org-pub__container">
-                {submitting && <LoadingScreen title="Submitting Checkout" />}
-                <section className={`w-full h-full ${!loading && 'p-5'}`}>
-                    <Elements stripe={stripePromise}>
-                        <StripeElement need={need} loading={loading} stripePromise={stripePromise} presubmit={presubmit} amount={amount} setAmount={setAmount} errors={errors} />
-                    </Elements>
-                </section>
-            </section>
-        </section>
+        <div className="w-full h-full">
+            <Elements stripe={stripePromise}>
+                <StripeElement 
+                    need={need} 
+                    loading={loading} 
+                    stripePromise={stripePromise} 
+                    presubmit={presubmit} 
+                    amount={amount} 
+                    setAmount={setAmount} 
+                    amountType={amountType}
+                    setAmountType={changeDonationType}
+                    total={total}
+                    setTotal={setTotal}
+                    cardHolder={cardHolder}
+                    setCardHolder={setCardHolder}
+                    errors={errors} 
+                    onClose={handleGoBack}
+                />
+            </Elements>
+        </div>
+        // <section className="create-org-pub flex items-center justify-center" style={{ backgroundImage: `url(${mainBackground})` }}>
+        //     <section className="create-org-pub__container">
+        //         {submitting && <LoadingScreen title="Submitting Checkout" />}
+        //         <section className={`w-full h-full ${!loading && 'p-5'}`}>
+        //             <Elements stripe={stripePromise}>
+        //                 <StripeElement need={need} loading={loading} stripePromise={stripePromise} presubmit={presubmit} amount={amount} setAmount={setAmount} errors={errors} />
+        //             </Elements>
+        //         </section>
+        //     </section>
+        // </section>
     )
 }
 

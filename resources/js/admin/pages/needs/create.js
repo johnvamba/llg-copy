@@ -119,7 +119,7 @@ const CreateNeeds = () => {
     }
 
     const handleUpload = (e) => {
-        console.log(e.target.name);
+        // console.log(e.target.name);
         let files = e.target.files || e.dataTransfer.files;
         if (!files.length) {
             delete form[e.target.name];

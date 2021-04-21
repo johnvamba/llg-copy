@@ -257,7 +257,7 @@ const OffersForm = ({setShowForm, data, handleForm}) => {
             <div className="offers-create-form__body">
                 {showTabTitle()}
                 { countTab == 1 && <CategoryGrid selectedCategories={category} handleCategories={handleCategories} errors={errors.category}/>}
-                { countTab == 2 && <FormServiceInfo service={{title, desc, location, photo}} updateService={updateService} fileList={(e)=>console.log('filepond files', e)} errors={errors}/>}
+                { countTab == 2 && <FormServiceInfo service={{title, desc, location, photo}} updateService={updateService} errors={errors}/>}
                 { countTab == 3 && <FormBusinessInfo service={{business_name, business_site, business_contact}} updateBusiness={updateBusiness}  errors={errors}/>}
             </div>
 
