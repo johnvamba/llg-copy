@@ -21,6 +21,7 @@ use App\Http\Resources\Mini\UserResource;
 use App\Http\Resources\NeedResource;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use App\Activity;
 
 class NeedsController extends Controller
 {
@@ -219,8 +220,17 @@ class NeedsController extends Controller
                 $need->getMedia('photo');
             }
 
-            DB::commit(); //commit to db
+            Activity::create([
+                'model_type' => Need::class,
+                'model_id' => $need->id,
+                'user_id' => auth()->user()->id,
+                'description' => 'submitted ',
+                'short_description' => $request->title,
+            ]);
+
             $need->loadMissing('type', 'media', 'organization');
+
+            DB::commit(); //commit to db            
             return new NeedResource($need);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -433,6 +443,14 @@ class NeedsController extends Controller
             ]);
             dispatch(new NeedStatus($need, true));
             $need->save();
+
+            Activity::create([
+                'model_type' => Need::class,
+                'model_id' => $need->id,
+                'user_id' => auth()->user()->id,
+                'description' => 'approved ',
+                'short_description' => $need->title,
+            ]);
 
             DB::commit();
             return response()->json(['Success'], 200);
