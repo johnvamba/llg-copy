@@ -11,6 +11,7 @@ use App\Jobs\Mail\StoryPublishing;
 use App\Story;
 use App\Organization;
 use App\Category;
+use App\Activity;
 
 class StoryController extends Controller
 {
@@ -284,6 +285,14 @@ class StoryController extends Controller
 
             if(isset($story->posted_at)) {
                 dispatch(new StoryPublishing($story));
+
+                Activity::create([
+                    'model_type' => Story::class,
+                    'model_id' => $story->id,
+                    'user_id' => optional(auth()->user())->id,
+                    'description' => 'published ',
+                    'short_description' => $story->title,
+                ]);
             }
 
             DB::commit();

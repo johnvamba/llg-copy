@@ -39,7 +39,7 @@ const RecentActivities = () => {
     }, []);
 
     const getAllData = () => {
-        api.get('/api/web/activities').then(({data}) => {
+        axios.get('/api/web/activities').then(({data}) => {
             dispatch(RecentActivtiesActions.setTodayActivities(data.today || []));
             dispatch(RecentActivtiesActions.setYesterdayActivities(data.yesterday || []));
 

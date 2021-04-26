@@ -370,7 +370,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                 <label>Phone Number</label>
                                 <IMaskInput
                                     className="input-field"
-                                  mask={'(00) 000000 000'}
+                                  mask={'00 0000 0000 [00]'}
                                   value={form.phone_number || ''}
                                   unmask={false} 
                                   inputRef={setNumbRef}
