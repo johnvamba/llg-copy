@@ -326,7 +326,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                                 {/* check libphonenumber-js for this improvement */}
                                 <IMaskInput
                                     className="input-field"
-                                  mask={'(00) 000000 000'}
+                                  mask={'00 0000 0000 [00]'}
                                   value={form.mobile_number || ''}
                                   unmask={false} 
                                   inputRef={setNumbRef}
