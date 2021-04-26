@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../../../components/Button'
 import { NavLink } from 'react-router-dom';
-import { swalSuccess, swalDelete } from '../../../components/helpers/alerts';
+import { swalSuccess, swalDelete, swalError } from '../../../components/helpers/alerts';
 import { selectStyle, selectStylePaddingZero, loadOrganization } from '../../../components/helpers/async_options';
 import DatePicker from 'react-datepicker';
 import AsyncSelect from 'react-select/async';
@@ -211,6 +211,9 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             if(err.response){
                 const { data } = err.response
                 setErrors(data.errors || [])
+                swalError('You have wrong data on the forms. Check again.')
+            } else {
+                swalError("Submitting forms failed!")
             }
             setSubmitting(false)
         })
