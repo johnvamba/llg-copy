@@ -142,6 +142,16 @@ class OrganizationController extends Controller
             $org['type'] = 'organisation';
             $org['photo'] = $org->getFirstMediaUrl('photo');
             $org['cover_photo'] = $org->getFirstMediaUrl('banner');
+
+            $org['activeNeeds'] = Need::where('organization_id', $org->id)
+                ->whereNotNull('approved_by')
+                ->whereRaw('raised < goal')
+                ->count();
+
+            $org['pastNeeds'] = Need::where('organization_id', $org->id)
+                ->whereNotNull('approved_by')
+                ->whereRaw('raised >= goal')
+                ->count();
         } 
 
         $groups = Group::select('groups.*')
@@ -278,6 +288,19 @@ class OrganizationController extends Controller
             ->first();
 
         $org->getMedia('photo');
+
+        $org['photo'] = $org->getFirstMediaUrl('photo');
+        $org['cover_photo'] = $org->getFirstMediaUrl('banner');
+            
+        $org['activeNeeds'] = Need::where('organization_id', $org->id)
+            ->whereNotNull('approved_by')
+            ->whereRaw('raised < goal')
+            ->count();
+
+        $org['pastNeeds'] = Need::where('organization_id', $org->id)
+            ->whereNotNull('approved_by')
+            ->whereRaw('raised >= goal')
+            ->count();
 
         return response()->json($org);
     }

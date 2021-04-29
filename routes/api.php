@@ -62,6 +62,7 @@ Route::get('needs-mets/{need}/volunteers', 'NeedsMetController@getNeedsVolunteer
 Route::get('organization/featured', 'OrganizationController@getFeaturedOrganizations');
 Route::post('organizations/nearby/{lat}/{lng}', 'OrganizationController@nearby')->middleware('datafilter');
 Route::get('organizations/page/{page?}', 'OrganizationController@index');
+Route::resource('organizations', 'OrganizationController');
 
 /** Story */
 Route::get('featured/stories', 'StoryController@featuredStory');
@@ -283,7 +284,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('organization/lists', 'OrganizationController@getOrganizations');
     Route::get('organizations/{organization}/credential', 'OrganizationController@getCredential');
     Route::post('organizations/{organization}/credential', 'OrganizationController@addCredential');
-    Route::resource('organizations', 'OrganizationController');
 
     /** Payment resource module */
     Route::post('payment/need/{need}', 'PaymentController@donateNeed');
