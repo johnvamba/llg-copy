@@ -10,6 +10,7 @@ use App\ServiceType;
 use App\User;
 use App\Campus;
 use App\Organization;
+use App\Activity;
 
 use App\Jobs\Mail\OfferMail;
 use App\Http\Resources\OfferResource;
@@ -118,6 +119,14 @@ class OffersController extends Controller
 
                 $offer->getMedia();
             }
+
+            Activity::create([
+                'model_type' => ServiceOffer::class,
+                'model_id' => $offer->id,
+                'user_id' => auth()->user()->id,
+                'description' => 'made offer ',
+                'short_description' => $offer->title,
+            ]);
 
             DB::commit();
             return new OfferResource($offer);
