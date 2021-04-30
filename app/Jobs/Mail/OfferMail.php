@@ -71,7 +71,9 @@ class OfferMail implements ShouldQueue
             //     ->info("status", $sendto->toArray() );
 
             $sendto->each(function($user) use ($offer, $accepted) {
-                dispatch(fn() => Mail::to($user)->send(new OfferApprove($offer, $accepted)) );
+                if($accepted) {
+                    dispatch(fn() => Mail::to($user)->send(new OfferApprove($offer, $accepted)) );
+                }
             });
         }
     }

@@ -42,7 +42,7 @@ const DonationGraph = () => {
                 mode: 'light', 
                 monochrome: {
                     enabled: true,
-                    color: '#008FFB',
+                    color: '#AA6E2D',
                     shadeTo: 'light',
                     shadeIntensity: 0.65
                 },
@@ -63,7 +63,8 @@ const DonationGraph = () => {
                 bar: {
                     horizontal: false,
                     columnWidth: '55%',
-                    endingShape: 'rounded'
+                    borderRadius: 5,
+                    // endingShape: 'rounded'
                 },
             },
             dataLabels: {

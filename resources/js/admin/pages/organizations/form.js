@@ -182,7 +182,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             name: name == '' ? "Missing name" : null,
             email: !validateEmail(email) ? "Missing email" : null,
             // site: site == '' ? "Missing site" : null,
-            benevity_link: !validBenevityLink(benevity_link) ? 'Wrong benevity_link' : null,
+            // benevity_link: !validBenevityLink(benevity_link) ? 'Wrong benevity_link' : null,
             phone_number: !validPhone(phone_number) ? "Missing phone_number" : null,
             description: description == '' ? "Missing description" : null,
             category: category.length == 0 ? "Missing category" : null,

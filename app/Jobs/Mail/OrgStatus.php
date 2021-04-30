@@ -55,9 +55,9 @@ class OrgStatus implements ShouldQueue
                 dispatch(new MailInvite(optional($inv)->email, $org, $inv));
             });
         } else {
-            $tosend->each(function($inv) use ($org){
-                dispatch(fn() => Mail::to(optional($inv)->email)->send(new OrgRejected($org)));
-            });
+            // $tosend->each(function($inv) use ($org){
+            //     dispatch(fn() => Mail::to(optional($inv)->email)->send(new OrgRejected($org)));
+            // });
         }
     }
 }

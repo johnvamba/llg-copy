@@ -282,7 +282,7 @@ class OffersController extends Controller
                 'approved_by' => auth()->user()->id,
             ]);
             $offer->save();
-            dispatch(new OfferMail($offer, false));
+            // dispatch(new OfferMail($offer, false));
 
             DB::commit();
             return response()->json(['Success'], 200);
