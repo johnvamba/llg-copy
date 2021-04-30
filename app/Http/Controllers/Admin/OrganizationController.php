@@ -611,7 +611,7 @@ class OrganizationController extends Controller
     public function reject(Organization $organization){
     DB::beginTransaction();
         try {
-            dispatch(new OrgStatus($organization, false));
+            // dispatch(new OrgStatus($organization, false));
             $organization->delete();
             DB::commit();
             return response()->json(['Success'], 200);
