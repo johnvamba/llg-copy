@@ -57,6 +57,11 @@ class Need extends Model implements HasMedia
         return $this->morphedByMany('App\User', 'model', 'need_mets');
     }
 
+    public function mets()
+    {
+        return $this->hasMany('App\NeedMet');
+    }
+
     public function organization()
     {
         return $this->belongsTo('App\Organization', 'organization_id');
