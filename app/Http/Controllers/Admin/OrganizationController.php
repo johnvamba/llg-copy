@@ -119,7 +119,7 @@ class OrganizationController extends Controller
             'description' => 'required',
             'category' => 'required',
             'location' => 'required',
-            'benevity_link' => 'required',
+            // 'benevity_link' => 'required',
             // 'address' => 'required',
             'lat' => 'required',
             'lng' => 'required',
@@ -252,7 +252,7 @@ class OrganizationController extends Controller
             'phone_number' => 'required',
             'description' => 'required',
             'category' => 'required',
-            'benevity_link' => 'required',
+            // 'benevity_link' => 'required',
             // 'address' => 'required',
             'location' => 'required',
             'lat' => 'required',
@@ -611,7 +611,7 @@ class OrganizationController extends Controller
     public function reject(Organization $organization){
     DB::beginTransaction();
         try {
-            dispatch(new OrgStatus($organization, false));
+            // dispatch(new OrgStatus($organization, false));
             $organization->delete();
             DB::commit();
             return response()->json(['Success'], 200);
