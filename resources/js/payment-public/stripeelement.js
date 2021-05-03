@@ -31,7 +31,7 @@ const logEvent=(event)=>{
     console.log(event)
 }
 
-const StripeElement = ({need, stripePromise, presubmit, loading, amount, setAmount, errors })=> {
+const StripeElement = ({need, stripePromise, presubmit, loading, amount, setAmount, errors, submitting = false })=> {
     const elements = useElements();
 
 	if(loading)
@@ -120,7 +120,7 @@ const StripeElement = ({need, stripePromise, presubmit, loading, amount, setAmou
                 }
                 <div className={`create-org-pub__footer create-org-pub__footer-cols-2`}>
                     <div>
-                        <button className="primary-btn" type="button" onClick={()=>presubmit(elements)} disabled={!stripePromise}>Checkout</button>
+                        <button className="primary-btn" type="button" onClick={()=>presubmit(elements)} disabled={!stripePromise || submitting}>Checkout</button>
                     </div>
                 </div>
             </div>

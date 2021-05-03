@@ -202,7 +202,7 @@ const PublicPayment = () => {
                 {submitting && <LoadingScreen title="Submitting Checkout" />}
                 <section className={`w-full h-full ${!loading && 'p-5'}`}>
                     <Elements stripe={stripePromise}>
-                        <StripeElement need={need} loading={loading} stripePromise={stripePromise} presubmit={presubmit} amount={amount} setAmount={setAmount} errors={errors} />
+                        <StripeElement need={need} loading={loading} submitting={submitting} stripePromise={stripePromise} presubmit={presubmit} amount={amount} setAmount={setAmount} errors={errors} />
                     </Elements>
                 </section>
             </section>
