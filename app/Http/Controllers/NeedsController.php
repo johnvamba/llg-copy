@@ -75,7 +75,7 @@ class NeedsController extends Controller
 
             $need['photo'] = $need->organization->getFirstMediaUrl('photo');
             $need['cover_photo'] = $need->getFirstMediaUrl('photo');
-
+            
             $need['totalActiveNeeds'] = Need::where(
                     'organization_id', $need->organization_id
                 )

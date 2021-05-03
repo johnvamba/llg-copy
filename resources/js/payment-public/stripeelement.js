@@ -44,6 +44,7 @@ const StripeElement = ({
     total,
     setTotal,
     cardHolder,
+    submitting,
     setCardHolder,
     errors,
     onClose
@@ -189,7 +190,7 @@ const StripeElement = ({
                         className="primary-btn w-full rounded-lg p-2 text-base"
                         type="button"
                         onClick={() => presubmit(elements)}
-                        disabled={!stripePromise}
+                        disabled={!stripePromise || submitting}
                     >Checkout</button>
                 </div>
             </div>
