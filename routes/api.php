@@ -231,6 +231,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Needs Met resource module */
     Route::get('needs-mets/user/{user}', 'NeedsMetController@getUserNeedsMet');
     Route::get('needs-mets/total', 'NeedsMetController@getTotalNeedsMet')->middleware('datafilter');
+    Route::get('needs-mets/{need}/volunteers', 'NeedsMetController@getNeedsVolunteer');
+    Route::get('needs-mets/group/{group}', 'NeedsMetController@getGroupNeedsMet');
     Route::resource('needs-met', 'NeedsMetController');
 
     /** Service Offered resource module */
@@ -246,9 +248,11 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Stories resource module */
     Route::post('story/lists', 'StoryController@getStories');
+    Route::get('stories/recommended', 'StoryController@recommended');
     Route::post('stories/{story}/appreciate', 'StoryController@Appreciate');
     Route::get('stories/search/{keyword}/page/{page?}', 'StoryController@searchStory');
     Route::post('stories/{story}/comments', 'StoryController@addComment');
+    Route::get('stories/page/{page?}', 'StoryController@index');
     Route::resource('stories', 'StoryController');
 
     /** Group invite resource module */
@@ -270,7 +274,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('groups/{group}/participate', 'GroupController@addParticipant');
     Route::get('groups/{group}/join-request', 'GroupController@getJoinRequest');
     Route::get('groups/messages/{group}', 'GroupController@messages');
+    Route::get('groups/discover/page/{page?}', 'GroupController@getDiscoverGroups');
     Route::post('groups/message/{group}', 'GroupController@addMessage');
+    Route::resource('groups', 'GroupController');
 
     /** Orgnization Categories resource module */
     Route::resource('organizations-categories', 'OrganizationCategoryController');
@@ -284,6 +290,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('organization/lists', 'OrganizationController@getOrganizations');
     Route::get('organizations/{organization}/credential', 'OrganizationController@getCredential');
     Route::post('organizations/{organization}/credential', 'OrganizationController@addCredential');
+    Route::resource('organizations', 'OrganizationController');
 
     /** Payment resource module */
     Route::post('payment/need/{need}', 'PaymentController@donateNeed');
