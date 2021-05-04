@@ -75,11 +75,11 @@ const PublicPayment = () => {
 
     const changeDonationType = (charge = amount, type) => {
         if (type == 'percentage') {
-            setAmount(charge);
+            setAmount(parseInt(charge));
             setAmountType('percentage');
 
             if (need.hasOwnProperty('goal')) {
-                let amnt = need.goal * (amount / 100);
+                let amnt = (need.goal * parseInt(charge)) / 100;
                 setTotal(parseFloat(amnt).toFixed(2));
             }
         } else {
