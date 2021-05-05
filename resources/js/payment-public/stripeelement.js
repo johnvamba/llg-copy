@@ -8,8 +8,9 @@ import {
     useStripe,
     useElements,
 } from '@stripe/react-stripe-js';
-import CurrencyInput from 'react-currency-input-field';
+//import CurrencyInput from 'react-currency-input-field';
 import LoadingScreen from '../components/LoadingScreen'
+import CurrencyInput from 'react-currency-input';
 
 
 const ELEMENT_OPTIONS = {
@@ -51,13 +52,15 @@ const StripeElement = ({
 }) => {
 
     const elements = useElements();
-    console.log(need);
 
     if (loading)
         return <LoadingScreen title="Loading Credentials" />
 
     const onChangeDonationType = (charge = amount, type) => {
-        setAmountType(charge, type)
+        if (charge == '' && type == 'percentage') {
+            charge = 0;
+        }
+        setAmountType(parseFloat(charge).toFixed(2), type)
     }
 
     const progress = () => {
@@ -112,7 +115,7 @@ const StripeElement = ({
                             <label>Donation Amount</label>
                             {need.type == 'Fundraise' ? (
                                 <div className="input-container">
-                                    <CurrencyInput
+                                    {/* <CurrencyInput
                                         id="input-example"
                                         className="input-field"
                                         name="amount"
@@ -121,6 +124,13 @@ const StripeElement = ({
                                         value={amount}
                                         decimalsLimit={2}
                                         onValueChange={(value) => onChangeDonationType(value, amountType)}
+                                    /> */}
+                                    <CurrencyInput
+                                        precision={amountType == 'fixed' ? '2' : '0'}
+                                        defaultValue={amount}
+                                        value={amount}
+                                        onChangeEvent={(event, maskValue, floatValue) => onChangeDonationType(maskValue, amountType)}
+                                        className="input-field"
                                     />
                                     <span
                                         onClick={() => onChangeDonationType(10, 'percentage')}
@@ -159,7 +169,7 @@ const StripeElement = ({
                     <div className="w-full">
                         <div className={`form-group border-b border-gray-400`}>
                             <label htmlFor="expiry">Name on Card</label>
-                            <input 
+                            <input
                                 defaultValue={cardHolder}
                                 value={cardHolder}
                                 onChange={e => setCardHolder(e.target.value)}
