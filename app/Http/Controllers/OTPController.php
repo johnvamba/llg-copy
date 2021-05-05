@@ -32,7 +32,7 @@ class OTPController extends Controller
     {
         $sns = AWS::createClient('sns');
     
-        $user = User::where('mobile_number', $request->mobileNumber)->first();
+        $user = User::where('mobile_number', $request->raw)->first();
 
         if (!$user) {
             return response()->json([
@@ -51,7 +51,7 @@ class OTPController extends Controller
 
         !$OTP ? Otp::create([
                 'user_id' => $user->id,
-                'mobile_number' => $request->mobileNumber,
+                'mobile_number' => $request->raw,
                 'otp' => bcrypt($code),
                 'status' => 'pending',
                 'expiry' => Carbon::now()->addMinutes(15)
@@ -86,7 +86,7 @@ class OTPController extends Controller
     {
         $date = Carbon::now();
 
-        $otp = Otp::where('mobile_number', $request->mobileNumber)->first();
+        $otp = Otp::where('mobile_number', $request->raw)->first();
 
         if (Hash::check($request->otp, $otp->otp)) {
             if ($date->lessThanOrEqualTo($otp->expiry)) {
@@ -120,7 +120,7 @@ class OTPController extends Controller
     {
         $sns = AWS::createClient('sns');
     
-        $user = User::where('mobile_number', $request->mobileNumber)->first();
+        $user = User::where('mobile_number', $request->raw)->first();
 
         if (!$user) {
             return response()->json([
