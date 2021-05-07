@@ -197,7 +197,7 @@ class UserController extends Controller
                 ->update([
                     'name' => $request->firstName.' '.$request->lastName,
                     'email' => $request->email,
-                    'mobile_number' => $request->mobileNumber,
+                    'mobile_number' => $request->mobile_number,
                 ]);
 
             UserProfile::where('user_id', $user->id)

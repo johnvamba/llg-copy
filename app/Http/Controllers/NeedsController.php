@@ -376,11 +376,42 @@ class NeedsController extends Controller
      */
     public function show(Need $need)
     {
-        $need = Need::with('type')->where('id', $need->id)->first();
-        $need->model;
-        $need->getMedia('photo');
+        $result = Need::with([
+                'organization',
+                'organization.credential',
+                'type', 
+                'categories',
+            ])
+            ->where('id', $need->id)
+            ->first();
 
-        return response()->json($need);
+        $result->model;
+        $result->getMedia('photo');
+
+        $result->categories = $result->categoriesList; //reset?
+
+        $result['photo'] = $result->organization->getFirstMediaUrl('photo');
+        $result['cover_photo'] = $result->getFirstMediaUrl('photo');
+        
+        $result['totalActiveNeeds'] = Need::where(
+                'organization_id', $result->organization_id
+            )
+            ->whereRaw('raised < goal')
+            ->count();
+        
+        $result['totalPastNeeds'] = Need::where(
+                'organization_id', $result->organization_id
+            )
+            ->whereRaw('raised >= goal')
+            ->count();
+
+        return response()->json($result);
+        
+        // $need = Need::with('type')->where('id', $need->id)->first();
+        // $need->model;
+        // $need->getMedia('photo');
+
+        // return response()->json($need);
     }
 
     /**

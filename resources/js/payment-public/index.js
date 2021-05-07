@@ -140,10 +140,8 @@ const PublicPayment = () => {
         let params = { status };
 
         if (status === 'success') {
-            params.amount = amount;
+            window.location.href = 'neuma://home'
         }
-
-        window.ReactNativeWebView.postMessage(JSON.stringify(params));
     }
 
     const presubmit = async (elements) => {
@@ -204,7 +202,7 @@ const PublicPayment = () => {
                                 <div className="bar"></div>
                             </div>
                             <div className="flex-1 text-right">
-                                <i className="fa fa-times text-white text-xl mr-2" aria-hidden="true" onClick={() => handleGoBack('success')}></i>
+                                {/* <i className="fa fa-times text-white text-xl mr-2" aria-hidden="true" onClick={() => handleGoBack('success')}></i> */}
                             </div>
                         </div>
 
@@ -227,12 +225,12 @@ const PublicPayment = () => {
                         <p className="text-center text-lg">Your donation to <span className="font-bold">{need.title}</span> was successful! A receipt was sent to your email!</p>
                     </div>
 
-                    <button
+                    {/* <button
                         className="primary-btn w-full rounded-lg p-2 text-base"
                         type="button"
                         onClick={() => handleGoBack('success')}
                         disabled={!stripePromise || submitting}
-                    >Done</button>
+                    >Done</button> */}
                 </div>
             </section>
         )
