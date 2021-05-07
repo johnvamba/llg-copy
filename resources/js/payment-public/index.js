@@ -140,10 +140,11 @@ const PublicPayment = () => {
         let params = { status };
 
         if (status === 'success') {
-            params.amount = amount;
+            //params.amount = amount;
+            window.location.href = 'neuma://home'
         }
 
-        window.ReactNativeWebView.postMessage(JSON.stringify(params));
+        //window.ReactNativeWebView.postMessage(JSON.stringify(params));
     }
 
     const presubmit = async (elements) => {
@@ -204,7 +205,7 @@ const PublicPayment = () => {
                                 <div className="bar"></div>
                             </div>
                             <div className="flex-1 text-right">
-                                <i className="fa fa-times text-white text-xl mr-2" aria-hidden="true" onClick={() => handleGoBack('success')}></i>
+                                {/* <i className="fa fa-times text-white text-xl mr-2" aria-hidden="true" onClick={() => handleGoBack('success')}></i> */}
                             </div>
                         </div>
 

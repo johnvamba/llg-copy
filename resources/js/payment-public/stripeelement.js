@@ -70,7 +70,7 @@ const StripeElement = ({
     return (
         <form>
             <div className="info_container px-3 pt-3 pb-3 pt-5">
-                <div className="flex flex-row items-center offers-create-form__header py-3">
+                {/* <div className="flex flex-row items-center offers-create-form__header py-3">
                     <div className="flex-1"></div>
                     <div className="flex-1 text-center">
                         <h2 className="text-white">Make a Donation</h2>
@@ -78,6 +78,9 @@ const StripeElement = ({
                     <div className="flex-1 text-right">
                         <i className="fa fa-times text-white text-xl mr-2" aria-hidden="true" onClick={() => onClose('cancel')}></i>
                     </div>
+                </div> */}
+                <div className="offers-create-form__header py-3">
+                    <h2 className="text-white text-center">Make a Donation</h2>
                 </div>
 
                 <div className={`form-group`}>
