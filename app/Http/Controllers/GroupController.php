@@ -150,6 +150,72 @@ class GroupController extends Controller
 
         return response()->json($groups, 200);
     }
+    
+    /**
+     * Display search discover groups
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getSearchGroup(Request $request)
+    {
+        $page = $request->page ?: 1;
+
+        $groups = Group::where('privacy', 'public');
+
+        if ($request->keyword != '') {
+            $groups = $groups->where('name', 'like', '%'.$request->keyword.'%');
+        }
+
+        $groups = $groups->paginate(10, ['*'], 'search_group', $page);
+
+        foreach ($groups as $group) {
+            $group['goal'] = Goal::whereHasMorph(
+                    'model',
+                    ['App\Group'],
+                    function(Builder $query) use ($group) {
+                        $query->where('model_id', $group->id);
+                    }
+                )
+                ->where('status', 'in progress')
+                ->latest()
+                ->first();
+            
+            if ($group['goal']) {
+                $date = Carbon::parse($group['goal']->created_at);
+
+                $participants = GroupParticipant::where([
+                        ['group_id', $group->id],
+                        ['status', 'approved'],
+                    ])
+                    ->pluck('user_id');
+
+                $participants->push($group->user_id);
+
+                $group['need_mets_count'] = NeedMet::whereHasMorph(
+                        'model',
+                        ['App\User'],
+                        function ($query) use ($participants) {
+                            $query->whereIn('model_id', $participants);
+                        }
+                    )
+                    ->whereBetween('created_at', [
+                        $date->copy()->toDateString(),
+                        $date->copy()->endOfMonth()->toDateString()
+                    ])
+                    ->count();
+
+                $group['members_count'] = GroupParticipant::where([
+                        ['group_id', $group->id],
+                        ['status', 'approved']
+                    ])->count();
+            } else {
+                $group['need_mets_count'] = 0;
+                $group['members_count'] = 0;
+            }
+        }
+
+        return response()->json($groups, 200);
+    }
 
     /**
      * Display user joined/created group.
