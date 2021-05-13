@@ -24,8 +24,10 @@ import CurrencyInput from 'react-currency-input-field';
 import 'pretty-checkbox';
 import StripeElement from './stripeelement'
 import axios from 'axios'
-import socketClient from "socket.io-client";
-const socket = socketClient(`http://neuma-web.test:5000`, {transports: ['websocket']});
+import io from "socket.io-client";
+const socket = io.connect('http://192.168.1.2:5000/', {
+    withCredentials: false,
+});
 
 import ThankYouImg from '../../assets/images/ThankYou.png';
 
@@ -51,6 +53,12 @@ const PublicPayment = () => {
     // const stripe = useStripe();
 
     // const elements = useElements();
+
+    useEffect(() => {
+        socket.on('connect', () => {
+            console.log('socket connected!');
+        });
+    }, [])
 
     useEffect(() => {
         // console.log('somethign');
