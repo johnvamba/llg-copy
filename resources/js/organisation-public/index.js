@@ -125,7 +125,7 @@ const OrgPub = () => {
         }
         switch(countTab){
             case 1:
-/*            set = {
+            set = {
                 name: orgInfoForm.name == '' ? 'Missing title' : null,
                 email: orgInfoForm.email == '' && !validateEmail(orgInfoForm.email) ? 'Missing Email' : null,
                 // site: orgInfoForm.site ? 'Missing Website' : null,
@@ -133,7 +133,7 @@ const OrgPub = () => {
                 description: orgInfoForm.description == '' ? 'Missing Description' : null,
                 location: orgInfoForm.location == '' ? 'Missing location' : null,
                 // benevity_link: !validBenevityLink(orgInfoForm.benevity_link) ? 'Invalid Benevity Link' : null,
-            }*/
+            }
             break;
             case 2:
             set = {
