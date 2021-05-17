@@ -156,7 +156,7 @@ const Organizations = (props) => {
         <>
             <Header count={count} handlePanels={handlePanels} />
             {
-                loading ? <LoadingScreen title={'Loading Organizations'}/>
+                loading ? <LoadingScreen title={'Loading Organisations'}/>
                 : <List set={orgs} handlePanels={handlePanels} triggerPage={nextPage}/>
             }
             {

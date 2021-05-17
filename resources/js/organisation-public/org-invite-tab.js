@@ -95,8 +95,8 @@ const OrgInviteTab = ({ submitting, users, setUsers, form,errors, handleOrgInvit
                         </div>
                     </div>
                     <div className="w-full sm:w-full md:w-full xl:w-1/4 px-2">
-                        <div className={`form-group ${errors.name && 'form-error'}`}>
-                            <label>First Name (Optional)</label>
+                        <div className={`form-group ${errors.firstName && 'form-error'}`}>
+                            <label>First Name</label>
                             <input
                                 className="input-field"
                                 type="text"
@@ -106,13 +106,13 @@ const OrgInviteTab = ({ submitting, users, setUsers, form,errors, handleOrgInvit
                                 placeholder="Enter First Name"
                             />
                             {
-                                (errors.name || false) && <span className="text-xs pt-1 text-red-500 italic">Missing name</span>
+                                (errors.firstName || false) && <span className="text-xs pt-1 text-red-500 italic">Missing first name</span>
                             }
                         </div>
                     </div>
                     <div className="w-full sm:w-full md:w-full xl:w-1/4 px-2">
-                        <div className={`form-group ${errors.name && 'form-error'}`}>
-                            <label>Last Name (Optional)</label>
+                        <div className={`form-group ${errors.lastName && 'form-error'}`}>
+                            <label>Last Name</label>
                             <input
                                 className="input-field"
                                 type="text"
@@ -122,7 +122,7 @@ const OrgInviteTab = ({ submitting, users, setUsers, form,errors, handleOrgInvit
                                 placeholder="Enter Last Name"
                             />
                             {
-                                (errors.name || false) && <span className="text-xs pt-1 text-red-500 italic">Missing name</span>
+                                (errors.lastName || false) && <span className="text-xs pt-1 text-red-500 italic">Missing last name</span>
                             }
                         </div>
                     </div>
@@ -162,7 +162,7 @@ const OrgInviteTab = ({ submitting, users, setUsers, form,errors, handleOrgInvit
                 </div>
             </div>
             {
-                (errors.users) && <span className="text-xs pt-1 mt-3 text-red-500 italic">Missing a primary contact</span>
+                (errors.users) && <span className="text-xs pt-1 mt-3 text-red-500 italic">{ errors.users }</span>
             }
         </>
     )

@@ -348,22 +348,23 @@ class NeedsController extends Controller
     {
         $result = DB::transaction(function () use ($request, $need) {
                 //bad code here. haha
-                Need::find($need->id)
-                    ->update([
+            $nm = NeedMet::firstOrCreate([
+                'need_id' => $need->id,
+                'amount' => $request->amount,
+                'model_type' => \App\User::class,
+                'model_id' => auth()->user()->id
+            ]);
+
+            if($nm->wasRecentlyCreated){
+                $need->update([
                         'raised' => ($need->raised + 1)
                     ]);
+            }
+            
+            dispatch(new NeedMetMailer($need, auth()->user(), 1));
 
-                $makeNeedMet = NeedMet::make([
-                    'need_id' => $request->need_id,
-                    'amount' => $request->amount,
-                ]);
-
-                $needMet = auth()->user()->needsMet()->save($makeNeedMet);
-
-                dispatch(new NeedMetMailer($need, auth()->user(), 1));
-
-                return $needMet;
-            });
+            return $needMet;
+        });
 
         return response()->json($result);
     }

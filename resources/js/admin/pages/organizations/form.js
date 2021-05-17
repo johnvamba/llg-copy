@@ -207,7 +207,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                 api.patch(`/api/web/organizations/${data.id}`, { ...params })
             const data_id = data.id;
             submitPromise.then(({data})=>{
-                swalSuccess(data_id ? "Organization has been updated": 'New Organization Created!')
+                swalSuccess(data_id ? "Organisation has been updated": 'New Organisation Created!')
                 setSubmitting(false)
                 afterSubmit()
                 handleClose(data.data);
@@ -250,7 +250,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             access: !accessable
         }).then((res) =>{
             loadAll(true)
-            swalSuccess(!accessable ? 'Access to organization added' : "Access to this Organization revoked")
+            swalSuccess(!accessable ? 'Access to organisation added' : "Access to this Organisation revoked")
         }).catch(err=>{
 
         })
@@ -316,7 +316,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                 onChange={setCampus}
                                 />
                             {
-                                (errors.campus || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
+                                (errors.campus || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organisation</span>
                             }
                         </div>
                     }

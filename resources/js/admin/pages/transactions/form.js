@@ -134,7 +134,7 @@ const TransactionsForm = ({ data = {}, handleForm, afterSubmit }) => {
                                     onChange={handleOrganization}
                                     />
                                 {
-                                    (fieldErrors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
+                                    (fieldErrors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organisation</span>
                                 }
                         </div>
                     </div>

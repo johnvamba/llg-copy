@@ -318,7 +318,7 @@ class GroupController extends Controller
     public function members(Request $request, Group $group) {
         $members = $group->participant_users()
         ->unfilter()
-        ->with('profile.media');
+        ->with('profile');
         
         return UserResource::collection( $members->paginate() );
     }
