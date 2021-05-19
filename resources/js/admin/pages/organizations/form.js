@@ -390,7 +390,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                 }
                             </div>
                         </div>
-                        <div className="w-full px-2">
+                        {/*<div className="w-full px-2">
                                 <div className={`form-group ${errors.benevity_link && 'form-error'}`}>
                                 <label>Benevity Link</label>
                                 <input
@@ -405,7 +405,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                     (errors.benevity_link || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Benevity Link</span>
                                 }
                             </div>
-                        </div>
+                        </div>*/}
                         <div className="w-full px-2">
                         {/*
                             <div className={`form-group ${errors.address && 'form-error'}`}>
