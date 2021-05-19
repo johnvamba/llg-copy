@@ -154,7 +154,7 @@ const PushForm = ({ data={}, handleForm }) =>{
                                 <div className="form-group form-input-text">
                                     <label>Date</label>
                                     <div className="flex items-center">
-                                        <DatePicker ref={calendarRef} selected={date} onChange={date => setStartDate(date)} />
+                                        <DatePicker ref={calendarRef} minDate={new Date} selected={date} onChange={date => setStartDate(date)} />
                                         <i className="cursor-pointer" onClick={() => {calendarRef.current.setOpen(true)}}>
                                             <Calendar/>
                                         </i>
@@ -211,7 +211,7 @@ const PushForm = ({ data={}, handleForm }) =>{
             </section>
             <footer className="form-footer org-form__footer">
                 <button className="btn btn-secondary" onClick={onClear}>Discard</button>
-                <button className="primary-btn" onClick={handleSubmit}>Send</button>
+                <button className="primary-btn" onClick={handleSubmit}>{data.id? 'Update':'Send'}</button>
             </footer>
         </section>
     )

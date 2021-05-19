@@ -27,7 +27,14 @@ class PushNotificationController extends Controller
             }
         }
 
-        return PushResource::collection($notifs->paginate());
+        return PushResource::collection($notifs->paginate())
+            ->additional([
+                'count'=> [
+                    'all' => PushNotification::count(),
+                    'sent' => PushNotification::where('status', 'sent')->count(),
+                    'scheduled' => PushNotification::where('status','!=', 'sent')->count() 
+                ]
+            ]);
     }
 
     /**
@@ -48,28 +55,34 @@ class PushNotificationController extends Controller
      */
     public function store(Request $request)
     {
-        $date = null;
-        switch ($request->get('toggleSched')) {
-            case 'later':
-                $date = Carbon::parse($request->get('date'));
-                $time = Carbon::parse($request->get('time'));
-                $date->setTime($time->hour, $time->minute);
-                break;
-            case 'now':
-            default:
-                $date = now();
-                break;
+        DB::beginTransaction();
+        try {
+            $date = null;
+            switch ($request->get('toggleSched')) {
+                case 'later':
+                    $date = Carbon::parse($request->get('date'));
+                    $time = Carbon::parse($request->get('time'));
+                    $date->setTime($time->hour, $time->minute);
+                    break;
+                case 'now':
+                default:
+                    $date = now();
+                    break;
+            }
+
+            $notif = PushNotification::create( $request->only('title', 'message', 'status') + [
+                'created_by' => auth()->user(),
+                'scheduled_at' => $date
+            ]);
+
+            //Do something here
+
+            DB::commit();
+            return new PushResource($notif);
+        } catch (xception $e) {
+            DB::rollback();
+            return response()->json($e->getMessage(), 400);
         }
-
-        $notif = PushNotification::create( $request->only('title', 'message', 'status') + [
-            'created_by' => auth()->user(),
-            'scheduled_at' => $date
-        ]);
-
-        //Do something here
-
-
-        return new PushResource($notif);
     }
 
     /**
@@ -78,9 +91,9 @@ class PushNotificationController extends Controller
      * @param  \App\PushNotification  $pushNotification
      * @return \Illuminate\Http\Response
      */
-    public function show(PushNotification $pushNotification)
+    public function show(PushNotification $push)
     {
-        return new PushResource($pushNotification);
+        return new PushResource($push);
     }
 
     /**
@@ -89,7 +102,7 @@ class PushNotificationController extends Controller
      * @param  \App\PushNotification  $pushNotification
      * @return \Illuminate\Http\Response
      */
-    public function edit(PushNotification $pushNotification)
+    public function edit(PushNotification $push)
     {
         //
     }
@@ -101,27 +114,31 @@ class PushNotificationController extends Controller
      * @param  \App\PushNotification  $pushNotification
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, PushNotification $pushNotification)
+    public function update(Request $request, PushNotification $push)
     {
+        DB::beginTransaction();
+        try {
+            $date = null;
+            switch ($request->get('toggleSched')) {
+                case 'later':
+                    $date = Carbon::parse($request->get('date'));
+                    $time = Carbon::parse($request->get('time'));
+                    $date->setTime($time->hour, $time->minute);
+                    break;
+                case 'now':
+                default:
+                    $date = now();
+                    break;
+            }
 
-        $date = null;
-        switch ($request->get('toggleSched')) {
-            case 'later':
-                $date = Carbon::parse($request->get('date'));
-                $time = Carbon::parse($request->get('time'));
-                $date->setTime($time->hour, $time->minute);
-                break;
-            case 'now':
-            default:
-                $date = now();
-                break;
+            $push->update( $request->only('title', 'message', 'status') + ['scheduled_at' => $date ]);
+            //Do something here
+            DB::commit();
+            return new PushResource($push);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json($e->getMessage(), 400);
         }
-
-        $notif = $pushNotification::update( $request->only('title', 'message', 'status') + ['scheduled_at' => $date ]);
-        //Do something here
-
-
-        return new PushResource($notif);
     }
 
     /**
@@ -130,11 +147,11 @@ class PushNotificationController extends Controller
      * @param  \App\PushNotification  $pushNotification
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PushNotification $pushNotification)
+    public function destroy(PushNotification $push)
     {
         DB::beginTransaction();
         try {
-            $pushNotification->delete();
+            $push->delete();
             DB::commit();
             return response()->json('Removed Notification', 200);
         } catch (\Exception $e) {

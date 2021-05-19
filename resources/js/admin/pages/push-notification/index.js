@@ -16,10 +16,10 @@ const PushNotification = () => {
     const [limit, setLimit] = useState(15);
     const [meta, setMeta] = useState({})
     const [page, setPage] = useState(1);
+    const [status, setTab] = useState('all'); //current or past
 
     useEffect(()=>{
         const { pathname } = loc 
-
         switch(pathname) {
             case '/notifications/scheduled':
             setTab('scheduled');
@@ -40,10 +40,7 @@ const PushNotification = () => {
         sent: 0
     });
 
-    const [status, setTab] = useState('all'); //current or past
-
     useEffect(() => {
-        console.log('loading?');
         setLoading(false)
         loadTab(false);
     }, [status])
@@ -79,6 +76,12 @@ const PushNotification = () => {
             cancelToken: token.token
         }).then(({ data })=>{
             setData( [...data.data ]);
+            setCounts({
+                all: 0,
+                scheduled: 0,
+                sent: 0,
+                ...data.count
+            })
             setMeta( data.meta )
         }).finally(()=>{
             setLoading(false)
