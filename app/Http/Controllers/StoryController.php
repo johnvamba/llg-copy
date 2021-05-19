@@ -156,20 +156,25 @@ class StoryController extends Controller
             ])
             ->withCount('appreciates');
 
-        if($search)
+        if ($search) {
             $query->where('title', 'LIKE', '%'.strtolower($search).'%');
+        }
         
         $stories = $query->whereNotNull('posted_at')
             ->orderBy('created_at', 'desc')
             ->paginate(10, ['*'], 'needs', $page);
 
         foreach ($stories as $story) {
+            $appreciate = 0;
+            
             $story['photo'] = $story->getFirstMediaUrl('photo');
 
-            $appreciate = StoryAppreciate::where([
-                ['user_id', auth()->user()->id],
-                ['story_id', $story->id]
-            ])->count();
+            if (auth()->check()) {
+                $appreciate = StoryAppreciate::where([
+                    ['user_id', auth()->user()->id],
+                    ['story_id', $story->id]
+                ])->count();
+            }
 
             $story['appreciated'] = $appreciate ? true  : false;
         }

@@ -12,6 +12,7 @@
         "apility/laravel-fcm": "^1.4",
         "aws/aws-sdk-php-laravel": "^3.6",
         "brozot/laravel-fcm": "^1.3",
+        "doctrine/dbal": "2.*",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^6.3",

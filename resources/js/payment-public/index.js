@@ -24,6 +24,10 @@ import CurrencyInput from 'react-currency-input-field';
 import 'pretty-checkbox';
 import StripeElement from './stripeelement'
 import axios from 'axios'
+import io from "socket.io-client";
+const socket = io.connect('http://127.0.0.1:5000/', {
+    withCredentials: false,
+});
 
 import ThankYouImg from '../../assets/images/ThankYou.png';
 
@@ -49,6 +53,12 @@ const PublicPayment = () => {
     // const stripe = useStripe();
 
     // const elements = useElements();
+
+    useEffect(() => {
+        socket.on('connect', () => {
+            console.log('socket connected!');
+        });
+    }, [])
 
     useEffect(() => {
         // console.log('somethign');
@@ -140,7 +150,13 @@ const PublicPayment = () => {
         let params = { status };
 
         if (status === 'success') {
-            window.location.href = 'neuma://home'
+            const url = new URL(window.location.href);
+
+            socket.emit('success donation', {
+                id: need.id,
+                amount: amount,
+                userId: url.searchParams.get('user')
+            })
         }
     }
 
@@ -225,12 +241,12 @@ const PublicPayment = () => {
                         <p className="text-center text-lg">Your donation to <span className="font-bold">{need.title}</span> was successful! A receipt was sent to your email!</p>
                     </div>
 
-                    {/* <button
+                    <button
                         className="primary-btn w-full rounded-lg p-2 text-base"
                         type="button"
                         onClick={() => handleGoBack('success')}
                         disabled={!stripePromise || submitting}
-                    >Done</button> */}
+                    >Done</button>
                 </div>
             </section>
         )

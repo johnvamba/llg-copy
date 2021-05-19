@@ -304,6 +304,45 @@ class OrganizationController extends Controller
 
         return response()->json($org);
     }
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getSearchOrganization(Request $request)
+    {
+        $page = $request->page ?: 1;
+
+        $organizations = Organization::with('categories', 'categories');
+
+        if ($request->keyword != '') {
+            $organizations = $organizations->where('name', 'like', '%'.$request->keyword.'%');
+        }
+
+        $results = $organizations->latest()
+            ->paginate(10, ['*'], 'search_organization', $page);
+
+        foreach($results as $result) {
+            $result->getMedia('photo');
+
+            $result['photo'] = $result->getFirstMediaUrl('photo');
+            $result['cover_photo'] = $result->getFirstMediaUrl('banner');
+                
+            $result['activeNeeds'] = Need::where('organization_id', $result->id)
+                ->whereNotNull('approved_by')
+                ->whereRaw('raised < goal')
+                ->count();
+
+            $result['pastNeeds'] = Need::where('organization_id', $result->id)
+                ->whereNotNull('approved_by')
+                ->whereRaw('raised >= goal')
+                ->count();
+        }
+
+        return response()->json($results);
+    }
 
     /**
      * Update the specified resource in storage.
