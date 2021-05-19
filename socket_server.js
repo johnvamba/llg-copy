@@ -1,14 +1,17 @@
 var app = require('express')();
 var http = require('http').createServer(app);
+const cors = require('cors');
 var io = require('socket.io')(http, {
-    cors: {
-        origin: '*',
-    }
+    cors:true,
+ 	origins:["http://neuma.test"],
 });
+
 
 app.get('/', function (req, res) {
     res.send('Neuma web socket!');
 });
+
+
 
 io.on('connection', function (socket) {
     socket.on("success donation", function (data) {
@@ -17,6 +20,6 @@ io.on('connection', function (socket) {
     });
 });
 
-http.listen(5000, '192.168.1.2', function() {
-    console.log(`listening on http://192.168.1.2:5000`);
+http.listen(5000, '127.0.0.1', function() {
+    console.log(`listening on http://127.0.0.1:5000`);
 });
