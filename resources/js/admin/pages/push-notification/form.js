@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { selectStyle, selectStylePaddingZero, loadOrganization, loadCampus, loadGroups, loadNeeds } from '../../../components/helpers/async_options';
 import OffersFormCross from '../../../svg/offers-form-cross';
 import Calendar from '../../../svg/calendar';
 import DatePicker from "react-datepicker";
+import AsyncSelect from 'react-select/async';
+import TimeInput from '../../../components/TimeInput'
 
-
-const PushForm = ({ data={}, activeForm, handleForm }) =>{
+const PushForm = ({ data={}, handleForm }) =>{
     const [toggleSched, setToggleSched] = useState('now');
-    const [meridiem, setMeridiem] = useState('AM');
-    const [startDate, setStartDate] = useState(new Date());
+    const [time, setTime] = useState('10:00 AM');
+    const [date, setStartDate] = useState(new Date());
+    const [sendType, selectType] = useState('all');
+    const [target, setTarget] = useState({});
+
     // enable to open datapicker when clicking calendar icon
     const calendarRef = useRef();
 
@@ -23,10 +28,17 @@ const PushForm = ({ data={}, activeForm, handleForm }) =>{
 
     useEffect(() => {
         if(data.id) {
-            const { title, message } = data
+            const { title, message, schedule_date, schedule_time } = data
             setFields({title, message});
+            setStartDate(new Date(schedule_date));
+            setTime(schedule_time || '9:00 AM');
+
         }
     }, [data])
+
+    useEffect(() => {
+        setTarget({});
+    }, [sendType])
 
     const handleInputChange = (e) => {
         setFieldErrors({...fieldErrors, [e.target.name] : '' });
@@ -44,10 +56,44 @@ const PushForm = ({ data={}, activeForm, handleForm }) =>{
         return false;
     }
 
+    const loadAsync = (a, b) => {
+        switch (sendType) {
+            case 'group':
+            loadGroups(a, b);
+            break;
+            case 'organisation':
+            loadOrganization(a, b);
+            break;
+            case 'campus':
+            loadCampus(a, b);
+            break;
+            case 'volunteers':
+            loadNeeds(a, b, { type: 'Volunteer'})
+            break;
+            case 'donators':
+            loadNeeds(a, b, { type: ['Donation', 'Fundraise']})
+            break;
+        }
+    }
+
     const handleSubmit = () => {
         if(validateForm()) 
         {
-
+            const submit = {
+                ...fields,
+                sendType,
+                target,
+                toggleSched,
+                date,
+                time
+            };
+            const submitPromise = !data.id ? 
+            api.post(`/api/web/pushs`, submit) : 
+            api.patch(`/api/web/pushs/${data.id}`, submit)
+            const data_id = data.id;
+            submitPromise.then(({data})=>{
+                handleForm({}, false, 'submit');
+            })
         }
     }
 
@@ -58,7 +104,7 @@ const PushForm = ({ data={}, activeForm, handleForm }) =>{
     return(
         <section className="form push-form create-form">
             <header className="form-title create-story__header">
-                <h3>{activeForm} Push Notification</h3>
+                <h3>Push Notification</h3>
                 <button type="button" onClick={handleForm}>
                     <OffersFormCross />
                 </button>
@@ -102,13 +148,13 @@ const PushForm = ({ data={}, activeForm, handleForm }) =>{
                         </div>
                     </div>
                     {
-                        data.id &&
+                        (toggleSched == 'later') &&
                         <div className="flex justify-between flex-wrap -mx-2">
                             <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
                                 <div className="form-group form-input-text">
                                     <label>Date</label>
                                     <div className="flex items-center">
-                                        <DatePicker ref={calendarRef} selected={startDate} onChange={date => setStartDate(date)} />
+                                        <DatePicker ref={calendarRef} selected={date} onChange={date => setStartDate(date)} />
                                         <i className="cursor-pointer" onClick={() => {calendarRef.current.setOpen(true)}}>
                                             <Calendar/>
                                         </i>
@@ -116,24 +162,56 @@ const PushForm = ({ data={}, activeForm, handleForm }) =>{
                                 </div>
                             </div>
                             <div className="w-full sm:w-full md:w-full xl:w-1/2 px-2">
-                                <div className="form-group form-input-text">
+                                <div className="form-group p-2 mb-0">
                                     <label>Time</label>
-                                    <div className="flex items-center justify-between">
+                                    <TimeInput value={time} onChange={setTime}/>
+
+                                   {/* <div className="flex items-center justify-between">
                                         <input className="outline-none" type="time" />
                                         <div className="push-form__meridiem">
                                             <span className={meridiem === 'AM' ? 'active' : null} onClick={() => setMeridiem('AM')}>AM</span>
                                             <span className={meridiem === 'PM' ? 'active' : null} onClick={() => setMeridiem('PM')}>PM</span>
                                         </div>
-                                    </div>
+                                    </div>*/}
                                 </div>
                             </div>
                         </div>
                     }
+                    <div className="w-full xl:w-full">
+                        <div className={`form-group ${fieldErrors.message ? 'has-error' : ''}`}>
+                        <label>Send to</label>
+                        <div className="input-container">
+                            <select name="date-type" value={sendType} onChange={(e)=>selectType(e.target.value)}>
+                                <option value="all">All Active Users</option>
+                                <option value="group">Group Users</option>
+                                <option value="organisation">Organisation Admins</option>
+                                <option value="campus">Campus Admins</option>
+                                <option value="volunteers">Need Volunteers</option>
+                                <option value="donators">Need Donators</option>
+                            </select>
+                        </div>
+                        {
+                            sendType != 'all' && <label>Target instance</label>
+                        }
+                        {
+                            sendType != 'all' && <AsyncSelect
+                                key={sendType}
+                                styles={selectStylePaddingZero}
+                                loadOptions={loadAsync}
+                                defaultOptions
+                                cacheOptions
+                                value={target}
+                                placeholder="Select From"
+                                onChange={setTarget}
+                            />
+                        }
+                        </div>
+                    </div>
                 </form>
             </section>
             <footer className="form-footer org-form__footer">
                 <button className="btn btn-secondary" onClick={onClear}>Discard</button>
-                <button className="primary-btn" onClick={handleSubmit}>Add</button>
+                <button className="primary-btn" onClick={handleSubmit}>Send</button>
             </footer>
         </section>
     )

@@ -18,6 +18,9 @@ io.on('connection', function (socket) {
         console.log("success donation!")
         socket.emit('donation', data)
     });
+    socket.on("*", function(data) {
+    	socket.emit('something', data)
+    })
 });
 
 http.listen(5000, '127.0.0.1', function() {

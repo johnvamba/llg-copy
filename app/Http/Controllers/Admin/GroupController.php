@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\GroupResource;
+use App\Http\Resources\Async\GeneralResource;
 use App\Http\Resources\Mini\UserResource;
 use Illuminate\Support\Facades\Mail;
 
@@ -51,6 +52,18 @@ class GroupController extends Controller
     public function inviteUser()
     {
 
+    }
+
+    public function async(Request $request) 
+    {
+        $group = Group::latest();
+        
+        if($search = $request->get('search'))
+            $group->where('name', 'like', '%'.$search.'%');
+
+        // GroupResource::setConversion('listing');
+
+        return GeneralResource::collection($group->paginate());
     }
 
     /**
