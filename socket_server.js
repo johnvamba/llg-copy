@@ -3,7 +3,7 @@ var http = require('http').createServer(app);
 const cors = require('cors');
 var io = require('socket.io')(http, {
     cors:true,
- 	origins:["http://neuma.test"],
+ 	origins:["http://neuma.test", 'http://127.0.0.1', 'https://dev.lovelivesgenerously.demosite.ninja', 'https://admin.neuma.church'],
 });
 
 
@@ -23,6 +23,6 @@ io.on('connection', function (socket) {
     })
 });
 
-http.listen(5000, '127.0.0.1', function() {
-    console.log(`listening on http://127.0.0.1:5000`);
+http.listen(5000, function() {
+    console.log(`listening on http://127.0.0.1:5000`, http);
 });
