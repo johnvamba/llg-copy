@@ -18,6 +18,7 @@ use App\NeedMet;
 use App\Tag;
 use App\Jobs\Mail\NeedStatus;
 use App\Http\Resources\Mini\UserResource;
+use App\Http\Resources\Async\GeneralResource;
 use App\Http\Resources\NeedResource;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
@@ -100,6 +101,27 @@ class NeedsController extends Controller
             'current' => $additional->current ?? 0,
             'past' => $additional->past ?? 0,
         ]);
+    }
+
+    public function async(Request $request)
+    {
+        $needs = Need::latest();
+
+        if($title = $request->get('title')){
+            $needs->where('title', 'like', "%".$title."%");
+        }
+
+        if($type = $request->get('type')) {
+            $needs->whereHas('type', function($t) use ($type) {
+                if(is_array($type)) {
+                    $t->whereIn('needs_types.name', $type);
+                } else {
+                    $t->where('needs_types.name', $type);
+                }
+            });
+        }
+
+        return GeneralResource::collection($needs->paginate());
     }
 
     /**

@@ -88,6 +88,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('needs/types', 'NeedsController@types');
         Route::get('needs/graph', 'NeedsController@needCountOnMonths');
 
+        Route::get('needs/async', 'NeedsController@async');
         Route::resource('needs', 'NeedsController')->names([
             'index' => 'adminneeds.index',
             'create' => 'adminneeds.create',
@@ -100,6 +101,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('needs/{need}/contributors', 'NeedsController@contributors');
         Route::post('needs/{need}/approve', 'NeedsController@approve');
         Route::post('needs/{need}/disapprove', 'NeedsController@disapprove');
+
+        Route::resource('pushs', 'PushNotificationController');
 
         Route::get('organizations/async', 'OrganizationController@async');
         Route::get('organizations/{organization}/members', 'OrganizationController@members');
@@ -162,6 +165,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         ]);
         Route::post('stories/{story}/toggle', 'StoryController@toggle');
 
+        Route::get('groups/async', 'GroupController@async');
         Route::get('groups/invite', 'GroupController@searchUserInvite');
         Route::get('groups/{group}/members', 'GroupController@members');
         Route::post('groups/invite', 'GroupController@initUserInvite');

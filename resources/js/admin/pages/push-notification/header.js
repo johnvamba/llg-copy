@@ -1,13 +1,17 @@
 import React from 'react';
 import OffersPlus from '../../../svg/offers-plus';
+import { Link } from 'react-router-dom';
 
 const PushHeader = ({ tab = 'all', handleTab, handleForm, counts = {} }) =>{
     return(
         <section className="push-notif-header offers-create h-16 flex flex-row jutify-center items-center border-b bg-white px-12">
             <ul className="nav-tab">
-                <li className={`nav-tab-item ${tab=='all' ? 'active' : ''}`} onClick={()=>handleTab('all')}>All ({ counts.all || 0 })</li>
-                <li className={`nav-tab-item ${tab=='scheduled' ? 'active' : ''}`} onClick={()=>handleTab('scheduled')}>Scheduled ({ counts.scheduled || 0 })</li>
-                <li className={`nav-tab-item ${tab=='sent' ? 'active' : ''}`} onClick={()=>handleTab('sent')}>Sent ({ counts.sent || 0 })</li>
+                <li className={`nav-tab-item ${tab=='all' ? 'active' : ''}`}>
+                    <Link to="/notifications">All ({ counts.all || 0 })</Link></li>
+                <li className={`nav-tab-item ${tab=='scheduled' ? 'active' : ''}`} >
+                    <Link to="/notifications/scheduled">Scheduled ({ counts.scheduled || 0 })</Link></li>
+                <li className={`nav-tab-item ${tab=='sent' ? 'active' : ''}`}>
+                    <Link to="/notifications/sent">Sent ({ counts.sent || 0 })</Link></li>
             </ul>
             {/*<ul className="flex items-center">
                 <li className="active">

@@ -65,6 +65,37 @@ export const loadOrganization = (name = '', callback, options = {}, catchFunc = 
 	}).catch(catchFunc)
 }
 
+export const loadGroups = (name = '', callback, options = {}, catchFunc = (err)=>{}) => {
+  api.get('/api/web/groups/async', {
+    params: {
+      name,
+      ...options
+    },
+    cache: {
+      clearCache: true,
+      exclude: { query: false },
+    }, 
+  }).then(({data})=>{
+    callback(data.data)
+  }).catch(catchFunc)
+}
+
+export const loadNeeds = (title = '', callback, options = {}, catchFunc = (err)=>{}) => {
+  api.get('/api/web/needs/async', {
+    params: {
+      title,
+      ...options
+    },
+    cache: {
+      clearCache: true,
+      exclude: { query: false },
+    }, 
+  }).then(({data})=>{
+    callback(data.data)
+  }).catch(catchFunc)
+}
+
+
 export const loadCampus = (name = '', callback, options = {}, catchFunc = (err)=>{}) => {
   api.get('/api/web/campuses/async', {
     params: {
