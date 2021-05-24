@@ -163,7 +163,7 @@ class GroupController extends Controller
         //load other parts here
         $group->loadMissing('campus');
 
-        GroupResource::setConversion('view');
+        GroupResource::setConversion('photo');
 
         return new GroupResource($group);
     }
