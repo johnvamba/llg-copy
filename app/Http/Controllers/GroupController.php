@@ -530,7 +530,7 @@ class GroupController extends Controller
                     ->where('status', 'approved');
             }])
             ->where('id', $id)
-            ->first();
+            ->firstorFail();
 
         if ($group) {
             $group['isJoined'] = 0;
