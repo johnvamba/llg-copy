@@ -300,9 +300,11 @@ class NeedsController extends Controller
 
     public function contributors(Need $need)
     {
+        // \DB::enableQueryLog();
         $need->loadMissing([
-            'contributors' => fn($contri) => $contri->withoutGlobalScopes()->with('profile')->select(["*", "need_mets.created_at as custom_date"])]);
+            'contributors' => fn($contri) => $contri->withoutGlobalScopes()->with('profile')->select(["users.*", "need_mets.created_at as custom_date"])]);
 
+        // dd(\DB::getQueryLog(), $need->contributors);
         return UserResource::collection($need->contributors);
     }
 
