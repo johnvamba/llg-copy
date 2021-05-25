@@ -50,7 +50,7 @@ class NeedsController extends Controller
             ]);
 
         if (!empty($filters)) {
-            if (count($filters['type']) > 0) {
+            if (array_key_exists('type', $filters) && count($filters['type']) > 0) {
                 $needs->whereIn('needs_type_id', $filters['type'])
                     ->orWhereIn('id', $needIds);
             }
