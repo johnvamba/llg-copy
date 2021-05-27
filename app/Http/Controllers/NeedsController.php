@@ -363,7 +363,7 @@ class NeedsController extends Controller
             
             dispatch(new NeedMetMailer($need, auth()->user(), 1));
 
-            return $needMet;
+            return $nm;
         });
 
         return response()->json($result);
