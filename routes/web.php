@@ -38,7 +38,7 @@ Route::group([
 	Route::get('reports', 'TestControl@reports');
 });
 
-Route::get('/admin/invite', 'Admin\EmailController@orgInvite');
+Route::get('/admin/invite', 'Admin\EmailControllers@orgInvite');
 
 Route::get('/needs/print', 'Admin\Dashboard');
 

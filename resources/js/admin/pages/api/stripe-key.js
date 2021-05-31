@@ -55,7 +55,7 @@ const StripeKey = () => {
     return(
         <div className="stripe-container">
             <header className="flex items-center justify-between  mb-2">
-                <h2 className="title">Organization Stripe Key</h2>
+                <h2 className="title">Organisation Stripe Key</h2>
             </header>
             <section className="form-container mb-4">
                 <div className="form-group">

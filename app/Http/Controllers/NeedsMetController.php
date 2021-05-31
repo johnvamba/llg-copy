@@ -59,7 +59,7 @@ class NeedsMetController extends Controller
             ->where('status', 'in progress')
             ->latest()
             ->first();
-
+        
         if (!$goal) {
             return response()->json([
                 'message' => "You have not set your goal yet."

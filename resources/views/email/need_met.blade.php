@@ -85,12 +85,12 @@
 				/>
 				
 				<strong>
-					Hi {{ optional($user)->name ?? 'User' }},
+					Hi {{ optional($receiver)->name ?? 'User' }},
 				</strong>
 
 				@if(optional($need->type)->name == 'Volunteer')
 				<p>
-					We just wanted to let you know that {{optional($volunteer)->name ?? 'Volunteer-name'}} <span>({{ optional($volunteer)->email ?? 'volunteer-email'}})</span> has just volunteered to be in your {{ $need->title ?? 'need-title'}}t
+					We just wanted to let you know that {{optional($user)->name ?? 'Volunteer-name'}} <span>({{ optional($user)->email ?? 'volunteer-email'}})</span> has just volunteered to be in your {{ $need->title ?? 'need-title'}}t
 				</p>
 
 				<div class="need-container">
@@ -107,7 +107,7 @@
 				</div>
 				@elseif(optional($need->type)->name == 'Donation')
 				<p>
-					We just wanted to let you know that {{optional($volunteer)->name ?? 'Volunteer-name'}} <span>({{ optional($volunteer)->email ?? 'volunteer-email'}})</span> has just made a donation of ${{ numberformat($transaction ?? 0, 2)}} toward {{ $need->title ?? 'need-title'}}.
+					We just wanted to let you know that {{optional($user)->name ?? 'Donor-name'}} <span>({{ optional($user)->email ?? 'volunteer-email'}})</span> has just made a donation of ${{ numberformat($transaction ?? 0, 2)}} toward {{ $need->title ?? 'need-title'}}.
 				</p>
 
 				<div class="need-container">

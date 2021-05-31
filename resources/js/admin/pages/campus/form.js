@@ -97,7 +97,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
             const data_id = data.id;
             submitPromise.then(({data})=>{
                 afterSubmit(data.data);
-                swalSuccess(data_id ? "Organization has been updated": 'New Organization Created!')
+                swalSuccess(data_id ? "Organisation has been updated": 'New Organisation Created!')
 
                 handleForm({}, false, false)
             }).catch(({response})=>{

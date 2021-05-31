@@ -59,6 +59,7 @@ Route::get('needs-mets/group/{group}', 'NeedsMetController@getGroupNeedsMet');
 Route::get('needs-mets/{need}/volunteers', 'NeedsMetController@getNeedsVolunteer');
 
 /** Organization */
+Route::get('organizations/search', 'OrganizationController@getSearchOrganization');
 Route::get('organization/featured', 'OrganizationController@getFeaturedOrganizations');
 Route::post('organizations/nearby/{lat}/{lng}', 'OrganizationController@nearby')->middleware('datafilter');
 Route::get('organizations/page/{page?}', 'OrganizationController@index');
@@ -69,11 +70,13 @@ Route::get('featured/stories', 'StoryController@featuredStory');
 Route::get('stories/recommended', 'StoryController@recommended');
 Route::get('stories/page/{page?}', 'StoryController@index');
 Route::get('stories/{story}/comments', 'StoryController@getComments');
+Route::get('stories/search/{keyword}/page/{page?}', 'StoryController@searchStory');
 
 /** Group */
+Route::get('groups/search', 'GroupController@getSearchGroup');
+Route::get('groups/{groupId}', 'GroupController@show');
 Route::get('groups/discover/page/{page?}', 'GroupController@getDiscoverGroups');
 Route::post('groups/suggested/nearby/{lat}/{lng}', 'GroupController@suggestedNearby');
-Route::resource('groups', 'GroupController');
 
 /** Invoice */
 Route::post('invoice/recent/donors', 'InvoiceController@getRecentDonors');
@@ -85,6 +88,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('needs/types', 'NeedsController@types');
         Route::get('needs/graph', 'NeedsController@needCountOnMonths');
 
+        Route::get('needs/async', 'NeedsController@async');
         Route::resource('needs', 'NeedsController')->names([
             'index' => 'adminneeds.index',
             'create' => 'adminneeds.create',
@@ -97,6 +101,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::get('needs/{need}/contributors', 'NeedsController@contributors');
         Route::post('needs/{need}/approve', 'NeedsController@approve');
         Route::post('needs/{need}/disapprove', 'NeedsController@disapprove');
+
+        Route::resource('pushs', 'PushNotificationController');
 
         Route::get('organizations/async', 'OrganizationController@async');
         Route::get('organizations/{organization}/members', 'OrganizationController@members');
@@ -159,6 +165,7 @@ Route::group(['middleware' => ['auth:api']], function () {
         ]);
         Route::post('stories/{story}/toggle', 'StoryController@toggle');
 
+        Route::get('groups/async', 'GroupController@async');
         Route::get('groups/invite', 'GroupController@searchUserInvite');
         Route::get('groups/{group}/members', 'GroupController@members');
         Route::post('groups/invite', 'GroupController@initUserInvite');
@@ -248,11 +255,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     /** Stories resource module */
     Route::post('story/lists', 'StoryController@getStories');
-    Route::get('stories/recommended', 'StoryController@recommended');
     Route::post('stories/{story}/appreciate', 'StoryController@Appreciate');
-    Route::get('stories/search/{keyword}/page/{page?}', 'StoryController@searchStory');
     Route::post('stories/{story}/comments', 'StoryController@addComment');
-    Route::get('stories/page/{page?}', 'StoryController@index');
     Route::resource('stories', 'StoryController');
 
     /** Group invite resource module */
@@ -274,7 +278,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('groups/{group}/participate', 'GroupController@addParticipant');
     Route::get('groups/{group}/join-request', 'GroupController@getJoinRequest');
     Route::get('groups/messages/{group}', 'GroupController@messages');
-    Route::get('groups/discover/page/{page?}', 'GroupController@getDiscoverGroups');
     Route::post('groups/message/{group}', 'GroupController@addMessage');
     Route::resource('groups', 'GroupController');
 

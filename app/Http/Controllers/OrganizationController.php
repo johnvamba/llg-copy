@@ -10,6 +10,7 @@ use App\Http\Requests\OrganizationStoreRequest;
 use Illuminate\Http\Request;
 use App\Need;
 use App\Group;
+use App\Campus;
 use App\Organization;
 use App\OrganizationCredential;
 use App\OrganizationHasCategory;
@@ -136,6 +137,19 @@ class OrganizationController extends Controller
             })->with('categories');
         }
 
+        $campuses = Campus::select('campuses.*')
+            ->selectRaw('( 6371 * acos( cos( radians(?) ) 
+                * cos( radians( lat ) ) * cos( radians( lng ) 
+                - radians(?) ) + sin( radians(?) ) 
+                * sin( radians( lat ) ) ) ) AS distance', 
+                [$lat, $lng, $lat])
+            ->orderBy('distance')->get();
+        
+        foreach($campuses as $campus) {
+            $campus['type'] = 'campus';
+            $campus['photo'] = $campus->getFirstMediaUrl();
+        } 
+
         $orgs = $fetchOrgs->orderBy('distance')->get();
 
         foreach($orgs as $org) {
@@ -167,7 +181,7 @@ class OrganizationController extends Controller
             $group['photo'] = $group->getFirstMediaUrl('photo');
         } 
 
-        $merged = $collections->merge($orgs)->merge($groups);
+        $merged = $collections->merge($orgs)->merge($campuses)->merge($groups);
 
         $results = $merged->sortBy('distance');
 
@@ -303,6 +317,45 @@ class OrganizationController extends Controller
             ->count();
 
         return response()->json($org);
+    }
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getSearchOrganization(Request $request)
+    {
+        $page = $request->page ?: 1;
+
+        $organizations = Organization::with('categories', 'categories');
+
+        if ($request->keyword != '') {
+            $organizations = $organizations->where('name', 'like', '%'.$request->keyword.'%');
+        }
+
+        $results = $organizations->latest()
+            ->paginate(10, ['*'], 'search_organization', $page);
+
+        foreach($results as $result) {
+            $result->getMedia('photo');
+
+            $result['photo'] = $result->getFirstMediaUrl('photo');
+            $result['cover_photo'] = $result->getFirstMediaUrl('banner');
+                
+            $result['activeNeeds'] = Need::where('organization_id', $result->id)
+                ->whereNotNull('approved_by')
+                ->whereRaw('raised < goal')
+                ->count();
+
+            $result['pastNeeds'] = Need::where('organization_id', $result->id)
+                ->whereNotNull('approved_by')
+                ->whereRaw('raised >= goal')
+                ->count();
+        }
+
+        return response()->json($results);
     }
 
     /**
