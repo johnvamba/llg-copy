@@ -18,6 +18,8 @@ Route::get('/admin/organizations/requests/{organization}', 'Admin\AppFile')->nam
 Route::get('/account', 'Admin\AppFile')->middleware('signed')->name('complete.account');
 Route::get('/expired', 'Admin\AppFile')->name('web.expired');
 
+Route::get('/login', 'Admin\AppFile')->name('web.login');
+
 Route::group([
 	'prefix' => 'test'
 ], function() {
@@ -33,11 +35,15 @@ Route::group([
 	Route::get('needreject', 'TestControl@needReject');
 	Route::get('orgapprove', 'TestControl@orgApprove');
 	Route::get('orgreject', 'TestControl@orgReject');
+	Route::get('reports', 'TestControl@reports');
 });
 
 Route::get('/admin/invite', 'Admin\EmailControllers@orgInvite');
 
 Route::get('/needs/print', 'Admin\Dashboard');
+
+Route::get('/needs/print2', 'Admin\Dashboard@test');
+
 
 Route::view('/{path1?}/{path2?}/{path3?}/{path4?}/{path5?}', 'app');
 

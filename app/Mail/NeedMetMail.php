@@ -53,7 +53,7 @@ class NeedMetMail extends Mailable
                 'need' => $this->need,
                 'user' => $this->user,
                 'transaction' => $this->transaction,
-                'receiver' = $this->to
+                'receiver' => $this->to
             ]);
     }
 }

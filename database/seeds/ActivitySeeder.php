@@ -19,7 +19,7 @@ class ActivitySeeder extends Seeder
      */
     public function run()
     {
-        $needs = Need::all()
+        $needs = Need::inRandomOrder()->take(5)
         ->each(function($need) {
             $step = rand(1, 3);
 
