@@ -62,7 +62,7 @@ class AuthController extends Controller
 
         if (!$user) {
             return response()->json([
-                'mobile_number' => 'The mobile number is not exist.'
+                'mobile_number' => 'The mobile number does not exist.'
             ], 422);
         }
 
