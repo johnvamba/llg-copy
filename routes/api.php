@@ -42,7 +42,7 @@ Route::group(['middleware' => 'wpcors', 'prefix' => 'offsite', 'namespace' => 'A
 Route::post('otps/sms', 'OTPController@sendOTP');
 Route::post('otps/sms/verify', 'OTPController@verifyOTP');
 Route::post('otps/sms/resend', 'OTPController@resendOTP');
-Route::resource('otps', 'OTPController');
+// Route::resource('otps', 'OTPController');
 
 Route::post('account', 'Admin\CompleteAccount')->name('post.complete.account');
 
