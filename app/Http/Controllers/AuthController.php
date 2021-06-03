@@ -60,6 +60,15 @@ class AuthController extends Controller
             ->where('mobile_number', $mobileNumber)
             ->first();
 
+        if(!$user) {
+            $user = User::with('profile')
+                ->select()
+                ->selectRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(users.mobile_number, '+', ''), ' ', ''), '(', ''), ')', ''), '-', '') as common_phone")
+                ->groupBy('common_phone')
+                ->having('common_phone', '=', preg_replace('/\D/i', '', $mobileNumber))
+                ->first();
+        }
+
         if (!$user) {
             return response()->json([
                 'mobile_number' => 'The mobile number does not exist.'
