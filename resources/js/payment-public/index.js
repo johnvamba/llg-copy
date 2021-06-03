@@ -25,8 +25,11 @@ import 'pretty-checkbox';
 import StripeElement from './stripeelement'
 import axios from 'axios'
 import io from "socket.io-client";
-const socket = io.connect({
+const socket = io.connect('https://dev.lovelivesgenerously.demosite.ninja:4443',{
     withCredentials: false,
+    transports: [ 'polling'],
+    forceNew: true
+
 });
 
 import ThankYouImg from '../../assets/images/ThankYou.png';
