@@ -34,6 +34,14 @@ class OTPController extends Controller
     
         $user = User::where('mobile_number', $request->mobileNumber)->first();
 
+        if(!$user) {
+            $user = User::select()
+                ->selectRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(users.mobile_number, '+', ''), ' ', ''), '(', ''), ')', ''), '-', '') as common_phone")
+                ->groupBy('common_phone')
+                ->having('common_phone', '=', preg_replace('/\D/i', '', $request->mobileNumber))
+                ->first();
+        }
+
         if (!$user) {
             return response()->json([
                 'mobile_number' => 'The mobile number is not exist.'
@@ -88,6 +96,14 @@ class OTPController extends Controller
 
         $otp = Otp::where('mobile_number', $request->mobileNumber)->first();
 
+        if(!$otp) {
+            $otp = Otp::select()
+                ->selectRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(otps.mobile_number, '+', ''), ' ', ''), '(', ''), ')', ''), '-', '') as common_phone")
+                ->groupBy('common_phone')
+                ->having('common_phone', '=', preg_replace('/\D/i', '', $request->mobileNumber))
+                ->first();
+        }
+
         if (Hash::check($request->otp, $otp->otp)) {
             if ($date->lessThanOrEqualTo($otp->expiry)) {
                 $user = User::with('profile')->find($otp->user_id);
@@ -121,6 +137,14 @@ class OTPController extends Controller
         $sns = AWS::createClient('sns');
     
         $user = User::where('mobile_number', $request->mobileNumber)->first();
+
+        if(!$user) {
+            $user = User::select()
+                ->selectRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(users.mobile_number, '+', ''), ' ', ''), '(', ''), ')', ''), '-', '') as common_phone")
+                ->groupBy('common_phone')
+                ->having('common_phone', '=', preg_replace('/\D/i', '', $request->mobileNumber))
+                ->first();
+        }
 
         if (!$user) {
             return response()->json([
