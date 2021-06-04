@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     // CardElement,
     CardNumberElement,
@@ -50,18 +50,16 @@ const StripeElement = ({
     errors,
     onClose
 }) => {
-
     const elements = useElements();
 
     if (loading)
         return <LoadingScreen title="Loading Credentials" />
 
-    const onChangeDonationType = (charge = amount, type) => {
-        if (charge == '' && type == 'percentage') {
+    const onChangeDonationType = (charge, type) => {
+        if (charge == '' && amountType == 'percentage') {
             charge = 0;
         }
-        setAmountType(charge, type)
-        console.log('updating', charge, type)
+        setAmountType(charge, amountType)
     }
 
     const progress = () => {
@@ -126,7 +124,7 @@ const StripeElement = ({
                                         placeholder="value"
                                         value={amount}
                                         decimalsLimit={2}
-                                        onValueChange={(value) => onChangeDonationType(value, amountType)}
+                                        onValueChange={onChangeDonationType}
                                     /> 
                                     <span
                                         onClick={() => onChangeDonationType(10, 'percentage')}
@@ -166,8 +164,8 @@ const StripeElement = ({
                         <div className={`form-group border-b border-gray-400`}>
                             <label htmlFor="expiry">Name on Card</label>
                             <input
-                                defaultValue={cardHolder}
-                                value={cardHolder}
+                                defaultValue={cardHolder || ''}
+                                value={cardHolder || ''}
                                 onChange={e => setCardHolder(e.target.value)}
                             />
                         </div>

@@ -25,7 +25,7 @@ import 'pretty-checkbox';
 import StripeElement from './stripeelement'
 import axios from 'axios'
 import io from "socket.io-client";
-const socket = io.connect('https://dev.lovelivesgenerously.demosite.ninja:4443',{
+const socket = io.connect( process.env.MIX_APP_URL +':4443',{
     withCredentials: false,
     transports: [ 'polling'],
     forceNew: true
@@ -86,7 +86,7 @@ const PublicPayment = () => {
     //     }
     // }, [stripe])
 
-    const changeDonationType = (charge = amount, type) => {
+    const changeDonationType = (charge = 0, type) => {
         if (type == 'percentage') {
             setAmount(parseInt(charge));
             setAmountType('percentage');
