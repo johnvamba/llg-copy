@@ -44,7 +44,7 @@ class OTPController extends Controller
 
         if (!$user) {
             return response()->json([
-                'mobile_number' => 'The mobile number is not exist.'
+                'mobile_number' => 'The mobile number does not exist.'
             ], 422);
         }
 
@@ -120,7 +120,7 @@ class OTPController extends Controller
             }
 
             return response()->json([
-                'message' => 'Your verification code is expired.'
+                'message' => 'Your verification code has expired.'
             ], 422);
         }
 
@@ -148,7 +148,7 @@ class OTPController extends Controller
 
         if (!$user) {
             return response()->json([
-                'mobile_number' => 'The mobile number is not exist.'
+                'mobile_number' => 'The mobile number does not exist.'
             ], 422);
         }
 
