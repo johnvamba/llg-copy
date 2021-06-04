@@ -160,9 +160,19 @@ const PublicPayment = () => {
                 amount: amount,
                 userId: url.searchParams.get('user')
             })
+            if(window.ReactNativeWebView) {
+                window.ReactNativeWebView.postMessage('success donation')
+            } else {
+                window.close();
+            }
+
         } else {
             socket.emit("success donation", {data:'data here'});
-            console.log('not imiiting?', socket)
+            if(window.ReactNativeWebView) {
+                window.ReactNativeWebView.postMessage('success donation')
+            } else {
+                window.close();
+            }
         }
     }
 

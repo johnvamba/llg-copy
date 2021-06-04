@@ -8,9 +8,9 @@ import {
     useStripe,
     useElements,
 } from '@stripe/react-stripe-js';
-//import CurrencyInput from 'react-currency-input-field';
+import CurrencyInput from 'react-currency-input-field';
 import LoadingScreen from '../components/LoadingScreen'
-import CurrencyInput from 'react-currency-input';
+// import CurrencyInput from 'react-currency-input';
 
 
 const ELEMENT_OPTIONS = {
@@ -60,13 +60,8 @@ const StripeElement = ({
         if (charge == '' && type == 'percentage') {
             charge = 0;
         }
-        setAmountType(parseFloat(charge).toFixed(2), type)
-    }
-
-    const updateFixed = (e) => {
-        const { value } = e.target;
-        if(value > 0)
-            onChangeDonationType(value, 'fixed');
+        setAmountType(charge, type)
+        console.log('updating', charge, type)
     }
 
     const progress = () => {
@@ -124,27 +119,15 @@ const StripeElement = ({
                             <label>Donation Amount</label>
                             {need.type == 'Fundraise' ? (
                                 <div className="input-container">
-                                    {/* <CurrencyInput
+                                    <CurrencyInput
                                         id="input-example"
                                         className="input-field"
                                         name="amount"
                                         placeholder="value"
-                                        defaultValue={amount}
                                         value={amount}
                                         decimalsLimit={2}
                                         onValueChange={(value) => onChangeDonationType(value, amountType)}
-                                    /> */}
-                                    {
-                                        amountType == 'fixed' ? 
-                                        <input className="input-field" type='number' value={amount} onChange={updateFixed} /> :
-                                        <CurrencyInput
-                                            precision={'0'}
-                                            defaultValue={amount}
-                                            value={amount}
-                                            onChangeEvent={(event, maskValue, floatValue) => onChangeDonationType(maskValue, amountType)}
-                                            className="input-field"
-                                        />
-                                    }
+                                    /> 
                                     <span
                                         onClick={() => onChangeDonationType(10, 'percentage')}
                                         className={`absolute right-0 border ${amountType == 'percentage' && 'active-donation-type'}  rounded-full py-2 px-3`}
