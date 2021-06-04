@@ -3,7 +3,7 @@ var http = require('http').createServer(app);
 const cors = require('cors');
 var io = require('socket.io')(http, {
 	    cors:true,
-            origins:['http://neuma.test', 'http://127.0.0.1', 'https://dev.lovelivesgenerously.demosite.ninja', 'https://admin.neuma.church','https://dev.lovelivesgenerously.demosite.ninja:4443'],
+            origins:['http://neuma.test', 'http://127.0.0.1', 'https://dev.lovelivesgenerously.demosite.ninja', 'https://dev.lovelivesgenerously.demosite.ninja:4443', 'https://admin.neuma.church', 'https://admin.neuma.church:4443'],
 });
 
 
