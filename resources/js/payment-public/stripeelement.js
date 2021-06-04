@@ -63,6 +63,12 @@ const StripeElement = ({
         setAmountType(parseFloat(charge).toFixed(2), type)
     }
 
+    const updateFixed = (e) => {
+        const { value } = e.target;
+        if(value > 0)
+            onChangeDonationType(value, 'fixed');
+    }
+
     const progress = () => {
         return (Math.floor(need.raised * 100) / need.goal).toFixed(2) + '%';
     }
@@ -128,13 +134,17 @@ const StripeElement = ({
                                         decimalsLimit={2}
                                         onValueChange={(value) => onChangeDonationType(value, amountType)}
                                     /> */}
-                                    <CurrencyInput
-                                        precision={amountType == 'fixed' ? '2' : '0'}
-                                        defaultValue={amount}
-                                        value={amount}
-                                        onChangeEvent={(event, maskValue, floatValue) => onChangeDonationType(maskValue, amountType)}
-                                        className="input-field"
-                                    />
+                                    {
+                                        amountType == 'fixed' ? 
+                                        <input className="input-field" type='number' value={amount} onChange={updateFixed} /> :
+                                        <CurrencyInput
+                                            precision={'0'}
+                                            defaultValue={amount}
+                                            value={amount}
+                                            onChangeEvent={(event, maskValue, floatValue) => onChangeDonationType(maskValue, amountType)}
+                                            className="input-field"
+                                        />
+                                    }
                                     <span
                                         onClick={() => onChangeDonationType(10, 'percentage')}
                                         className={`absolute right-0 border ${amountType == 'percentage' && 'active-donation-type'}  rounded-full py-2 px-3`}
