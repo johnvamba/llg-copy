@@ -42,7 +42,7 @@ class StoryPublishing implements ShouldQueue
         $story = $this->story;
 
         $members->each(function($user) use ($story) {
-            dispatch(fn() => Mail::to($user)->send(new StoryPublished($story)) );
+            Mail::to($user)->send(new StoryPublished($story));
         });
     }
 
