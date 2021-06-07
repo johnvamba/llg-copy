@@ -36,7 +36,9 @@ class OfferApprove extends Mailable
         $subject = $this->accepted ? "Your Offer Request have been Approved!" : "Your Offer Request has not been approved!";
         $view = $this->accepted ? 'email.offer_approve' : "email.offer_reject";
 
-        return $this->subject($subject)
+        return $this
+            ->from(config('mail.from.address'), config('mail.from.name'))
+            ->subject($subject)
             ->view($view)
             ->with([
                 'offer' => $this->offer,

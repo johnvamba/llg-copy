@@ -36,7 +36,9 @@ class OrgReportMail extends Mailable
      */
     public function build()
     {
-        return $this->subject("Your Weekly Report!")
+        return $this
+            ->from(config('mail.from.address'), config('mail.from.name'))
+            ->subject("Your Weekly Report!")
             ->view('email.weekly_report')
             ->with( 
                 $this->calculate() + [

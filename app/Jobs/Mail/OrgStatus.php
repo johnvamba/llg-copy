@@ -51,7 +51,7 @@ class OrgStatus implements ShouldQueue
         $tosend = OrgInvites::where('org_id', $org->id)->get();
         if($this->approved) {
             $tosend->each(function($inv) use ($org){
-                dispatch(fn() => Mail::to(optional($inv)->email)->send(new OrgAccepted($org)));
+                Mail::to(optional($inv)->email)->send(new OrgAccepted($org));
                 dispatch(new MailInvite(optional($inv)->email, $org, $inv));
             });
         } else {

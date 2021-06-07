@@ -48,11 +48,11 @@ class NeedStatus implements ShouldQueue
         $need = $this->need;
         if($this->approved) {
             $tosend->each(function($user) use ($need){
-                dispatch(fn() => Mail::to($user)->send(new NeedApproved($need)));
+                Mail::to($user)->send(new NeedApproved($need));
             });
         } else {
             $tosend->each(function($user) use ($need){
-                dispatch(fn() => Mail::to($user)->send(new NeedRejected($need)));
+                Mail::to($user)->send(new NeedRejected($need));
             });
         }
 

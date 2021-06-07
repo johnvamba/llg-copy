@@ -35,6 +35,7 @@ class NeedApproved extends Mailable
     public function build()
     {
         return $this
+            ->from(config('mail.from.address'), config('mail.from.name'))
             ->subject("Your Need Request has been approved!")
             ->view('email.need_approve')
             ->with([

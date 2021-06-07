@@ -35,6 +35,7 @@ class OrgAccepted extends Mailable
     public function build()
     {
         return $this
+            ->from(config('mail.from.address'), config('mail.from.name'))
             ->subject("You have been approved!")
             ->view('email.org_approved')
             ->with([

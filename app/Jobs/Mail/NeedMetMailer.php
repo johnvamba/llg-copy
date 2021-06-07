@@ -51,7 +51,7 @@ class NeedMetMailer implements ShouldQueue
         $transaction = $this->transaction;
 
         $tosend->each(function($user) use ($need, $actor, $transaction){
-            dispatch(fn() => Mail::to($user)->send(new NeedMetMail($need, $actor, $transaction)));
+            Mail::to($user)->send(new NeedMetMail($need, $actor, $transaction));
         });
     }
 
