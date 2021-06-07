@@ -84,8 +84,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja'),
-        'name' => env('MAIL_FROM_NAME', 'Love Lives Generously'),
+        'address' => env('MAIL_FROM_ADDRESS', 'info@neuma.church'),
+        'name' => env('MAIL_FROM_NAME', 'Neuma Care'),
     ],
 
     /*
