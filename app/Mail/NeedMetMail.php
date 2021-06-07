@@ -47,7 +47,9 @@ class NeedMetMail extends Mailable
                 $subject = 'New Donation';
                 break;
         }
-        return $this->view('email.need_met')
+        return $this
+            ->from(config('mail.from.address'), config('mail.from.name'))
+            ->view('email.need_met')
             ->subject($subject)
             ->with([
                 'need' => $this->need,

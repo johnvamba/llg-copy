@@ -159,8 +159,6 @@ const PublicPayment = () => {
                 amount: amount,
                 userId: url.searchParams.get('user')
             })
-<<<<<<< HEAD
-=======
             if(window.ReactNativeWebView) {
                 window.ReactNativeWebView.postMessage('success donation')
             } else {
@@ -174,7 +172,6 @@ const PublicPayment = () => {
             } else {
                 window.close();
             }
->>>>>>> 32cf347f789feaa5a2d331125fe12bdea0d957af
         }
     }
 

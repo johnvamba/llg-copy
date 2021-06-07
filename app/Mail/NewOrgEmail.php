@@ -33,10 +33,11 @@ class NewOrgEmail extends Mailable
      */
     public function build()
     {
-         $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
-            ?? 'info@lovelivesgenerously.demosite.ninja';
+         // $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
+         //    ?? 'info@lovelivesgenerously.demosite.ninja';
         $organization = $this->org;
-        return $this//->from($from)
+        return $this
+            ->from(config('mail.from.address'), config('mail.from.name'))
             ->subject("A new organisation has signed up")
             ->view('email.org_new')
             ->with([

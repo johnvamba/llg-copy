@@ -29,10 +29,11 @@ class GroupInvitation extends Mailable
      */
     public function build()
     {
-         $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
-            ?? 'info@lovelivesgenerously.demosite.ninja';
+         // $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
+         //    ?? 'info@lovelivesgenerously.demosite.ninja';
             
-        return $this//->from($from)
+        return $this
+            ->from(config('mail.from.address'), config('mail.from.name'))
             ->subject('You are invited to a group')
             ->view('email.group_invite')
             ->with([

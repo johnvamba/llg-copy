@@ -45,7 +45,7 @@ class OrgCreated implements ShouldQueue
             })->get();
         // $campus
         $users->each(function($user) use ($organization){
-            dispatch(fn() => Mail::to($user)->send(new NewOrgEmail($organization)) );
+            Mail::to($user)->send(new NewOrgEmail($organization));
         });
     }
 
