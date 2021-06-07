@@ -25,7 +25,7 @@ import 'pretty-checkbox';
 import StripeElement from './stripeelement'
 import axios from 'axios'
 import io from "socket.io-client";
-const socket = io.connect( process.env.MIX_APP_URL +':4443',{
+const socket = io.connect( process.env.SOCKETIO_URL,{
     withCredentials: false,
     transports: [ 'polling'],
     forceNew: true
