@@ -34,6 +34,7 @@ class GroupController extends Controller
 
         foreach ($groups as $group) {
             $group->getMedia();
+            $group['photo'] = $group->getFirstMediaUrl('photo');
         }
 
         return response()->json($groups);
@@ -104,6 +105,8 @@ class GroupController extends Controller
             ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($groups as $group) {
+            $group['photo'] = $group->getFirstMediaUrl('photo');
+            
             $group['goal'] = Goal::whereHasMorph(
                     'model',
                     ['App\Group'],
