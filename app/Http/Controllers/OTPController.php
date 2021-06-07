@@ -30,6 +30,7 @@ class OTPController extends Controller
      */
     public function sendOTP(Request $request)
     {
+
         $sns = AWS::createClient('sns');
     
         $user = User::where('mobile_number', $request->mobileNumber)->first();
