@@ -14,6 +14,8 @@ use App\Mail\NeedRejected;
 use App\Mail\OrgAccepted;
 use App\Mail\OrgRejected;
 
+use App\Mail\OrgReportMail;
+
 use App\Mail\PasswordReset;
 use App\Mail\StoryPublished;
 
@@ -81,6 +83,14 @@ class TestControl extends Controller
         return (new StoryPublished($story))->to('logicbase.amba@gmail.com');
     }
 
+    public function reports(){
+        $report = Organization::has('needs.mets')->first();
+
+        return new OrgReportMail($report, now()->subWeek(), now());//->to('logicbase.amba@gmail.com');
+        // Mail::to('logicbase.amba@gmail.com')->send(new OrgReportMail($report, now()->subWeek(), now()));
+        // dd('sent');
+    }
+
     public function groupEmail(){
         $group = Group::first();
 
@@ -104,13 +114,31 @@ class TestControl extends Controller
     }
 
     public function tester() {
-        $organization = Organization::find(3);
+        // $organization = Organization::find(3);
+        $mobileNumber = '00123322312';
+        $skipping = false;
 
-        $users = User::unfilter()
-            ->role('admin')
-            ->orWhereHas('campus', function($camp) use ($organization){
-                $camp->whereHas('organizations', fn($org) => $org->where('organizations.id', $organization->id));
-            })->get();
+        $user = User::with('profile')
+            ->where('mobile_number', $mobileNumber)
+            ->first();
+
+
+
+        /*$orgs = Organization::whereHas('needs', function($needs) {
+            $needs->whereHas('mets', function($mets) {
+                $mets->whereBetween('need_mets.created_at', [now()->subWeek(), now()]);
+            });
+        })->whereHas('members')
+        ->with(['members', 'needs.mets'])
+        ->get();*/
+
+        dd($user, $skipping, preg_replace('/\D/i', '', $mobileNumber));
+
+        // $users = User::unfilter()
+        //     ->role('admin')
+        //     ->orWhereHas('campus', function($camp) use ($organization){
+        //         $camp->whereHas('organizations', fn($org) => $org->where('organizations.id', $organization->id));
+        //     })->get();
         // optional($need)->loadMissing(['organization'=>function($org){
         //     $org->withoutGlobalScopes()->with(['members' => fn($m) => $m->unfilter()]);
         // }]);

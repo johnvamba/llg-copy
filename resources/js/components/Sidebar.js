@@ -367,7 +367,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         )
                     }
 
-                    {(roles.name === 'admin' || roles.name === 'campus admin') && false &&
+                    {(roles.name === 'admin' || roles.name === 'campus admin') &&
                         (
                             <div
                                 className={`mt-6 

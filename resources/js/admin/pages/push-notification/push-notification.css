@@ -24,6 +24,7 @@
 }
 .push-form__body{
     margin-top: 20px;
+    max-height: calc(100vh - 260px) !important;
 }
 .push-form.create-form{
     width: 100%;
@@ -121,4 +122,7 @@
     .org-form__footer{
         padding: 15px 0;
     }
+}
+.form-group.p-2.mb-0 > .input-container.time-input {
+    padding-bottom: 10px;
 }

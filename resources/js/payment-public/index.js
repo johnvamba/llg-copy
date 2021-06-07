@@ -25,8 +25,10 @@ import 'pretty-checkbox';
 import StripeElement from './stripeelement'
 import axios from 'axios'
 import io from "socket.io-client";
-const socket = io.connect('http://192.168.1.2:5000/', {
+const socket = io.connect( process.env.MIX_APP_URL +':4443',{
     withCredentials: false,
+    transports: [ 'polling'],
+    forceNew: true
 });
 
 import ThankYouImg from '../../assets/images/ThankYou.png';
@@ -83,7 +85,7 @@ const PublicPayment = () => {
     //     }
     // }, [stripe])
 
-    const changeDonationType = (charge = amount, type) => {
+    const changeDonationType = (charge = 0, type) => {
         if (type == 'percentage') {
             setAmount(parseInt(charge));
             setAmountType('percentage');
@@ -157,6 +159,22 @@ const PublicPayment = () => {
                 amount: amount,
                 userId: url.searchParams.get('user')
             })
+<<<<<<< HEAD
+=======
+            if(window.ReactNativeWebView) {
+                window.ReactNativeWebView.postMessage('success donation')
+            } else {
+                window.close();
+            }
+
+        } else {
+            socket.emit("success donation", {data:'data here'});
+            if(window.ReactNativeWebView) {
+                window.ReactNativeWebView.postMessage('success donation')
+            } else {
+                window.close();
+            }
+>>>>>>> 32cf347f789feaa5a2d331125fe12bdea0d957af
         }
     }
 

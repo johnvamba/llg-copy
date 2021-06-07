@@ -273,7 +273,7 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite, afterSubmit })
             </section>
             <footer className="flex justify-between bg-gray-200 p-3 relative">
                 <h4>
-                    Do you approve this organization?
+                    Do you approve this organisation?
                 </h4>
                 <div className="flex">
                     <button className="flex items-center rounded-full bg-green-400 mr-2 px-3 py-1 text-white" ref={setApproveElement} onClick={()=>togglePopItem(true, approveElement, 'approve')}>

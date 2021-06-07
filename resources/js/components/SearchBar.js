@@ -150,7 +150,7 @@ const SearchBar = () => {
 							{
 	            				(results.organisations && results.organisations.length > 0) &&
 		            			<div className="result-group">
-		            				<h4>Organizations</h4>
+		            				<h4>Organisations</h4>
 		            				<div className="item-results">
 		            					{
 	            							results.organisations.map((i, k) =><div className="item" key={'need'+i.id}>
@@ -159,7 +159,7 @@ const SearchBar = () => {
 			            						{ i.subtitle && <span className="subtitle">{i.subtitle}</span>}
 			            					</div>)
 		            					// <div className="more-item">
-		            					// 	<h6 className="show-more">Show More Organizations</h6>
+		            					// 	<h6 className="show-more">Show More Organisations</h6>
 		            					// </div>
 	            						}
 		            				</div>

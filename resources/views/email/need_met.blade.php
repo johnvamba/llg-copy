@@ -83,14 +83,14 @@
 					alt="image"
 					class="img"
 				/>
-				
+				number_f
 				<strong>
-					Hi {{ optional($user)->name ?? 'User' }},
+					Hi {{ optional($receiver)->name ?? 'User' }},
 				</strong>
 
 				@if(optional($need->type)->name == 'Volunteer')
 				<p>
-					We just wanted to let you know that {{optional($volunteer)->name ?? 'Volunteer-name'}} <span>({{ optional($volunteer)->email ?? 'volunteer-email'}})</span> has just volunteered to be in your {{ $need->title ?? 'need-title'}}t
+					We just wanted to let you know that {{optional($user)->name ?? 'Volunteer-name'}} <span>({{ optional($user)->email ?? 'volunteer-email'}})</span> has just volunteered to be in your {{ $need->title ?? 'need-title'}}t
 				</p>
 
 				<div class="need-container">
@@ -101,13 +101,13 @@
 						</div>
 						<hr>
 						<div class="need-goals">
-							<p>Volunteers: {{ numberformat($need->raised ?? 0, 0)}} <span>Goal: {{ numberformat($need->goal ?? 0, 0)}}</span></p>
+							<p>Volunteers: {{ number_format($need->raised ?? 0, 0)}} <span>Goal: {{ number_format($need->goal ?? 0, 0)}}</span></p>
 						</div>
 					</div>
 				</div>
-				@elseif(optional($need->type)->name == 'Donation')
+				@else
 				<p>
-					We just wanted to let you know that {{optional($volunteer)->name ?? 'Volunteer-name'}} <span>({{ optional($volunteer)->email ?? 'volunteer-email'}})</span> has just made a donation of ${{ numberformat($transaction ?? 0, 2)}} toward {{ $need->title ?? 'need-title'}}.
+					We just wanted to let you know that {{optional($user)->name ?? 'Donor-name'}} <span>({{ optional($user)->email ?? 'volunteer-email'}})</span> has just made a donation of ${{ number_format($transaction ?? 0, 2)}} toward {{ $need->title ?? 'need-title'}}.
 				</p>
 
 				<div class="need-container">
@@ -118,7 +118,7 @@
 						</div>
 						<hr>
 						<div class="need-goals">
-							<p>Volunteers: {{ numberformat($need->raised ?? 0, 0)}} <span>Goal: {{ numberformat($need->goal ?? 0, 0)}}</span></p>
+							<p>Volunteers: {{ number_format($need->raised ?? 0, 0)}} <span>Goal: {{ number_format($need->goal ?? 0, 0)}}</span></p>
 						</div>
 					</div>
 				</div>

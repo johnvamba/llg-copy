@@ -209,7 +209,7 @@ const StoriesForm = ({ data={}, handleForm, afterSubmit, AuthUserReducer }) => {
                                 onChange={setOrganization}
                                 />
                             {
-                                (errors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
+                                (errors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organisation</span>
                             }
                         </div>
                     }

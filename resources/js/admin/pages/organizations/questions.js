@@ -35,10 +35,10 @@ const TabQuestions = ({ acnc= false, fundraiser= false, insured= false, stripe=f
                   <p> Stripe details added </p>
                   { stripe ? <Yes /> : <No /> }
                </li>
-               <li>
+{/*               <li>
                   <p> Benevity Verified </p>
                   { benevity ? <Yes /> : <No /> }
-               </li>
+               </li>*/}
            </ul>
         </section>
     )

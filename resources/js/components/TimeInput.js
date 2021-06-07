@@ -10,7 +10,7 @@ const TimeInput = ({value, onChange}) => {
 	const [init, setInit] = useState(false);
     useEffect(()=>{
     	if(value != '' && typeof value == 'string'){
-    		const regex = /([0-9]{2}):([0-9]{2})\W(AM|PM)/g;
+    		const regex = /([0-9]{2}):([0-9]{2})\W(AM|PM|Am|Pm|am|pm)/g;
     		const check = [...value.matchAll(regex)];
     		if(!init) {
     			// console.log('check??', check);
@@ -63,8 +63,8 @@ const TimeInput = ({value, onChange}) => {
         	<input type="text" ref={refMinute} pattern="[0-9]{2}" placeholder="--" value={minute} 
         	onChange={(e)=>changeMinute(e.target.value)} onBlur={minuteBlur}/>
         </div>
-        <span className={`time-toggle time-am ${meridiem =='AM' ? 'active':''}`} onClick={()=>setMeridiem('AM')}>AM</span>
-        <span className={`time-toggle time-pm ${meridiem =='PM' ? 'active':''}`} onClick={()=>setMeridiem('PM')}>PM</span>
+        <span className={`time-toggle time-am ${meridiem.toUpperCase() =='AM' ? 'active':''}`} onClick={()=>setMeridiem('AM')}>AM</span>
+        <span className={`time-toggle time-pm ${meridiem.toUpperCase() =='PM' ? 'active':''}`} onClick={()=>setMeridiem('PM')}>PM</span>
     </div>
 }
 

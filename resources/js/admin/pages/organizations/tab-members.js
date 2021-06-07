@@ -15,7 +15,7 @@ const TabMembers = ({ members = [], loading = false }) => {
     )
 }
 
-const MemberItem = ({image = null, name='', email='', contact=''}) => {
+const MemberItem = ({image = null, name='', email='', contact='', invite_status = null}) => {
     return (<li>
         <div className="tab-members__left">
             {
@@ -28,6 +28,7 @@ const MemberItem = ({image = null, name='', email='', contact=''}) => {
                 <label>{name}</label>
                 <p>{email}</p>
                 <p>{contact}</p>
+                { invite_status == 'pending' && <p>Invite Pending</p>}
             </div>
         </div>
         <button className="tab-members__right">

@@ -29,7 +29,9 @@ import {
 	Senior,
 	Migrants,
 	Homelessness,
-	Fostercare
+	Fostercare,
+	Mentoring,
+	Admin
 } from './categories'
 
 export const monetary = [
@@ -102,6 +104,16 @@ export const monetary = [
 		name: 'Fostercare',
 		slug: 'fostercare',
 		svg_class: Fostercare
+	},
+	{
+		name: 'Mentoring',
+		slug: 'mentoring',
+		svg_class: Mentoring
+	},
+	{
+		name: 'Admin',
+		slug: 'admin',
+		svg_class: Admin
 	}
 
 ];

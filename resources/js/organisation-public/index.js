@@ -118,6 +118,7 @@ const OrgPub = () => {
 
     const validateTab = (newCount) => {
         let set = {} 
+
         if(newCount < countTab){
             setCountTab(newCount)
             return;
@@ -141,11 +142,15 @@ const OrgPub = () => {
             }
             break;
             case 3:
-            set = {
-                users: (users.length == 0 && !validateEmail(form.email)) ? 'Missing primary contact or email invalid' : null
-            }
-            if(validateEmail(form.email)){
-                addUser()
+            const notEmpty = !_.isEmpty( validateUser() );
+            if( users.length == 0 && notEmpty ) {
+                set = {
+                    users: 'Missing primary contact or email invalid'
+                }
+            } else if (notEmpty) {
+                return;
+            } else {
+                addUser();
             }
             break;
             case 4:
@@ -157,13 +162,13 @@ const OrgPub = () => {
             return {};
         }
         const valid = isValidated(set);
-        // console.log('here', valid, set, errors)
-        if(!_.isEmpty(valid) || !_.isEmpty(errors)){
+        if(!_.isEmpty(valid)){
             setErrors({
                 ...errors,
                 ...valid
             })
-        } else {
+        } else { //page next
+            console.log('set', set)
             setCountTab(newCount)
         }
         return isValidated(set);
@@ -196,9 +201,9 @@ const OrgPub = () => {
             api.post(`/api/org-create`, params)
                 .then(({data})=>{
                 setSubmitting(false)
-                const message = 'Please wait until one of our team can look over and approve your organisation. Once this occurs you will be notified via the email provided with your login details to access your account. In the meantime please head to www.stripe.com to sign up if you are wanting to receive financial donations. For more information how to do this please visit the website https://app.neuma.church/';
+                const message = '<br />Please wait until one of our team can look over and approve your organisation. Once this occurs you will be notified via the email provided with your login details to access your account.<br />In the meantime please head to <a href="https://www.stripe.com">Stripe</a> to sign up if you are wanting to receive financial donations. <br />For more information how to do this please visit the website <a href="https://app.neuma.church/">Neuma Care</a>';
                 swal.fire({
-                    text: `You successfully created "${orgInfoForm.name}"${users.length > 0 ? ' and invited ' + users.length + ' members' : ''}. ${message}`,
+                    html: `You successfully created "${orgInfoForm.name}"${users.length > 0 ? ' and invited ' + users.length + ' members' : ''}. ${message}`,
                     imageUrl: PopupLogo,
                     title: 'Created New Organisation!',
                     showConfirmButton: false,
@@ -241,26 +246,29 @@ const OrgPub = () => {
         }
     }
 
+    const validateUser = () => {
+        let set = {
+            email: !validateEmail(form.email) ? 'Wrong email format' : null,
+            firstName: form.firstName == '' ? 'Mandatory first name' : null,
+            lastName: form.lastName == '' ? 'Mandatory last name' : null,
+            phone: (!validPhone(form.phone) || form.phone == '') ? 'Invalid or missing phone' : null
+        }
+        setFormErrors(set);
+        return isValidated(set);
+    }
+
     const addUser = () => {
-        if(!_.isEmpty(formErrors))
-            return;
-        if(form.email == ''){
-            setFormErrors({email: 'Missing email'})
+        const vU = validateUser();
+        if(!_.isEmpty( vU )){
             return;
         }
         if(users.find(i => i.email == form.email)){
             setFormErrors({ email: 'Email already included'})
             return
         }
-        if(!validateEmail(form.email)){
-            setFormErrors({ email: 'Invalid Email'})
-            return;
-        }
-        if(!validPhone(form.phone) || form.phone == ''){
-            setFormErrors({phone: 'Invalid or missing phone'})
-            return;
-        }
         setUsers([...users, form])
+        removeError('users')
+        setFormErrors({});
         setForm({
             email: '',
             firstName: '',
@@ -284,7 +292,7 @@ const OrgPub = () => {
                 </section>
                 <section className="right">
                     {
-                        submitting && <LoadingScreen title="Creating your Organisation on Neuma..."/>
+                        submitting && <LoadingScreen title="Creating your Organisation..."/>
                     }
                     <div className="offers-create-form__header">
                         <h2>Create Organisation</h2>

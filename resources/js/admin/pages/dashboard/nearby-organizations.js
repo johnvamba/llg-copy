@@ -4,6 +4,7 @@ import { Checkbox } from 'pretty-checkbox-react';
 import { connect, useSelector } from 'react-redux';
 
 import 'pretty-checkbox';
+import './dashboard.css';
 
 const NearbyOrganizations = ({...props}) => {
     const [categories, setCategories] = useState([]);
@@ -96,25 +97,26 @@ const NearbyOrganizations = ({...props}) => {
                         Show
                     </p>
 
-                    <Checkbox
-                        className="text-sm px-2 focus:outline-none"
-                        animation="smooth"
-                        color="primary"
-                        shape="curve"
-                        icon={<i className="fas fa-check"></i>}
-                        onChange={handleSetAll}
-                    >
-                        All
-                    </Checkbox>
-
+                    <div className="flex flex-wrap">
+                        <div className="truncate mb-1">
+                            <Checkbox
+                                animation="smooth"
+                                color="primary"
+                                shape="curve"
+                                icon={<i className="fas fa-check"></i>}
+                                onChange={handleSetAll}
+                            >
+                                <p className="break-words">All</p>
+                            </Checkbox>
+                        </div>
+                    </div>
                     <div className="flex flex-wrap mb-2">
                         {categories.map((category, index) => (
                             <div
-                                className="w-1/2 truncate"
+                                className="w-1/2 truncate mb-1"
                                 key={category.name}
                             >
                                 <Checkbox
-                                    className="text-sm px-2 focus:outline-none"
                                     animation="smooth"
                                     color="primary"
                                     shape="curve"

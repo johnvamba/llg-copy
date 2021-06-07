@@ -134,6 +134,7 @@ class StoryController extends Controller
                 else if($user->hasRole(['campus admin','admin']))
                     $story->update([
                         'posted_at' => $request->get('saveAs') != 'draft' ? now() : null,
+                        'submitted_at' => $request->get('saveAs') != 'draft' ? now() : null
                     ]);
             }
 
