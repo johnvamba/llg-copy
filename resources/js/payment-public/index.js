@@ -29,7 +29,6 @@ const socket = io.connect( process.env.MIX_APP_URL +':4443',{
     withCredentials: false,
     transports: [ 'polling'],
     forceNew: true
-
 });
 
 import ThankYouImg from '../../assets/images/ThankYou.png';

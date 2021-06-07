@@ -69,10 +69,10 @@ class OTPController extends Controller
                 ]);
 
         try {
-            // $sns->publish([
-            //     'Message' => "$code is your one time password (OTP) for phone verification.",
-            //     'PhoneNumber' => "+{$request->mobileNumber}"
-            // ]);
+            $sns->publish([
+                'Message' => "$code is your one time password (OTP) for phone verification.",
+                'PhoneNumber' => "+{$request->mobileNumber}"
+            ]);
             DB::commit();
         } catch(AwsException $e) {
             DB::rollBack();
@@ -83,7 +83,7 @@ class OTPController extends Controller
         }
 
         return response()->json([
-            "message" => "Verification code successfully sent. $code"
+            "message" => "Verification code successfully sent."
         ], 200);
     }
 
