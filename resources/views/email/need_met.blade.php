@@ -83,7 +83,7 @@
 					alt="image"
 					class="img"
 				/>
-				number_f
+				
 				<strong>
 					Hi {{ optional($receiver)->name ?? 'User' }},
 				</strong>

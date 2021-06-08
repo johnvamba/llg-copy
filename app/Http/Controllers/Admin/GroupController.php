@@ -319,7 +319,7 @@ class GroupController extends Controller
             if(!$gp)
                 $gp = GroupParticipant::firstOrCreate( $request->only('group_id', 'user_id') );
             
-            dispatch(fn() => Mail::to($user)->send(new GroupInvitation($group))); //Run this on production but with dispatch
+            Mail::to($user)->send(new GroupInvitation($group)); //Run this on production but with dispatch
         }
 
         if(is_null($gp))
