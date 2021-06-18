@@ -162,6 +162,16 @@ class OTPController extends Controller
 
         $code = mt_rand(100000, 999999);
 
+        if(!$OTP) {
+            $OTP = Otp::create([
+                'user_id' => $user->id,
+                'mobile_number' => $request->mobileNumber,
+                'otp' => bcrypt($code),
+                'status' => 'pending',
+                'expiry' => Carbon::now()->addMinutes(15)
+            ]);
+        }
+        
         $OTP->update([
                 'otp' => bcrypt($code), 
                 'expiry' => Carbon::now()->addMinutes(15)
