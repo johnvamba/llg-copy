@@ -1,52 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UsersActionsEdit from '../../../svg/users-actions-edit';
 import UsersActionsDelete from '../../../svg/users-actions-delete';
+import Paginator from '../../../components/Paginator';
 
-
-const PushList = ({ showEdit, handleForm}) => {
+const PushList = ({ data = [], setData = ()=>{}, setLimit, loading, meta, setPage, handleForm}) => {
     const [isChecked, setIsChecked] = useState(false);
     const [approveElement, setApproveElement] = useState(null);
     const [rejectElement, setRejectElement] = useState(null);
 
-    const [notifs, setNotifs] = useState(
-        [
-            {
-                id: 1,
-                title: "Notification 01",
-                scheduleDate: "September 01, 2020",
-                scheduleTime: "9:00 AM",
-                status: "Scheduled", 
-            },
-            {
-                id: 2,
-                title: "Notification 02",
-                scheduleDate: "September 01, 2020",
-                scheduleTime: "9:00 AM",
-                status: "Sent", 
-            }
-        ]
-    )
     const checkedAll = (e) => {
         setIsChecked(!isChecked);
-        const data = notifs.map(obj => {
+        const _data = data.map(obj => {
                 obj.checked = !isChecked;
                 return obj;
             }
         )
-        setNotifs(data);
+        setData(_data);
     }
 
     const handleChange = (row,input) => {
         setIsChecked(false);
         row.checked = input;
-        const data = notifs.map(obj => obj.id == row.id ? row : obj);
-        setNotifs(data);
+        const _data = data.map(obj => obj.id == row.id ? row : obj);
+        setData(_data);
     }
 
     const handleRowActive = (row) => {
         handleForm(row, true);
         row.active = 'active';
-        const data = notifs.map(obj => {
+        const _data = data.map(obj => {
                 if(obj.id == row.id) return row;
                 else{
                     obj.active = 'non-active'
@@ -54,7 +36,7 @@ const PushList = ({ showEdit, handleForm}) => {
                 }
             }
         );
-        setNotifs(data);
+        setData(_data);
     }
 
     const switchStatus=(status)=>{
@@ -87,99 +69,55 @@ const PushList = ({ showEdit, handleForm}) => {
                 </thead>
                 <tbody>
                     {
-                    notifs.map((notif, index) => 
-                        <tr key={index}>
-                            <td className="checkbox">
-                                <input type='checkbox' onChange={(e) => handleChange(notif,e.target.checked)} checked={notif.checked ? notif.checked : false} />
-                            </td>
-                            <td className="title" onClick={() => handleRowActive(notif)}>
-                                <div className="flex">
-                                    <img className="title-img circle" src="http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp" />
-                                    <p>
-                                        { notif.title }
-                                    </p>
-                                </div>
-                            </td>
-                            <td>
-                                <p>{ notif.scheduleDate }</p>
-                            </td>
-                            <td>
-                                <p>{ notif.scheduleTime }</p>
-                            </td>
-                            <td>
-                                { switchStatus(notif.status) }
-                            </td>
-                            <td>
-                                <div className="actions row-actions">
-                                    
-                                <button onClick={() => handleRowActive(notif)}>
-                                    <i ref={setApproveElement}>
-                                    <UsersActionsEdit />
-                                    </i>
-                                </button>
-                                <button onClick={()=>popAction(rejectElement, 'remove')}>
-                                    <i ref={setRejectElement}>
-                                    <UsersActionsDelete />
-                                    </i>
-                                </button>
-                                </div>
-                            </td>
-                        </tr>
-                    )
-                }
-                </tbody>
-            </table>
-            {/* <table>
-                <thead className="">
-                    <tr>
-                        <th className="checkbox">
-                            <input type='checkbox' onChange={checkedAll} checked={isChecked} />
-                        </th>
-                        <th>Title</th>
-                        <th>Schedule Date</th>
-                        <th>Schedule Time</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        notifs.map((notif, index) => 
-                            <tr key={index} className={notif.active && 'non-active'} >
+                        data.map((notif, index) => 
+                            <tr key={index}>
                                 <td className="checkbox">
                                     <input type='checkbox' onChange={(e) => handleChange(notif,e.target.checked)} checked={notif.checked ? notif.checked : false} />
-                                    <label></label>
                                 </td>
                                 <td className="title" onClick={() => handleRowActive(notif)}>
-                                    <div className="title-img"></div>
-                                    <p>
-                                        {notif.title}
-                                    </p>
+                                    <div className="flex">
+                                        <img className="title-img circle" src="http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp" />
+                                        <p>
+                                            { notif.title }
+                                        </p>
+                                    </div>
                                 </td>
                                 <td>
-                                    <p>{notif.scheduleDate}</p>
+                                    <p>{ notif.schedule_date }</p>
                                 </td>
                                 <td>
-                                    <p>{notif.scheduleTime}</p>
+                                    <p>{ notif.schedule_time }</p>
                                 </td>
                                 <td>
-                                    <button className={`btn-${notif.status == 'Scheduled' ? 'scheduled' : 'sent' }`}>
-                                        {notif.status}
-                                    </button>
+                                    { switchStatus(notif.status) }
                                 </td>
-                                <td className="actions">
-                                    <span onClick={() => handleRowActive(notif)}>
+                                <td>
+                                    <div className="actions row-actions">
+                                        
+                                    <button onClick={() => handleRowActive(notif)}>
+                                        <i ref={setApproveElement}>
                                         <UsersActionsEdit />
-                                    </span>
-                                    <span>
+                                        </i>
+                                    </button>
+                                    <button onClick={()=>popAction(rejectElement, 'remove')}>
+                                        <i ref={setRejectElement}>
                                         <UsersActionsDelete />
-                                    </span>
+                                        </i>
+                                    </button>
+                                    </div>
                                 </td>
                             </tr>
                         )
                     }
+                    {
+                        data.length == 0 && <tr>
+                            <td colSpan="6"> {loading ? "Loading..." : "No notifications"}</td>
+                        </tr>
+                    }
                 </tbody>
-            </table> */}
+            </table>
+            <Paginator setLimit={setLimit} {...meta} clickedPage={setPage}/>
+
         </section>
     )
 }

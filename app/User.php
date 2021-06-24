@@ -117,6 +117,11 @@ class User extends Authenticatable
     {
         return $this->morphToMany("App\Category", "categorize", 'categorizes');
     }
+
+    public function invited()
+    {
+        return $this->belongsTo("App\OrgInvites", "email", "email");
+    }
     /**
      * Register new user
      */

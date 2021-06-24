@@ -35,6 +35,7 @@ class OrgRejected extends Mailable
     public function build()
     {
         return $this
+            ->from(config('mail.from.address'), config('mail.from.name'))
             ->subject("Your application has been declined")
             ->view('email.org_reject')
             ->with([

@@ -125,8 +125,8 @@ class PaymentController extends Controller
 
                 $charge = \Stripe\Charge::create([
                     'source' => $request->token,
-                    'amount' => floatval($request->amount),
-                    'currency' => 'usd',
+                    'amount' => floatval($request->amount) * 100,
+                    'currency' => 'aud',
                     'description' => $description
                 ]);
 

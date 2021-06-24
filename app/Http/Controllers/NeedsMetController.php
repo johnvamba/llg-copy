@@ -12,6 +12,7 @@ use App\NeedMet;
 use App\GroupParticipant;
 use DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class NeedsMetController extends Controller
 {
@@ -58,7 +59,7 @@ class NeedsMetController extends Controller
             ->where('status', 'in progress')
             ->latest()
             ->first();
-
+        
         if (!$goal) {
             return response()->json([
                 'message' => "You have not set your goal yet."
@@ -205,7 +206,7 @@ class NeedsMetController extends Controller
         $needsMets['volunteers'] = NeedMet::where('need_id', $need->id)
             ->limit(6)
             ->get();
-        
+
         foreach($needsMets['volunteers'] as $met) {
             if (auth()->check()) {
                 if ($met->model->profile->id == auth()->user()->id) 

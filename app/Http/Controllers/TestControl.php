@@ -115,16 +115,24 @@ class TestControl extends Controller
 
     public function tester() {
         // $organization = Organization::find(3);
+        $mobileNumber = '00123322312';
+        $skipping = false;
 
-        $orgs = Organization::whereHas('needs', function($needs) {
+        $user = User::with('profile')
+            ->where('mobile_number', $mobileNumber)
+            ->first();
+
+
+
+        /*$orgs = Organization::whereHas('needs', function($needs) {
             $needs->whereHas('mets', function($mets) {
                 $mets->whereBetween('need_mets.created_at', [now()->subWeek(), now()]);
             });
         })->whereHas('members')
         ->with(['members', 'needs.mets'])
-        ->get();
+        ->get();*/
 
-        dd($orgs);
+        dd($user, $skipping, preg_replace('/\D/i', '', $mobileNumber));
 
         // $users = User::unfilter()
         //     ->role('admin')

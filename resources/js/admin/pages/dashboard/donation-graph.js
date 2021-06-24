@@ -63,7 +63,7 @@ const DonationGraph = () => {
                 bar: {
                     horizontal: false,
                     columnWidth: '55%',
-                    borderRadius: 5,
+                    borderRadius: 6,
                     // endingShape: 'rounded'
                 },
             },

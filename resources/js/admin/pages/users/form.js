@@ -147,7 +147,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
             bio: bio == '' ? 'Missing bio content' : null,
             photo: !photo ? 'Missing photo' : null,
             type: _.isEmpty(type) ? "Missing type" : null,
-            organization: (_.isEmpty(organization) && type.value == 'organization admin') ? "Missing organization" : null,
+            organization: (_.isEmpty(organization) && type.value == 'organization admin') ? "Missing organisation" : null,
             campus: (_.isEmpty(campus) && type.value == 'campus admin') ? "Missing location" : null,
             mobile_number: !validPhone(mobile_number)  ? "Missing mobile number" : null
         })
@@ -400,7 +400,7 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                                         onChange={handleOrganization}
                                         />
                                     {
-                                        (errors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
+                                        (errors.organization || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organisation</span>
                                     }
                                 </div>
                             </div>

@@ -40,10 +40,11 @@ class OrgInvitation extends Mailable
         $user = $this->to[0];
         $expires = now()->addWeek();
 
-        $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
-            ?? 'info@lovelivesgenerously.demosite.ninja';
+        // $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
+        //     ?? 'info@lovelivesgenerously.demosite.ninja';
             
         return $this//->from($from)
+            ->from(config('mail.from.address'), config('mail.from.name'))
             ->view('email.org_invite')
             ->subject('Account Invitation')
             ->with([

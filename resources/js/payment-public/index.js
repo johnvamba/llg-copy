@@ -24,6 +24,14 @@ import CurrencyInput from 'react-currency-input-field';
 import 'pretty-checkbox';
 import StripeElement from './stripeelement'
 import axios from 'axios'
+import io from "socket.io-client";
+const socket = io.connect( process.env.SOCKETIO_URL,{
+    withCredentials: false,
+    transports: [ 'polling'],
+    forceNew: true
+});
+
+import ThankYouImg from '../../assets/images/ThankYou.png';
 
 const auth_token = Cookie.get('oToken_admin') || Cookie.get('oToken_org_admin');
 
@@ -38,12 +46,21 @@ const PublicPayment = () => {
     const [need, setNeed] = useState({})
     const [authtoken, setAuthToken] = useState(false)
     const [axiosState, setAxiosState] = useState(null);
+    const [amountType, setAmountType] = useState('fixed');
+    const [total, setTotal] = useState(0);
+    const [cardHolder, setCardHolder] = useState(null);
     const location = useLocation();
 
     // const [card, setCard] = useState('');
     // const stripe = useStripe();
 
     // const elements = useElements();
+
+    useEffect(() => {
+        socket.on('connect', () => {
+            console.log('socket connected!');
+        });
+    }, [])
 
     useEffect(() => {
         // console.log('somethign');
@@ -68,6 +85,22 @@ const PublicPayment = () => {
     //     }
     // }, [stripe])
 
+    const changeDonationType = (charge = 0, type) => {
+        if (type == 'percentage') {
+            setAmount(parseInt(charge));
+            setAmountType('percentage');
+
+            if (need.hasOwnProperty('goal')) {
+                let amnt = (need.goal * parseInt(charge)) / 100;
+                setTotal(parseFloat(amnt).toFixed(2));
+            }
+        } else {
+            setAmount(charge);
+            setAmountType('fixed');
+            setTotal(charge);
+        }
+    }
+
     const loadAll = (need_id, auth) => {
         //User cred from api
         // console.log(axios, need_id, auth);
@@ -81,6 +114,15 @@ const PublicPayment = () => {
             }
         }).then(({ data }) => {
             setNeed(data.data)
+
+            if (data.data.type == 'Donation') {
+                setAmount(data.data.goal);
+                setTotal(data.data.goal);
+            } else {
+                setAmount(50);
+                setTotal(50);
+            }
+
             if (data.data.pk) {
                 /*stripe.setOptions({
                     publishableKey:data.data.pk 
@@ -110,21 +152,41 @@ const PublicPayment = () => {
         let params = { status };
 
         if (status === 'success') {
-            params.amount = amount;
-        }
+            const url = new URL(window.location.href);
 
-        window.ReactNativeWebView.postMessage(JSON.stringify(params));
+            socket.emit('success donation', {
+                id: need.id,
+                amount: amount,
+                userId: url.searchParams.get('user')
+            })
+            if(window.ReactNativeWebView) {
+                window.ReactNativeWebView.postMessage('success donation')
+            } else {
+                window.close();
+            }
+
+        } else {
+            socket.emit("success donation", {data:'data here'});
+            if(window.ReactNativeWebView) {
+                window.ReactNativeWebView.postMessage('success donation')
+            } else {
+                window.close();
+            }
+        }
     }
 
     const presubmit = async (elements) => {
         // event.preventDefault()
-        setSubmitting(true);
+
         const stripe = await stripePromise.then(stripe => stripe)
         const { token, error } = await stripe.createToken(elements.getElement(CardNumberElement));
         // console.log('stripePromise', stripePromise, token, error, stripe);
         if (token) {
+            setSubmitting(true);
+
             axios.post(`api/payment/need/${need.id}`, {
-                amount,
+                amount: parseFloat(total),
+                name: cardHolder,
                 token: token.id
             }, {
                 headers: {
@@ -155,25 +217,70 @@ const PublicPayment = () => {
                 }
             })
         } else if (error) {
-            setErrors([error]);
+            setErrors([error.message]);
         }
     }
 
-    if (paymentSuccess)
-        return (<section className="create-org-pub flex items-center justify-center" style={{ backgroundImage: `url(${mainBackground})` }}>
-            <section className="create-org-pub__container">
-                <section className="w-full h-full p-5">
-                    <div className="offers-create-form__header">
-                        <h2>Thank you!!</h2>
-                    </div>
-                    <div className={`create-org-pub__footer create-org-pub__footer-cols-2`}>
-                        <div>
-                            <button className="primary-btn" onClick={() => handleGoBack('success')}>Go back.</button>
+    if (paymentSuccess) {
+        return (
+            <section>
+                <div className="info_container px-3 pt-3 pb-3 pt-5">
+                    <div className="items-center offers-create-form__header py-3">
+                        <div className="flex flex-row">
+                            <div className="flex-1"></div>
+                            <div className="flex flex-row justify-evenly items-center">
+                                <div className="bar active"></div>
+                                <div className="bar"></div>
+                            </div>
+                            <div className="flex-1 text-right">
+                                {/* <i className="fa fa-times text-white text-xl mr-2" aria-hidden="true" onClick={() => handleGoBack('success')}></i> */}
+                            </div>
                         </div>
+
+                        <h2 className="text-white text-center mt-4">Receipt</h2>
                     </div>
-                </section>
+                </div>
+
+                <div className="mt-10 mb-8 mx-6">
+                    <h1 className="text-center tracking-wider success-message mb-6">Thank you for donating!</h1>
+
+                    <img src={ThankYouImg} className="mx-auto w-48 h-48" alt="img" />
+
+                    <div className="text-center mt-8">
+                        <span className="px-3 py-2 rounded-full bg-green-100 text-green-500 font-bold text-xl">
+                            $ {parseFloat(total).toFixed(2)}
+                        </span>
+                    </div>
+
+                    <div className="w-64 mt-8 mb-12 mx-auto">
+                        <p className="text-center text-lg">Your donation to <span className="font-bold">{need.title}</span> was successful! A receipt was sent to your email!</p>
+                    </div>
+
+                    <button
+                        className="primary-btn w-full rounded-lg p-2 text-base"
+                        type="button"
+                        onClick={() => handleGoBack('success')}
+                        disabled={!stripePromise || submitting}
+                    >Done</button>
+                </div>
             </section>
-        </section>)
+        )
+        /** not base on the mockup design  */
+        // return (<section className="create-org-pub flex items-center justify-center" style={{ backgroundImage: `url(${mainBackground})` }}>
+        //     <section className="create-org-pub__container">
+        //         <section className="w-full h-full p-5">
+        //             <div className="offers-create-form__header">
+        //                 <h2>Thank you!!</h2>
+        //             </div>
+        //             <div className={`create-org-pub__footer create-org-pub__footer-cols-2`}>
+        //                 <div>
+        //                     <button className="primary-btn" onClick={() => handleGoBack('success')}>Go back.</button>
+        //                 </div>
+        //             </div>
+        //         </section>
+        //     </section>
+        // </section>)
+    }
 
     if ((_.isEmpty(need) || errors.length > 0) && !loading)
         return (<section className="create-org-pub flex items-center justify-center" style={{ backgroundImage: `url(${mainBackground})` }}>
@@ -197,16 +304,37 @@ const PublicPayment = () => {
 
 
     return (
-        <section className="create-org-pub flex items-center justify-center" style={{ backgroundImage: `url(${mainBackground})` }}>
-            <section className="create-org-pub__container">
-                {submitting && <LoadingScreen title="Submitting Checkout" />}
-                <section className={`w-full h-full ${!loading && 'p-5'}`}>
-                    <Elements stripe={stripePromise}>
-                        <StripeElement need={need} loading={loading} submitting={submitting} stripePromise={stripePromise} presubmit={presubmit} amount={amount} setAmount={setAmount} errors={errors} />
-                    </Elements>
-                </section>
-            </section>
-        </section>
+        <div className="w-full h-full">
+            <Elements stripe={stripePromise}>
+                <StripeElement
+                    need={need}
+                    loading={loading}
+                    stripePromise={stripePromise}
+                    presubmit={presubmit}
+                    amount={amount}
+                    setAmount={setAmount}
+                    amountType={amountType}
+                    setAmountType={changeDonationType}
+                    total={total}
+                    setTotal={setTotal}
+                    cardHolder={cardHolder}
+                    submitting={submitting}
+                    setCardHolder={setCardHolder}
+                    errors={errors}
+                    onClose={handleGoBack}
+                />
+            </Elements>
+        </div>
+        // <section className="create-org-pub flex items-center justify-center" style={{ backgroundImage: `url(${mainBackground})` }}>
+        //     <section className="create-org-pub__container">
+        //         {submitting && <LoadingScreen title="Submitting Checkout" />}
+        //         <section className={`w-full h-full ${!loading && 'p-5'}`}>
+        //             <Elements stripe={stripePromise}>
+        //                 <StripeElement need={need} loading={loading} stripePromise={stripePromise} presubmit={presubmit} amount={amount} setAmount={setAmount} errors={errors} />
+        //             </Elements>
+        //         </section>
+        //     </section>
+        // </section>
     )
 }
 

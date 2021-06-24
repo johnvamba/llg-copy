@@ -50,12 +50,12 @@ class NeedsController extends Controller
             ]);
 
         if (!empty($filters)) {
-            if (count($filters['type']) > 0) {
+            if (array_key_exists('type', $filters) && count($filters['type']) > 0) {
                 $needs->whereIn('needs_type_id', $filters['type'])
                     ->orWhereIn('id', $needIds);
             }
             
-            if ($filters['filterAmount']) 
+            if (array_key_exists('filterAmount',$filters)) 
                 $needs->where('goal', '<=', floatval($filters['amount']));
         }
         
@@ -75,7 +75,7 @@ class NeedsController extends Controller
 
             $need['photo'] = $need->organization->getFirstMediaUrl('photo');
             $need['cover_photo'] = $need->getFirstMediaUrl('photo');
-
+            
             $need['totalActiveNeeds'] = Need::where(
                     'organization_id', $need->organization_id
                 )
@@ -348,22 +348,23 @@ class NeedsController extends Controller
     {
         $result = DB::transaction(function () use ($request, $need) {
                 //bad code here. haha
-                Need::find($need->id)
-                    ->update([
+            $nm = NeedMet::firstOrCreate([
+                'need_id' => $need->id,
+                'amount' => $request->amount,
+                'model_type' => \App\User::class,
+                'model_id' => auth()->user()->id
+            ]);
+
+            if($nm->wasRecentlyCreated){
+                $need->update([
                         'raised' => ($need->raised + 1)
                     ]);
+            }
+            
+            dispatch(new NeedMetMailer($need, auth()->user(), 1));
 
-                $makeNeedMet = NeedMet::make([
-                    'need_id' => $request->need_id,
-                    'amount' => $request->amount,
-                ]);
-
-                $needMet = auth()->user()->needsMet()->save($makeNeedMet);
-
-                dispatch(new NeedMetMailer($need, auth()->user(), 1));
-
-                return $needMet;
-            });
+            return $nm;
+        });
 
         return response()->json($result);
     }
@@ -376,11 +377,42 @@ class NeedsController extends Controller
      */
     public function show(Need $need)
     {
-        $need = Need::with('type')->where('id', $need->id)->first();
-        $need->model;
-        $need->getMedia('photo');
+        $result = Need::with([
+                'organization',
+                'organization.credential',
+                'type', 
+                'categories',
+            ])
+            ->where('id', $need->id)
+            ->first();
 
-        return response()->json($need);
+        $result->model;
+        $result->getMedia('photo');
+
+        $result->categories = $result->categoriesList; //reset?
+
+        $result['photo'] = $result->organization->getFirstMediaUrl('photo');
+        $result['cover_photo'] = $result->getFirstMediaUrl('photo');
+        
+        $result['totalActiveNeeds'] = Need::where(
+                'organization_id', $result->organization_id
+            )
+            ->whereRaw('raised < goal')
+            ->count();
+        
+        $result['totalPastNeeds'] = Need::where(
+                'organization_id', $result->organization_id
+            )
+            ->whereRaw('raised >= goal')
+            ->count();
+
+        return response()->json($result);
+        
+        // $need = Need::with('type')->where('id', $need->id)->first();
+        // $need->model;
+        // $need->getMedia('photo');
+
+        // return response()->json($need);
     }
 
     /**

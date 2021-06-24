@@ -9,6 +9,7 @@ use App\Http\Requests\GroupStoreRequest;
 use Illuminate\Http\Request;
 use App\User;
 use App\GroupParticipant;
+use App\GroupInvite;
 use App\Group;
 use App\Goal;
 use App\Tag;
@@ -34,6 +35,7 @@ class GroupController extends Controller
 
         foreach ($groups as $group) {
             $group->getMedia();
+            $group['photo'] = $group->getFirstMediaUrl('photo');
         }
 
         return response()->json($groups);
@@ -104,6 +106,8 @@ class GroupController extends Controller
             ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($groups as $group) {
+            $group['photo'] = $group->getFirstMediaUrl('photo');
+            
             $group['goal'] = Goal::whereHasMorph(
                     'model',
                     ['App\Group'],
@@ -146,6 +150,72 @@ class GroupController extends Controller
                     ['group_id', $group->id],
                     ['status', 'approved']
                 ])->count();
+        }
+
+        return response()->json($groups, 200);
+    }
+    
+    /**
+     * Display search discover groups
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getSearchGroup(Request $request)
+    {
+        $page = $request->page ?: 1;
+
+        $groups = Group::where('privacy', 'public');
+
+        if ($request->keyword != '') {
+            $groups = $groups->where('name', 'like', '%'.$request->keyword.'%');
+        }
+
+        $groups = $groups->paginate(10, ['*'], 'search_group', $page);
+
+        foreach ($groups as $group) {
+            $group['goal'] = Goal::whereHasMorph(
+                    'model',
+                    ['App\Group'],
+                    function(Builder $query) use ($group) {
+                        $query->where('model_id', $group->id);
+                    }
+                )
+                ->where('status', 'in progress')
+                ->latest()
+                ->first();
+            
+            if ($group['goal']) {
+                $date = Carbon::parse($group['goal']->created_at);
+
+                $participants = GroupParticipant::where([
+                        ['group_id', $group->id],
+                        ['status', 'approved'],
+                    ])
+                    ->pluck('user_id');
+
+                $participants->push($group->user_id);
+
+                $group['need_mets_count'] = NeedMet::whereHasMorph(
+                        'model',
+                        ['App\User'],
+                        function ($query) use ($participants) {
+                            $query->whereIn('model_id', $participants);
+                        }
+                    )
+                    ->whereBetween('created_at', [
+                        $date->copy()->toDateString(),
+                        $date->copy()->endOfMonth()->toDateString()
+                    ])
+                    ->count();
+
+                $group['members_count'] = GroupParticipant::where([
+                        ['group_id', $group->id],
+                        ['status', 'approved']
+                    ])->count();
+            } else {
+                $group['need_mets_count'] = 0;
+                $group['members_count'] = 0;
+            }
         }
 
         return response()->json($groups, 200);
@@ -464,18 +534,114 @@ class GroupController extends Controller
                     ->where('status', 'approved');
             }])
             ->where('id', $id)
-            ->first();
+            ->firstorFail();
 
         if ($group) {
             $group['isJoined'] = 0;
         }
 
-        if (auth()->check()) {
+        // if (auth()->check()) {
+        //     $group['isJoined'] = GroupParticipant::where([
+        //             ['group_id', $group->id],
+        //             ['user_id', auth()->user()->id],
+        //             ['status', 'approved']
+        //         ])->count();
+        // }
+
+        $group['goal'] = Goal::whereHasMorph(
+                'model',
+                ['App\Group'],
+                function (Builder $query) use ($group) {
+                    $query->where('model_id', $group->id);
+                }
+            )
+            ->where('status', 'in progress')
+            ->latest()
+            ->first();
+
+        if ($group['goal']) {
+            $date = Carbon::parse($group['goal']->created_at);
+        } else {
+            $date = Carbon::parse($group->created_at);
+        }
+
+        $group->getMedia();
+        $group['photo'] = $group->getFirstMediaUrl('photo');
+
+        $group['requestings'] = GroupParticipant::where([
+            ['group_id', $group->id],
+            ['status', 'pending'],
+        ])
+        ->pluck('user_id');
+
+        $participants = GroupParticipant::where([
+                ['group_id', $group->id],
+                ['status', 'approved'],
+            ])
+            ->pluck('user_id');
+        
+        $participants->push($group->user_id);
+
+        $group['needs_met_count'] = NeedMet::whereHasMorph(
+                'model',
+                    ['App\User'],
+                    function ($query) use ($participants) {
+                        $query->whereIn('model_id', $participants);
+                    }
+                )
+                ->whereBetween('created_at', [
+                    $date->copy()->toDateString(),
+                    $date->copy()->endOfMonth()->toDateString(),
+                ])
+                ->count();
+
+        return response()->json($group);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getGroup($groupId, $userId)
+    {
+        $date;
+
+        $group = Group::with([
+                'user', 
+            ])
+            ->withCount(['requesting' => function(Builder $query) {
+                $query->where('status', 'pending');
+            }, 'participants' => function(Builder $query) {
+                $query->with('participants.user')
+                    ->where('status', 'approved');
+            }])
+            ->where('id', $groupId)
+            ->firstorFail();
+
+        if ($group) {
+            $group['isJoined'] = 0;
+        }
+
+        if ($userId) {
             $group['isJoined'] = GroupParticipant::where([
                     ['group_id', $group->id],
-                    ['user_id', auth()->user()->id],
+                    ['user_id', $userId],
                     ['status', 'approved']
                 ])->count();
+
+            $group['has_requested'] = GroupInvite::where([
+                    ['user_id', $userId],
+                    ['status', 'pending']
+                ])->count();
+
+            if(!$group['has_requested']) {
+                $group['has_requested'] = GroupParticipant::where('user_id', $userId)
+                    ->where('status', 'pending')
+                    ->orWhere('status', 'approved')
+                    ->count();
+            }
         }
 
         $group['goal'] = Goal::whereHasMorph(

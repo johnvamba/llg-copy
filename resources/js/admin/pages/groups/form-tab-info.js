@@ -51,7 +51,7 @@ const FormTabInfo = ({ handleInputChange, fieldErrors, fields, handleSelectPriva
                                 onChange={setCampus}
                                 />
                             {
-                                (fieldErrors.campus || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organization</span>
+                                (fieldErrors.campus || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Location</span>
                             }
                         </div>
                     }

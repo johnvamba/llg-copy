@@ -34,11 +34,12 @@ class TransactionReceipt extends Mailable
      */
     public function build()
     {
-         $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
-            ?? env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja')
-            ?? 'info@lovelivesgenerously.demosite.ninja';
+         // $from = config('mail.from.address', 'info@lovelivesgenerously.demosite.ninja')
+         //    ?? env('MAIL_FROM_ADDRESS', 'info@lovelivesgenerously.demosite.ninja')
+         //    ?? 'info@lovelivesgenerously.demosite.ninja';
             
         return $this//->from($from)
+            ->from(config('mail.from.address'), config('mail.from.name'))
             ->view('email.transact')
             ->subject(optional($this->org->template)->subject ?? 'Payment Received!')
             ->with([

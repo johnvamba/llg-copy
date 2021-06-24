@@ -529,3 +529,7 @@
     color: #f56565 !important;
     color: rgba(245, 101, 101, var(--text-opacity)) !important;
 }
+
+.swal2-html-container a {
+    color: #CF995F;
+}

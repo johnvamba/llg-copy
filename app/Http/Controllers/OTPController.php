@@ -34,9 +34,17 @@ class OTPController extends Controller
     
         $user = User::where('mobile_number', $request->mobileNumber)->first();
 
+        if(!$user) {
+            $user = User::select()
+                ->selectRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(users.mobile_number, '+', ''), ' ', ''), '(', ''), ')', ''), '-', '') as common_phone")
+                ->groupBy('common_phone')
+                ->having('common_phone', '=', preg_replace('/\D/i', '', $request->mobileNumber))
+                ->first();
+        }
+
         if (!$user) {
             return response()->json([
-                'mobile_number' => 'The mobile number is not exist.'
+                'mobile_number' => 'The mobile number does not exist.'
             ], 422);
         }
 
@@ -63,7 +71,7 @@ class OTPController extends Controller
         try {
             $sns->publish([
                 'Message' => "$code is your one time password (OTP) for phone verification.",
-                'PhoneNumber' => "+{$request->raw}"
+                'PhoneNumber' => "+{$request->mobileNumber}"
             ]);
             DB::commit();
         } catch(AwsException $e) {
@@ -88,6 +96,14 @@ class OTPController extends Controller
 
         $otp = Otp::where('mobile_number', $request->mobileNumber)->first();
 
+        if(!$otp) {
+            $otp = Otp::select()
+                ->selectRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(otps.mobile_number, '+', ''), ' ', ''), '(', ''), ')', ''), '-', '') as common_phone")
+                ->groupBy('common_phone')
+                ->having('common_phone', '=', preg_replace('/\D/i', '', $request->mobileNumber))
+                ->first();
+        }
+
         if (Hash::check($request->otp, $otp->otp)) {
             if ($date->lessThanOrEqualTo($otp->expiry)) {
                 $user = User::with('profile')->find($otp->user_id);
@@ -104,7 +120,7 @@ class OTPController extends Controller
             }
 
             return response()->json([
-                'message' => 'Your verification code is expired.'
+                'message' => 'Your verification code has expired.'
             ], 422);
         }
 
@@ -122,9 +138,17 @@ class OTPController extends Controller
     
         $user = User::where('mobile_number', $request->mobileNumber)->first();
 
+        if(!$user) {
+            $user = User::select()
+                ->selectRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(users.mobile_number, '+', ''), ' ', ''), '(', ''), ')', ''), '-', '') as common_phone")
+                ->groupBy('common_phone')
+                ->having('common_phone', '=', preg_replace('/\D/i', '', $request->mobileNumber))
+                ->first();
+        }
+
         if (!$user) {
             return response()->json([
-                'mobile_number' => 'The mobile number is not exist.'
+                'mobile_number' => 'The mobile number does not exist.'
             ], 422);
         }
 
@@ -137,6 +161,16 @@ class OTPController extends Controller
 
         $code = mt_rand(100000, 999999);
 
+        if(!$OTP) {
+            $OTP = Otp::create([
+                'user_id' => $user->id,
+                'mobile_number' => $request->mobileNumber,
+                'otp' => bcrypt($code),
+                'status' => 'pending',
+                'expiry' => Carbon::now()->addMinutes(15)
+            ]);
+        }
+        
         $OTP->update([
                 'otp' => bcrypt($code), 
                 'expiry' => Carbon::now()->addMinutes(15)
@@ -145,7 +179,7 @@ class OTPController extends Controller
         try {
             $sns->publish([
                 'Message' => "$code is your one time password (OTP) for phone verification.",
-                'PhoneNumber' => "+{$request->raw}"
+                'PhoneNumber' => "+{$request->mobileNumber}"
             ]);
             DB::commit();
         } catch(AwsException $e) {

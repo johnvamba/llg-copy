@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\GroupResource;
+use App\Http\Resources\Async\GeneralResource;
 use App\Http\Resources\Mini\UserResource;
 use Illuminate\Support\Facades\Mail;
 
@@ -51,6 +52,18 @@ class GroupController extends Controller
     public function inviteUser()
     {
 
+    }
+
+    public function async(Request $request) 
+    {
+        $group = Group::latest();
+        
+        if($search = $request->get('search'))
+            $group->where('name', 'like', '%'.$search.'%');
+
+        // GroupResource::setConversion('listing');
+
+        return GeneralResource::collection($group->paginate());
     }
 
     /**
@@ -150,7 +163,7 @@ class GroupController extends Controller
         //load other parts here
         $group->loadMissing('campus');
 
-        GroupResource::setConversion('view');
+        GroupResource::setConversion('photo');
 
         return new GroupResource($group);
     }
@@ -306,7 +319,7 @@ class GroupController extends Controller
             if(!$gp)
                 $gp = GroupParticipant::firstOrCreate( $request->only('group_id', 'user_id') );
             
-            dispatch(fn() => Mail::to($user)->send(new GroupInvitation($group))); //Run this on production but with dispatch
+            Mail::to($user)->send(new GroupInvitation($group)); //Run this on production but with dispatch
         }
 
         if(is_null($gp))
@@ -318,7 +331,7 @@ class GroupController extends Controller
     public function members(Request $request, Group $group) {
         $members = $group->participant_users()
         ->unfilter()
-        ->with('profile.media');
+        ->with('profile');
         
         return UserResource::collection( $members->paginate() );
     }

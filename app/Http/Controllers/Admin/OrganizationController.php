@@ -380,9 +380,22 @@ class OrganizationController extends Controller
     {
         $users = User::unfilter()->whereHas('organizationMembers', function($query) use ($organization){
             $query->where('organization_id', $organization->id);
-        });
+        })->with('profile')->get();
 
-        return UserResource::collection((clone $users)->paginate())
+        $invites = OrgInvites::where('org_id', $organization->id)
+            ->with('user.profile')
+            ->get()
+            ->map(function($invite){
+                if(isset($invite->user))
+                    return $invite->user;
+                
+                $invite->invite_status = 'pending';
+                return $invite;
+            });
+
+        // dd($users->merge($invites));
+
+        return UserResource::collection((clone $users)->merge($invites))
             ->additional([
                 'users_count' => $users->count()
             ]);

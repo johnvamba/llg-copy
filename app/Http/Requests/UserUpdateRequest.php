@@ -35,7 +35,8 @@ class UserUpdateRequest extends FormRequest
             'lng' => 'sometimes|required',
             'bio' => 'sometimes|required',
             'photo' => 'sometimes|required',
-            'coverPhoto' => 'sometimes|required'
+            'coverPhoto' => 'sometimes|required',
+            'mobile_number' => 'required|unique:users,mobile_number,'.$request->id
         ];
     }
 }
