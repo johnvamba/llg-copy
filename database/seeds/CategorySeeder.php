@@ -18,7 +18,8 @@ class CategorySeeder extends Seeder
         [ 'name' => 'Driver', 'icon' => 'Driver.png' ],
         [ 'name' => 'Cook', 'icon' => 'Cook.png' ],
         [ 'name' => 'Hairdresser', 'icon' => 'Hairdresser.png' ],
-        [ 'name' => 'Gardener', 'icon' => 'Gardener.png' ]
+        [ 'name' => 'Gardener', 'icon' => 'Gardener.png' ],
+        [ 'name' => 'Other', 'icon' => 'Other.png' ],
     ];
     
     /**

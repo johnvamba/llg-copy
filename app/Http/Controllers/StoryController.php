@@ -130,9 +130,10 @@ class StoryController extends Controller
             ->withCount('appreciates', 'comments')
             ->where(function($query) use ($date) {
                 $query->whereNotNull('posted_at')
-                    ->whereDate('featured_start_date', '<=', $date);
+                    ->whereDate('posted_at', '<=', $date);
             })
             ->latest()
+            ->inRandomOrder()
             ->first();
 
         if ($story) {
