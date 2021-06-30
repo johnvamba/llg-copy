@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
+        'App\Console\Commands\GoalReset'
     ];
 
     /**
@@ -27,6 +28,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->job(new OrgReport)->weeklyOn(1, "8:00");
+        $schedule->command('goal:reset')->monthly();
     }
 
     /**

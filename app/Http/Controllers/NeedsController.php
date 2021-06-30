@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use App\Http\Requests\NeedsStoreRequest;
 use App\Http\Requests\NeedsUpdateRequest;
@@ -347,13 +348,12 @@ class NeedsController extends Controller
     public function addVolunteer(Request $request, Need $need)
     {
         $result = DB::transaction(function () use ($request, $need) {
-                //bad code here. haha
-            $nm = NeedMet::firstOrCreate([
+            $nm = NeedMet::make([
                 'need_id' => $need->id,
                 'amount' => $request->amount,
-                'model_type' => \App\User::class,
-                'model_id' => auth()->user()->id
             ]);
+
+            auth()->user()->needsMet()->save($nm);
 
             if($nm->wasRecentlyCreated){
                 $need->update([
@@ -367,6 +367,36 @@ class NeedsController extends Controller
         });
 
         return response()->json($result);
+    }
+    
+    /**
+     * Cancel volunteering to needs
+     * 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function cancelVolunteer(Request $request, Need $need)
+    {
+        try {
+            $nm = NeedMet::whereHasMorph(
+                'model',
+                ['App\User'],
+                function (Builder $query) {
+                    $query->where('model_id', auth()->user()->id);
+                }
+            )
+            ->where('need_id', $need->id)
+            ->delete();
+
+            return response()->json([
+                'message' => 'Successfully cancelled.'
+            ], 204);
+        } catch (\Exception $e) {
+            return response()->json([
+                    'message' => 'An error occurred. Please try again.'
+                ], 500);
+        }
     }
 
     /**

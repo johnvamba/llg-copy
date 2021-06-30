@@ -631,13 +631,13 @@ class GroupController extends Controller
                     ['status', 'approved']
                 ])->count();
 
-            $group['has_requested'] = GroupInvite::where([
+            $group['has_request'] = GroupInvite::where([
                     ['user_id', $userId],
                     ['status', 'pending']
                 ])->count();
 
-            if(!$group['has_requested']) {
-                $group['has_requested'] = GroupParticipant::where('user_id', $userId)
+            if(!$group['has_request']) {
+                $group['has_request'] = GroupParticipant::where('user_id', $userId)
                     ->where('status', 'pending')
                     ->orWhere('status', 'approved')
                     ->count();

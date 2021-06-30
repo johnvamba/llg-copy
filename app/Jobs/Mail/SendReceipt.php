@@ -45,7 +45,7 @@ class SendReceipt implements ShouldQueue
         $organization = optional($this->need)->organization;
 
         if($organization && $transacts && $this->user){
-            Mail::to($this->user)->send(new TransactionReceipt($organization, [  $transacts => $this->amount ?? 0 ]));
+            Mail::to($this->user)->send(new TransactionReceipt($organization, $this->user, [  $transacts => $this->amount ?? 0 ]));
         }
     }
 

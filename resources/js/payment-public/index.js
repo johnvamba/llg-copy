@@ -25,9 +25,10 @@ import 'pretty-checkbox';
 import StripeElement from './stripeelement'
 import axios from 'axios'
 import io from "socket.io-client";
-const socket = io.connect( process.env.SOCKETIO_URL,{
+//const socket = io.connect('http://neuma-web.test:5000', {
+const socket = io.connect(process.env.SOCKETIO_URL, {
     withCredentials: false,
-    transports: [ 'polling'],
+    transports: ['polling'],
     forceNew: true
 });
 
@@ -157,21 +158,21 @@ const PublicPayment = () => {
             socket.emit('success donation', {
                 id: need.id,
                 amount: amount,
-                userId: url.searchParams.get('user')
+                userId: parseInt(url.searchParams.get('user'))
             })
-            if(window.ReactNativeWebView) {
-                window.ReactNativeWebView.postMessage('success donation')
-            } else {
-                window.close();
-            }
 
+            // if(window.ReactNativeWebView) {
+            //     window.ReactNativeWebView.postMessage('success donation')
+            // } else {
+            //     window.close();
+            // }
         } else {
-            socket.emit("success donation", {data:'data here'});
-            if(window.ReactNativeWebView) {
-                window.ReactNativeWebView.postMessage('success donation')
-            } else {
-                window.close();
-            }
+            socket.emit('cancelled donation', {});
+            // if(window.ReactNativeWebView) {
+            //     window.ReactNativeWebView.postMessage('success donation')
+            // } else {
+            //     window.close();
+            // }
         }
     }
 
@@ -260,7 +261,7 @@ const PublicPayment = () => {
                         className="primary-btn w-full rounded-lg p-2 text-base"
                         type="button"
                         onClick={() => handleGoBack('success')}
-                        disabled={!stripePromise || submitting}
+                        //disabled={!stripePromise || submitting}
                     >Done</button>
                 </div>
             </section>

@@ -229,6 +229,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('needs-met/nearby/{lat}/{lng}', 'NeedsController@nearby');
     Route::get('needs/open/total', 'NeedsController@getTotalNeedsOpen')->middleware('datafilter');
     Route::post('need/{need}/volunteer', 'NeedsController@addVolunteer');
+    Route::get('need/{need}/volunteer/cancel', 'NeedsController@cancelVolunteer');
     Route::resource('needs', 'NeedsController');
 
     /** Needs Categories resource module */

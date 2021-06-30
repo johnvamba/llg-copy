@@ -59,7 +59,7 @@ class NeedsMetController extends Controller
             ->where('status', 'in progress')
             ->latest()
             ->first();
-        
+
         if (!$goal) {
             return response()->json([
                 'message' => "You have not set your goal yet."
@@ -67,6 +67,10 @@ class NeedsMetController extends Controller
         }
 
         $date = Carbon::parse($goal->created_at);
+
+        $dateEnded = $goal->term == 'year' 
+            ? $date->copy()->endOfYear()->toDateString()
+            : $date->copy()->endOfMonth()->toDateString();
 
         $needsMet = NeedMet::whereHasMorph(
                 'model',
@@ -77,7 +81,7 @@ class NeedsMetController extends Controller
             )
             ->whereBetween('created_at', [
                 $date->copy()->toDateString(),
-                $date->copy()->endOfMonth()->toDateString()
+                $dateEnded
             ])
             ->pluck('need_id');
 
@@ -204,12 +208,11 @@ class NeedsMetController extends Controller
         $needsMets['volunteered'] = false;
 
         $needsMets['volunteers'] = NeedMet::where('need_id', $need->id)
-            ->limit(6)
             ->get();
 
         foreach($needsMets['volunteers'] as $met) {
             if (auth()->check()) {
-                if ($met->model->profile->id == auth()->user()->id) 
+                if ($met->model->profile->user_id == auth()->user()->id) 
                     $needsMets['volunteered'] = true;
             }
             $met->model->profile;

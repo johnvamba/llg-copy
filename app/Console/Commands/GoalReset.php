@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Carbon\Carbon;
+use App\User;
+use App\Goal;
 
 class GoalReset extends Command
 {
@@ -59,16 +62,14 @@ class GoalReset extends Command
                 $params['status'] = 'done';
             }
 
-            Goal::find($goal->id)->update(params);
+            Goal::find($goal->id)->update($params);
 
-            $user = User::find($goal->model_id);
-
-            $makeGoal = Goal::make([
-                    'term' => $goal->term,
-                    'need' => $goal->need
-                ]);
-
-            $user->goal()->save($makeGoal);
+            Goal::create([
+                'model_type' => $goal->model_type,
+                'model_id' => $goal->model_id,
+                'term' => $goal->term,
+                'need' => $goal->need
+            ]);
         }
 
         /** monthly goal */
@@ -85,16 +86,14 @@ class GoalReset extends Command
                 $params['status'] = 'done';
             }
 
-            Goal::find($goal->id)->update(params);
+            Goal::find($goal->id)->update($params);
 
-            $user = User::find($goal->model_id);
-
-            $makeGoal = Goal::make([
-                    'term' => $goal->term,
-                    'need' => $goal->need
-                ]);
-
-            $user->goal()->save($makeGoal);
+            Goal::create([
+                'model_type' => $goal->model_type,
+                'model_id' => $goal->model_id,
+                'term' => $goal->term,
+                'need' => $goal->need
+            ]);
         }
 
         $this->info('Goals has been reset');
