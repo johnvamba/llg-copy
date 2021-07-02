@@ -77,8 +77,6 @@ class NeedResource extends JsonResource
         if(is_null($this->approved_at))
             return 'pending';
 
-        $type = $this->whenLoaded('type', optional($this->type)->name) ?? "Donation"
-
         if(now()->gt($this->ended_at)) {
             if($this->raised >= $this->goal)
                 return 'achieved';
