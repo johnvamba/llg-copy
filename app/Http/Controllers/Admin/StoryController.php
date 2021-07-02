@@ -129,10 +129,12 @@ class StoryController extends Controller
             if($user = auth()->user()){
                 if($user->hasRole('organization admin'))
                     $story->update([
+                        'featured_start_date' => null,
                         'submitted_at' => $request->get('saveAs') != 'draft' ? now() : null,
                     ]);
                 else if($user->hasRole(['campus admin','admin']))
                     $story->update([
+                        'featured_start_date' => $request->get('feature') == 'true' ? now() : null,
                         'posted_at' => $request->get('saveAs') != 'draft' ? now() : null,
                         'submitted_at' => $request->get('saveAs') != 'draft' ? now() : null
                     ]);
@@ -232,6 +234,7 @@ class StoryController extends Controller
                     ]);
                 else if($user->hasRole(['campus admin','admin']))
                     $story->fill([
+                        'featured_start_date' => $request->get('feature') == 'true' ? now() : null,
                         'posted_at' => $request->get('saveAs') != 'draft' ? now() : null,
                     ]);
             }

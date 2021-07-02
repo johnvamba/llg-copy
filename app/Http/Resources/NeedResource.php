@@ -77,10 +77,16 @@ class NeedResource extends JsonResource
         if(is_null($this->approved_at))
             return 'pending';
 
-        if($this->raised >= $this->goal)
-            return 'achieved';
-        else 
-            return 'on-going';
+        $type = $this->whenLoaded('type', optional($this->type)->name) ?? "Donation"
+
+        if(now()->gt($this->ended_at)) {
+            if($this->raised >= $this->goal)
+                return 'achieved';
+              
+            return 'lapsed';
+        }
+            
+        return 'on-going';
     }
 
     protected function getRatio()

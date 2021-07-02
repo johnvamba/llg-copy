@@ -20,6 +20,8 @@ const RowTable = ({item, roles, checkValue = false, checkChange, writeStory = ()
             return <span className="label label-success">Achieved</span>;
             case 'on-going':
             return <span className="label label-active">On-Going</span>;
+            case 'lapsed':
+            return <span className="label label-pending">Lapsed</span>;
             case 'pending':
             return <span className="label label-pending">Pending</span>;
             default:
