@@ -604,13 +604,11 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getGroup($groupId, $userId)
+    public function getGroup(Request $request, $groupId, $userId)
     {
         $date;
 
-        $group = Group::with([
-                'user', 
-            ])
+        $group = Group::with(['user'])
             ->withCount(['requesting' => function(Builder $query) {
                 $query->where('status', 'pending');
             }, 'participants' => function(Builder $query) {
