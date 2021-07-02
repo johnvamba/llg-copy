@@ -111,6 +111,8 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::post('organizations/{organization}/reject', 'OrganizationController@reject');
         Route::get('organizations/{organization}/needs', 'OrganizationController@needs');
         Route::post('organizations/{organization}/access', 'OrganizationController@access');
+        Route::post('organizations/{organization}/resendInvite', 'OrganizationController@resendInvite');
+        Route::post('organizations/{organization}/removeUser', 'OrganizationController@removeUser');
         Route::get('organizations/credentials', 'OrganizationController@credentials');
         Route::post('organizations/credentials', 'OrganizationController@postCred');
 

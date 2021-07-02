@@ -27,6 +27,7 @@ use App\Http\Resources\Mini\NeedResource;
 
 use App\Jobs\Mail\OrgCreated;
 use App\Jobs\Mail\OrgStatus;
+use App\Jobs\Mail\OrgInvite;
 
 use App\OrgInvites;
 
@@ -388,6 +389,7 @@ class OrganizationController extends Controller
             ->map(function($invite){
                 if(isset($invite->user))
                     return $invite->user;
+                $invite->mobile_number = $invite->phone;
                 
                 $invite->invite_status = 'pending';
                 return $invite;
@@ -433,6 +435,37 @@ class OrganizationController extends Controller
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
+    }
+
+    public function resendInvite(Request $request, Organization $organization) 
+    {
+        if($invite = OrgInvites::find( $request->get('invite_id') ))
+        {
+            dispatch(new OrgInvite($invite->email, $organization, $invite));
+
+            return response()->json(['Email Invitations Resent'], 200);
+        }
+
+        return response()->json(['error' => "Invite missing for person"], 400);
+    }
+
+    public function removeUser(Request $request, Organization $organization) 
+    {
+        if($invite = OrgInvites::find( $request->get('invite_id') )) {
+            if($invite->delete()) 
+                return response()->json(['Invite Removed'], 200);
+            
+            return response()->json(['Invite Missing'], 400);
+        } else if($member = OrganizationMember::where('organization_id', $organization->id)
+                ->where("model_id", $request->get('member_id') )
+                ->first() ) {
+
+            if($member->delete()) 
+                return response()->json(['Member Removed'], 200);
+
+            return response()->json(['Member Missing'], 200);
+        }
+        return response()->json(['No user removed'], 400);
     }
 
     public function needs(Request $request, Organization $organization)
