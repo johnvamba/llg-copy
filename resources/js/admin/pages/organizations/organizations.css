@@ -614,6 +614,7 @@
 .tab-members__right i{
     color: #A7B3BF;
 }
+.tab-members__right.dropdown-toggle:after { content: none }
 .org-view-header{
     display: flex;
     align-items: center;

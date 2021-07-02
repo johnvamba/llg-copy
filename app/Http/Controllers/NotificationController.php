@@ -18,23 +18,17 @@ class NotificationController extends Controller
         //
         $recentNotifications = Notification::with(['from', 'to'])->where('to', auth()->user()->id)
             ->latest()
+            ->with('model')
             ->skip(0)
             ->take(3)
             ->get();
 
-        foreach($recentNotifications as $notification) {
-            $notification->model;
-        }
-
         $earlierNotifications = Notification::with(['from', 'to'])->where('to', auth()->user()->id)
-            ->latest()    
+            ->latest()
+            ->with('model')    
             ->skip(3)
             ->take(3)
             ->get();
-
-        foreach($earlierNotifications as $notification) {
-            $notification->model;
-        }
 
         $notifications = [
             'recent' => $recentNotifications,

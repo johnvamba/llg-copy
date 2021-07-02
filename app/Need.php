@@ -22,7 +22,7 @@ class Need extends Model implements HasMedia
 
     protected $appends = ['created'];
 
-    protected $dates = ['scheduled_at'];
+    protected $dates = ['scheduled_at', 'ended_at'];
 
     protected $with = ['tags'];
 

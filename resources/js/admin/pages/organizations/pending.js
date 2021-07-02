@@ -266,7 +266,7 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite, afterSubmit })
                 <div className="offers-create-form__body">
                     { (tab === 'details') && <TabQuestions {...questions}/>}
 
-                    { (tab === 'members') && <TabMembers members={members} loading={loadingMembers}/>}
+                    { (tab === 'members') && <TabMembers members={members} reloadMembers={()=>loadMembers(true)} loading={loadingMembers} orgId={data.id} disableResend={true}/>}
                     { (tab === 'active-needs') && <TabActiveNeeds needs={actives.data} loading={loadingNeedActives}/>}
                     { (tab === 'past-needs') && <TabActiveNeeds needs={pasts.data} loading={loadingNeedPasts}/>}
                 </div>

@@ -123,6 +123,8 @@ const NeedInfo = ({data, clickEdit, toClose, openStory, remove = () => {}}) => {
             return "On-Going";
             case 'pending':
             return "Pending";
+            case 'lapsed':
+            return "Lapsed";
             default:
             return "Unknown";
         }

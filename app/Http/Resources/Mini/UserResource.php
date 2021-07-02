@@ -25,8 +25,8 @@ class UserResource extends JsonResource
             'photo' => $this->when($this->relationLoaded('profile'), optional($this->profile)->avatar),
             'cover_photo' => $this->when($this->relationLoaded('profile'), optional($this->profile)->cover_photo),
             'invite_status' => $this->when(isset($this->invite_status), $this->invite_status),
-            'custom_date' => $this->when(isset($this->custom_date), Carbon::parse($this->custom_date)->format('m/d/y'))
-            // 'contact' => '(00) 0000 000'
+            'custom_date' => $this->when(isset($this->custom_date), Carbon::parse($this->custom_date)->format('m/d/y')),
+            'contact' => $this->mobile_number
         ];
     }
 
