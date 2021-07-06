@@ -56,8 +56,9 @@ class NeedsController extends Controller
                     ->orWhereIn('id', $needIds);
             }
             
-            if (array_key_exists('filterAmount',$filters)) 
+            if (array_key_exists('filterAmount',$filters) && $filters['filterAmount']) {
                 $needs->where('goal', '<=', floatval($filters['amount']));
+            }
         }
         
         $results = $needs
