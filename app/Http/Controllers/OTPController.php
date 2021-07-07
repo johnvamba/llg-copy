@@ -106,7 +106,7 @@ class OTPController extends Controller
 
         if (Hash::check($request->otp, $otp->otp)) {
             if ($date->lessThanOrEqualTo($otp->expiry)) {
-                $user = User::with('profile')->find($otp->user_id);
+                $user = User::with(['profile', 'campus'])->find($otp->user_id);
 
                 $token = $user->createToken('api')->accessToken;
                 $user->getRoleNames();

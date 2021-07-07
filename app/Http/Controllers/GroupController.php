@@ -444,7 +444,7 @@ class GroupController extends Controller
 
         if ($hasRequest) {
             return response()->json([
-                'message' => 'You have already requested in other group.'
+                'message' => 'You cannot join this group.'
             ], 409);
         }
 
