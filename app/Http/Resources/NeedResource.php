@@ -74,11 +74,13 @@ class NeedResource extends JsonResource
 
     protected function setStatus()
     {
+        $type = $this->whenLoaded('type', optional($this->type)->name, "Donation");
+
         if(is_null($this->approved_at))
             return 'pending';
 
         if(now()->gt($this->ended_at)) {
-            if($this->raised >= $this->goal)
+            if($this->raised >= $this->goal || $type !== 'Volunteer')
                 return 'achieved';
               
             return 'lapsed';
