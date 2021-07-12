@@ -80,10 +80,11 @@ class NeedResource extends JsonResource
             return 'pending';
 
         if(now()->gt($this->ended_at)) {
-            if($this->raised >= $this->goal || $type !== 'Volunteer')
+            if($this->raised >= $this->goal)
                 return 'achieved';
-              
-            return 'lapsed';
+            
+            if($type == 'Volunteer')
+                return 'lapsed';
         }
             
         return 'on-going';
