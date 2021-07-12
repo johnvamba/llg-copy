@@ -234,11 +234,12 @@ class GroupController extends Controller
         if (!$group) {
             $hasParticipated = GroupParticipant::where(function($query) {
                     $query->where('user_id', auth()->user()->id)
-                        ->where('status', 'approved');
+                        ->whereIn('status', ['approved', 'pending']);
                 })->first();
 
             if ($hasParticipated) {
-                $group = Group::find($hasParticipated->id);
+                $group = Group::find($hasParticipated->group_id);
+                $group['member_status'] = $hasParticipated->status;
             } else {
                 return response()->json($group);
             }
