@@ -9,11 +9,11 @@ const SearchBarRedux = () => {
     const dispatch = useDispatch();
 	const loc = useLocation();
     const search = useSelector(({SearchReducer}) => SearchReducer.search);
-    // useEffect(()=>{
-    // 	if(loc.pathname !== '/admin/dashboard' || loc.pathname !== '/admin') {
-    // 		dispatch( setSearch(null) )
-    // 	}
-    // }, [loc]);
+    useEffect(()=>{
+    	if(loc.pathname !== '/admin/dashboard' || loc.pathname !== '/admin') {
+    		dispatch( setSearch(null) )
+    	}
+    }, [loc]);
 
 	return <div className="flex flex-1 items-center pl-12 search-header">
         <button className="text-gray-500 mr-4 focus:outline-none" onClick={()=>setActive(!searchActive)}>
