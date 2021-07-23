@@ -66,7 +66,7 @@ class NeedsController extends Controller
                 $query->whereNotNull('approved_by')
                     ->whereRaw('raised < goal');
             })
-            ->latest()
+            ->inRandomOrder()
             ->paginate(10, ['*'], 'needs', $page);
 
         foreach ($results as $need) {
