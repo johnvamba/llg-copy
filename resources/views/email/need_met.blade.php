@@ -73,6 +73,7 @@
 				src="https://admin.neuma.church/images/neuma-logo.png"
 				alt="image"
 				class="img"
+				width="180px"
 			/>
 
 			<div class="content">

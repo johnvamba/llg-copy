@@ -63,6 +63,7 @@
 				src="https://admin.neuma.church/images/neuma-logo.png"
 				alt="image"
 				class="img"
+				width="180px"
 			/>
 			<div class="pre-content">
 				<h2>New Story was Published</h2>
