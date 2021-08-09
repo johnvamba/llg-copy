@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\GroupMessageEvent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use App\Http\Requests\GroupUpdateRequest;
@@ -482,6 +483,8 @@ class GroupController extends Controller
                 ->usingFileName($name.'.'.$extension)
                 ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
         }
+
+        event(new GroupMessageEvent($chat));
 
         $chat->getMedia();
 

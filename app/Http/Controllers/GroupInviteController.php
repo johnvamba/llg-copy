@@ -23,13 +23,15 @@ class GroupInviteController extends Controller
     }
 
     /**
-     * Get users not in group
+     * Get users that can be invited
      *
      * @param json
      * @return \Illuminate\Http\Response
      */
-    public function getUsersNotInGroup(Request $request, Group $group)
+    public function getUsersToInvite(Request $request, Group $group)
     {
+        $page = $request->page ?: 1;
+
         $participants = GroupParticipant::where('group_id', $group->id)
             ->where(function($query) use($group) {
                 $query->where('status', 'approved');
@@ -47,9 +49,16 @@ class GroupInviteController extends Controller
 
         $users = User::with('profile')
             ->role('user')
-            ->whereNotIn('id', $groupUsers)->get();
+            ->whereNotIn('id', $groupUsers);
 
-        return response()->json($users, 202);
+        if ($request->search) {
+            $users = $users->where('name', 'LIKE', '%'.strtolower($request->search).'%');
+        }
+
+        $results = $users->latest()
+            ->paginate(10, ['*'], 'user-to-invite', $page);
+
+        return response()->json($results, 200);
     }
 
     /**

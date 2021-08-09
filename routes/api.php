@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::post('login', 'AuthController@login');
 Route::post('direct/login/{mobileNumber}', 'AuthController@directLogin');
 Route::post('password/forget', 'AuthController@sendResetLinkEmail');
@@ -264,7 +263,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('stories', 'StoryController');
 
     /** Group invite resource module */
-    Route::get('users-not-in-group/{group}', 'GroupInviteController@getUsersNotInGroup');
+    Route::get('group-invites/{group}/users-to-invite', 'GroupInviteController@getUsersToInvite');
     Route::resource('group-invites', 'GroupInviteController');
     
     /** Group Participants resource module */

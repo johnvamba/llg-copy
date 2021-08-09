@@ -22,6 +22,12 @@ io.on('connection', function (socket) {
 		console.log("cancelled donation!")
 		socket.broadcast.emit('cancelled_donation', {});
 	});
+
+	socket.on("group message", (data) => {
+		console.log("broadcasting message...")
+		socket.emit('group_message', data)
+	});
+
 	// socket.on("*", function (data) {
 	// 	socket.emit('something', data)
 	// })
@@ -29,5 +35,6 @@ io.on('connection', function (socket) {
 
 http.listen(5000, function () {
 	console.log(`listening on http://3.25.191.28:5000`, http);
-	// console.log(`listening on http://192.168.1.16:5000`, http);
+	
+	// console.log(`listening on http://192.168.1.8:5000`, http); // for testing
 });

@@ -23,6 +23,9 @@ class EventServiceProvider extends ServiceProvider
         GroupInvite::class => [
             SendInvitationNotification::class,
         ],
+        GroupMessage::class => [
+            SendMessageNotification::class,
+        ],
     ];
 
     /**
