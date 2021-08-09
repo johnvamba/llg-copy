@@ -39,6 +39,7 @@ class TestControl extends Controller
         }
 
     	return new TransactionReceipt($organization, 
+            User::inRandomOrder()->first(),
     		[ 'Sample Transaction' => 200 ]
     	);
     }

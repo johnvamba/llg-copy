@@ -26,6 +26,7 @@
 			src="{{ asset('images/neuma-logo-white.png') }}"
 			alt="image"
 			class="img"
+			width="150px" 
 		/>
 	</div>
 	<h1>Neuma Report</h1>

@@ -99,6 +99,7 @@
 				src="{{asset('images/neuma-logo.png')}}"
 				alt="image"
 				class="img"
+				width="180px"
 			/>
 
 			<div class="content">
