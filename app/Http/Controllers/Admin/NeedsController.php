@@ -503,10 +503,19 @@ class NeedsController extends Controller
         $now = Carbon::now();
         $start = (clone $now)->subYear();
         $period = CarbonPeriod::create($start, '1 month', $now)->toArray();
-
-        $needs = Need::whereBetween('needs.created_at', [$start, $now])
+        //Number of needs created.
+        // $needs = Need::whereBetween('needs.created_at', [$start, $now])
+        //     ->leftJoin('needs_types', 'needs_types.id', 'needs.needs_type_id')
+        //     ->selectRaw("needs_types.name as need_type, count(needs.id) as data, YEAR(needs.created_at) year, MONTH(needs.created_at) month")
+        //     ->groupBy('need_type')//;
+        //     ->groupBy('year')
+        //     ->groupBy('month')
+        //     ->get();
+        //number of needs met
+        $needs = NeedMet::whereBetween('need_mets.created_at', [$start, $now])
+            ->leftJoin('needs', 'needs.id', 'need_mets.need_id')
             ->leftJoin('needs_types', 'needs_types.id', 'needs.needs_type_id')
-            ->selectRaw("needs_types.name as need_type, count(needs.id) as data, YEAR(needs.created_at) year, MONTH(needs.created_at) month")
+            ->selectRaw("needs_types.name as need_type, count(need_mets.id) as data, YEAR(need_mets.created_at) year, MONTH(need_mets.created_at) month")
             ->groupBy('need_type')//;
             ->groupBy('year')
             ->groupBy('month')

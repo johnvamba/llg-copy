@@ -31,7 +31,7 @@ const DonationGraph = () => {
         }],
         options: {
             title: {
-                text: 'Needs',
+                text: 'Needs Met',
                 align: 'left',
                 offsetY: 20,
                 style: {

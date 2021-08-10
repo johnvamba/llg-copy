@@ -115,7 +115,7 @@
 		const token = Cookies.get('oToken_admin') || Cookies.get('oToken_org_admin');
 		const options = {
 	            title: {
-	                text: 'Needs',
+	                text: 'Needs Met',
 	                align: 'left',
 	                offsetY: 20,
 	                style: {
@@ -193,7 +193,6 @@
 			}
 		}).then(({ data })=>{
 			const { donation, fundraise, volunteer, categories } = data
-			console.log('response?', data)
 			var chart = new ApexCharts(document.querySelector("#chart"), 
 				{
 					...options, 
