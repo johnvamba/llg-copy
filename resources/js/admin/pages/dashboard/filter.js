@@ -16,7 +16,7 @@ const DashboardFilter = ({onClose, generate}) => {
     const [org, setOrg] = useState(null)
     const [errors, setErrors] = useState({})
     const [needs, setNeeds] = useState({
-        open: false,
+        open: true,
         mets: false,
     })
     const [types, setTypes] = useState({
@@ -45,6 +45,9 @@ const DashboardFilter = ({onClose, generate}) => {
         const url = new URLSearchParams(obj).toString();
         window.open(`/needs/print?${url}`, '__blank');
     }
+    const changeRadioOption = (value = false, option = 'open', disable = 'mets') => {
+        setNeeds({ ...needs, [option]: value ? value : false, [disable]: false })
+    }
 
     return (
         <div className="form dashboard-filter">
@@ -52,14 +55,29 @@ const DashboardFilter = ({onClose, generate}) => {
                 <div className="form-group">
                     <label>Needs</label>
                     <div className="flex mt-2">
-                        <div className="form-check mr-4">
-                            <input type="checkbox" className="form-check-input" id="open" 
-                            checked={needs.open} onChange={e=>setNeeds({...needs, open: e.target.checked})}/>
+                        <div className="flex items-center mr-4">
+                            <input type="radio" className="form-radio cursor-pointer mr-2" 
+                                name="radio" 
+                                value="public" 
+                                checked={needs.open} 
+                                onChange={e=>changeRadioOption(e.target.checked, "open", "mets")} 
+                            />
+                            {
+                            /*<input type="checkbox" className="form-check-input" id="open"  checked={needs.open} onChange={e=>setNeeds({...needs, open: e.target.checked})}/>*/
+                            }
                             <label className="form-check-label" htmlFor="open">Open Needs</label>
                         </div>
-                        <div className="form-check mr-4">
-                            <input type="checkbox" className="form-check-input" id="mets" 
-                            checked={needs.mets} onChange={e=>setNeeds({...needs, mets: e.target.checked})}/>
+                        <div className="flex items-center">
+                            <input type="radio" className="form-radio cursor-pointer mr-2" 
+                                name="radio" 
+                                value="public" 
+                                checked={needs.mets} 
+                                onChange={e=>changeRadioOption(e.target.checked, "mets", "open")} 
+                                />
+                            {
+                            /*<input type="checkbox" className="form-check-input" id="mets" 
+                                checked={needs.mets} onChange={e=>setNeeds({...needs, mets: e.target.checked})}/>*/
+                            }
                             <label className="form-check-label" htmlFor="mets">Needs Met</label>
                         </div>
                     </div>
