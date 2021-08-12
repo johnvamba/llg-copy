@@ -51,7 +51,8 @@ class SendMessageNotification
         $notification = [
             "tokens" => $tokens->toArray(),
             "data" => [
-                'message' => $event->params['message']
+                'message' => $event->params['message'],
+                'type' => 'group_message'
             ]
         ];
 

@@ -19,9 +19,41 @@ use App\Need;
 use App\NeedMet;
 use DB;
 use Carbon\Carbon;
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
+use FCM;
 
 class GroupController extends Controller
 {
+    public function testNotification()
+    {
+        $notification = [
+            "tokens" => ['fGfuYrdGbU8MqxkhmAWUG4:APA91bGaCMya52kMJda6duf9zk94tc9GMCQ5RHYg1jsj9zAzSR-FYpUEFmXK3PtJsXh_tRDokIujzDCPCa1MTgY7LOeKSYULZH0lFoP2T9hCwKGLNiLpEKhfjiZ2Cqa_XsjMPJoWqdq3'],
+            "data" => [
+                'message' => "demo",
+                'type' => 'group_message'
+            ]
+        ];
+
+        $optionBuilder = new OptionsBuilder();
+        $optionBuilder->setTimeToLive(60*20);
+
+        $notificationBuilder = new PayloadNotificationBuilder('Group Invitation');
+        $notificationBuilder->setBody($notification['data']['message'])
+                            ->setSound('default');
+
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData(['data' => json_encode($notification['data'], true)]);
+
+        $option = $optionBuilder->build();
+        $notificationBuild = $notificationBuilder->build();
+        $data = $dataBuilder->build();
+
+        $downstreamResponse = FCM::sendTo($notification['tokens'], $option, $notificationBuild, $data);
+        dd($downstreamResponse);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -47,7 +79,7 @@ class GroupController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getGroups(Request $request)
+    public function Currents(Request $request)
     {
         $results['columns'] = [
             'id',
@@ -236,6 +268,90 @@ class GroupController extends Controller
             $hasParticipated = GroupParticipant::where(function($query) {
                     $query->where('user_id', auth()->user()->id)
                         ->whereIn('status', ['approved', 'pending']);
+                })->first();
+
+            if ($hasParticipated) {
+                $group = Group::find($hasParticipated->group_id);
+                $group['member_status'] = $hasParticipated->status;
+            } else {
+                return response()->json($group);
+            }
+        }
+
+        $group['goal'] = Goal::whereHasMorph(
+                'model',
+                ['App\Group'],
+                function(Builder $query) use ($group) {
+                    $query->where('model_id', $group->id);
+                }
+            )
+            ->where('status', 'in progress')
+            ->latest()
+            ->first();
+
+        $date = Carbon::parse($group['goal']->created_at);
+
+        if (!$group) {
+            $participated = GroupParticipant::where([
+                    ['user_id', auth()->user()->id],
+                    ['status', 'approved']
+                ])
+                ->first();
+
+            if ($participated) {
+                $group = Group::where('group_id', $participated->group_id)
+                    ->first();
+            } else {
+                return response()->json($participated);
+            }
+        }
+
+        $participants = GroupParticipant::where([
+                ['group_id', $group->id],
+                ['status', 'approved'],
+            ])
+            ->pluck('user_id');
+
+        $participants->push($group->user_id);
+
+        $group['need_mets_count'] = NeedMet::whereHasMorph(
+                'model',
+                ['App\User'],
+                function ($query) use ($participants) {
+                    $query->whereIn('model_id', $participants);
+                }
+            )
+            ->whereBetween('created_at', [
+                $date->copy()->toDateString(),
+                $date->copy()->endOfMonth()->toDateString()
+            ])
+            ->count();
+
+        $group['members_count'] = GroupParticipant::where([
+                ['group_id', $group->id],
+                ['status', 'approved']
+            ])->count();
+
+        $group->getMedia();
+        $group['photo'] = $group->getFirstMediaUrl('photo');
+
+        return response()->json($group);
+    }
+
+    /**
+     * Display user joined/created group.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getCurrentGroup(Request $request)
+    {
+        $group = Group::where('user_id', auth()->user()->id)
+            ->first();
+
+        if (!$group) {
+            $hasParticipated = GroupParticipant::where(function($query) {
+                    $query->where('user_id', auth()->user()->id)
+                        ->where('status', 'approved');
                 })->first();
 
             if ($hasParticipated) {
@@ -608,7 +724,7 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getGroup(Request $request, $groupId, $userId)
+    public function Current(Request $request, $groupId, $userId)
     {
         $date;
 

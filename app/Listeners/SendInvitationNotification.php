@@ -41,7 +41,8 @@ class SendInvitationNotification
         $notification = [
             "tokens" => $tokens->toArray(),
             "data" => [
-                'message' => $event->params['description']
+                'message' => $event->params['description'],
+                'type' => 'group_invitation'
             ]
         ];
 
