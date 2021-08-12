@@ -2,25 +2,29 @@
 @push('css')
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.26.1/apexcharts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.0/dist/js.cookie.min.js"></script>
+<!-- <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.26.1/apexcharts.min.css" rel="stylesheet">
+<link href="{{ asset('css/print.css') }}" media="print" rel="stylesheet" />
 <style type="text/css">
-	* {
-		font-family: 'Inter', 'Arial', sans-serif;
-	}
-	.header {
-		width: 100%;
-	    height: 80px;
-	    margin: 0 auto;
-	    display: flex;
-	    align-items: center;
-	    background-color: #587B7F;
-	    justify-content: center;
-	    align-content: center;
-	}
+* {
+	font-family: 'Inter', 'Arial', sans-serif;
+}
+.header {
+	width: 100%;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    background-color: #587B7F;
+    justify-content: center;
+    align-content: center;
+}
 </style>
 @endpush
 @section('content')
-<div>
+<div id="printable">
 	<div class="header">
 		<img 
 			src="{{ asset('images/neuma-logo-white.png') }}"
@@ -108,19 +112,10 @@
 @push('js')
 <script>
 	(function(){
+		const token = Cookies.get('oToken_admin') || Cookies.get('oToken_org_admin');
 		const options = {
-	        	series: [{
-		            name: 'Donations',
-		            data: [2,3,5]
-		        }, {
-		            name: 'Fundraise',
-		            data: [1,5,4]
-		        }, {
-		            name: 'Volunteer',
-		            data: [2,1,0]
-		        }],
 	            title: {
-	                text: 'Needs',
+	                text: 'Needs Met',
 	                align: 'left',
 	                offsetY: 20,
 	                style: {
@@ -139,8 +134,17 @@
 	            chart: {
 	                type: 'bar',
 	                height: '500px',
+	                width: "1200px",
 	                toolbar: {
 	                    show: false
+	                },
+	                events: {
+	                	animationEnd: function() {
+		                	setTimeout(()=>{
+		                		// printJS('printable', 'html'); //bati
+		                		window.print()
+		                	}, 100)
+	                	}
 	                }
 	            },
 	            legend: {
@@ -152,7 +156,7 @@
 	                bar: {
 	                    horizontal: false,
 	                    columnWidth: '55%',
-	                    borderRadius: 15,
+	                    borderRadius: 10,
 	                    // endingShape: 'rounded'
 	                },
 	            },
@@ -164,10 +168,10 @@
 	                width: 2,
 	                colors: ['transparent']
 	            },
-	            xaxis: {
-	                categories: ['Test 1', "Test 2", "Test 3"]
-	                // categories: ['Jan '+data.year, 'Feb '+data.year, 'Mar '+data.year, 'Apr '+data.year, 'May '+data.year, 'Jun '+data.year, 'Jul '+data.year, 'Aug '+data.year, 'Setp '+data.year, 'Oct '+data.year, 'Nov '+data.year, 'Dec '+data.year],
-	            },
+	            
+	            noData: {
+					text: 'Loading...'
+				},
 	            fill: {
 	                opacity: 1
 	            },
@@ -183,11 +187,31 @@
 	                strokeDashArray: 3
 	            }
 	        }
-		var chart = new ApexCharts(document.querySelector("#chart"), options);
-		chart.render();
-
-		window.print();
-		//window.onafterprint = function(){ window.close() };
+		axios.get("/api/web/needs/graph", {
+			headers: {
+				'Authorization': "Bearer "+ token
+			}
+		}).then(({ data })=>{
+			const { donation, fundraise, volunteer, categories } = data
+			var chart = new ApexCharts(document.querySelector("#chart"), 
+				{
+					...options, 
+		        	series: [{
+			            name: 'Donations',
+			            data: donation
+			        }, {
+			            name: 'Fundraise',
+			            data: fundraise
+			        }, {
+			            name: 'Volunteer',
+			            data: volunteer
+			        }],
+			        xaxis: {
+		                categories
+		            }
+			   	});
+			chart.render();
+		})
 	})();
 </script>
 @endpush

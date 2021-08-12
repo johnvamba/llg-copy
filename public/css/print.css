@@ -1,0 +1,24 @@
+* {
+	font-family: 'Inter', 'Arial', sans-serif;
+}
+@media print {
+	* {
+    	-webkit-print-color-adjust: exact; 
+	}
+	body {
+		min-height: unset !important;
+		height: auto !important;
+	}
+	#printable {
+		width: 50%;
+	}
+	.header {
+	    height: 80px;
+	    margin: 0 auto;
+	    display: flex;
+	    align-items: center;
+	    background-color: #587B7F;
+	    justify-content: center;
+	    align-content: center;
+	}
+}
