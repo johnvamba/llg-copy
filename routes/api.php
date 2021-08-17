@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::get('test', 'GroupController@testNotification');
 Route::post('login', 'AuthController@login');
 Route::post('direct/login/{mobileNumber}', 'AuthController@directLogin');
 Route::post('password/forget', 'AuthController@sendResetLinkEmail');
@@ -268,6 +267,8 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::resource('group-invites', 'GroupInviteController');
     
     /** Group Participants resource module */
+    Route::get('group-participants/participated', 'GroupParticipantController@getGroupsParticipated');
+    Route::get('group-participants/requested', 'GroupParticipantController@getGroupsRequested');
     Route::get('group/{group}/participants/page/{page?}', 'GroupParticipantController@index');
     Route::post('group-participants/{groupId}/cancel-request', 'GroupParticipantController@cancelRequest');
     Route::resource('group-participants', 'GroupParticipantController');
@@ -275,6 +276,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     /** Group resource module */
     Route::get('group/me', 'GroupController@getMyGroup');
     Route::get('group/current', 'GroupController@getCurrentGroup');
+    
     Route::post('group/lists', 'GroupController@getGroups');
     Route::post('group/search/people', 'GroupController@searchPeople');
     Route::post('group/{group}/update-goal', 'GoalController@updateGroupGoal');

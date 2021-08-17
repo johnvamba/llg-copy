@@ -105,4 +105,24 @@ class GroupParticipantController extends Controller
                 ], 500);
         }
     }
+
+    public function getGroupsParticipated(Request $request)
+    {
+        $results = GroupParticipant::where([
+            ['user_id', auth()->user()->id],
+            ['status', 'approved']
+        ])->pluck('group_id');
+
+        return response()->json($results);
+    }
+
+    public function getGroupsRequested(Request $request)
+    {
+        $results = GroupParticipant::where(function($q) use ($request) {
+            $q->where('user_id', auth()->user()->id)
+                ->where('status', 'pending');
+        })->pluck('group_id');
+
+        return response()->json($results);
+    }
 }

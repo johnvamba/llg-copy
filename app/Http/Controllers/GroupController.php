@@ -19,41 +19,9 @@ use App\Need;
 use App\NeedMet;
 use DB;
 use Carbon\Carbon;
-use LaravelFCM\Message\OptionsBuilder;
-use LaravelFCM\Message\PayloadDataBuilder;
-use LaravelFCM\Message\PayloadNotificationBuilder;
-use FCM;
 
 class GroupController extends Controller
 {
-    public function testNotification()
-    {
-        $notification = [
-            "tokens" => ['fGfuYrdGbU8MqxkhmAWUG4:APA91bGaCMya52kMJda6duf9zk94tc9GMCQ5RHYg1jsj9zAzSR-FYpUEFmXK3PtJsXh_tRDokIujzDCPCa1MTgY7LOeKSYULZH0lFoP2T9hCwKGLNiLpEKhfjiZ2Cqa_XsjMPJoWqdq3'],
-            "data" => [
-                'message' => "demo",
-                'type' => 'group_message'
-            ]
-        ];
-
-        $optionBuilder = new OptionsBuilder();
-        $optionBuilder->setTimeToLive(60*20);
-
-        $notificationBuilder = new PayloadNotificationBuilder('Group Invitation');
-        $notificationBuilder->setBody($notification['data']['message'])
-                            ->setSound('default');
-
-        $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData(['data' => json_encode($notification['data'], true)]);
-
-        $option = $optionBuilder->build();
-        $notificationBuild = $notificationBuilder->build();
-        $data = $dataBuilder->build();
-
-        $downstreamResponse = FCM::sendTo($notification['tokens'], $option, $notificationBuild, $data);
-        dd($downstreamResponse);
-    }
-
     /**
      * Display a listing of the resource.
      *
