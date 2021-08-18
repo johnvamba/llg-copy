@@ -69,7 +69,7 @@
 			<thead class="thead-dark">
 				<tr>
 					<th>Need</th>
-					<th>Organization</th>
+					<th>Organisation</th>
 					<!-- <th>Created By</th> -->
 					<th>Type of Need</th>
 					<th>Goal</th>

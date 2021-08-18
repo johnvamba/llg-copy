@@ -65,7 +65,7 @@
 				</strong>
 
 				<p>
-					<span>{{ $org->name ?? 'an organization'}}</span> has submitted an application request for an organization account on Neuma.
+					<span>{{ $org->name ?? 'an organisation'}}</span> has submitted an application request for an organisation account on Neuma.
 					<br/>
 					<br/>
 					<br/>
