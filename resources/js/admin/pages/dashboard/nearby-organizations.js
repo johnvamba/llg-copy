@@ -15,8 +15,8 @@ const NearbyOrganizations = ({...props}) => {
     const [all, setAll] = useState(false);
     //HQ
     const [center, setCenter] = useState({
-        lat: -37.8180604,
-        lng: 145.0001764
+        lat: -37.8136,
+        lng: 144.9631
     });
     
     const loc = useSelector(({AuthUserReducer}) => AuthUserReducer.loc);
@@ -95,6 +95,7 @@ const NearbyOrganizations = ({...props}) => {
                 >
                     <p className="text-xs py-2 text-gray-500 font-thin">
                         Show
+                        <span className="float-right fa fa-times" onClick={()=> setShowFilter(false)}></span>
                     </p>
 
                     <div className="flex flex-wrap">

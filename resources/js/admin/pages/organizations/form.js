@@ -46,8 +46,8 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
     const [submitting, setSubmitting] = useState(false);
     const [location, setLocation] = useState({
         location: '',
-        lat: -33.868782, 
-        lng: 151.207583
+        lat: -37.8136, 
+        lng: 144.9631
     })
     const [loading, setLoading] = useState(false);
     const [campus, setCampus] = useState([]);
@@ -72,9 +72,9 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             setSubmitting(false)
             setErrors({})
             setLocation({
-                location: 'Sydney, Australia',
-                lat: -33.868782, 
-                lng: 151.207583
+                location: 'Melbourne, Australia',
+                lat: -37.8136, 
+                lng: 144.9631
             })
         }
     }, [data])
