@@ -121,7 +121,7 @@
 	<div class="receipt-header">
 		<img class="rounded-img" src="{{ optional($template)->getFirstMediaUrl('photo') ?? optional($org)->getFirstMediaUrl('photo') ?? 'http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp'}}"/>
 		<div class="receipt-title">
-			<strong>{{ optional($org)->name ?? 'Organization'}}</strong>
+			<strong>{{ optional($org)->name ?? 'Organisation'}}</strong>
 			<address>{{ optional($org)->location ?? 'Location'}}</address>
 		</div>
 	</div>
@@ -129,12 +129,12 @@
 		<strong>Dear {{ $user->name ?? 'User'}}</strong>
 		<br/>
 		@if(!trim(optional($template)->html_content))
-		<p>We give thanks to your generous donation. <br/> We Appreciate you helping out our organization.</p>
+		<p>We give thanks to your generous donation. <br/> We Appreciate you helping out our organisation.</p>
 		@else
 			{!! optional($template)->html_content !!}
 		@endif
 		<!-- Content Here -->
-		<strong>{{ optional($org)->name ?? 'Organization'}}</strong>
+		<strong>{{ optional($org)->name ?? 'Organisation'}}</strong>
 	</div> 
 	<div class="receipt-summary">
 		<p>Summary</p>
