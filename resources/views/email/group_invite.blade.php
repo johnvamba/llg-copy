@@ -21,9 +21,9 @@
 				<strong>Dear {{$user['name'] ?? 'User'}}, </strong>
 
 				<p>
-					You are invited to join {{ $group->name ?? 'a group' }} on Love-Lives Generously.
+					{{ $group->name ?? 'A group' }} has invited you to be apart of their community on the Neuma Care App.
 					<br/>
-					Sign-in and be up-to-date with your local community.
+					Log in to accept this request and join your friends as you transform your City, one need at a time.
 					<br/>
 					<br/>
 					Warm welcome.
