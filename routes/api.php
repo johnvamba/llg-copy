@@ -286,7 +286,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('groups/{group}/join-request', 'GroupController@getJoinRequest');
     Route::get('groups/messages/{group}', 'GroupController@messages');
     Route::post('groups/message/{group}', 'GroupController@addMessage');
-    Route::get('groups/{group}/user/{user}', 'GroupController@getGroup');
+    Route::get('groups/{group}/user/{user}', 'GroupController@current');
     Route::resource('groups', 'GroupController');
 
     /** Orgnization Categories resource module */

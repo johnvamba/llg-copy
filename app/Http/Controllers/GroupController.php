@@ -692,7 +692,7 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function Current(Request $request, $groupId, $userId)
+    public function current(Request $request, $groupId, $userId)
     {
         $date;
 
