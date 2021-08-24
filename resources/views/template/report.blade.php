@@ -42,6 +42,7 @@
 			<thead>
 				<tr>
 					<th>Need</th>
+					<th>Donor</th>
 					<th>Organisation</th>
 					<th>Amount</th>
 					<th>Date</th>
@@ -51,6 +52,7 @@
 				@forelse($needs as $need)
 				<tr>
 					<td>{{ $need->title }}</td>
+					<td>{{ "Donor missing" }}
 					<td>{{ optional($need->organization)->name }}</td>
 					<!-- <td>Added By</td> -->
 					<td>$ {{ number_format(0, 2) }}</td>
@@ -64,48 +66,6 @@
 				@endforelse
 			</tbody>
 		</table>
-		{{--
-		<table class="table">
-			<thead class="thead-dark">
-				<tr>
-					<th>Need</th>
-					<th>Organisation</th>
-					<!-- <th>Created By</th> -->
-					<th>Type of Need</th>
-					<th>Goal</th>
-					<th>Raised</th>
-					<th>Status</th>
-					<th>Date Added</th>
-				</tr>
-			</thead>
-			<tbody>
-				@forelse($needs as $need)
-				<tr>
-					<td>{{ $need->title }}</td>
-					<td>{{ optional($need->organization)->name }}</td>
-					<!-- <td>Added By</td> -->
-					<td>{{ optional($need->type)->name }}</td>
-					<td>{{ number_format($need->Goal, 2) }}</td>
-					<td>{{ number_format($need->raised, 2) }}</td>
-					<td>
-						@if(is_null($need->approved_at))
-							Pending
-				        @elseif($need->raised >= $need->goal)
-				            Achieved
-				        @else 
-				            On-going
-				        @endif
-					</td>
-					<td>{{ optional($need->created_at)->format('m/d/Y') }}</td>
-				</tr>
-				@empty
-				<tr>
-					<td colspan="7">No need listing found on your query</td>
-				</tr>
-				@endforelse
-			</tbody>
-		</table>
-			--}}
 	</div>
 <div>
 @endsection

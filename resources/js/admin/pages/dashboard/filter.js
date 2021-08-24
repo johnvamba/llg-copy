@@ -16,13 +16,13 @@ const DashboardFilter = ({onClose, generate}) => {
     const [org, setOrg] = useState(null)
     const [errors, setErrors] = useState({})
     const [needs, setNeeds] = useState({
-        open: true,
-        mets: false,
+        open: false,
+        mets: true,
     })
     const [types, setTypes] = useState({
-        donations: false,
-        fundraise: false,
-        volunteer: false
+        donations: true,
+        fundraise: true,
+        volunteer: true
     })
     const roles = useSelector( ({AuthUserReducer}) => AuthUserReducer.roles);
 
