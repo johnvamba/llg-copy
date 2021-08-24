@@ -73,7 +73,7 @@ const Dashboard = ({ ...props }) => {
                             </div>
 
                             <div className="flex flex-initial flex-shrink-0 flex-col w-64">
-                                <UserMonitoring />
+                                {/*<UserMonitoring />*/}
                                 <RecentNeeds />
                             </div>
                         </div>

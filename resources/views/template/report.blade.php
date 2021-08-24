@@ -41,7 +41,7 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th>Donors</th>
+					<th>Need</th>
 					<th>Organisation</th>
 					<th>Amount</th>
 					<th>Date</th>
