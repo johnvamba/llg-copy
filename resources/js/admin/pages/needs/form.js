@@ -45,9 +45,9 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
     const [need_link, setUrl] = useState('');
     // const [address, setAddress] = useState('');
     const [location, setLocation] = useState({
-        formatted_address: '',
-        lat: -37.8180604,
-        lng: 145.0001764
+        formatted_address: 'Melbourne, Australia',
+        lat: -37.8136, 
+        lng: 144.9631
     })
     const [cropper, openCropper] = useState({
         url: null,
@@ -129,9 +129,9 @@ const NeedForm = ({handleForm, data = {}, AuthUserReducer}) => {
             setErrors({})
             // setAddress('')
             setLocation({
-                formatted_address: '',
-                lat: -37.8180604,
-                lng: 145.0001764
+                formatted_address: 'Melbourne, Australia',
+                lat: -37.8136, 
+                lng: 144.9631
             })
             setOrganization({})
             setSubmitting(false)

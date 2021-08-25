@@ -106,9 +106,9 @@ class UsersController extends Controller
                 + [
                     'first_name' => $request->firstName,
                     'last_name' => $request->lastName,
-                    'location' => $request->location ?? 'Sydney, Australia',
-                    'lat' => $request->lat ?? -33.868782, 
-                    'lng' => $request->lng ?? 151.207583
+                    'location' => $request->location ?? 'Melbourne, Australia',
+                    'lat' => $request->lat ?? -37.8136, 
+                    'lng' => $request->lng ?? 144.9631
                 ]
             );
 

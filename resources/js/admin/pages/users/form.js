@@ -12,6 +12,7 @@ import {IMaskInput} from 'react-imask';
 import CircleImageForm from '../../../components/CircleImageForm';
 import LoadingScreen from '../../../components/LoadingScreen';
 import ImageCropper from '../../../components/ImageCropper'
+import Location from '../../../components/Location'
 
 const selOption = [
     { value: 'user', label: 'App User'},
@@ -31,7 +32,11 @@ const UsersForm = ({ data, showItem, handleForm }) => {
         mobile_number: '(02) 00000-0000',
         bio: '',
     })
-
+    const [location, setLocation] = useState({
+        location: '',
+        lat: -37.8136, 
+        lng: 144.9631
+    })
     const [loading, setLoading] = useState(false)
     const [photo, setPhoto] = useState(null);
     const [type, setType] = useState({ value: 'user', label: 'App User'});
@@ -80,6 +85,11 @@ const UsersForm = ({ data, showItem, handleForm }) => {
             setType({ value: 'user', label: 'App User'})
             setOrganization({})
             setErrors({})
+            setLocation({
+                location: 'Melbourne, Australia',
+                lat: -37.8136, 
+                lng: 144.9631
+            })
             setSubmitting(false)
         }
     }, [data])
@@ -97,11 +107,16 @@ const UsersForm = ({ data, showItem, handleForm }) => {
         setLoading(true)
         api.get(`/api/web/users/${data.id}`)
             .then(({data}) => {
-                const { photo, type, organization, campus } = data.data
+                const { photo, type, organization, campus, location, lng, lat } = data.data
                 setPhoto(photo || '')
                 setType( selectOptions.find(i => i.value == type) )
                 setOrganization(organization || {})
                 setCampus(campus)
+                setLocation({
+                    location: location || 'Melbourne, Australia',
+                    lat: lat || -37.8136, 
+                    lng: lng || 144.9631
+                })
             }).catch(({response})=>{
                 setErrors({}) //set empty if success.
             }).finally(()=>{
@@ -135,6 +150,14 @@ const UsersForm = ({ data, showItem, handleForm }) => {
     const handleCampus = (campus) => {
         setCampus(campus)
         removeError('campus')
+    }
+
+    const handleLocation = ({formatted_address, geometry}) => {
+        setLocation({
+            location: formatted_address, 
+            lat: geometry.location.lat(), 
+            lng: geometry.location.lng()
+        })
     }
 
     const validateSubmit = (e) => {
@@ -345,6 +368,16 @@ const UsersForm = ({ data, showItem, handleForm }) => {
                                     (errors.mobile_number || false) && <span className="text-xs pt-1 text-red-500 italic">Missing or wrong mobile number</span>
                                 }
                             </div>
+                        </div>
+                        <div className="w-full xl:w-full px-2">
+                            <Location 
+                                className={`short-width ${errors.location && 'form-error'}`}
+                                name={'location'}
+                                label={"Default Location"}
+                                defaultValue={location.location}
+                                placesSelected={handleLocation}
+                                errors={errors.location || []}
+                            />
                         </div>
                         <div className="w-full xl:w-full px-2">
                             <div className={`form-group ${errors.bio && 'form-error'}`}>
