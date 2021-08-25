@@ -70,6 +70,7 @@ Route::get('featured/stories', 'StoryController@featuredStory');
 Route::get('stories/recommended', 'StoryController@recommended');
 Route::get('stories/page/{page?}', 'StoryController@index');
 Route::get('stories/{story}/comments', 'StoryController@getComments');
+Route::get('stories/comments/{comment}/delete', 'StoryController@deleteComment');
 Route::get('stories/search/{keyword}/page/{page?}', 'StoryController@searchStory');
 
 /** Group */

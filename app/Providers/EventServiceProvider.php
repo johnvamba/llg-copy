@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use App\Events\GroupInvite;
+use App\Events\GroupMessage;
+use App\Events\GroupRequestEvent;
 use App\Listeners\SendInvitationNotification;
+use App\Listeners\SendMessageNotification;
+use App\Listeners\SendGroupRequestNotification;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -25,6 +29,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         GroupMessage::class => [
             SendMessageNotification::class,
+        ],
+        GroupRequestEvent::class => [
+            SendGroupRequestNotification::class,
         ],
     ];
 

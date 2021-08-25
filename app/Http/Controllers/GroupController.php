@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\GroupMessageEvent;
+use App\Events\GroupRequestEvent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use App\Http\Requests\GroupUpdateRequest;
@@ -17,6 +18,7 @@ use App\Tag;
 use App\GroupChat;
 use App\Need;
 use App\NeedMet;
+use App\Device;
 use DB;
 use Carbon\Carbon;
 
@@ -591,14 +593,22 @@ class GroupController extends Controller
     {
         $participant = GroupParticipant::find($id);
 
+        $params = [
+            'group_id' => $participant->group_id,
+            'user_id' => $participant->user_id,
+            'isApproved' => $request->status == 'approved' ? true : false
+        ];
+
+        $participant->update(request()->only(['status']));
+
         if ($request->status == 'approved') {
-            $participant->update(request()->only(['status']));
-            
             GroupParticipant::where('user_id', $participant->user_id)
                 ->where('status', 'pending')
                 ->delete();
-        }
-
+        } 
+        
+        event(new GroupRequestEvent($params));
+        
         return response()->json($participant, 202);
     }
 

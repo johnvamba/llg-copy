@@ -329,6 +329,21 @@ class StoryController extends Controller
         return response()->json($comment, 202);
     }
 
+    public function deleteComment(Request $request, CommentStory $comment)
+    {
+        try {
+            $comment = CommentStory::find($comment->id)->delete();
+            
+            return response()->json([
+                    'message' => 'Comment successfully deleted.'
+                ], 204);
+        } catch (\Exception $e) {
+            return response()->json([
+                    'message' => 'An error occurred. Please try again.'
+                ], 500);
+        }
+    }
+
     /**
      * Display the specified resource.
      *

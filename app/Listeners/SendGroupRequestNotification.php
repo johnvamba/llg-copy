@@ -2,18 +2,17 @@
 
 namespace App\Listeners;
 
-use App\Events\GroupMessageEvent;
+use App\Events\GroupRequestEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
-use App\GroupParticipant;
 use App\Group;
 use App\Device;
 use FCM;
 
-class SendMessageNotification
+class SendGroupRequestNotification
 {
     /**
      * Create the event listener.
@@ -28,31 +27,27 @@ class SendMessageNotification
     /**
      * Handle the event.
      *
-     * @param  GroupMessageEvent  $event
+     * @param  GroupRequestEvent  $event
      * @return void
      */
-    public function handle(GroupMessageEvent $event)
+    public function handle(GroupRequestEvent $event)
     {
         $group = Group::find($event->params['group_id']);
 
-        $participants = GroupParticipant::where(function($query) use ($event) {
-                $query->where('group_id', $event->params['group_id'])
-                    ->where('user_id', '!=', $event->params['user_id'])
-                    ->where('status', 'approved');
-            })
-            ->pluck('user_id');
-
-        $tokens = Device::whereIn('user_id', $participants)
+        $tokens = Device::where('user_id', $event->params['user_id'])
             ->pluck('fcm_token');
         
         if (!$tokens->count())
             return;
 
         $notification = [
-            "tokens" => $tokens->toArray(),
+            // "tokens" => $tokens->toArray(),
+            "tokens" => ['eEdCRa6ITPCC1o2UYTVATH:APA91bG9FhrbYJfeXSfioE0RtWwNnuvUMan_DWsHv1gzfp55UaflHhySB-vbrIyz_vtoXTnl5JxO8OzoE8bA7E8Qxo7inaXYmp_kdawxbsuCXad3BVczGcT9N3gtcJ4EJmzIjYGSdzqu'],
             "data" => [
-                'message' => $event->params['message'],
-                'type' => 'group_message'
+                'message' => $event->params['isApproved'] 
+                    ? "Your request from group $group->name has been approved" 
+                    : "Your request from group $group->name has been rejected",
+                'type' => 'group_request'
             ]
         ];
 
@@ -64,7 +59,7 @@ class SendMessageNotification
         $optionBuilder = new OptionsBuilder();
         $optionBuilder->setTimeToLive(60*20);
 
-        $notificationBuilder = new PayloadNotificationBuilder($group->name);
+        $notificationBuilder = new PayloadNotificationBuilder('Group Joined Response');
         $notificationBuilder->setBody($notification['data']['message'])
                             ->setSound('default');
 
@@ -76,14 +71,14 @@ class SendMessageNotification
         $data = $dataBuilder->build();
 
         $downstreamResponse = FCM::sendTo($notification['tokens'], $option, $notificationBuild, $data);
-
+        
         return;
     }
 
     /** 
      * Handle a job failure.
     */
-    public function failed(GroupMessageEvent $event, $exception)
+    public function failed(GroupRequestEvent $event, $exception)
     {
         \App::Log("failed group message notification");
     }
