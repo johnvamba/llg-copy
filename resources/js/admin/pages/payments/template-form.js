@@ -76,10 +76,26 @@ const TemplateForm = () => {
             setPhoto(photo)
             setOrgDetails({org_name, org_location})
             if(tryParseJson(raw_draft_json)){
-                setBodyField({ editorState: EditorState.createWithContent( convertFromRaw( JSON.parse(raw_draft_json) ) )})
+                let json = JSON.parse(raw_draft_json);
+                if(json && json.blocks.length > 0) {
+                    json = {
+                        ...json,
+                        blocks: json.blocks.map(block => {
+                            if(block.text == null)
+                                block.text = ""; //Fix on text null whiteline issue
+                            return block
+                        })
+                    }
+                }
+                setBodyField({ editorState: EditorState.createWithContent( convertFromRaw( json ) )})
             }
             setLoading(false)
-        }).finally(()=>{
+        })
+        /*.catch(()=>{
+            console.log("this should be cleared if you have a valid organisation. Other issue might be for the content");
+            setLoading(false)
+        })*/
+        .finally(()=>{
             setLoaded(true);
         })
         return token; //for useEffect

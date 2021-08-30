@@ -38,6 +38,7 @@
 		<div id="chart"></div>
 	</div>
 	<div class="content" style="width: auto; margin:auto;">
+		@if($needsmet->isNotEmpty())
 		<table class="table">
 			<thead>
 				<tr>
@@ -49,14 +50,17 @@
 				</tr>
 			</thead>
 			<tbody>
-				@forelse($needs as $need)
+				@forelse($needsmet as $need)
 				<tr>
-					<td>{{ $need->title }}</td>
-					<td>{{ "Donor missing" }}
-					<td>{{ optional($need->organization)->name }}</td>
+					<td>{{ optional($need->need)->title ?? "Unknown Need"}}</td>
+					<td>{{ optional($need->model)->name ?? 'Anonymous Donor' }}
+					<td>{{ optional($need->need->organization)->name ?? 'Unknown Organisation' }}</td>
 					<!-- <td>Added By</td> -->
-					<td>$ {{ number_format(0, 2) }}</td>
-					
+					@if($need->need_type->name == "Volunteer")
+					<td>{{ number_format($need->amount, 0) }}</td>
+					@else
+					<td>$ {{ number_format($need->amount, 2) }}</td>
+					@endif
 					<td>{{ optional($need->created_at)->format('m/d/Y') }}</td>
 				</tr>
 				@empty
@@ -66,6 +70,36 @@
 				@endforelse
 			</tbody>
 		</table>
+		@elseif($openneeds->isNotEmpty())
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Need</th>
+					<th>Organisation</th>
+					<th>Raised</th>
+					<th>Goal</th>
+					<th>Date</th>
+				</tr>
+			</thead>
+			<tbody>
+				@forelse($openneeds as $need)
+				<tr>
+					<td>{{ $need->title }}</td>
+					<td>{{ optional($need->organization)->name ?? 'Unknown Organisation' }}</td>
+					<!-- <td>Added By</td> -->
+					<td>{{ optional($need->type)->name == 'Volunteer' ? '$' : ''}} {{ number_format($need->raised, optional($need->type)->name == 'Volunteer' ? 2 : 0) }}</td>
+					<td>{{ optional($need->type)->name == 'Volunteer' ? '$' : ''}} {{ number_format($need->goal, optional($need->type)->name == 'Volunteer' ? 2 : 0) }}</td>
+
+					<td>{{ optional($need->created_at)->format('m/d/Y') }}</td>
+				</tr>
+				@empty
+				<tr>
+					<td colspan="7">No need listing found on your query</td>
+				</tr>
+				@endforelse
+			</tbody>
+		</table>
+		@endif
 	</div>
 <div>
 @endsection

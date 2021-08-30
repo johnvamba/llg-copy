@@ -4,7 +4,7 @@ import ReceiptList from './receipt-list';
 import TemplateForm1 from './template-form-1';
 import ReceiptTemplateV2 from './receipt-template-v2';
 import OffersPlus from '../../../svg/offers-plus';
-
+import './receipt.css'
 
 const ReceiptTemplate = () => {
 
