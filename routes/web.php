@@ -40,7 +40,7 @@ Route::group([
 
 Route::get('/admin/invite', 'Admin\EmailControllers@orgInvite');
 
-Route::get('/needs/print', 'Admin\Dashboard');
+Route::get('/needs/print', 'Admin\Dashboard')->middleware('shortlived');
 
 Route::view('/{path1?}/{path2?}/{path3?}/{path4?}/{path5?}', 'app');
 

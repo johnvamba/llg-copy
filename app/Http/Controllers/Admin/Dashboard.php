@@ -22,18 +22,20 @@ class Dashboard extends Controller
 
         $needsmet = collect();
         $openneeds = collect();
+        $show = 'mets';
 
         if ( filter_var($request->get('mets'), FILTER_VALIDATE_BOOLEAN) ) {
             $needsmet = $this->generateNeedMets($request, $startDate, $endDate);
         } else if ( filter_var($request->get('open'), FILTER_VALIDATE_BOOLEAN) ) {
+            $show = 'open';
             $openneeds = $this->generateOpenNeeds($request, $startDate, $endDate);
         }
 
-    	return view('template.report', compact('needsmet', 'openneeds'));
+    	return view('template.report', compact('needsmet', 'openneeds', 'show'));
     }
 
     protected function generateNeedMets(Request $request, $startDate = null, $endDate = null) {
-        $query = NeedMet::has('need')->with(['need_type','need.organization', 'model']);
+        $query = NeedMet::has('need')->with(['need_type','need.organization', 'model' => fn($user) => $user->withoutGlobalScopes() ]);
 
         if($set = $request->only('donations', 'fundraise', 'volunteer')) {
             $keys = array_map(fn($f) => ucfirst($f), array_keys( array_filter($set, fn($i) => filter_var($i, FILTER_VALIDATE_BOOLEAN) ) ) );

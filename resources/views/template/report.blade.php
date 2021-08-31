@@ -38,12 +38,12 @@
 		<div id="chart"></div>
 	</div>
 	<div class="content" style="width: auto; margin:auto;">
-		@if($needsmet->isNotEmpty())
+		@if($show == 'mets')
 		<table class="table">
 			<thead>
 				<tr>
-					<th>Need</th>
 					<th>Donor</th>
+					<th>Need</th>
 					<th>Organisation</th>
 					<th>Amount</th>
 					<th>Date</th>
@@ -53,11 +53,11 @@
 				@forelse($needsmet as $need)
 				<tr>
 					<td>{{ optional($need->need)->title ?? "Unknown Need"}}</td>
-					<td>{{ optional($need->model)->name ?? 'Anonymous Donor' }}
+					<td>{{ optional($need->model)->name ?? 'Anonymous Donor' }}</td>
 					<td>{{ optional($need->need->organization)->name ?? 'Unknown Organisation' }}</td>
 					<!-- <td>Added By</td> -->
 					@if($need->need_type->name == "Volunteer")
-					<td>{{ number_format($need->amount, 0) }}</td>
+					<td>{{ number_format($need->amount, 0) }} Volunteers</td>
 					@else
 					<td>$ {{ number_format($need->amount, 2) }}</td>
 					@endif
@@ -70,7 +70,7 @@
 				@endforelse
 			</tbody>
 		</table>
-		@elseif($openneeds->isNotEmpty())
+		@elseif($show == 'open')
 		<table class="table">
 			<thead>
 				<tr>

@@ -8,7 +8,6 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Helper\Traits\UserPortalTrait;
 use App\Mail\PasswordReset as ResetPasswordNotification;
 
 class User extends Authenticatable
@@ -17,7 +16,6 @@ class User extends Authenticatable
     use HasApiTokens;
     use HasRoles;
     use SoftDeletes;
-    use UserPortalTrait;
 
     /**
      * The attributes that are mass assignable.
