@@ -13,7 +13,7 @@ use App\Group;
 use App\Goal;
 use App\GroupLocation;
 use App\GroupParticipant;
-use App\User;
+use App\ScopedUser as User;
 use App\Mail\GroupInvitation;
 use App\Helper\Scopes\UserPortalScope;
 
