@@ -35,7 +35,7 @@ class Dashboard extends Controller
     }
 
     protected function generateNeedMets(Request $request, $startDate = null, $endDate = null) {
-        $query = NeedMet::has('need')->with(['need_type','need.organization', 'model' => fn($user) => $user->withoutGlobalScopes() ]);
+        $query = NeedMet::whereHas('need', fn($need) => $need->whereNotNull('needs.approved_at') )->with(['need_type','need.organization', 'model' => fn($user) => $user->withoutGlobalScopes() ]);
 
         if($set = $request->only('donations', 'fundraise', 'volunteer')) {
             $keys = array_map(fn($f) => ucfirst($f), array_keys( array_filter($set, fn($i) => filter_var($i, FILTER_VALIDATE_BOOLEAN) ) ) );

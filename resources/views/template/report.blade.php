@@ -52,8 +52,8 @@
 			<tbody>
 				@forelse($needsmet as $need)
 				<tr>
-					<td>{{ optional($need->need)->title ?? "Unknown Need"}}</td>
 					<td>{{ optional($need->model)->name ?? 'Anonymous Donor' }}</td>
+					<td>{{ optional($need->need)->title ?? "Unknown Need"}}</td>
 					<td>{{ optional($need->need->organization)->name ?? 'Unknown Organisation' }}</td>
 					<!-- <td>Added By</td> -->
 					@if($need->need_type->name == "Volunteer")
