@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
+import { findDOMNode } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import * as DonationsActions from '../../../redux/donations/actions';
 import Card from './card';
@@ -33,6 +34,20 @@ const Dashboard = ({ ...props }) => {
     // if (roles.name !== 'admin') {
     //     window.location = '/admin';
     // }
+    const close = (evt) => {
+        if(popperElement && !popperElement.contains(evt.target)) {
+            document.removeEventListener('click', close);
+            showFilter(false);
+        }
+    }
+
+    useEffect(()=>{
+        if(popperElement && toggleFilter) {
+            document.addEventListener('click', close)
+        } else {
+            document.removeEventListener('click', close);
+        }
+    }, [toggleFilter, popperElement]);
 
     return (
         <>
