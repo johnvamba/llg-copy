@@ -82,13 +82,14 @@ const Stories = () => {
         }
     }
 
-    const loadStories = (clearCache = false, type = null) => {
+    const loadStories = (clearCache = false, type = null, firstPage = null) => {
         setLoading(true)
         const addFilter = {}; //for redux values
         const token = axios.CancelToken.source();
         apiLoad({
             params: {
-                page, ...addFilter,
+                page: firstPage || page || 1, 
+                ...addFilter,
                 type: type || getType(),
                 search
             },
@@ -99,11 +100,13 @@ const Stories = () => {
             cancelToken: token.token
         }).then((res)=>{
             const { data } = res
+            const { meta } = data
             setStoryData({ 
                 ...storyData,
                 data: data.data,
-                meta: data.meta
+                meta: meta
             })
+            setPage(meta.current_page || 1);
             setLoading(false)
         }).finally(()=>{
         })
@@ -118,6 +121,14 @@ const Stories = () => {
         if(edited)
             setEdited(false)
     }, [location])
+
+    useEffect(() => {
+        const ct = loadStories(true, null, 1)
+        return ()=>{
+            //cancel api here
+            ct.cancel('Resetting');
+        }
+    }, [search])
 
     //disable scrolling if there is any modal/popup
     if (windowWidth < 1024) {
