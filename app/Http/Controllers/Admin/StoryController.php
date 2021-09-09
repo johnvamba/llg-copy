@@ -22,11 +22,20 @@ class StoryController extends Controller
      */
     public function index(Request $request)
     {
+        DB::enableQueryLog();
         $stories = Story::with(['categories:name', 'media', 'organization.media'])
         ->withCount(['appreciates', 'comments'])
         ->authorRole()
         ->latest();
         $type = '';
+
+        if($string = $request->get('search')) {
+            $stories->where(function($q) use ($string) {
+                //We'll allow other searches thru here
+                $q->where('title', 'like', '%'.$string.'%')
+                ->orWhereHas('organization', fn($o) => $o->where('organizations.name', 'like', '%'.$string.'%'));
+            });
+        }
 
         if($request->get('type') == 'drafts'){
             $stories->whereNull('posted_at')->whereNull('submitted_at');
@@ -40,11 +49,11 @@ class StoryController extends Controller
                 $stories->whereNotNull('posted_at');
             }
         }
-
-        if($string = $request->get('search')) {
-            $stories->where('title', 'like', '%'.$string.'%');
-        }
         StoryResource::setConversion('listing');
+
+        if($request->get('debug')){
+            dd($stories->get(), DB::getQueryLog(), session()->only(['camp_id','org_id']));
+        }
         return StoryResource::collection( $stories->paginate() );
     }
 

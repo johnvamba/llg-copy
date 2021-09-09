@@ -25,13 +25,41 @@ const containerStyle = {
     height: '440px'
 };
 
-const OrgWindow = ({org, loading}) => {
-    const { name, date_added, site, phone_number, email, description, banner, photo } = org;
+const ShowWindow = ({org, loading, reload}) => {
+    const { name, date_added, site, phone_number, email, description, banner, photo, incomplete = false } = org; // if officially org
+    const { privacy = 'Public', participants_count = 0 } = org; // actually group/church
+    const { org_count = 0 } = org; //if campus or location
+
+    if(incomplete) 
+        return <header className="info-window">
+            <p>An error occured on loading this organisation. </p>
+            <a type="button" className="text-blue" onClick={reload}>Click here to try again.</a>
+        </header>
 
     if(loading) 
         return <header className="info-window loading">
             <LoadingScreen title="Loading Organisation"/>
         </header>
+
+    if(org.type == 'church') 
+        return <header className="info-window">
+        <div className="info-photo">
+            <div className="org-info_rounded-img" style={{backgroundImage: `url(${photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}}></div>
+        </div>
+        <div className='org-view__details'>
+            <h2>{ name }<span className="float-right">{participants_count} Members</span></h2>
+            <p>{ description }</p>
+        </div>
+    </header>
+
+    if(org.type == 'campus') 
+        return <header className="info-window">
+            <div className="w-full h-1" style={{backgroundImage: `url(${photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}}></div>
+            <div className='org-view__details'>
+                <h2>{ name }<span className="float-right">{org_count} Organisations</span></h2>
+                <p>{ description }</p>
+            </div>
+    </header>
 
     return <header className="info-window">
         <div className="info-photo">
@@ -66,12 +94,16 @@ const OrgWindow = ({org, loading}) => {
 }
 
 const ordNulls = {
-    lng: null,
-    lat: null,
+    lat: -37.8136,
+    lng: 144.9631
 }
 
 const displayMap = ({markers, lat, lng, options = {}, ...props}) => {
     const [showItem, setShowItem] = useState({...ordNulls});
+    const [center, setCenter] = useState({
+        lat, 
+        lng
+    })
     const [org, setOrg] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -80,11 +112,22 @@ const displayMap = ({markers, lat, lng, options = {}, ...props}) => {
     const handleClick = async(org) => {
         setLoading(true);
         setShowItem({ lng: org.lng, lat: org.lat });
-        setOrg(org);
-        api.get(`/api/web/organizations/${org.id}`)
+        setCenter({ lng: org.lng, lat: org.lat });
+        setOrg({...org, incomplete: false});
+        let url = `/api/web/organizations/${org.id}`;
+        if(org.type == 'church')
+            url = `/api/web/groups/${org.id}`;
+        else if(org.type == 'campus')
+            url = `/api/web/campus/${org.id}`;
+        api.get(url, {
+            clearCacheEntry: org.incomplete
+        })
         .then(({data})=> {
-            setOrg({...org, ...data.data})
+            setOrg({...org, ...data.data, incomplete: false})
             // props.onViewOrganization(data);
+            setLoading(false)
+        }).catch(()=>{
+            setOrg({...org, incomplete: true});
             setLoading(false)
         });
     }
@@ -95,7 +138,10 @@ const displayMap = ({markers, lat, lng, options = {}, ...props}) => {
             mapContainerStyle={containerStyle}
             options={{...defaultMapOptions, ...options}}
             zoom={14}
-            center={{lat: parseFloat(lat), lng: parseFloat(lng)}}
+            center={{
+                lat: parseFloat(center.lat),
+                lng: parseFloat(center.lng)
+            }}
         >
             {
                 (showItem.lat && showItem.lng && org) && <InfoWindow
@@ -105,7 +151,7 @@ const displayMap = ({markers, lat, lng, options = {}, ...props}) => {
                         lng: parseFloat(showItem.lng)
                     }}
                 >
-                    <OrgWindow org={org} loading={loading}/>
+                    <ShowWindow org={org} loading={loading} reload={()=>handleClick(org)}/>
                 </InfoWindow>
             }
             <Marker
@@ -117,7 +163,7 @@ const displayMap = ({markers, lat, lng, options = {}, ...props}) => {
                 mks.map((org, key) => (
                     <Marker
                         className="Mappin"
-                        key={key}
+                        key={`${org.type}-${org.id}`}
                         icon={OrgMarker}
                         position={{ lat: parseFloat(org.lat), lng: parseFloat(org.lng) }}
                         onClick={() => handleClick(org)}

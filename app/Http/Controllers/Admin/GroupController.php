@@ -13,7 +13,7 @@ use App\Group;
 use App\Goal;
 use App\GroupLocation;
 use App\GroupParticipant;
-use App\User;
+use App\ScopedUser as User;
 use App\Mail\GroupInvitation;
 use App\Helper\Scopes\UserPortalScope;
 
@@ -163,7 +163,7 @@ class GroupController extends Controller
         //load other parts here
         $group->loadMissing('campus');
 
-        GroupResource::setConversion('photo');
+        GroupResource::setConversion('listing');
 
         return new GroupResource($group);
     }

@@ -38,23 +38,29 @@
 		<div id="chart"></div>
 	</div>
 	<div class="content" style="width: auto; margin:auto;">
+		@if($show == 'mets')
 		<table class="table">
 			<thead>
 				<tr>
-					<th>Donors</th>
+					<th>Donor</th>
+					<th>Need</th>
 					<th>Organisation</th>
 					<th>Amount</th>
 					<th>Date</th>
 				</tr>
 			</thead>
 			<tbody>
-				@forelse($needs as $need)
+				@forelse($needsmet as $need)
 				<tr>
-					<td>{{ $need->title }}</td>
-					<td>{{ optional($need->organization)->name }}</td>
+					<td>{{ optional($need->model)->name ?? 'Anonymous Donor' }}</td>
+					<td>{{ optional($need->need)->title ?? "Unknown Need"}}</td>
+					<td>{{ optional($need->need->organization)->name ?? 'Unknown Organisation' }}</td>
 					<!-- <td>Added By</td> -->
-					<td>$ {{ number_format(0, 2) }}</td>
-					
+					@if($need->need_type->name == "Volunteer")
+					<td>{{ number_format($need->amount, 0) }} Volunteers</td>
+					@else
+					<td>$ {{ number_format($need->amount, 2) }}</td>
+					@endif
 					<td>{{ optional($need->created_at)->format('m/d/Y') }}</td>
 				</tr>
 				@empty
@@ -64,38 +70,26 @@
 				@endforelse
 			</tbody>
 		</table>
-		{{--
+		@elseif($show == 'open')
 		<table class="table">
-			<thead class="thead-dark">
+			<thead>
 				<tr>
 					<th>Need</th>
 					<th>Organisation</th>
-					<!-- <th>Created By</th> -->
-					<th>Type of Need</th>
-					<th>Goal</th>
 					<th>Raised</th>
-					<th>Status</th>
-					<th>Date Added</th>
+					<th>Goal</th>
+					<th>Date</th>
 				</tr>
 			</thead>
 			<tbody>
-				@forelse($needs as $need)
+				@forelse($openneeds as $need)
 				<tr>
 					<td>{{ $need->title }}</td>
-					<td>{{ optional($need->organization)->name }}</td>
+					<td>{{ optional($need->organization)->name ?? 'Unknown Organisation' }}</td>
 					<!-- <td>Added By</td> -->
-					<td>{{ optional($need->type)->name }}</td>
-					<td>{{ number_format($need->Goal, 2) }}</td>
-					<td>{{ number_format($need->raised, 2) }}</td>
-					<td>
-						@if(is_null($need->approved_at))
-							Pending
-				        @elseif($need->raised >= $need->goal)
-				            Achieved
-				        @else 
-				            On-going
-				        @endif
-					</td>
+					<td>{{ optional($need->type)->name == 'Volunteer' ? '$' : ''}} {{ number_format($need->raised, optional($need->type)->name == 'Volunteer' ? 2 : 0) }}</td>
+					<td>{{ optional($need->type)->name == 'Volunteer' ? '$' : ''}} {{ number_format($need->goal, optional($need->type)->name == 'Volunteer' ? 2 : 0) }}</td>
+
 					<td>{{ optional($need->created_at)->format('m/d/Y') }}</td>
 				</tr>
 				@empty
@@ -105,7 +99,7 @@
 				@endforelse
 			</tbody>
 		</table>
-			--}}
+		@endif
 	</div>
 <div>
 @endsection

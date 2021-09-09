@@ -74,7 +74,7 @@ const NearbyOrganizations = ({...props}) => {
     }
 
     return (
-        <div className="w-full bg-white rounded-lg border">
+        <div className="w-full bg-white rounded-lg border" style={{height: "fit-content"}}>
             <div className="flex flex-row px-4 py-4">
                 <div className="flex flex-1 items-center">
                     <h2>

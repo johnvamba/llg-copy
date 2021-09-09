@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
-use App\User;
+use App\ScopedUser as User;
 use Spatie\Permission\Models\Role;
 use App\OrgInvites;
 

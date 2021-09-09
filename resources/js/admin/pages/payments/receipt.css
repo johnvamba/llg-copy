@@ -1,0 +1,4 @@
+.public-DraftEditor-content .public-DraftStyleDefault-block {
+    /* Override default of 'pre-wrap' so that whitespace characters wrap onto new lines as expected. */
+    white-space: break-spaces;
+}

@@ -16,26 +16,32 @@ const DashboardFilter = ({onClose, generate}) => {
     const [org, setOrg] = useState(null)
     const [errors, setErrors] = useState({})
     const [needs, setNeeds] = useState({
-        open: true,
-        mets: false,
+        open: false,
+        mets: true,
     })
     const [types, setTypes] = useState({
-        donations: false,
-        fundraise: false,
-        volunteer: false
+        donations: true,
+        fundraise: true,
+        volunteer: true
     })
     const roles = useSelector( ({AuthUserReducer}) => AuthUserReducer.roles);
+    const u_id = useSelector( ({AuthUserReducer}) => AuthUserReducer.profile ? AuthUserReducer.profile.profile.user_id : null);
 
     const dispatch = useDispatch();
 
     const clickDispatch = ()=>{
-        const obj = {
+        let obj = {
             ...needs, ...types, dateType, 
             startdate: startdate.toUTCString(), 
             enddate: enddate.toUTCString(),
-            org: (roles.name == 'campus admin' || roles.name == 'admin') && !_.isEmpty(org) ? org.id : null,
-            campus: (roles.name == 'admin') && !_.isEmpty(campus) ? campus.id : null
+            u_id
         }
+
+        if((roles.name == 'campus admin' || roles.name == 'admin') && !_.isEmpty(org))
+            obj.org = org.id;
+
+        if(roles.name == 'admin' && !_.isEmpty(campus))
+            obj.campus = campus.id;
 
         if(typeof generate == 'function'){
             generate(obj)

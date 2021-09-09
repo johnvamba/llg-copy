@@ -5,9 +5,12 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
+use App\Helper\Traits\NeedMetPortalTrait;
+
 class NeedMet extends Model
 {
-    //
+    use NeedMetPortalTrait;
+
     protected $guarded = [];
 
     protected $appends = ['created'];

@@ -65,6 +65,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'datafilter' => \App\Http\Middleware\FilterByUserType::class,
-        'wpcors' => \App\Http\Middleware\WPCors::class
+        'wpcors' => \App\Http\Middleware\WPCors::class,
+
+        'shortlived' => \App\Http\Middleware\ShortLivedAuthenticate::class
     ];
 }

@@ -15,7 +15,7 @@ use App\CampusOrganisation;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OrgInvitation;
 
-use App\User;
+use App\ScopedUser as User;
 use App\UserProfile;
 use App\Need;
 
