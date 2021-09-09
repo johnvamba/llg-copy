@@ -216,6 +216,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('users/lists', 'UserController@getUsers');
     Route::post('user/add-card/{organization}', 'UserController@addCard');
     Route::post('user/cards', 'UserController@getCards');
+    Route::get('users/need-mets', 'NeedsMetController@getNeedMets');
     Route::resource('users', 'UserController');
     
     /** Goal resource module */

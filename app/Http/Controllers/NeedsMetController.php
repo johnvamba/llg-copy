@@ -42,6 +42,51 @@ class NeedsMetController extends Controller
         return response()->json($needsMet);
     }
 
+    public function getNeedMets(Request $request)
+    {
+        $needsMet = NeedMet::whereHasMorph(
+            'model',
+            ['App\User'],
+            function ($query) {
+                $query->where('model_id', auth()->user()->id);
+            }
+        )
+        ->latest()
+        ->pluck('need_id');
+
+        if (!$needsMet) {
+            return response()->json($needsMet);
+        }
+
+        $needs = Need::with('type', 'categories', 'contribution')
+            ->whereIn('id', $needsMet)
+            ->get();
+
+        foreach ($needs as $need) {
+            $need->model;
+            $need->getMedia('photo');
+
+            $need->categories = $need->categoriesList; //reset?
+
+            $need['photo'] = $need->organization->getFirstMediaUrl('photo');
+            $need['cover_photo'] = $need->organization->getFirstMediaUrl('cover_photo');
+
+            $need['totalActiveNeeds'] = Need::where(
+                    'organization_id', $need->organization_id
+                )
+                ->whereRaw('raised < goal')
+                ->count();
+            
+            $need['totalPastNeeds'] = Need::where(
+                    'organization_id', $need->organization_id
+                )
+                ->whereRaw('raised >= goal')
+                ->count();
+        }
+
+        return response()->json($needs);
+    }
+
     /**
      * Display user needs met.
      *
