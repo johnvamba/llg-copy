@@ -6,7 +6,11 @@ import {
     Marker } from "@react-google-maps/api"
 import { Link } from 'react-router-dom';
 import MarkerImg from '../../../../assets/images/marker.png';
-import OrgMarker from '../../../../assets/images/orgmarker.png';
+import OrgsMarker from '../../../../assets/images/orgs.png';
+import OffersMarker from '../../../../assets/images/offers.png';
+import GroupMarker from '../../../../assets/images/groups.png';
+import LocMarker from '../../../../assets/images/churches.png';
+
 import LoadingScreen from '../../LoadingScreen'
 
 import Style from './style';
@@ -30,6 +34,21 @@ const ShowWindow = ({org, loading, reload}) => {
     const { privacy = 'Public', participants_count = 0 } = org; // actually group/church
     const { org_count = 0 } = org; //if campus or location
 
+    const knowType = () => {
+        switch(org.type){
+            case "organisation":
+            return "Organisation";
+            // case "campus":
+            // return ;
+            case "campus":
+            return "Location";
+            case "group":
+            return "Group";
+            default:
+            return "Component";
+        }
+    }
+
     if(incomplete) 
         return <header className="info-window">
             <p>An error occured on loading this organisation. </p>
@@ -38,10 +57,10 @@ const ShowWindow = ({org, loading, reload}) => {
 
     if(loading) 
         return <header className="info-window loading">
-            <LoadingScreen title="Loading Organisation"/>
+            <LoadingScreen title={`Loading ${knowType()}`}/>
         </header>
 
-    if(org.type == 'church') 
+    if(org.type == 'group') 
         return <header className="info-window">
         <div className="info-photo">
             <div className="org-info_rounded-img" style={{backgroundImage: `url(${photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}}></div>
@@ -115,7 +134,7 @@ const displayMap = ({markers, lat, lng, options = {}, ...props}) => {
         setCenter({ lng: org.lng, lat: org.lat });
         setOrg({...org, incomplete: false});
         let url = `/api/web/organizations/${org.id}`;
-        if(org.type == 'church')
+        if(org.type == 'group')
             url = `/api/web/groups/${org.id}`;
         else if(org.type == 'campus')
             url = `/api/web/campus/${org.id}`;
@@ -130,6 +149,20 @@ const displayMap = ({markers, lat, lng, options = {}, ...props}) => {
             setOrg({...org, incomplete: true});
             setLoading(false)
         });
+    }
+
+    const renderMarker = (org) => {
+        switch(org.type){
+            case "organisation":
+            return OrgsMarker;
+            // case "campus":
+            // return ;
+            case "campus":
+            return LocMarker;
+            case "group":
+            default:
+            return GroupMarker;
+        }
     }
 
     return (
@@ -164,7 +197,7 @@ const displayMap = ({markers, lat, lng, options = {}, ...props}) => {
                     <Marker
                         className="Mappin"
                         key={`${org.type}-${org.id}`}
-                        icon={OrgMarker}
+                        icon={renderMarker(org)}
                         position={{ lat: parseFloat(org.lat), lng: parseFloat(org.lng) }}
                         onClick={() => handleClick(org)}
                     />

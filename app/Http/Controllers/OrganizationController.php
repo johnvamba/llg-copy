@@ -177,7 +177,7 @@ class OrganizationController extends Controller
             ->orderBy('distance')->get();
         
         foreach($groups as $group) {
-            $group['type'] = 'church';
+            $group['type'] = 'group';
             $group['photo'] = $group->getFirstMediaUrl('photo');
         } 
 
