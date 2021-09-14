@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\ScopedUser as User;
+use App\User;
 use App\UserProfile;
 use App\CampusUser;
 use Illuminate\Support\Facades\Storage;
