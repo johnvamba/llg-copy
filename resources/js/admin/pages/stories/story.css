@@ -670,6 +670,7 @@
 }
 .view-story__body{
     padding: 27px;
+    flex-grow: 1;
 }
 .view-story__body .bg-cover{
     width: 100%;
@@ -885,13 +886,17 @@
     background-color: unset;
     border: 0;
 }
+section.view-story {
+    display: flex;
+    flex-direction: column;
+}
 
 section.view-story section.story-counts {
-    bottom: 0;
+    /*bottom: 0;*/
     display: flex;
     height: 60px;
     border-top: 1px solid #E7EAEF;
-    position: absolute;
+    /*position: absolute;*/
 }
 section.story-counts button {
     display: flex;
