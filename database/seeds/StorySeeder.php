@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Story;
 
 class StorySeeder extends Seeder
 {
@@ -17,10 +18,13 @@ class StorySeeder extends Seeder
 
             $orgUser = \App\User::inRandomOrder()->whereHas('roles', fn($role) => $role->where('name', 'organization admin'))->first();
 
+            $this->runStoryComments($faker);
+            return;
+
             for ($i=0; $i < 20; $i++) { 
                 $org = \App\Organization::inRandomOrder()->first();
                 # code...
-                $story = factory(\App\Story::class)->create([
+                $story = factory(Story::class)->create([
                     'user_id' => $orgUser->id, 
                     'organization_id' => $org->id,
                     'posted_at' => $faker->boolean(50) ? now() : null
@@ -42,6 +46,25 @@ class StorySeeder extends Seeder
                 }
             }
 
+        });
+    }
+
+    protected function runStoryComments($faker)
+    {
+        Story::all()->each(function($story) use ($faker) {
+            for ($x=0; $x < 5; $x++) { 
+                $user = \App\User::inRandomOrder()->whereHas('roles', fn($role) => $role->where('name', 'user'))->first();
+                factory(\App\StoryAppreciate::class)->create([
+                    'user_id' => $user->id, 
+                    'story_id' => $story->id, 
+                ]);
+
+                factory(\App\CommentStory::class)->create([
+                    'user_id' => $user->id, 
+                    'story_id' => $story->id,
+                    'comment' => $faker->text
+                ]);
+            }
         });
     }
 }

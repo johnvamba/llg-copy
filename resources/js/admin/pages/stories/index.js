@@ -8,6 +8,7 @@ import CreateStory from './create';
 import StoriesForm from './form';
 import EditStory from './edit';
 import View from './view';
+import ManageComment from './comments';
 import StoriesHeader from './header';
 import LoadingScreen from '../../../components/LoadingScreen'
 import { setOrg, setNeedId } from '../../../redux/stories/actions';
@@ -41,6 +42,7 @@ const Stories = () => {
     const [showCreateStory, setShowCreateStory] = useState(false);
     const [showViewStory, setShowViewStory] = useState(false);
     const [showEditStory, setShowEditStory] = useState(false);
+    const [showComments, setShowComments] = useState(false);
 
     const location = useLocation();
     const windowWidth = window.innerWidth;
@@ -143,10 +145,11 @@ const Stories = () => {
         setPage(parseInt(page));
     }
 
-    const handleForm = (data = {}, openForm = false, openView = false)=>{
+    const handleForm = (data = {}, openForm = false, openView = false, showComments = false)=>{
         setFocus(data)
         setShowCreateStory(openForm)
         setShowViewStory(openView)
+        setShowComments(showComments)
     }
 
     const afterSubmit = (data = {}, type = 'draft') => {
@@ -179,6 +182,7 @@ const Stories = () => {
             </section>
             { showCreateStory && <StoriesForm data={focus} handleForm={handleForm} afterSubmit={afterSubmit} /> }
             { showViewStory && <View data={focus} handleForm={handleForm} afterSubmit={afterSubmit} /> }
+            { showComments && <ManageComment data={focus} handleForm={handleForm} /> } 
         </>
     )
 

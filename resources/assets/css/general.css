@@ -130,7 +130,7 @@ input[type="time"]::-webkit-datetime-edit-ampm-field {
 	display: none;
 }
 
-header .filter-header .filter-content, .search-header .search-content, .dashboard-filter, .map-legend {
+header .filter-header .filter-content, .search-header .search-content, .dashboard-filter, .map-legend, .comment-buttons {
 	background: #FFFFFF;
 	border: 1px solid #E7EBF3;
 	box-sizing: border-box;

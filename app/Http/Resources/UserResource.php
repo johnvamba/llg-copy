@@ -29,7 +29,7 @@ class UserResource extends JsonResource
             'age' => $this->when($this->relationLoaded('profile'), optional($this->profile)->age, 18),
             'bio' => $this->when($this->relationLoaded('profile'), optional($this->profile)->bio),
 
-            'location' => $this->when($this->relationLoaded('profile'), optional($this->profile)->location),                
+            'location' => $this->when($this->relationLoaded('profile'), optional($this->profile)->location),
             'lng' => $this->when($this->relationLoaded('profile'), optional($this->profile)->lng),
             'lat' => $this->when($this->relationLoaded('profile'), optional($this->profile)->lat),
 

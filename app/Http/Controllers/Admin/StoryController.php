@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\StoryResource;
+use App\Http\Resources\StoryCommentResource;
 use App\Http\Controllers\Controller;
 use DB;
 use Str;
 use App\Jobs\Mail\StoryPublishing;
 use App\Story;
+use App\CommentStory;
 use App\Organization;
 use App\Category;
 use App\Activity;
@@ -316,7 +318,8 @@ class StoryController extends Controller
         }
     }
 
-    public function share(Story $story){
+    public function share(Story $story)
+    {
         DB::beginTransaction();
         try {
             // $story->update([
@@ -328,5 +331,38 @@ class StoryController extends Controller
             DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 400);
         }
+    }
+
+    public function loadComments(Request $request, Story $story) 
+    {
+        $comments = $story->comments()
+            ->with(['user' => fn($u) => $u->withoutGlobalScopes(), 'user_profile'])
+            ->latest();
+
+        // $comments->onlyVisible();
+
+        return StoryCommentResource::collection( $comments->paginate(20) );
+    }
+
+    public function deleteComment(Request $request, Story $story, CommentStory $comment) 
+    {
+        if(optional($comment)->delete()) 
+            return response()->json([ 'message' => 'Comment removed!'], 201);
+
+        return response()->json(['message' => 'Could not find comment!'], 403);
+    }
+
+    public function hideComment(Request $request, Story $story, CommentStory $comment)
+    {
+        if(optional($comment)->toHide( $request->hide )) {
+            $comment->loadMissing(['user' => fn($u) => $u->withoutGlobalScopes(), 'user_profile']);
+            
+            return response()->json([
+                'message' => $comment->hide ? 'Comment hidden!' : "Comment unhidden", 
+                'comment' => new StoryCommentResource($comment)
+            ], 201);
+        }
+
+        return response()->json(['message' => 'Could not find comment!'], 403);
     }
 }

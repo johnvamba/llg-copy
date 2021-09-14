@@ -166,6 +166,9 @@ Route::group(['middleware' => ['auth:api']], function () {
             'update' => 'adminstories.update',
             'destroy' => 'adminstories.destroy'
         ]);
+        Route::get('stories/{story}/comments', 'StoryController@loadComments');
+        Route::post('stories/{story}/comments/{comment}', 'StoryController@hideComment');
+        Route::delete('stories/{story}/comments/{comment}', 'StoryController@deleteComment');
         Route::post('stories/{story}/toggle', 'StoryController@toggle');
 
         Route::get('groups/async', 'GroupController@async');
