@@ -11,9 +11,11 @@ use App\User;
 use App\Campus;
 use App\Organization;
 use App\Activity;
+use App\ReportUse;
 
 use App\Jobs\Mail\OfferMail;
 use App\Http\Resources\OfferResource;
+use App\Http\Resources\ReportUseResource;
 use DB;
 use Str;
 
@@ -27,7 +29,7 @@ class OffersController extends Controller
     public function index(Request $request)
     {
         // DB::enableQueryLog();
-        $offers = ServiceOffer::latest()->with('serviceType');
+        $offers = ServiceOffer::latest()->with('serviceType')->withCount('reports');
 
         if($status = $request->get('status') ) {
             $offers->where('status', $status);
@@ -275,7 +277,7 @@ class OffersController extends Controller
     }
 
     public function disapprove(ServiceOffer $offer){
-    DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $offer->fill([
                 'status' => 'denied',
@@ -290,5 +292,29 @@ class OffersController extends Controller
             DB::rollBack();
             return response()->json(['error'=>$e->getMessage()], 400);
         }
+    }
+
+    public function getReports(Request $request, ServiceOffer $offer)
+    {
+        $reports = $offer->reports()
+            ->with(['user'=> fn($user) => $user->withoutGlobalScopes(), 'user_profile'])
+            ->latest()
+            ->get();
+
+        return ReportUseResource::collection($reports);
+    }
+
+    public function postReport(Request $request, ServiceOffer $offer)
+    {
+        $report = $offer->reports()->create([
+            'user_id' => auth()->user()->id,
+        ] + $request->only('thumbs', 'comment'));
+        
+        return new ReportUseResource( $report );
+    }
+
+    public function deleteReport(Request $request, ServiceOffer $offer)
+    {
+        // return new ReportUseResource( new ReportUse );
     }
 }

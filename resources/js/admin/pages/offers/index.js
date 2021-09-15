@@ -9,6 +9,8 @@ import Swal from 'sweetalert2';
 
 //As test icon only
 import OfferForm from './form';
+import ReportForm from './report-form';
+import ManageReports from './reports';
 import OfferView from './offer-view';
 import OfferTable from './table'
 
@@ -23,6 +25,8 @@ const Offers = () => {
     const [meta, setMeta] = useState({})
     const [showForm, setShowForm] = useState(false);
     const [showView, setShowView] = useState(false);
+    const [showReportUse, setShowReportUse] = useState(false);
+    const [showReportForm, setShowReportForm] = useState(false);
     const [focus, setFocus] = useState({});
 
     const [isChecked, setIsChecked] = useState(false);
@@ -81,10 +85,12 @@ const Offers = () => {
         setFocus(data)
     }
 
-    const showItem = (data = {}, showView = true, showForm=false) => {
+    const showItem = (data = {}, showView = true, showForm = false, showReportUse = false, showReportForm = false) => {
         setShowView(showView);
         setShowForm(showForm);
         setFocus(data);
+        setShowReportUse(showReportUse)
+        setShowReportForm(showReportForm)
     }
 
      const remove = (item) => {
@@ -137,7 +143,13 @@ const Offers = () => {
             }
             {
                 showView && 
-                <OfferView data={focus} setShowOfferEdit={(e)=>showItem(focus, false, true)} remove={()=>remove(focus)} toClose={()=>showItem({}, false)} />
+                <OfferView data={focus} setShowOfferEdit={(e)=>showItem(focus, false, true)} handleForm={showItem} remove={()=>remove(focus)} toClose={()=>showItem({}, false)} />
+            }
+            {
+                showReportUse && <ManageReports data={focus} handleForm={showItem}/>
+            }
+            {
+                showReportForm && <ReportForm data={focus} handleForm={showItem}/>
             }
         </>
     )

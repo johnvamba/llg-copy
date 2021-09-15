@@ -42,6 +42,11 @@ class ServiceOffer extends Model implements HasMedia
         return $this->belongsTo('App\ServiceType');
     }
 
+    public function reports()
+    {
+        return $this->hasMany(ReportUse::class, 'offer_id');
+    }
+
     // public function organization() //Nothing herrre.
     // {
     //     return $this->belongsTo('App\Organization');
