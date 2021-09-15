@@ -6,11 +6,13 @@ import Cross from '../../../svg/cross'
 import Quill from '../../../svg/quill'
 import { usePopper } from 'react-popper';
 import { swalSuccess, swalError } from '../../../components/helpers/alerts';
+import { useSelector } from 'react-redux';
 
 import { volunteer } from '../needs/categorylist';
+
 const findCategory = (title = 'Employment') => volunteer.find(i=>i.name == title);
 
-const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction}) => {
+const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, onShowInfo, popAction, handleForm, roles_name = ""}) => {
     const { title ="Untitled", type = "Employment", location = "N/A", status = "achieved", date = "Missing", photo = null} = item
     const cat = findCategory(type);
     const [approveElement, setApproveElement] = useState(null);
@@ -74,16 +76,30 @@ const RowTable = ({item, checkValue = false, checkChange, writeStory = ()=>{}, o
             status == 'pending' &&
             <td>
                 <div className="actions row-actions">
-                <button onClick={()=>popAction(approveElement, 'approve')}>
-                    <i ref={setApproveElement}>
-                    <Check />
-                    </i>
-                </button>
-                <button onClick={()=>popAction(rejectElement, 'disapprove')}>
-                    <i ref={setRejectElement}>
-                    <Cross/>
-                    </i>
-                </button>
+                    <button onClick={()=>popAction(approveElement, 'approve')}>
+                        <i ref={setApproveElement}>
+                        <Check />
+                        </i>
+                    </button>
+                    <button onClick={()=>popAction(rejectElement, 'disapprove')}>
+                        <i ref={setRejectElement}>
+                        <Cross/>
+                        </i>
+                    </button>
+                </div>
+            </td>
+        }
+        {
+            roles_name == 'organization admin' &&
+            <td>
+                <div className="actions row-actions">
+                    <Button className="primary-btn flex text-white bg-blue-500 hover:bg-blue-600" 
+                        onClick={(e)=>onShowInfo(e, false, false, false, true)}>
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12.9172 5.27255C11.7292 2.50805 9.81825 0.405049 8.8515 0.797299C7.20975 1.46555 9.8295 4.6703 1.76625 7.94705C1.0695 8.2313 0.893248 9.36305 1.185 10.041C1.476 10.7175 2.4285 11.3918 3.12525 11.109C3.246 11.0595 3.6885 10.917 3.6885 10.917C4.18575 11.5853 4.70625 11.1893 4.8915 11.613L5.76 13.608C5.92425 13.9845 6.29625 14.3333 6.56625 14.2305L8.10375 13.6463C8.45475 13.5128 8.538 13.1993 8.43075 12.9533C8.31525 12.687 7.84125 12.609 7.7055 12.2985C7.5705 11.9895 7.12875 10.995 7.002 10.6815C6.8295 10.2555 7.19625 9.9083 7.7295 9.85355C11.4 9.46955 12.0862 11.7375 13.3357 11.229C14.301 10.8353 14.1045 8.0348 12.9172 5.27255ZM12.504 9.75455C12.2887 9.8408 10.8442 8.70305 9.92175 6.5543C8.9985 4.40705 9.11475 2.4443 9.32925 2.35655C9.54375 2.2703 10.953 3.6443 11.8755 5.79155C12.7987 7.9388 12.7185 9.6668 12.504 9.75455Z" fill="white"/>
+                        </svg>
+                        Report Use
+                    </Button>
                 </div>
             </td>
         }
@@ -135,6 +151,7 @@ const ButtonPopper = ({buttonElement, actionClosure, btnAction, loading}) => {
 }
 //click on row shows popper
 const OfferTable = ({tab = null, data = [], showInfo, loading = false, type='approved', loadTable})=> {
+    const roles = useSelector(({AuthUserReducer}) => AuthUserReducer.roles);
     const [checkAll, setCheckAll] = useState(false)
     const [offers, setOffers] = useState([])
     const [popped, setPopItem] = useState(null)
@@ -202,7 +219,7 @@ const OfferTable = ({tab = null, data = [], showInfo, loading = false, type='app
                 <th className="">Status</th>
                 <th className="">Date Added</th>
                 {
-                    type == 'pending' &&
+                    (type == "pending" || roles.name == 'organization admin') &&
                     <th className=''>Action</th>
                 }
             </tr>
@@ -219,8 +236,10 @@ const OfferTable = ({tab = null, data = [], showInfo, loading = false, type='app
                         item={i} 
                         checkValue={i.checked}
                         checkChange={e=>handleRowCheckbox(i,e.target.checked)}
-                        onShowInfo={()=>showInfo(i)}
-                        popAction={(button, type)=>togglePopItem(i, button, type)}/>
+                        onShowInfo={(e,a,b,c,d)=>showInfo(i,a,b,c,d)}
+                        popAction={(button, type)=>togglePopItem(i, button, type)}
+                        roles_name={roles.name}
+                        />
                     ) :
                     <tr>
                         <td colSpan={type == 'pending' ? 7 : 6}>No data found</td>

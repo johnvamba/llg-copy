@@ -127,6 +127,10 @@ Route::group(['middleware' => ['auth:api']], function () {
             'destroy' => 'adminorg.destroy'
         ]);
 
+        Route::get('offers/{offer}/reports', 'OffersController@getReports');
+        Route::post('offers/{offer}/reports', 'OffersController@postReport');
+        Route::delete('offers/{offer}/reports', 'OffersController@deleteReport');
+
         Route::post('offers/{offer}/approve', 'OffersController@approve');
         Route::post('offers/{offer}/disapprove', 'OffersController@disapprove');
         Route::resource('offers', 'OffersController');
