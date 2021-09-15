@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 use App\Category;
 use App\Categorizes;
-use \DB;
+use DB;
 
 class UpdateCategories extends Command
 {
