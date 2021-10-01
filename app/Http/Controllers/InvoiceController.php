@@ -131,11 +131,12 @@ class InvoiceController extends Controller
     public function getTopDonors(Request $request)
     {
         $users = User::has('invoice.organization')->with(['invoice' => function($query) {
-                    $query->with('organization')
+                    $query->with(['organization', 'model'])
                     ->select(DB::raw('invoices.*, SUM(amount) as donations, count(*) as total'))
                     ->groupBy(['user_id', 'organization_id'])
-                    ->orderBy('donations', 'desc');
-            }, 'invoice.model'])
+                    ->orderBy('donations', 'desc')
+                    ->whereDate('created_at', '>', Carbon::now()->subDays(30));
+            }])
             ->get();
 
         foreach ($users as $user) {
