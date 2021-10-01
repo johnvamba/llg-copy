@@ -16,7 +16,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
-        'App\Console\Commands\GoalReset'
+        'App\Console\Commands\GoalMonthlyReset',
+        'App\Console\Commands\GoalYearlyReset',
     ];
 
     /**
@@ -27,8 +28,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        /***
+         *  Command to reset the goal monthly and yearly
+         */
+        $schedule->command('goal:monthly-reset')->everyMinute();
+        $schedule->command('goal:yearly-reset')->everyMinute();
+
+
         $schedule->job(new OrgReport)->weeklyOn(1, "8:00");
-        $schedule->command('goal:reset')->monthly();
     }
 
     /**

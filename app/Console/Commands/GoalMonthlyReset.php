@@ -2,27 +2,27 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\User;
 use App\Goal;
 
-class GoalReset extends Command
+class GoalMonthlyReset extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'goal:reset';
+    protected $signature = 'goal:monthly-reset';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'This will create a new goal in the month';
 
     /**
      * Create a new command instance.
@@ -41,7 +41,17 @@ class GoalReset extends Command
      */
     public function handle()
     {
-        $goals = Goal::whereDate('created_at', '<=', Carbon::now()->toDateTimeString())
+        Log::info("Goal monthly reset command is running...");
+
+        $date = Carbon::now();
+
+        $startOfMonth = $date->copy()->startOfMonth();
+        $endOfMonth   = $date->copy()->endOfMonth();
+
+        /** monthly goal */
+
+        $goals = Goal::whereNotBetween('created_at', [$startOfMonth, $endOfMonth])
+            ->where('term', 'month')
             ->where('reset', false)
             ->get();
 
@@ -61,6 +71,8 @@ class GoalReset extends Command
                 'need' => $goal->need
             ]);
         }
+
+        Log::info("Goal monthly reset command is stop...");
 
         $this->info('Goals has been reset');
     }
