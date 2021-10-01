@@ -33,7 +33,7 @@ class TransactionResource extends JsonResource
             'need_goal' => $this->when($this->relationLoaded('model'), fn() => optional($this->model)->goal),
 
             'amount' => $this->amount,
-            'date' => $this->created_at->format('m/d/Y'),
+            'date' => $this->created_at->format('d/m/Y'),
         ];
     }
 }
