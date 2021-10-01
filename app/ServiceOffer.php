@@ -32,10 +32,10 @@ class ServiceOffer extends Model implements HasMedia
         return $this->morphMany('App\Tag', 'model');
     }
     //Depreciated
-    public function user()
-    {
-        return $this->belongsTo('App\User');
-    }
+    // public function user()
+    // {
+    //     return $this->belongsTo('App\User');
+    // }
 
     public function serviceType()
     {

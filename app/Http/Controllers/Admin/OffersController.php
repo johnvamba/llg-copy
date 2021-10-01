@@ -29,7 +29,7 @@ class OffersController extends Controller
     public function index(Request $request)
     {
         // DB::enableQueryLog();
-        $offers = ServiceOffer::latest()->with('serviceType')->withCount('reports');
+        $offers = ServiceOffer::latest()->with(['serviceType', 'model'])->withCount('reports');
 
         if($status = $request->get('status') ) {
             $offers->where('status', $status);
@@ -146,7 +146,7 @@ class OffersController extends Controller
      */
     public function show(ServiceOffer $offer)
     {
-        $offer->loadMissing(['serviceType']);
+        $offer->loadMissing(['serviceType', 'model']);
 
         OfferResource::setConversion('view');
 

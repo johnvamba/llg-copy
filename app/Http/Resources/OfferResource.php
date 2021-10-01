@@ -35,6 +35,7 @@ class OfferResource extends JsonResource
             'business_name' => $this->business_name,
             'business_site' => $this->business_site,
             'business_contact' => $this->business_contact,
+            'by_user' => $this->whenLoaded('model', fn() => $this->model->name ?? $this->model->title),
             'report_count' => $this->when(isset($this->reports_count), $this->reports_count)
         ];
         // return parent::toArray($request);

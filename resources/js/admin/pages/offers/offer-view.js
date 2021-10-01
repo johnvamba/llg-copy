@@ -15,7 +15,7 @@ import { connect, useSelector } from 'react-redux';
 const OfferView = ({ setShowOfferEdit, data = {}, remove=()=>{}, handleForm, toClose}) => {
     const roles = useSelector(({AuthUserReducer}) => AuthUserReducer.roles);    
 
-    const { title, type, location, business_name, status, business_site, business_contact, photo, description, date, lng, lat } = data
+    const { title, type, location, business_name, by_user, status, business_site, business_contact, photo, description, date, lng, lat } = data
     const catIcon = volunteer.find(i=>i.name == type);
 
     const addHttp = () => {
@@ -101,6 +101,8 @@ const OfferView = ({ setShowOfferEdit, data = {}, remove=()=>{}, handleForm, toC
                 <div className="view-offer__bottom flex">
                     <div>
                         <label>Offer By</label>
+                        <h3>{by_user}</h3>
+                        <label>Business</label>
                         <h3>{business_name}</h3>
                         {
                             business_site &&
