@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as AuthUserActions from '../redux/auth-user/actions';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import OffersFormCross from '../svg/offers-form-cross';
 import Organisation from '../svg/organisation';
 import SidebarCampus from '../svg/sidebar-campus';
 import './css/sidebar.css';
+import Cookie from 'js-cookie';
 
 import {	
     Dashboard,
@@ -25,6 +26,7 @@ import {
 
 const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
     const location = useLocation();
+    const history = useHistory();
     const profile = useSelector(
         state => state.AuthUserReducer.profile
     );
@@ -66,6 +68,13 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
         setShow(list);
     }
 
+    const clickProfile = () => {
+        if(roles.name === 'admin' && location.pathname != '/organizations')
+            return;
+
+        history.push('/organizations');
+    }
+
     return (
         <>
             <div className={`sidebar flex flex-shrink-0 flex-col w-64 border-r relative ${showSidebarMobile ? 'sidebar__mobile' : '' }`}>
@@ -76,7 +85,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         </button>
                 }
                 <div className="px-8 py-3 text-white">
-                    <div className="flex flex-row justify-center items-center my-4">
+                    <div className={`flex flex-row justify-center items-center my-4 ${roles.name !== 'admin' ? "cursor-pointer" : ''}`} onClick={clickProfile}>
                         <img className="rounded-full h-12 w-12" src="http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp" />
 
                         <div className="mx-4">
