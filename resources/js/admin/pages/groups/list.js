@@ -45,6 +45,9 @@ const GroupsList = ({ data = [], handleForm, handleActionButtons, afterSubmit, t
                                 <span>{`${obj.participants_count || '0'} members`}</span>
                             </div>
                             <p>{obj.short_description || 'Description not found'}</p>
+                            <div>
+                                <span>{`Created By:  ${obj.by_user || 'Unknown'}`}</span>
+                            </div>
                             <div className="groups-list__progress-bar">
                                 <label>{obj.goal_ratio || 0} Goals</label>
                                 <div className="relative pt-1">

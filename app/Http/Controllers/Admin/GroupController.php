@@ -29,7 +29,7 @@ class GroupController extends Controller
      */
     public function index(Request $request)
     {
-        $group = Group::withCount('participants')->withGoalRatio()->latest();
+        $group = Group::with('user')->withCount('participants')->withGoalRatio()->latest();
         
         if($search = $request->get('search'))
             $group->where('name', 'like', '%'.$search.'%');
@@ -161,7 +161,7 @@ class GroupController extends Controller
     public function show(Group $group)
     {
         //load other parts here
-        $group->loadMissing('campus');
+        $group->loadMissing(['campus', 'user']);
 
         GroupResource::setConversion('listing');
 

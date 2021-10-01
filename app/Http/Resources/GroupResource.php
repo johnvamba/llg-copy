@@ -28,6 +28,7 @@ class GroupResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'by_user' => $this->whenLoaded('user', fn() => $this->user->name),
             'participants_count' => $this->when(isset($this->participants_count), $this->participants_count),
             'short_description' => $this->short_description,
             'description' => $this->description,
