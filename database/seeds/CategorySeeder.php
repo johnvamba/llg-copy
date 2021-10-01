@@ -29,16 +29,16 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        \App\Category::create(['name' => 'Housing', 'icon' => 'Housing.png']);
-        \App\Category::create(['name' => 'Food', 'icon' => 'Food.png']);
-        \App\Category::create(['name' => 'Everyday Things', 'icon' => 'Everyday.png']);
-        \App\Category::create(['name' => 'Domestic & Family Violence', 'icon' => 'Violence.png']);
-        \App\Category::create(['name' => 'Health', 'icon' => 'Health.png']);
-        \App\Category::create(['name' => 'Mental Health', 'icon' => 'MentalHealth.png']);
-        \App\Category::create(['name' => 'Education', 'icon' => 'Education.png']);
-        \App\Category::create(['name' => 'Advocacy', 'icon' => 'Advocacy.png']);
-        \App\Category::create(['name' => 'Children', 'icon' => 'Children.png']);
-        \App\Category::create(['name' => 'Youth', 'icon' => 'Youth.png']);
+        \App\Category::firstOrCreate(['name' => 'Housing', 'icon' => 'Housing.png']);
+        \App\Category::firstOrCreate(['name' => 'Food', 'icon' => 'Food.png']);
+        \App\Category::firstOrCreate(['name' => 'Everyday Things', 'icon' => 'Everyday.png']);
+        \App\Category::firstOrCreate(['name' => 'Domestic & Family Violence', 'icon' => 'Violence.png']);
+        \App\Category::firstOrCreate(['name' => 'Health', 'icon' => 'Health.png']);
+        \App\Category::firstOrCreate(['name' => 'Mental Health', 'icon' => 'MentalHealth.png']);
+        \App\Category::firstOrCreate(['name' => 'Education', 'icon' => 'Education.png']);
+        \App\Category::firstOrCreate(['name' => 'Advocacy', 'icon' => 'Advocacy.png']);
+        \App\Category::firstOrCreate(['name' => 'Children', 'icon' => 'Children.png']);
+        \App\Category::firstOrCreate(['name' => 'Youth', 'icon' => 'Youth.png']);
 
         foreach ($this->volunteering as $key => $value) {
             \App\Category::firstOrCreate($value + ['type' => 'volunteer']);
