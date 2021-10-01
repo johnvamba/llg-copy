@@ -160,6 +160,11 @@ const PublicPayment = () => {
                 amount: amount,
                 userId: parseInt(url.searchParams.get('user'))
             })
+            if (window.ReactNativeWebView) {
+                window.ReactNativeWebView.postMessage('success donation')
+            } else {
+                window.close();
+            }
 
             // if(window.ReactNativeWebView) {
             //     window.ReactNativeWebView.postMessage('success donation')
@@ -167,12 +172,16 @@ const PublicPayment = () => {
             //     window.close();
             // }
         } else {
-            socket.emit('cancelled donation', {});
-            // if(window.ReactNativeWebView) {
-            //     window.ReactNativeWebView.postMessage('success donation')
-            // } else {
-            //     window.close();
-            // }
+            socket.emit("cancel donation", {
+                id: need.id,
+                userId: url.searchParams.get('user')
+            });
+            // socket.emit("success donation", {data:'data here'});
+            if (window.ReactNativeWebView) {
+                window.ReactNativeWebView.postMessage('cancelled donation')
+            } else {
+                window.close();
+            }
         }
     }
 
@@ -227,18 +236,18 @@ const PublicPayment = () => {
             <section>
                 <div className="info_container px-3 pt-3 pb-3 pt-5">
                     <div className="items-center offers-create-form__header py-3">
-                        <div className="flex flex-row">
+                        {/* <div className="flex flex-row">
                             <div className="flex-1"></div>
                             <div className="flex flex-row justify-evenly items-center">
                                 <div className="bar active"></div>
                                 <div className="bar"></div>
                             </div>
                             <div className="flex-1 text-right">
-                                {/* <i className="fa fa-times text-white text-xl mr-2" aria-hidden="true" onClick={() => handleGoBack('success')}></i> */}
+                                <i className="fa fa-times text-white text-xl mr-2" aria-hidden="true" onClick={() => handleGoBack('success')}></i>
                             </div>
-                        </div>
+                        </div> */}
 
-                        <h2 className="text-white text-center mt-4">Receipt</h2>
+                        <h2 className="text-white text-center">Receipt</h2>
                     </div>
                 </div>
 

@@ -162,7 +162,7 @@ const StripeElement = ({
                     </div>
                     <div className="w-full">
                         <div className={`form-group border-b border-gray-400`}>
-                            <label htmlFor="expiry">Name on Card</label>
+                            <label htmlFor="cardHolder">Name on Card</label>
                             <input
                                 defaultValue={cardHolder || ''}
                                 value={cardHolder || ''}

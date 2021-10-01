@@ -44,47 +44,50 @@ class NeedsMetController extends Controller
 
     public function getNeedMets(Request $request)
     {
-        $needsMet = NeedMet::whereHasMorph(
+        $goal = Goal::whereHasMorph(
             'model',
             ['App\User'],
-            function ($query) {
+            function (Builder $query) {
                 $query->where('model_id', auth()->user()->id);
             }
         )
+        ->where('status', 'in progress')
         ->latest()
-        ->pluck('need_id');
+        ->first();
 
-        if (!$needsMet) {
-            return response()->json($needsMet);
+        if (!$goal) {
+            return response()->json([
+                'message' => "You have not set your goal yet."
+            ]);
         }
 
-        $needs = Need::with('type', 'categories', 'contribution')
-            ->whereIn('id', $needsMet)
+        $date = Carbon::parse($goal->created_at);
+
+        $dateEnded = $goal->term == 'year' 
+            ? $date->copy()->endOfYear()->toDateString()
+            : $date->copy()->endOfMonth()->toDateString();
+        
+        $needsMet = NeedMet::with(
+                'need', 
+                'need.type', 
+                'need.categories', 
+                'need.contribution'
+            )
+            ->whereHasMorph(
+                'model',
+                ['App\User'],
+                function ($query) {
+                    $query->where('model_id', auth()->user()->id);
+                }
+            )
+            ->whereBetween('created_at', [
+                $date->copy()->toDateString(),
+                $dateEnded
+            ])
+            ->latest()
             ->get();
 
-        foreach ($needs as $need) {
-            $need->model;
-            $need->getMedia('photo');
-
-            $need->categories = $need->categoriesList; //reset?
-
-            $need['photo'] = $need->organization->getFirstMediaUrl('photo');
-            $need['cover_photo'] = $need->organization->getFirstMediaUrl('cover_photo');
-
-            $need['totalActiveNeeds'] = Need::where(
-                    'organization_id', $need->organization_id
-                )
-                ->whereRaw('raised < goal')
-                ->count();
-            
-            $need['totalPastNeeds'] = Need::where(
-                    'organization_id', $need->organization_id
-                )
-                ->whereRaw('raised >= goal')
-                ->count();
-        }
-
-        return response()->json($needs);
+        return response()->json($needsMet);
     }
 
     /**

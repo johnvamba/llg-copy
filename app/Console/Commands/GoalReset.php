@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
 use App\User;
@@ -40,46 +41,11 @@ class GoalReset extends Command
      */
     public function handle()
     {
-        $date = Carbon::now();
-
-        $startOfYear = $date->copy()->startOfYear();
-        $endOfYear = $date->copy()->endOfYear();
-
-        $startOfMonth = $date->copy()->startOfMonth();
-        $endOfMonth   = $date->copy()->endOfMonth();
-
-        /** yearly goal */
-
-        $yearly_goals = Goal::whereNotBetween('created_at', [$startOfYear, $endOfYear])
-            ->where('term', 'year')
-            ->where('reset', false)
-            ->get();    
-            
-        foreach($yearly_goals as $goal) {
-            $params = ['reset' => true];
-
-            if ($goal->status == 'in progress') {
-                $params['status'] = 'done';
-            }
-
-            Goal::find($goal->id)->update($params);
-
-            Goal::create([
-                'model_type' => $goal->model_type,
-                'model_id' => $goal->model_id,
-                'term' => $goal->term,
-                'need' => $goal->need
-            ]);
-        }
-
-        /** monthly goal */
-
-        $monthly_goals = Goal::whereNotBetween('created_at', [$startOfMonth, $endOfMonth])
-            ->where('term', 'month')
+        $goals = Goal::whereDate('created_at', '<=', Carbon::now()->toDateTimeString())
             ->where('reset', false)
             ->get();
 
-        foreach($monthly_goals as $goal) {
+        foreach($goals as $goal) {
             $params = ['reset' => true];
 
             if ($goal->status == 'in progress') {

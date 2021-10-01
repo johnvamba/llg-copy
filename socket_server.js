@@ -20,7 +20,7 @@ io.on('connection', function (socket) {
 	
 	socket.on("cancelled donation", (data) => {
 		console.log("cancelled donation!")
-		socket.broadcast.emit('cancelled_donation', {});
+		socket.broadcast.emit('cancelled_donation', data);
 	});
 
 	socket.on("group message", (data) => {
