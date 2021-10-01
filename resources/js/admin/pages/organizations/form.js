@@ -181,6 +181,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         const set = isValidated({
             name: name == '' ? "Missing name" : null,
             email: !validateEmail(email) ? "Missing email" : null,
+            campus: campus.length <= 0 ? 'Missing campus' : null,
             // site: site == '' ? "Missing site" : null,
             // benevity_link: !validBenevityLink(benevity_link) ? 'Wrong benevity_link' : null,
             phone_number: !validPhone(phone_number) ? "Missing phone_number" : null,
@@ -265,6 +266,11 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         setForm({...form, phone_number})
     }
 
+    const updateCampus = (campus) => {
+        setCampus(campus)
+        removeError('campus');
+    }
+
     return (
         <section className="form org-form">
             {
@@ -313,10 +319,10 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                 cacheOptions
                                 value={campus}
                                 placeholder="Location"
-                                onChange={setCampus}
+                                onChange={updateCampus}
                                 />
                             {
-                                (errors.campus || false) && <span className="text-xs pt-1 text-red-500 italic">Missing Organisation</span>
+                                (errors.campus || false) && <span className="text-xs pt-1 text-red-500 italic">Missing at least one Location</span>
                             }
                         </div>
                     }
