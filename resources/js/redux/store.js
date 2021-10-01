@@ -8,5 +8,5 @@ import rootReducer from './reducers';
 
 export const store = createStore(
     rootReducer
-    ,composeEnhancers ( applyMiddleware( createLogger() ) )
+    // ,composeEnhancers ( applyMiddleware( createLogger() ) )
 );

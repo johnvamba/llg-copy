@@ -8,7 +8,7 @@ import Calendar from '../../../svg/calendar'
 import SwitchCheckbox from '../../../components/SwitchCheckbox'
 import AsyncSelect from 'react-select/async';
 
-const DashboardFilter = ({onClose, generate}) => {
+const DashboardFilter = ({onClose, generate, setPicker}) => {
     const [startdate, setStartDate] = useState(startdate|| new Date());
     const [enddate, setEndDate] = useState(enddate|| new Date());
     const [dateType, selectDateType] = useState('custom');
@@ -124,6 +124,8 @@ const DashboardFilter = ({onClose, generate}) => {
                                 name="date" 
                                 className="input-field space-r"
                                 onChange={setStartDate}
+                                onCalendarClose={()=> setPicker(false)}
+                                onCalendarOpen={()=> setPicker(true)}
                                 popperPlacement="bottom-end"
                                 popperModifiers={{
                                   offset: {
@@ -148,6 +150,8 @@ const DashboardFilter = ({onClose, generate}) => {
                                 name="date" 
                                 className="input-field space-r"
                                 onChange={setEndDate}
+                                onCalendarClose={()=> setPicker(false)}
+                                onCalendarOpen={()=> setPicker(true)}
                                 popperPlacement="bottom-end"
                                 popperModifiers={{
                                   offset: {
