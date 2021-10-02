@@ -86,7 +86,7 @@ class UsersController extends Controller
             ]);
 
             if($type = $request->get('type')){
-                $role = Role::where('name', $type['value'] ?? 'user')->firstOrCreate();
+                $role = Role::firstOrCreate(['name'=> $type['value'] ?? 'user']);
                 $user->syncRoles( $role->name );
             }
 
