@@ -88,7 +88,7 @@ const EditOrganization = () => {
 
     return (
         <div className="p-12">
-            <Link className="mb-4 text-sm text-gray-500 inline-flex items-center" to="/organizations">
+            <Link className="mb-4 text-sm text-gray-500 inline-flex items-center" to="/organisations">
                 <i className="fa fa-angle-left mr-2" aria-hidden="true"></i>
                 <span>Go Back</span>
             </Link>

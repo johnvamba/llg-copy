@@ -69,10 +69,10 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
     }
 
     const clickProfile = () => {
-        if(roles.name === 'admin' && location.pathname != '/organizations')
+        if(roles.name === 'admin' && location.pathname != '/organisations')
             return;
 
-        history.push('/organizations');
+        history.push('/organisations');
     }
 
     return (
@@ -311,9 +311,9 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                             <button
                                 onClick={() => handleOpen('organizations')}
                                 className={`relative w-full flex items-center focus:outline-none
-                                ${(location.pathname == "/organizations") || (location.pathname == "/organizations/requests") ? "text-blue-400" : "text-gray-400"}`}
+                                ${(location.pathname == "/organisations") || (location.pathname == "/organisations/requests") ? "text-blue-400" : "text-gray-400"}`}
                             >
-                                <Organisations active={location.pathname == "/organizations" ? true : false} />
+                                <Organisations active={location.pathname == "/organisations" ? true : false} />
                                 <span className="px-4">Organisations</span>
 
 
@@ -332,18 +332,18 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                 <div className={`ml-8`}>
                                     <div
                                         className={`mt-4 
-                                        ${location.pathname == "/organizations" ? "text-blue-400" : "text-gray-400"}`}
+                                        ${location.pathname == "/organisations" ? "text-blue-400" : "text-gray-400"}`}
                                     >
-                                        <Link to="/organizations">
+                                        <Link to="/organisations">
                                             Approved
                                         </Link>
                                     </div>
 
                                     <div
                                     className={`mt-4 
-                                        ${location.pathname == "/organizations/requests" ? "text-blue-400" : "text-gray-400"}`}
+                                        ${location.pathname == "/organisations/requests" ? "text-blue-400" : "text-gray-400"}`}
                                     >
-                                        <Link to="/organizations/requests">
+                                        <Link to="/organisations/requests">
                                             Requests
                                         </Link>
                                     </div>
@@ -352,10 +352,10 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                         </div> :
                         <div
                             className={`mt-6 
-                            ${location.pathname == "/organizations" ? "text-yellow-400" : "text-gray-400"}`}
+                            ${location.pathname == "/organisations" ? "text-yellow-400" : "text-gray-400"}`}
                         >
-                            <Link to="/organizations" className="flex items-center">
-                                <Organisations active={location.pathname == "/organizations" ? true : false} />
+                            <Link to="/organisations" className="flex items-center">
+                                <Organisations active={location.pathname == "/organisations" ? true : false} />
                                 <span className="px-4">Organisations</span>
                             </Link>
                         </div>

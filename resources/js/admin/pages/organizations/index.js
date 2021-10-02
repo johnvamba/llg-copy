@@ -45,7 +45,7 @@ const Organizations = (props) => {
     const loadTable = (clearCache = false) => {
         setLoading(true)
         const addFilter = {}; //for redux values
-        let requests = loc.pathname.indexOf('/organizations/requests') == 0;
+        let requests = loc.pathname.indexOf('/organisations/requests') == 0;
         const token = axios.CancelToken.source();
         api.get(`/api/web/organizations`, {
             params: {
@@ -70,7 +70,7 @@ const Organizations = (props) => {
     //To always get fresh new ones
     const nextPage = (clearCache = true) => {
         const nextpage = page+1;
-        let requests = loc.pathname.indexOf('/organizations/requests') == 0;
+        let requests = loc.pathname.indexOf('/organisations/requests') == 0;
         if(nextpage <= endPage && endPage > 1){
             const addFilter = {};
             const token = axios.CancelToken.source();
@@ -118,7 +118,7 @@ const Organizations = (props) => {
     }, [params])
     
     const handlePanels = (data = {},  form = false, info = false, invite = false) => {
-        let requests = loc.pathname.indexOf('/organizations/requests') == 0;
+        let requests = loc.pathname.indexOf('/organisations/requests') == 0;
         setInfo(data)
         showForm(form)
         if(requests) {
@@ -130,7 +130,7 @@ const Organizations = (props) => {
     }
 
     const afterSubmit = (reload = false) =>{
-        let requests = loc.pathname.indexOf('/organizations/requests') == 0;
+        let requests = loc.pathname.indexOf('/organisations/requests') == 0;
 
         if(reload && requests) {
             api.get(`/api/web/organizations`, {
