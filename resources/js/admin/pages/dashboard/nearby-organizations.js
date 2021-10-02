@@ -110,7 +110,7 @@ const NearbyOrganizations = ({...props}) => {
                             style={{...styles.popper, top:'15px', zIndex: 1}} 
                             {...attributes.popper}>
                             <div ref={setArrowElement} className='dbfilter-arrow' style={{...styles.arrow}} />
-                            <div className="map-legend w-200 h-100">
+                            <div className="map-legend w-200">
                                 <h4>Legend</h4>
                                 <div className="legend-item">
                                     <img src={OffersMarker} />
