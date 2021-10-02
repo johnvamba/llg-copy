@@ -71,7 +71,7 @@ const DashboardFilter = ({onClose, generate, setPicker}) => {
                             {
                             /*<input type="checkbox" className="form-check-input" id="open"  checked={needs.open} onChange={e=>setNeeds({...needs, open: e.target.checked})}/>*/
                             }
-                            <label className="form-check-label" htmlFor="open">Open Needs</label>
+                            <label className="form-check-label" htmlFor="open">Transactions</label>
                         </div>
                         <div className="flex items-center">
                             <input type="radio" className="form-radio cursor-pointer mr-2" 
@@ -84,7 +84,7 @@ const DashboardFilter = ({onClose, generate, setPicker}) => {
                             /*<input type="checkbox" className="form-check-input" id="mets" 
                                 checked={needs.mets} onChange={e=>setNeeds({...needs, mets: e.target.checked})}/>*/
                             }
-                            <label className="form-check-label" htmlFor="mets">Needs Met</label>
+                            <label className="form-check-label" htmlFor="mets">Needs</label>
                         </div>
                     </div>
                 </div>
