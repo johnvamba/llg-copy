@@ -111,7 +111,6 @@ const Organizations = (props) => {
     }, [search, loc]);
 
     useEffect(()=>{
-        console.log('id', params)
         if(params.id) {
             handlePanels(params, false, true);
         }
