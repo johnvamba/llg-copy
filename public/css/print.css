@@ -6,10 +6,14 @@
     	-webkit-print-color-adjust: exact; 
 	}
 	body {
-		min-height: unset !important;
-		height: auto !important;
+/*		min-height: unset !important;
+		height: auto !important;*/
+        width: 21cm;
+        height: 29.7cm;
+        margin: 30mm 45mm 30mm 45mm; 
 	}
 	#printable {
+        padding: 0 60px;
 		width: 50%;
 	}
 	.header {

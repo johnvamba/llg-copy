@@ -12,3 +12,10 @@
     top: 0;
     height: 100vh;
 }
+.mx-4.profile-details * {
+    display: inline-block;
+    max-width: 120px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -88,9 +88,9 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                     <div className={`flex flex-row justify-center items-center my-4 ${roles.name !== 'admin' ? "cursor-pointer" : ''}`} onClick={clickProfile}>
                         <img className="rounded-full h-12 w-12" src="http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp" />
 
-                        <div className="mx-4">
-                            <p className="text-black text-sm mr-2 capitalize">{profile.name}</p>
-                            <span className="text-gray-500 mr-2 text-xs">{profile.email}</span>
+                        <div className="mx-4 profile-details">
+                            <p className="text-black text-sm mr-2 capitalize" title={profile.name}>{profile.name}</p>
+                            <span className="text-gray-500 mr-2 text-xs" title={profile.email}>{profile.email}</span>
                         </div>
                     </div>
                 </div>
