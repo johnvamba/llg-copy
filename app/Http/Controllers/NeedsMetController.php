@@ -63,7 +63,7 @@ class NeedsMetController extends Controller
 
         $date = Carbon::parse($goal->created_at);
 
-        $dateEnded = $goal->term == 'year' 
+        $endDate = $goal->term == 'year' 
             ? $date->copy()->endOfYear()->toDateString()
             : $date->copy()->endOfMonth()->toDateString();
         
@@ -82,7 +82,7 @@ class NeedsMetController extends Controller
             )
             ->whereBetween('created_at', [
                 $date->copy()->toDateString(),
-                $dateEnded
+                $endDate
             ])
             ->latest()
             ->get();
@@ -186,14 +186,9 @@ class NeedsMetController extends Controller
                 }
             )
             ->where('status', 'in progress')
+            ->where('reset', false)
             ->latest()
             ->first();
-
-        if ($group['goal']) {
-            $date = Carbon::parse($group->created_at);
-        } else {
-            $date = Carbon::parse($group->created_at);
-        }
 
         $needsMet = NeedMet::whereHasMorph(
                 'model',
@@ -201,25 +196,32 @@ class NeedsMetController extends Controller
                 function ($query) use ($users) {
                     $query->whereIn('model_id', $users);
                 }
-            )
-            ->whereBetween('created_at', [
-                $date->copy()->toDateString(),
-                $date->copy()->endOfMonth()->toDateString()
-            ])
-            ->pluck('need_id');
+            );
 
-        $needs = Need::with(['type', 'categories', 
-            'contribution' => function ($query) {
-                $query->whereHasMorph(
-                    'model',
-                    ['App\User'],
-                    function ($q) {
-                        $q->where('model_id', auth()->user()->id);
-                    }
-                );
-            }])
-            ->whereIn('id', $needsMet)
-            ->get();
+        if ($goal) {
+            $date = Carbon::parse($group->created_at);
+            
+            $needsMet = $needsMet->whereBetween('created_at', [
+                    $date->copy()->toDateString(),
+                    $date->copy()->endOfMonth()->toDateString()
+                ]);
+        }
+
+        $needsMet = $needsMet->pluck('need_id');
+
+        $needs = Need::with('type', 'categories');
+
+        // if ($request->user) {
+        //     $needs = $needs->with(['contribution' => whereHasMorph(
+        //         'model',
+        //         ['App\User'],
+        //         function ($q) {
+        //             $q->where('model_id', $request->user);
+        //         }
+        //     )]);
+        // }
+
+        $needs = $needs->whereIn('id', $needsMet)->get();
 
         foreach ($needs as $need) {
             $need->model;
@@ -244,6 +246,82 @@ class NeedsMetController extends Controller
         }
 
         return response()->json($needs);
+
+        // $date;
+
+        // $users = GroupParticipant::where([
+        //         ['group_id', $group->id],
+        //         ['status', 'approved']
+        //     ])->pluck('user_id');
+
+        // $users->push($group->user_id);
+
+        // $goal = Goal::whereHasMorph(
+        //         'model',
+        //         ['App\Group'],
+        //         function (Builder $query) use ($group) {
+        //             $query->where('model_id', $group->id);
+        //         }
+        //     )
+        //     ->where('status', 'in progress')
+        //     ->latest()
+        //     ->first();
+
+        // if ($group['goal']) {
+        //     $date = Carbon::parse($group->created_at);
+        // } else {
+        //     $date = Carbon::parse($group->created_at);
+        // }
+
+        // $needsMet = NeedMet::whereHasMorph(
+        //         'model',
+        //         ['App\User'],
+        //         function ($query) use ($users) {
+        //             $query->whereIn('model_id', $users);
+        //         }
+        //     )
+        //     ->whereBetween('created_at', [
+        //         $date->copy()->toDateString(),
+        //         $date->copy()->endOfMonth()->toDateString()
+        //     ])
+        //     ->pluck('need_id');
+
+        // $needs = Need::with(['type', 'categories', 
+        //     'contribution' => function ($query) {
+        //         $query->whereHasMorph(
+        //             'model',
+        //             ['App\User'],
+        //             function ($q) {
+        //                 $q->where('model_id', auth()->user()->id);
+        //             }
+        //         );
+        //     }])
+        //     ->whereIn('id', $needsMet)
+        //     ->get();
+
+        // foreach ($needs as $need) {
+        //     $need->model;
+        //     $need->getMedia('photo');
+
+        //     $need->categories = $need->categoriesList; //reset?
+
+        //     $need['photo'] = $need->organization->getFirstMediaUrl('photo');
+        //     $need['cover_photo'] = $need->organization->getFirstMediaUrl('cover_photo');
+
+        //     $need['totalActiveNeeds'] = Need::where(
+        //             'organization_id', $need->organization_id
+        //         )
+        //         ->whereRaw('raised < goal')
+        //         ->count();
+            
+        //     $need['totalPastNeeds'] = Need::where(
+        //             'organization_id', $need->organization_id
+        //         )
+        //         ->whereRaw('raised >= goal')
+        //         ->count();
+        // }
+
+        // return response()->json($needs);
     }
 
     /**

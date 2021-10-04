@@ -33,7 +33,7 @@ class GroupController extends Controller
     {
         $groups = Group::with('user')
             ->where('privacy', 'public')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('name')
             ->paginate();
 
         foreach ($groups as $group) {
@@ -106,6 +106,7 @@ class GroupController extends Controller
         }
 
         $groups = $groups->whereNotIn('id', $groupParticipated)
+            ->orderBy('name')
             ->paginate(10, ['*'], 'stories', $page);
 
         foreach ($groups as $group) {
@@ -672,16 +673,14 @@ class GroupController extends Controller
         ])
         ->pluck('user_id');
 
-        $participants = GroupParticipant::where([
-                ['group_id', $group->id],
-                ['status', 'approved'],
-            ])
+        $participants = GroupParticipant::where('group_id', $group->id)
+            ->where('status', 'approved')
             ->pluck('user_id');
-        
+
         $participants->push($group->user_id);
 
         $group['needs_met_count'] = NeedMet::whereHasMorph(
-                'model',
+                    'model',
                     ['App\User'],
                     function ($query) use ($participants) {
                         $query->whereIn('model_id', $participants);

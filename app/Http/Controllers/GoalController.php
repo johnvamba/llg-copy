@@ -104,6 +104,7 @@ class GoalController extends Controller
                 }
             )
             ->where('status', 'in progress')
+            ->where('reset', false)
             ->latest()
             ->first();
 
@@ -113,38 +114,27 @@ class GoalController extends Controller
                 ]);
         }
 
-        $date = Carbon::parse($goal->created_at);
-        
-        if ($goal->term == 'year') {
-            $goal['needs_met_count'] = NeedMet::whereHasMorph(
-                    'model',
-                    ['App\User'],
-                    function (Builder $query) {
-                        $query->where('model_id', auth()->user()->id);
-                    }
-                )
-                ->whereBetween('created_at', [
-                    $date->copy()->toDateString(),
-                    $date->copy()->endOfYear()->toDateString()
-                ])
-                ->groupBy('need_id')
-                ->count();
-        } else {
-            $goal['needs_met_count'] = NeedMet::whereHasMorph(
-                    'model',
-                    ['App\User'],
-                    function (Builder $query) {
-                        $query->where('model_id', auth()->user()->id);
-                    }
-                )
-                ->whereBetween('created_at', [
-                    $date->copy()->toDateString(),
-                    $date->copy()->endOfMonth()->toDateString()
-                ])
-                ->groupBy('need_id')
-                ->count();
-        }
+        $goal['needs_met_count'] = [];
 
+        $date = Carbon::parse($goal->created_at);
+        $endDate = $goal->term == 'year' 
+            ? $date->copy()->endOfYear()->toDateString()
+            : $date->copy()->endOfMonth()->toDateString();
+        
+        $goal['needs_met_count'] = NeedMet::whereHasMorph(
+                'model',
+                ['App\User'],
+                function (Builder $query) {
+                    $query->where('model_id', auth()->user()->id);
+                }
+            )
+            ->whereBetween('created_at', [
+                $date->copy()->toDateString(),
+                $endDate
+            ])
+            ->groupBy('need_id', 'model_id')
+            ->get();
+        
         return response()->json($goal, 200);
     }
 
@@ -161,7 +151,9 @@ class GoalController extends Controller
                 function($query) use ($request, $group) {
                     $query->where('model_id', $group->id);
                 }
-            )->first();
+            )
+            ->latest()
+            ->first();
 
         $goal->update([
                 'need' => $request->need,
@@ -180,7 +172,7 @@ class GoalController extends Controller
     {
         $fetchGroup = Group::with(['goals' => function($query) {
                 $query->where('status', 'in progress')
-                    ->orderBy('created_at')
+                    ->latest()
                     ->first();
             }])
             ->find($group->id);

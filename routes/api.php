@@ -251,7 +251,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('needs-mets/user/{user}', 'NeedsMetController@getUserNeedsMet');
     Route::get('needs-mets/total', 'NeedsMetController@getTotalNeedsMet')->middleware('datafilter');
     Route::get('needs-mets/{need}/volunteers', 'NeedsMetController@getNeedsVolunteer');
-    Route::get('needs-mets/group/{group}', 'NeedsMetController@getGroupNeedsMet');
     Route::resource('needs-met', 'NeedsMetController');
 
     /** Service Offered resource module */
