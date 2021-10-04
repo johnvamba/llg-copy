@@ -172,7 +172,7 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite, handleDelete }
                 api.delete(`/api/web/organizations/${data.id}`).then((res) =>{
                     handleDelete()
                     setLoading(false)
-                    swalSuccess("Organization Removed")
+                    swalSuccess("Organisation Removed")
                 }).catch(err=>{
 
                 })

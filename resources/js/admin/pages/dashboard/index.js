@@ -18,10 +18,13 @@ import OrganizationView from '../organizations/view';
 import { usePopper } from 'react-popper';
 import DashboardFilter from './filter'
 
+let globalPicker = false;
+
 const Dashboard = ({ ...props }) => {
     const roles = useSelector(state => state.AuthUserReducer.roles);
     const [filterElement, setFilterElement] = useState(null);
     const [toggleFilter, showFilter] = useState(false);
+    const [picker, showPicker] = useState(false);
     // const [organization, setOrganization] = useState(null);
     const [popperElement, setPopperElement] = useState(null);
     const [arrowElement, setArrowElement] = useState(null);
@@ -36,10 +39,22 @@ const Dashboard = ({ ...props }) => {
     // }
     const close = (evt) => {
         if(popperElement && !popperElement.contains(evt.target)) {
+            if(toggleFilter && globalPicker) {
+                return;
+            }
             document.removeEventListener('click', close);
             showFilter(false);
         }
     }
+
+    useEffect(() => {
+        if(!picker) {
+            globalPicker = true
+            setTimeout(()=>{
+                globalPicker = false
+            }, 500)
+        } 
+    }, [picker])
 
     useEffect(()=>{
         if(popperElement && toggleFilter) {
@@ -64,7 +79,7 @@ const Dashboard = ({ ...props }) => {
                         style={{...styles.popper, top:'15px', zIndex: 1}} 
                         {...attributes.popper}>
                         <div ref={setArrowElement} className='dbfilter-arrow' style={{...styles.arrow}} />
-                        <DashboardFilter />
+                        <DashboardFilter setPicker={showPicker} />
                     </div>
                 }
             </div>

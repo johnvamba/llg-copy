@@ -8,7 +8,7 @@ import Calendar from '../../../svg/calendar'
 import SwitchCheckbox from '../../../components/SwitchCheckbox'
 import AsyncSelect from 'react-select/async';
 
-const DashboardFilter = ({onClose, generate}) => {
+const DashboardFilter = ({onClose, generate, setPicker}) => {
     const [startdate, setStartDate] = useState(startdate|| new Date());
     const [enddate, setEndDate] = useState(enddate|| new Date());
     const [dateType, selectDateType] = useState('custom');
@@ -68,10 +68,7 @@ const DashboardFilter = ({onClose, generate}) => {
                                 checked={needs.open} 
                                 onChange={e=>changeRadioOption(e.target.checked, "open", "mets")} 
                             />
-                            {
-                            /*<input type="checkbox" className="form-check-input" id="open"  checked={needs.open} onChange={e=>setNeeds({...needs, open: e.target.checked})}/>*/
-                            }
-                            <label className="form-check-label" htmlFor="open">Open Needs</label>
+                            <label className="form-check-label" htmlFor="mets">Needs</label>
                         </div>
                         <div className="flex items-center">
                             <input type="radio" className="form-radio cursor-pointer mr-2" 
@@ -80,11 +77,7 @@ const DashboardFilter = ({onClose, generate}) => {
                                 checked={needs.mets} 
                                 onChange={e=>changeRadioOption(e.target.checked, "mets", "open")} 
                                 />
-                            {
-                            /*<input type="checkbox" className="form-check-input" id="mets" 
-                                checked={needs.mets} onChange={e=>setNeeds({...needs, mets: e.target.checked})}/>*/
-                            }
-                            <label className="form-check-label" htmlFor="mets">Needs Met</label>
+                            <label className="form-check-label" htmlFor="open">Transactions</label>
                         </div>
                     </div>
                 </div>
@@ -124,6 +117,8 @@ const DashboardFilter = ({onClose, generate}) => {
                                 name="date" 
                                 className="input-field space-r"
                                 onChange={setStartDate}
+                                onCalendarClose={()=> setPicker(false)}
+                                onCalendarOpen={()=> setPicker(true)}
                                 popperPlacement="bottom-end"
                                 popperModifiers={{
                                   offset: {
@@ -148,6 +143,8 @@ const DashboardFilter = ({onClose, generate}) => {
                                 name="date" 
                                 className="input-field space-r"
                                 onChange={setEndDate}
+                                onCalendarClose={()=> setPicker(false)}
+                                onCalendarOpen={()=> setPicker(true)}
                                 popperPlacement="bottom-end"
                                 popperModifiers={{
                                   offset: {

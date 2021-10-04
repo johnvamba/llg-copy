@@ -57,7 +57,7 @@
 					<td>{{ optional($need->need->organization)->name ?? 'Unknown Organisation' }}</td>
 					<!-- <td>Added By</td> -->
 					@if($need->need_type->name == "Volunteer")
-					<td>{{ number_format($need->amount, 0) }} Volunteers</td>
+					<td>Volunteered</td>
 					@else
 					<td>$ {{ number_format($need->amount, 2) }}</td>
 					@endif

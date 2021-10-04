@@ -104,16 +104,16 @@ export const monetary = [
 		name: 'Fostercare',
 		slug: 'fostercare',
 		svg_class: Fostercare
-	},
-	{
-		name: 'Mentoring',
-		slug: 'mentoring',
-		svg_class: Mentoring
-	},
-	{
-		name: 'Admin',
-		slug: 'admin',
-		svg_class: Admin
+	// },
+	// {
+	// 	name: 'Mentoring',
+	// 	slug: 'mentoring',
+	// 	svg_class: Mentoring
+	// },
+	// {
+	// 	name: 'Admin',
+	// 	slug: 'admin',
+	// 	svg_class: Admin
 	}
 
 ];

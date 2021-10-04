@@ -52,7 +52,7 @@ const OrgView = ({ data, closePanel , ...props }) => {
 
     const handleEdit = () => {
         props.onHandleView(null);
-        window.location.href = `/admin/organizations/edit/${data.id}`;
+        window.location.href = `/admin/organisations/edit/${data.id}`;
     }
 
     return (

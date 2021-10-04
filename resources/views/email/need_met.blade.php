@@ -91,7 +91,9 @@
 
 				@if(optional($need->type)->name == 'Volunteer')
 				<p>
-					We just wanted to let you know that {{optional($user)->name ?? 'Volunteer-name'}} <span>({{ optional($user)->email ?? 'volunteer-email'}})</span> has just volunteered to be in your {{ $need->title ?? 'need-title'}}t
+					We just wanted to let you know that {{optional($user)->name ?? 'Volunteer-name'}} <span>({{ optional($user)->email ?? 'volunteer-email'}})</span> has just volunteered to be in your {{ $need->title ?? 'need-title'}}.
+					<br />
+					Please contact them directly to confirm their engagement.
 				</p>
 
 				<div class="need-container">

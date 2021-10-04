@@ -58,7 +58,7 @@ class Group extends Model implements HasMedia
 
     public function participant_users()
     {
-        return $this->hasManyThrough('App\User', 'App\GroupParticipant', 'group_id', 'id', 'id', 'user_id');
+        return $this->hasManyThrough('App\ScopedUser', 'App\GroupParticipant', 'group_id', 'id', 'id', 'user_id');
     }
     
     public function requesting()

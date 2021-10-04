@@ -138,7 +138,7 @@ const routes = [
     //     component: () => <EditGroup />
     // },
     {
-        path: ['/organizations', '/organizations/requests', '/organizations/requests/:id'],
+        path: ['/organisations', '/organisations/requests', '/organisations/requests/:id'],
         exact: true,
         component: (props) => <Organizations {...props}/>
     },
@@ -173,7 +173,7 @@ const routes = [
         component: () => <Api />
     },
     {
-        path: '/organizations/:id/invite',
+        path: '/organisations/:id/invite',
         exact: true,
         component: () => <InviteMember />
     },

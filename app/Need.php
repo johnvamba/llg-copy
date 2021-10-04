@@ -54,7 +54,7 @@ class Need extends Model implements HasMedia
     
     public function contributors()
     {
-        return $this->morphedByMany('App\User', 'model', 'need_mets');
+        return $this->morphedByMany('App\ScopedUser', 'model', 'need_mets');
     }
 
     public function mets()

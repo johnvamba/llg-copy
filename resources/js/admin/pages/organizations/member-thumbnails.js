@@ -42,7 +42,7 @@ const MemberThumbnails = ({ org, members = [] }) => {
                 </div>
 
                 <div className="flex flex-initial justify-end items-center">
-                    <NavLink to={`/organizations/${org}/invite`}>
+                    <NavLink to={`/organisations/${org}/invite`}>
                         <button
                             className="border-2 border-blue-400 px-6 h-10 rounded-lg text-blue-400"
                         >

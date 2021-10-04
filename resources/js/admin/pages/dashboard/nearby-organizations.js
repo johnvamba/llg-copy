@@ -14,7 +14,8 @@ import './dashboard.css';
 const NearbyOrganizations = ({...props}) => {
     const [categories, setCategories] = useState([]);
     const [showFilter, setShowFilter] = useState(false);
-
+    const [openSelect, setOpenSelect] = useState(false);
+    const [catLoading, setCatLoading] = useState(false);
     const [filter, setFilter] = useState([]);
     const [markers, setMarkers] = useState([]);
     const [all, setAll] = useState(false);
@@ -53,13 +54,18 @@ const NearbyOrganizations = ({...props}) => {
     }, []);
 
     useEffect(() => {
-        async function fetchData() {
-            let { data } = await axios.post(`/api/organizations/nearby/${center.lat}/${center.lng}`, {filter});
-            setMarkers(data);
-        }
-
-        fetchData();
+        if(!openSelect && filter.length > 0) 
+            setOpenSelect(true)
     }, [filter]);
+
+    const selectCategories = async () => {
+        setCatLoading(true)
+        let { data } = await axios.post(`/api/organizations/nearby/${center.lat}/${center.lng}`, {filter});
+        setMarkers(data);
+        setOpenSelect(false);
+        setCatLoading(false);
+        setShowFilter(false);
+    }
     
     const handleCheck = (e) => {
         let checks = [...filter];
@@ -104,7 +110,7 @@ const NearbyOrganizations = ({...props}) => {
                             style={{...styles.popper, top:'15px', zIndex: 1}} 
                             {...attributes.popper}>
                             <div ref={setArrowElement} className='dbfilter-arrow' style={{...styles.arrow}} />
-                            <div className="map-legend w-200 h-100">
+                            <div className="map-legend w-200">
                                 <h4>Legend</h4>
                                 <div className="legend-item">
                                     <img src={OffersMarker} />
@@ -191,6 +197,14 @@ const NearbyOrganizations = ({...props}) => {
                             </div>
                         ))
                         }
+                    </div>
+                    <div className="flex flex-wrap">
+                        <button type="button" 
+                            className="p-2 rounded focus:outline-none px-4 primary-btn flex text-white bg-blue-500 hover:bg-blue-600"
+                            onClick={selectCategories} 
+                            disabled={!openSelect || catLoading}>
+                            {catLoading ? 'Loading' :'Select'}
+                        </button>
                     </div>
                 </div>
 
