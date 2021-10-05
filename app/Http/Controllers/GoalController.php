@@ -132,7 +132,6 @@ class GoalController extends Controller
                 $date->copy()->toDateString(),
                 $endDate
             ])
-            ->groupBy('need_id', 'model_id')
             ->get();
         
         return response()->json($goal, 200);

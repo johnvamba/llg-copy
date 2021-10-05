@@ -164,9 +164,9 @@ const StripeElement = ({
                         <div className={`form-group border-b border-gray-400`}>
                             <label htmlFor="cardHolder">Name on Card</label>
                             <input
-                                defaultValue={cardHolder || ''}
                                 value={cardHolder || ''}
                                 onChange={e => setCardHolder(e.target.value)}
+                                autoComplete="off"
                             />
                         </div>
                     </div>

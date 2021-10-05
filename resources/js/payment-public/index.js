@@ -25,7 +25,7 @@ import 'pretty-checkbox';
 import StripeElement from './stripeelement'
 import axios from 'axios'
 import io from "socket.io-client";
-//const socket = io.connect('http://neuma-web.test:5000', {
+// const socket = io.connect('http://neuma-web.test:5000', {
 const socket = io.connect(process.env.SOCKETIO_URL, {
     withCredentials: false,
     transports: ['polling'],
@@ -231,7 +231,7 @@ const PublicPayment = () => {
         }
     }
 
-    if (paymentSuccess) {
+    const renderReceipt = () => {
         return (
             <section>
                 <div className="info_container px-3 pt-3 pb-3 pt-5">
@@ -270,7 +270,7 @@ const PublicPayment = () => {
                         className="primary-btn w-full rounded-lg p-2 text-base"
                         type="button"
                         onClick={() => handleGoBack('success')}
-                        //disabled={!stripePromise || submitting}
+                        // disabled={!stripePromise || submitting}
                     >Done</button>
                 </div>
             </section>
@@ -291,6 +291,67 @@ const PublicPayment = () => {
         //     </section>
         // </section>)
     }
+
+    // if (paymentSuccess) {
+    //     return (
+    //         <section>
+    //             <div className="info_container px-3 pt-3 pb-3 pt-5">
+    //                 <div className="items-center offers-create-form__header py-3">
+    //                     {/* <div className="flex flex-row">
+    //                         <div className="flex-1"></div>
+    //                         <div className="flex flex-row justify-evenly items-center">
+    //                             <div className="bar active"></div>
+    //                             <div className="bar"></div>
+    //                         </div>
+    //                         <div className="flex-1 text-right">
+    //                             <i className="fa fa-times text-white text-xl mr-2" aria-hidden="true" onClick={() => handleGoBack('success')}></i>
+    //                         </div>
+    //                     </div> */}
+
+    //                     <h2 className="text-white text-center">Receipt</h2>
+    //                 </div>
+    //             </div>
+
+    //             <div className="mt-10 mb-8 mx-6">
+    //                 <h1 className="text-center tracking-wider success-message mb-6">Thank you for donating!</h1>
+
+    //                 <img src={ThankYouImg} className="mx-auto w-48 h-48" alt="img" />
+
+    //                 <div className="text-center mt-8">
+    //                     <span className="px-3 py-2 rounded-full bg-green-100 text-green-500 font-bold text-xl">
+    //                         $ {parseFloat(total).toFixed(2)}
+    //                     </span>
+    //                 </div>
+
+    //                 <div className="w-64 mt-8 mb-12 mx-auto">
+    //                     <p className="text-center text-lg">Your donation to <span className="font-bold">{need.title}</span> was successful! A receipt was sent to your email!</p>
+    //                 </div>
+
+    //                 <button
+    //                     className="primary-btn w-full rounded-lg p-2 text-base"
+    //                     type="button"
+    //                     onClick={() => handleGoBack('success')}
+    //                 //disabled={!stripePromise || submitting}
+    //                 >Done</button>
+    //             </div>
+    //         </section>
+    //     )
+    //     /** not base on the mockup design  */
+    //     // return (<section className="create-org-pub flex items-center justify-center" style={{ backgroundImage: `url(${mainBackground})` }}>
+    //     //     <section className="create-org-pub__container">
+    //     //         <section className="w-full h-full p-5">
+    //     //             <div className="offers-create-form__header">
+    //     //                 <h2>Thank you!!</h2>
+    //     //             </div>
+    //     //             <div className={`create-org-pub__footer create-org-pub__footer-cols-2`}>
+    //     //                 <div>
+    //     //                     <button className="primary-btn" onClick={() => handleGoBack('success')}>Go back.</button>
+    //     //                 </div>
+    //     //             </div>
+    //     //         </section>
+    //     //     </section>
+    //     // </section>)
+    // }
 
     if ((_.isEmpty(need) || errors.length > 0) && !loading)
         return (<section className="create-org-pub flex items-center justify-center" style={{ backgroundImage: `url(${mainBackground})` }}>
@@ -315,26 +376,28 @@ const PublicPayment = () => {
 
     return (
         <div className="w-full h-full">
-            <Elements stripe={stripePromise}>
-                <StripeElement
-                    need={need}
-                    loading={loading}
-                    stripePromise={stripePromise}
-                    presubmit={presubmit}
-                    amount={amount}
-                    setAmount={setAmount}
-                    amountType={amountType}
-                    setAmountType={changeDonationType}
-                    total={total}
-                    setTotal={setTotal}
-                    cardHolder={cardHolder}
-                    submitting={submitting}
-                    setCardHolder={setCardHolder}
-                    errors={errors}
-                    onClose={handleGoBack}
-                />
-            </Elements>
-        </div>
+            {paymentSuccess ? renderReceipt() : (
+                <Elements stripe={stripePromise}>
+                    <StripeElement
+                        need={need}
+                        loading={loading}
+                        stripePromise={stripePromise}
+                        presubmit={presubmit}
+                        amount={amount}
+                        setAmount={setAmount}
+                        amountType={amountType}
+                        setAmountType={changeDonationType}
+                        total={total}
+                        setTotal={setTotal}
+                        cardHolder={cardHolder}
+                        submitting={submitting}
+                        setCardHolder={setCardHolder}
+                        errors={errors}
+                        onClose={handleGoBack}
+                    />
+                </Elements>
+            )}
+        </div >
         // <section className="create-org-pub flex items-center justify-center" style={{ backgroundImage: `url(${mainBackground})` }}>
         //     <section className="create-org-pub__container">
         //         {submitting && <LoadingScreen title="Submitting Checkout" />}

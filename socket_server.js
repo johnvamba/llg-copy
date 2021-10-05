@@ -4,7 +4,7 @@ const cors = require('cors');
 var io = require('socket.io')(http, {
 	cors: true,
 	origins:['http://neuma.test', 'http://127.0.0.1', 'https://dev.lovelivesgenerously.demosite.ninja', 'https://dev.lovelivesgenerously.demosite.ninja:4443', 'https://admin.neuma.church', 'https://admin.neuma.church:4443'],
-	//origins: ['http://neuma-web.test', 'http://neuma-web.test:4443'],
+	// origins: ['http://neuma-web.test', 'http://neuma-web.test:4443'], // for testing
 });
 
 
@@ -36,5 +36,5 @@ io.on('connection', function (socket) {
 http.listen(5000, function () {
 	console.log(`listening on http://3.25.191.28:5000`, http);
 	
-	// console.log(`listening on http://192.168.1.8:5000`, http); // for testing
+	// console.log(`listening on http://192.168.1.15:5000`, http); // for testing
 });
