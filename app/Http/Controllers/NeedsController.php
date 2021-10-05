@@ -75,7 +75,10 @@ class NeedsController extends Controller
 
             $need->categories = $need->categoriesList; //reset?
 
-            $need['photo'] = $need->organization->getFirstMediaUrl('photo');
+            if ($need->organization) {
+                $need['photo'] = $need->organization->getFirstMediaUrl('photo');
+            }
+
             $need['cover_photo'] = $need->getFirstMediaUrl('photo');
             
             $need['totalActiveNeeds'] = Need::where(
