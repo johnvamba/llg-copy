@@ -154,7 +154,8 @@ const PublicPayment = () => {
 
         if (status === 'success') {
             const url = new URL(window.location.href);
-
+            
+            console.log("success");
             socket.emit('success donation', {
                 id: need.id,
                 amount: amount,
@@ -172,6 +173,7 @@ const PublicPayment = () => {
             //     window.close();
             // }
         } else {
+            console.log("cancel");
             socket.emit("cancel donation", {
                 id: need.id,
                 userId: url.searchParams.get('user')
