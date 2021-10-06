@@ -150,41 +150,53 @@ const PublicPayment = () => {
     }
 
     const handleGoBack = (status) => {
-        let params = { status };
-
-        if (status === 'success') {
-            const url = new URL(window.location.href);
-            
-            console.log("success");
-            socket.emit('success donation', {
-                id: need.id,
-                amount: amount,
-                userId: parseInt(url.searchParams.get('user'))
-            })
-            if (window.ReactNativeWebView) {
-                window.ReactNativeWebView.postMessage('success donation')
-            } else {
-                window.close();
-            }
-
-            // if(window.ReactNativeWebView) {
-            //     window.ReactNativeWebView.postMessage('success donation')
-            // } else {
-            //     window.close();
-            // }
+        if (window.ReactNativeWebView) {
+            window.ReactNativeWebView.postMessage('success donation')
         } else {
-            console.log("cancel");
-            socket.emit("cancel donation", {
-                id: need.id,
-                userId: url.searchParams.get('user')
-            });
-            // socket.emit("success donation", {data:'data here'});
-            if (window.ReactNativeWebView) {
-                window.ReactNativeWebView.postMessage('cancelled donation')
-            } else {
-                window.close();
-            }
+            window.close();
         }
+
+        const url = new URL(window.location.href);
+
+        socket.emit('close payment screen', {
+            id: url.searchParams.get('need_id'),
+            userId: url.searchParams.get('user')
+        })
+        // let params = { status };
+
+        // if (status === 'success') {
+        //     const url = new URL(window.location.href);
+            
+        //     console.log("success");
+        //     socket.emit('success donation', {
+        //         id: need.id,
+        //         amount: amount,
+        //         userId: parseInt(url.searchParams.get('user'))
+        //     })
+        //     if (window.ReactNativeWebView) {
+        //         window.ReactNativeWebView.postMessage('success donation')
+        //     } else {
+        //         window.close();
+        //     }
+
+        //     // if(window.ReactNativeWebView) {
+        //     //     window.ReactNativeWebView.postMessage('success donation')
+        //     // } else {
+        //     //     window.close();
+        //     // }
+        // } else {
+        //     console.log("cancel");
+        //     socket.emit("cancel donation", {
+        //         id: need.id,
+        //         userId: url.searchParams.get('user')
+        //     });
+        //     // socket.emit("success donation", {data:'data here'});
+        //     if (window.ReactNativeWebView) {
+        //         window.ReactNativeWebView.postMessage('cancelled donation')
+        //     } else {
+        //         window.close();
+        //     }
+        // }
     }
 
     const presubmit = async (elements) => {
@@ -207,6 +219,15 @@ const PublicPayment = () => {
             }).then(() => {
                 setSubmitting(false)
                 setSuccess(true)
+
+                const url = new URL(window.location.href);
+                
+                socket.emit('success donation', {
+                    id: url.searchParams.get('need_id'),
+                    amount: amount,
+                    userId: url.searchParams.get('user')
+                })
+
                 swal.fire({
                     text: `You successfully donated to need ${need.title}`,
                     imageUrl: PopupLogo,
