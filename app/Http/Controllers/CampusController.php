@@ -16,9 +16,13 @@ class CampusController extends Controller
     public function index()
     {
         //
-        $campus = Campus::latest()->get();
+        $campuses = Campus::orderBy('name')->get();
 
-        return response()->json($campus);
+        foreach ($campuses as $campus) {
+            $campus['photo'] = $campus->getFirstMediaUrl('photo');
+        }
+
+        return response()->json($campuses);
     }
 
     /**
