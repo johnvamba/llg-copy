@@ -191,7 +191,7 @@ class OTPController extends Controller
         }
 
         return response()->json([
-            "message" => "Verification code successfully sent."
+            "message" => "Verification code successfully sent. $code"
         ], 200);
     }
 
