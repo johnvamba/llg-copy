@@ -39,8 +39,7 @@ io.on('connection', function (socket) {
 });
 
 http.listen(5000, function () {
-	console.log(`listening on http://172.16.1.162:5000`, http);
-	// console.log(`listening on http://3.25.191.28:5000`, http);
+	console.log(`listening on http://3.25.191.28:5000`, http);
 	
 	// console.log(`listening on http://192.168.1.5:5000`, http); // for testing
 });
