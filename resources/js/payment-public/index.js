@@ -25,9 +25,7 @@ import 'pretty-checkbox';
 import StripeElement from './stripeelement'
 import axios from 'axios'
 import io from "socket.io-client";
-// const socket = io.connect('http://neuma-web.test:5000', {
-let url = 'https://dev.lovelivesgenerously.demosite.ninja:4443';
-const socket = io.connect(url, {
+const socket = io.connect(process.env.MIX_SOCKETIO_URL, {
     withCredentials: false,
     transports: ['polling'],
     forceNew: true
@@ -59,9 +57,8 @@ const PublicPayment = () => {
     // const elements = useElements();
 
     useEffect(() => {
-        console.log("server url", url)
         socket.on('connect', () => {
-            console.log('socket connected!' , url);
+            console.log('socket connected!');
         });
     }, [])
 
