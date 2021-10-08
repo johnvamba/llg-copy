@@ -26,7 +26,7 @@ import StripeElement from './stripeelement'
 import axios from 'axios'
 import io from "socket.io-client";
 // const socket = io.connect('http://neuma-web.test:5000', {
-const socket = io.connect(process.env.SOCKETIO_URL, {
+const socket = io.connect('https://dev.lovelivesgenerously.demosite.ninja:4443', {
     withCredentials: false,
     transports: ['polling'],
     forceNew: true
