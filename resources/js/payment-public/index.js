@@ -26,7 +26,8 @@ import StripeElement from './stripeelement'
 import axios from 'axios'
 import io from "socket.io-client";
 // const socket = io.connect('http://neuma-web.test:5000', {
-const socket = io.connect('https://dev.lovelivesgenerously.demosite.ninja:4443', {
+let url = 'https://dev.lovelivesgenerously.demosite.ninja:4443';
+const socket = io.connect(url, {
     withCredentials: false,
     transports: ['polling'],
     forceNew: true
@@ -58,9 +59,9 @@ const PublicPayment = () => {
     // const elements = useElements();
 
     useEffect(() => {
-        console.log("server url", process.env.SOCKETIO_URL)
+        console.log("server url", url)
         socket.on('connect', () => {
-            console.log('socket connected!');
+            console.log('socket connected!' , url);
         });
     }, [])
 
