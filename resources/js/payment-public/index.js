@@ -58,7 +58,7 @@ const PublicPayment = () => {
     // const elements = useElements();
 
     useEffect(() => {
-        console.log(process.env.SOCKETIO_URL)
+        console.log("server url", process.env.SOCKETIO_URL)
         socket.on('connect', () => {
             console.log('socket connected!');
         });
