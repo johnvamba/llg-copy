@@ -64,6 +64,8 @@ class StoryController extends Controller
             ->withCount('appreciates', 'comments')
             ->whereNotNull('posted_at')
             ->orderBy('created_at', 'desc')
+            ->inRandomOrder()
+            ->take(5)
             ->get();
 
         foreach ($stories as $story) {
