@@ -16,23 +16,23 @@ class NotificationController extends Controller
     public function index()
     {
         //
-        $recentNotifications = Notification::with(['from', 'to'])->where('to', auth()->user()->id)
+        $recents = Notification::with(['from', 'to', 'model'])
+            ->where('to', auth()->user()->id)
             ->latest()
-            ->with('model')
             ->skip(0)
             ->take(3)
             ->get();
 
-        $earlierNotifications = Notification::with(['from', 'to'])->where('to', auth()->user()->id)
+        $earliers = Notification::with(['from', 'to', 'model'])
+            ->where('to', auth()->user()->id)
             ->latest()
-            ->with('model')    
             ->skip(3)
             ->take(3)
             ->get();
 
         $notifications = [
-            'recent' => $recentNotifications,
-            'earlier' => $earlierNotifications
+            'recent' => $recents,
+            'earlier' => $earliers
         ];
 
         return response()->json($notifications);

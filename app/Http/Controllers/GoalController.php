@@ -114,14 +114,14 @@ class GoalController extends Controller
                 ]);
         }
 
-        $goal['needs_met_count'] = [];
+        $goal['need_mets'] = [];
 
         $date = Carbon::parse($goal->created_at);
         $endDate = $goal->term == 'year' 
             ? $date->copy()->endOfYear()->toDateString()
             : $date->copy()->endOfMonth()->toDateString();
         
-        $goal['needs_met_count'] = NeedMet::whereHasMorph(
+        $goal['need_mets'] = NeedMet::whereHasMorph(
                 'model',
                 ['App\User'],
                 function (Builder $query) {

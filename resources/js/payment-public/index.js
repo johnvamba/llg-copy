@@ -215,7 +215,7 @@ const PublicPayment = () => {
                 headers: {
                     Authorization: `Bearer ${authtoken}`
                 }
-            }).then(() => {
+            }).then(({data}) => {
                 setSubmitting(false)
                 setSuccess(true)
 
@@ -223,6 +223,7 @@ const PublicPayment = () => {
                 
                 socket.emit('success donation', {
                     id: url.searchParams.get('need_id'),
+                    invoice: data.data.id,
                     amount: amount,
                     userId: url.searchParams.get('user')
                 })

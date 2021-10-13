@@ -853,7 +853,7 @@ class GroupController extends Controller
                 * sin( radians( lat ) ) ) ) AS distance', 
                 [$lat, $lng, $lat])
             ->orderBy('distance')
-            ->limit(10)
+            ->take(10)
             ->get();
         
         foreach($groups as $group) {
