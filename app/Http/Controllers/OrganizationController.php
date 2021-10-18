@@ -137,19 +137,6 @@ class OrganizationController extends Controller
             })->with('categories');
         }
 
-        $campuses = Campus::select('campuses.*')
-            ->selectRaw('( 6371 * acos( cos( radians(?) ) 
-                * cos( radians( lat ) ) * cos( radians( lng ) 
-                - radians(?) ) + sin( radians(?) ) 
-                * sin( radians( lat ) ) ) ) AS distance', 
-                [$lat, $lng, $lat])
-            ->orderBy('distance')->get();
-        
-        foreach($campuses as $campus) {
-            $campus['type'] = 'campus';
-            $campus['photo'] = $campus->getFirstMediaUrl();
-        } 
-
         $orgs = $fetchOrgs->orderBy('distance')->get();
 
         foreach($orgs as $org) {
@@ -166,6 +153,19 @@ class OrganizationController extends Controller
                 ->whereNotNull('approved_by')
                 ->whereRaw('raised >= goal')
                 ->count();
+        } 
+
+        $campuses = Campus::select('campuses.*')
+            ->selectRaw('( 6371 * acos( cos( radians(?) ) 
+                * cos( radians( lat ) ) * cos( radians( lng ) 
+                - radians(?) ) + sin( radians(?) ) 
+                * sin( radians( lat ) ) ) ) AS distance', 
+                [$lat, $lng, $lat])
+            ->orderBy('distance')->get();
+        
+        foreach($campuses as $campus) {
+            $campus['type'] = 'campus';
+            $campus['photo'] = $campus->getFirstMediaUrl();
         } 
 
         $groups = Group::select('groups.*')
