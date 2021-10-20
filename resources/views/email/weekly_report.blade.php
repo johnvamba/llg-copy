@@ -98,6 +98,7 @@
 				src="http://admin.neuma.church/images/neuma-logo-white.png"
 				alt="image"
 				class="img"
+				width="180px"
 			/>
 
 			<div class="content">
