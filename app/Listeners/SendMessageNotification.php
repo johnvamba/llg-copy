@@ -33,11 +33,11 @@ class SendMessageNotification
      */
     public function handle(GroupMessageEvent $event)
     {
-        $group = Group::find($event->params['group_id']);
+        $group = Group::find($event->params->group_id);
 
         $participants = GroupParticipant::where(function($query) use ($event) {
-                $query->where('group_id', $event->params['group_id'])
-                    ->where('user_id', '!=', $event->params['user_id'])
+                $query->where('group_id', $event->params->group_id)
+                    ->where('user_id', '!=', $event->params->user_id)
                     ->where('status', 'approved');
             })
             ->pluck('user_id');

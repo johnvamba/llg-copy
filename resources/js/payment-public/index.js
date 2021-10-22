@@ -149,53 +149,12 @@ const PublicPayment = () => {
     }
 
     const handleGoBack = (status) => {
-        if (window.ReactNativeWebView) {
-            window.ReactNativeWebView.postMessage('success donation')
-        } else {
-            window.close();
-        }
-
         const url = new URL(window.location.href);
 
-        socket.emit('close payment screen', {
+        socket.emit('close_payment_screen', {
             id: url.searchParams.get('need_id'),
             userId: url.searchParams.get('user')
         })
-        // let params = { status };
-
-        // if (status === 'success') {
-        //     const url = new URL(window.location.href);
-            
-        //     console.log("success");
-        //     socket.emit('success donation', {
-        //         id: need.id,
-        //         amount: amount,
-        //         userId: parseInt(url.searchParams.get('user'))
-        //     })
-        //     if (window.ReactNativeWebView) {
-        //         window.ReactNativeWebView.postMessage('success donation')
-        //     } else {
-        //         window.close();
-        //     }
-
-        //     // if(window.ReactNativeWebView) {
-        //     //     window.ReactNativeWebView.postMessage('success donation')
-        //     // } else {
-        //     //     window.close();
-        //     // }
-        // } else {
-        //     console.log("cancel");
-        //     socket.emit("cancel donation", {
-        //         id: need.id,
-        //         userId: url.searchParams.get('user')
-        //     });
-        //     // socket.emit("success donation", {data:'data here'});
-        //     if (window.ReactNativeWebView) {
-        //         window.ReactNativeWebView.postMessage('cancelled donation')
-        //     } else {
-        //         window.close();
-        //     }
-        // }
     }
 
     const presubmit = async (elements) => {
@@ -215,13 +174,13 @@ const PublicPayment = () => {
                 headers: {
                     Authorization: `Bearer ${authtoken}`
                 }
-            }).then(({data}) => {
+            }).then(({ data }) => {
                 setSubmitting(false)
                 setSuccess(true)
 
                 const url = new URL(window.location.href);
-                
-                socket.emit('success donation', {
+
+                socket.emit('success_donation', {
                     id: url.searchParams.get('need_id'),
                     invoice: data.data.id,
                     amount: amount,
@@ -256,7 +215,7 @@ const PublicPayment = () => {
 
     const renderReceipt = () => {
         return (
-            <section>
+            <div>
                 <div className="info_container px-3 pt-3 pb-3 pt-5">
                     <div className="items-center offers-create-form__header py-3">
                         {/* <div className="flex flex-row">
@@ -289,14 +248,16 @@ const PublicPayment = () => {
                         <p className="text-center text-lg">Your donation to <span className="font-bold">{need.title}</span> was successful! A receipt was sent to your email!</p>
                     </div>
 
-                    <button
-                        className="primary-btn w-full rounded-lg p-2 text-base"
-                        type="button"
-                        onClick={() => handleGoBack('success')}
+                    <div>
+                        <button
+                            className="primary-btn w-full rounded-lg p-2 text-base"
+                            type="button"
+                            onClick={() => handleGoBack('success')}
                         // disabled={!stripePromise || submitting}
-                    >Done</button>
+                        >Done</button>
+                    </div>
                 </div>
-            </section>
+            </div>
         )
         /** not base on the mockup design  */
         // return (<section className="create-org-pub flex items-center justify-center" style={{ backgroundImage: `url(${mainBackground})` }}>
