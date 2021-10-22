@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Events\GroupInvite;
-use App\Events\GroupMessage;
+use App\Events\GroupMessageEvent;
 use App\Events\GroupRequestEvent;
 use App\Listeners\SendInvitationNotification;
 use App\Listeners\SendMessageNotification;
@@ -27,7 +27,7 @@ class EventServiceProvider extends ServiceProvider
         GroupInvite::class => [
             SendInvitationNotification::class,
         ],
-        GroupMessage::class => [
+        GroupMessageEvent::class => [
             SendMessageNotification::class,
         ],
         GroupRequestEvent::class => [

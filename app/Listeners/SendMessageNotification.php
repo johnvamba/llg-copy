@@ -40,14 +40,14 @@ class SendMessageNotification
                     ->where('user_id', '!=', $event->params->sender)
                     ->where('status', 'approved');
             })
-            ->pluck('user_id');
+            ->pluck('user_id')
+            ->toArray();
 
         if (auth()->user()->id != $event->params->sender) {
             $participants->push(auth()->user()->id);
         }
 
-        $tokens = Device::whereIn('user_id', $participants)
-            ->pluck('fcm_token');
+        $tokens = Device::whereIn('user_id', $participants)->pluck('fcm_token');
         
         if (!$tokens->count())
             return;

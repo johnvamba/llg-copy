@@ -572,7 +572,7 @@ class GroupController extends Controller
         }
 
         event(new GroupMessageEvent($chat));
-
+        
         $chat->getMedia();
 
         foreach($chat['media'] as $media) {
