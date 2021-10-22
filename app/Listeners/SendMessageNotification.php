@@ -37,10 +37,14 @@ class SendMessageNotification
 
         $participants = GroupParticipant::where(function($query) use ($event) {
                 $query->where('group_id', $event->params->group_id)
-                    ->where('user_id', '!=', $event->params->user_id)
+                    ->where('user_id', '!=', $event->params->sender)
                     ->where('status', 'approved');
             })
             ->pluck('user_id');
+
+        if (auth()->user()->id != $event->params->sender) {
+            $participants->push(auth()->user()->id);
+        }
 
         $tokens = Device::whereIn('user_id', $participants)
             ->pluck('fcm_token');
