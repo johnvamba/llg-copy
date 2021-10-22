@@ -13,7 +13,7 @@ app.get('/', function (req, res) {
 });
 
 io.on('connection', function (socket) {
-	socket.on("success donation", (data) => {
+	socket.on("success_donation", (data) => {
 		console.log("success donation!", data)
 		socket.broadcast.emit('donation', data);
 	});
@@ -23,7 +23,7 @@ io.on('connection', function (socket) {
 	// 	socket.broadcast.emit('cancelled_donation', data);
 	// });
 	
-	socket.on("close payment screen", (data) => {
+	socket.on("close_payment_screen", (data) => {
 		console.log("closing payment screen..")
 		socket.broadcast.emit('close_payment', data);
 	});
@@ -41,5 +41,5 @@ io.on('connection', function (socket) {
 http.listen(5000, function () {
 	console.log(`listening on http://3.25.191.28:5000`, http);
 	
-	// console.log(`listening on http://192.168.1.7:5000`, http); // for local testing
+	// console.log(`listening on http://192.168.1.12:5000`, http); // for local testing
 });
