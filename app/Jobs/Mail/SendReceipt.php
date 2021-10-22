@@ -41,7 +41,7 @@ class SendReceipt implements ShouldQueue
      */
     public function handle()
     {
-        $transacts = 'Donation on need#'. optional($this->need)->id;
+        $transacts = 'Donation on need entitled "'. (optional($this->need)->title ?? '-missing-need-') .'"';
         $organization = optional($this->need)->organization;
 
         if($organization && $transacts && $this->user){

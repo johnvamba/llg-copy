@@ -44,7 +44,7 @@ class TransactionReceipt extends Mailable
         return $this//->from($from)
             ->from(config('mail.from.address'), config('mail.from.name'))
             ->view('email.transact')
-            ->subject(optional($this->org->template)->subject ?? 'Payment Received!')
+            ->subject(optional($this->org->template)->subject ?? ('Thank you for your donation - ' . $this->user->name))
             ->with([
                 'user' => $this->user,
                 'org' => $this->org,

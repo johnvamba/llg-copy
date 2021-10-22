@@ -63,19 +63,19 @@ class EmailReceipt extends Command
             $organization->setRelation('template', new ReceiptTemplate);
         }
 
-        $transact->loadMissing(['user' => fn($usr) => $usr->withoutGlobalScopes()]);
+        $transact->loadMissing(['model' => fn($model) => $model->withoutGlobalScopes()]);
 
         $transacts = 'Amount';
 
         switch ($transact->model_type) {
             case 'App\Need':
-                $transacts = 'Donation on need #'. $transact->model_id;
+                $transacts = 'Donation on need entitled "'. (optional($transact->model)->title ?? '-missing-need-') . '"';
                 break;
             default:
                 break;
         }
 
-        Mail::to($transact->user)->send(new TransactionReceipt($organization, [  $transacts => $transact->amount ?? 0 ]));
+        Mail::to($transact->user)->send(new TransactionReceipt($organization, $transact->user, [  $transacts => $transact->amount ?? 0 ]));
 
         $this->info('Transaction receipt will be sent shortly');
 
