@@ -117,9 +117,16 @@
 </style>
 @endpush
 
+@php
+	$templateImage = optional($template)->getFirstMediaUrl('photo');
+	$orgImage = optional($org)->getFirstMediaUrl('photo');
+
+	$imageDefault = is_null($templateImage) ? $templateImage : (is_null($orgImage) ? $orgImage : 'http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp')
+@endphp
+
 <div class="receipt">
 	<div class="receipt-header">
-		<img class="rounded-img" src="{{ optional($template)->getFirstMediaUrl('photo') ?? optional($org)->getFirstMediaUrl('photo') ?? 'http://www.gravatar.com/avatar/3b3be63a4c2a439b013787725dfce802?d=mp'}}"/>
+		<img class="rounded-img" src="{{ $imageDefault }}"/>
 		<div class="receipt-title">
 			<strong>{{ optional($org)->name ?? 'Organisation'}}</strong>
 			<address>{{ optional($org)->location ?? 'Location'}}</address>

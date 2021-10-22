@@ -35,11 +35,11 @@
     background-color: #CF995F;
 }
 
-.progress {
+.progress.stripe-progress {
     background-color: #a06628 !important;
 }
 
-.progress-bar {
+.progress-bar.stripe-progress {
     background-color: #ffffff !important;
 }
 

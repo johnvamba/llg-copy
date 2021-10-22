@@ -28,6 +28,10 @@ const TransactionsView = ({ data = {}, handleForm }) => {
         }
     }, [data]);
 
+    const calc = () => {
+        return (raised /(goal != 0 ? goal : 1)) * 100;
+    }
+
     return(
         <section className="form transactions-form create-form">
             {
@@ -104,8 +108,8 @@ const TransactionsView = ({ data = {}, handleForm }) => {
                                     </div>
                                     <label className="about mb-1">About</label>
                                     <p className="details">{state.need_desc}</p>
-                                    <div className="progress mb-1">
-                                        <div className="progress-bar" style={{width: `${raised /(goal != 0 ? goal : 1)}%`}}></div>
+                                    <div className="progress mb-1 mt-1">
+                                        <div className="progress-bar" style={{width: `${calc()}%`}}></div>
                                     </div>
                                     <div className="flex justify-between">
                                         <p className="raised">Raised: $ {raised}</p>
