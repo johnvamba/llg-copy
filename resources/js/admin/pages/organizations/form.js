@@ -289,7 +289,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
             }
             <div className="form-title create-story__header">
                 <h3>{data.id ? "Edit" : "Add"} Organisation</h3>
-                <button type="button" onClick={handleClose}>
+                <button type="button" onClick={()=>handleClose({})}>
                     <OffersFormCross />
                 </button>
             </div>
