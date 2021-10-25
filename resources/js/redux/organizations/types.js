@@ -1,1 +1,4 @@
 export const SET_ORGANIZATIONS = 'SET_ORGANIZATIONS';
+export const SET_PANEL_ORG = 'SET_PANEL_ORG';
+export const SET_PANEL_SHOW = 'SET_PANEL_SHOW'
+export const SET_LOADING = 'SET_LOADING';

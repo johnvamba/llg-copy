@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as AuthUserActions from '../redux/auth-user/actions';
+import { setPanelShow } from '../redux/organizations/actions';
 import { Link, useLocation, useHistory } from 'react-router-dom';
 import OffersFormCross from '../svg/offers-form-cross';
 import Organisation from '../svg/organisation';
@@ -69,10 +70,9 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
     }
 
     const clickProfile = () => {
-        if(roles.name === 'admin' && location.pathname != '/organisations')
-            return;
-
-        history.push('/organisations');
+        if(roles.name === 'organization admin'){
+            dispatch(setPanelShow('info'))
+        }
     }
 
     return (
@@ -306,7 +306,7 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                     }
 
                     { 
-                        (roles.name === 'admin' || roles.name === 'campus admin') ?
+                        (roles.name === 'admin' || roles.name === 'campus admin') &&
                         <div className="mt-6 text-gray-400">
                             <button
                                 onClick={() => handleOpen('organizations')}
@@ -349,8 +349,9 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                     </div>
                                 </div>
                             }
-                        </div> :
-                        <div
+                        </div> 
+                    }
+                        {/*<div
                             className={`mt-6 
                             ${location.pathname == "/organisations" ? "text-yellow-400" : "text-gray-400"}`}
                         >
@@ -358,9 +359,8 @@ const Sidebar = ({ showSidebarMobile, setShowSidebarMobile }) => {
                                 <Organisations active={location.pathname == "/organisations" ? true : false} />
                                 <span className="px-4">Organisations</span>
                             </Link>
-                        </div>
+                        </div>*/}
                        
-                    }
 
                     {(roles.name === 'admin' || roles.name === 'campus admin') &&
                         (
