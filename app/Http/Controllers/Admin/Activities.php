@@ -15,12 +15,16 @@ class Activities extends Controller
         $date = Carbon::now();
 
         $today = Activity::with('user', 'user.profile', 'model')
-            ->has('model')
+            ->hasMorph('model', 
+                ['*']
+            )
             ->whereDate('created_at', $date)
             ->latest();
 
         $yesterday = Activity::with('user', 'user.profile', 'model')
-            ->has('model')
+            ->hasMorph('model', 
+                ['*']
+            )
             ->whereDate('created_at', (clone $date)->subDay())
             ->latest();
         // dd($date, (clone $date)->subDay());
