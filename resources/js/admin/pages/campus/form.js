@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import OffersFormCross from '../../../svg/offers-form-cross';
 import Camera from '../../../svg/camera';
-
+import Select from 'react-select';
 import Location from '../../../components/Location'
 import { swalError, swalSuccess } from '../../../components/helpers/alerts';
 import { isValidated } from '../../../components/helpers/validator';
 import LoadingScreen from '../../../components/LoadingScreen'
 import BannerImage from '../../../components/BannerImage';
 import ImageCropper from '../../../components/ImageCropper'
+import { selectStylePaddingZero } from '../../../components/helpers/async_options';
 
 const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
     const [form, setForm] = useState({
@@ -24,6 +25,7 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
     })
     const [errors, setErrors] = useState({})
     const [submitting, setSubmitting] = useState(false);
+    const [languange, setLanguage] = useState({});
 
     useEffect(()=>{
         const { name, description, location, lng, lat, photo } = data;
@@ -169,6 +171,16 @@ const CampusForm = ({ data={}, handleForm, afterSubmit }) => {
                             {
                                 (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing description</span>
                             }
+                        </div>
+                    </div>
+                    <div className="w-full">
+                        <div className="form-group">
+                            <label>Select Languange</label>
+                            <Select
+                                styles={selectStylePaddingZero}
+                                onChange={setLanguage}
+                                options={[{label: "English (Default)", 'value': 'en'}]}
+                            />
                         </div>
                     </div>
                 </form>

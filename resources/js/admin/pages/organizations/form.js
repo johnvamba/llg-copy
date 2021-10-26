@@ -12,6 +12,7 @@ import CircleImageForm from '../../../components/CircleImageForm';
 import BannerImage from '../../../components/BannerImage';
 import ImageCropper from '../../../components/ImageCropper'
 import AsyncSelect from 'react-select/async';
+import Select from 'react-select';
 import { connect } from 'react-redux';
 import { selectStyle, selectStylePaddingZero, loadCampus, checkEmail } from '../../../components/helpers/async_options';
 import { all } from '../needs/categorylist';
@@ -57,6 +58,7 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
         insured: false,
         taxable: false
     })
+    const [languange, setLanguage] = useState({});
     //Loading data from table
     useEffect(()=>{
         if(data.id){
@@ -448,6 +450,16 @@ const OrgForm = ({ data = {}, handleClose, page, afterSubmit, AuthUserReducer })
                                 {
                                     (errors.description || false) && <span className="text-xs pt-1 text-red-500 italic">Missing about description</span>
                                 }
+                            </div>
+                        </div>
+                        <div className="w-full px-2 mb-4">
+                            <div className="form-group">
+                                <label>Select Languange</label>
+                                <Select
+                                    styles={selectStylePaddingZero}
+                                    onChange={setLanguage}
+                                    options={[{label: "English (Default)", 'value': 'en'}]}
+                                />
                             </div>
                         </div>
                         <div className="w-full px-2 mb-4">
