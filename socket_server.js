@@ -15,17 +15,17 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
 	socket.on("success_donation", (data) => {
 		console.log("success donation!", data)
-		socket.broadcast.emit('donation', data);
+		socket.emit('donation', data);
 	});
-	
+
 	// socket.on("cancelled donation", (data) => {
 	// 	console.log("cancelled donation!")
 	// 	socket.broadcast.emit('cancelled_donation', data);
 	// });
-	
+
 	socket.on("close_payment_screen", (data) => {
 		console.log("closing payment screen..")
-		socket.broadcast.emit('close_payment', data);
+		socket.emit('close_payment', data);
 	});
 
 	socket.on("group message", (data) => {
@@ -40,6 +40,6 @@ io.on('connection', function (socket) {
 
 http.listen(5000, function () {
 	console.log(`listening on http://3.25.191.28:5000`, http);
-	
+
 	// console.log(`listening on http://192.168.1.12:5000`, http); // for local testing
 });
