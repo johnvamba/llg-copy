@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use Illuminate\Support\Facades\Log;
 use App\Events\GroupMessageEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -33,6 +34,8 @@ class SendMessageNotification
      */
     public function handle(GroupMessageEvent $event)
     {
+        $participants = collect();
+
         $group = Group::find($event->params->group_id);
 
         $participants = GroupParticipant::where(function($query) use ($event) {
@@ -40,11 +43,10 @@ class SendMessageNotification
                     ->where('user_id', '!=', $event->params->sender)
                     ->where('status', 'approved');
             })
-            ->pluck('user_id')
-            ->toArray();
+            ->pluck('user_id');
 
-        if (auth()->user()->id != $event->params->sender) {
-            $participants->push(auth()->user()->id);
+        if ($group->user_id != $event->params->sender) {
+            $participants->push($group->user_id);
         }
 
         $tokens = Device::whereIn('user_id', $participants)->pluck('fcm_token');
