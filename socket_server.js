@@ -15,22 +15,17 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
 	socket.on("success_donation", (data) => {
 		console.log("success donation!", data)
-		socket.emit('donation', data);
+		socket.broadcast.emit('donation', data);
 	});
-
-	// socket.on("cancelled donation", (data) => {
-	// 	console.log("cancelled donation!")
-	// 	socket.broadcast.emit('cancelled_donation', data);
-	// });
 
 	socket.on("close_payment_screen", (data) => {
 		console.log("closing payment screen..")
-		socket.emit('close_payment', data);
+		socket.broadcast.emit('close_payment', data);
 	});
 
-	socket.on("group message", (data) => {
+	socket.on("group_message", (data) => {
 		console.log("broadcasting message...")
-		socket.emit('group_message', data)
+		socket.broadcast.emit('group_message', data)
 	});
 
 	// socket.on("*", function (data) {
