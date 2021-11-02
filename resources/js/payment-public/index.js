@@ -148,14 +148,10 @@ const PublicPayment = () => {
     const handleGoBack = () => {
         const url = new URL(window.location.href);
 
-        socket.emit('close_payment_screen', {
+        socket.broadcast.emit('close_payment_screen', {
             id: url.searchParams.get('need_id'),
             userId: url.searchParams.get('user')
-        }, function(error, success) {
-            alert(JSON.stringify(success));
         })
-
-        alert(url.searchParams.get('need_id'));
     }
 
     const presubmit = async (elements) => {
@@ -181,7 +177,7 @@ const PublicPayment = () => {
 
                 const url = new URL(window.location.href);
 
-                socket.emit('success_donation', {
+                socket.broadcast.emit('success_donation', {
                     id: url.searchParams.get('need_id'),
                     invoice: data.data.id,
                     amount: amount,
