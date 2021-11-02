@@ -58,6 +58,7 @@ const PublicPayment = () => {
 
     useEffect(() => {
         socket.on('connect', () => {
+            alert(process.env.MIX_SOCKETIO_URL);
             console.log('socket connected!');
         });
     }, [])
@@ -150,6 +151,8 @@ const PublicPayment = () => {
 
     const handleGoBack = (status) => {
         const url = new URL(window.location.href);
+
+        alert(url.searchParams.get('need_id'));
 
         socket.emit('close_payment_screen', {
             id: url.searchParams.get('need_id'),
