@@ -148,7 +148,7 @@ const PublicPayment = () => {
     const handleGoBack = () => {
         const url = new URL(window.location.href);
 
-        socket.broadcast.emit('close_payment_screen', {
+        socket.emit('close_payment_screen', {
             id: url.searchParams.get('need_id'),
             userId: url.searchParams.get('user')
         })
@@ -179,7 +179,7 @@ const PublicPayment = () => {
 
                 const url = new URL(window.location.href);
 
-                socket.broadcast.emit('success_donation', {
+                socket.emit('success_donation', {
                     id: url.searchParams.get('need_id'),
                     invoice: data.data.id,
                     amount: amount,
