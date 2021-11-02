@@ -59,6 +59,7 @@ const PublicPayment = () => {
     useEffect(() => {
         socket.on('connect', () => {
             console.log('socket connected!');
+            alert("socket connection success")
         });
     }, [])
 
