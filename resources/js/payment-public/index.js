@@ -68,6 +68,8 @@ const PublicPayment = () => {
         const url = new URL(window.location.href)
         const need_id = url.searchParams.get('need_id');
         const auth = url.searchParams.get('token') || auth_token;
+
+        alert(url.searchParams.get('need_id'));
         // console.log('auth', url.searchParams.get('token'), auth_token)
         if (need_id && auth) {
             setAuthToken(auth);
@@ -149,10 +151,10 @@ const PublicPayment = () => {
 
     }
 
-    const handleGoBack = (status) => {
-        const url = new URL(window.location.href);
-
+    const handleGoBack = () => {
         alert(url.searchParams.get('need_id'));
+
+        const url = new URL(window.location.href);
 
         socket.emit('close_payment_screen', {
             id: url.searchParams.get('need_id'),
@@ -254,9 +256,7 @@ const PublicPayment = () => {
                     <div>
                         <button
                             className="primary-btn w-full rounded-lg p-2 text-base"
-                            type="button"
-                            onClick={() => handleGoBack('success')}
-                        // disabled={!stripePromise || submitting}
+                            onClick={handleGoBack}
                         >Done</button>
                     </div>
                 </div>
@@ -353,7 +353,7 @@ const PublicPayment = () => {
                     </div>
                     <div className={`create-org-pub__footer create-org-pub__footer-cols-2`}>
                         <div>
-                            <button className="primary-btn" onClick={() => handleGoBack('cancel')}>Go back.</button>
+                            <button className="primary-btn" onClick={handleGoBack}>Go back.</button>
                         </div>
                     </div>
                 </section>
