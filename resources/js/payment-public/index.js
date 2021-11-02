@@ -59,7 +59,6 @@ const PublicPayment = () => {
     useEffect(() => {
         socket.on('connect', () => {
             console.log('socket connected!');
-            alert("socket connection success")
         });
     }, [])
 
@@ -149,12 +148,14 @@ const PublicPayment = () => {
     const handleGoBack = () => {
         const url = new URL(window.location.href);
 
-        alert(url.searchParams.get('need_id'));
-
         socket.emit('close_payment_screen', {
             id: url.searchParams.get('need_id'),
             userId: url.searchParams.get('user')
+        }, function(error, success) {
+            alert(JSON.stringify(success));
         })
+
+        alert(url.searchParams.get('need_id'));
     }
 
     const presubmit = async (elements) => {
