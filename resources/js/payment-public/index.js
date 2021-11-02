@@ -27,7 +27,7 @@ import axios from 'axios'
 import io from "socket.io-client";
 const socket = io.connect(process.env.MIX_SOCKETIO_URL, {
     withCredentials: false,
-    transports: ['polling'],
+    transports: ['websocket'],
     forceNew: true
 });
 
