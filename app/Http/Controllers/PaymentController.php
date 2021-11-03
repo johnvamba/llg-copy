@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\DonationEvent;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ActivityController;
@@ -146,6 +147,15 @@ class PaymentController extends Controller
 
                 return $invoice;
             });
+
+            $eventParams = [
+                'user_id' => auth()->user()->id,
+                'need_id' => $need->id,
+                'invoice' => $result->id,
+                'amount' => $request->amount
+            ];
+
+            event(new DonationEvent($eventParams));
 
             return response()->json([
                     'message' => 'Successfully donated.',
