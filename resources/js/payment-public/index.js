@@ -152,8 +152,6 @@ const PublicPayment = () => {
             id: url.searchParams.get('need_id'),
             userId: url.searchParams.get('user')
         })
-
-        alert("successfully emitted");
     }
 
     const presubmit = async (elements) => {
