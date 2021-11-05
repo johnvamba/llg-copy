@@ -15,6 +15,7 @@ use App\Organization;
 use App\OrganizationCredential;
 use App\Device;
 use App\CampusUser;
+use App\Otp;
 use Carbon\Carbon;
 use DB;
 
@@ -199,6 +200,8 @@ class UserController extends Controller
                     'email' => $request->email,
                     'mobile_number' => $request->mobile_number,
                 ]);
+
+            Otp::where('user_id', $user->id)->delete();
 
             UserProfile::where('user_id', $user->id)
                 ->update(

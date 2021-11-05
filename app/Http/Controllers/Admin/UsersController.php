@@ -19,6 +19,8 @@ use Spatie\Permission\Models\Role;
 use DB;
 use Str;
 
+use App\Otp;
+
 class UsersController extends Controller
 {
     /**
@@ -257,6 +259,8 @@ class UsersController extends Controller
             skipPhoto:
             $user->profile->save();
 
+            Otp::where('user_id', $user->id)->delete();
+
             DB::commit();
             return new UserResource($user);
         } catch (\Exception $e) {
@@ -278,6 +282,8 @@ class UsersController extends Controller
             // $user->profile()->delete(); //wala siya deletd at. just delete the user
             if(auth()->user()->id == $user->id)
                 return response()->json('Could not delete self', 400);
+
+            Otp::where('user_id', $user->id)->delete();
 
             $user->delete();
 
