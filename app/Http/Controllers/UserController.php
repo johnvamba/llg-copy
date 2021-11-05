@@ -280,6 +280,8 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
+            Otp::where('user_id', $user->id)->delete();
+            
             $user->delete();
             
             return response()->json([
