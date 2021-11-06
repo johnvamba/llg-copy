@@ -117,7 +117,7 @@ class TestControl extends Controller
     public function tester() {
         // $organization = Organization::find(3);
         // dd(new \App\Events\DonationEvent(["user_id"=>"1", "message" => 'Huuuh?']));
-        broadcast(new \App\Events\AdminPushNotifEvent(PushNotification::first()));
+        broadcast(new \App\Events\DonationEvent(["user_id"=>"1", "message" => 'Huuuh?']));
 
         return 'something';
 

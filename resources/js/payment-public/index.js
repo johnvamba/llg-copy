@@ -55,8 +55,14 @@ const PublicPayment = () => {
     const [total, setTotal] = useState(0);
     const [cardHolder, setCardHolder] = useState(null);
     const location = useLocation();
-    const channel = useChannel('general');
-    const event = useEvent(channel, 'donation-event', handleGoBack);
+    const channel = useChannel('private-donation.user.1');
+    const event = useEvent(channel, 'donation-event', ()=>{
+        if(window.ReactNativeWebView) {
+            window.ReactNativeWebView.postMessage('success donation')
+        } else {
+            window.close();
+        }
+    });
 
     useEffect(() => {
         // console.log('somethign');
