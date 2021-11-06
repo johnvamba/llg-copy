@@ -25,7 +25,7 @@ use App\OrgInvites;
 use App\Story;
 use App\Need;
 
-
+use App\PushNotification;
 use App\User;
 use App\Group;
 
@@ -116,6 +116,11 @@ class TestControl extends Controller
 
     public function tester() {
         // $organization = Organization::find(3);
+        // dd(new \App\Events\DonationEvent(["user_id"=>"1", "message" => 'Huuuh?']));
+        broadcast(new \App\Events\AdminPushNotifEvent(PushNotification::first()));
+
+        return 'something';
+
         $mobileNumber = '00123322312';
         $skipping = false;
 
