@@ -17,6 +17,14 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('donation.user.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('donation.channel', function () {
+    return true;
+});
+
+Broadcast::channel('close-payment-channel', function () {
+    return true;
+});
+
+Broadcast::channel('general', function ($user, $id) {
+    return \Auth::check();
 });

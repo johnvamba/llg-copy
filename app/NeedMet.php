@@ -22,12 +22,12 @@ class NeedMet extends Model
 
     public function need()
     {
-        return $this->belongsTo('App\Need', 'need_id');
+        return $this->belongsTo('App\Need', 'need_id')->withTrashed();
     }
 
     public function need_type()
     {
-        return $this->hasOneThrough(NeedsType::class, Need::class, 'id', 'id', 'need_id', 'needs_type_id');
+        return $this->hasOneThrough(NeedsType::class, Need::class, 'id', 'id', 'need_id', 'needs_type_id')->withTrashed();
     }
 
     /**

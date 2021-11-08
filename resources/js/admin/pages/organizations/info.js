@@ -159,6 +159,9 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite, handleDelete }
     }, [data])
 
     const remove = () => {
+        if(typeof handleDelete != 'function')
+            return;
+
         setLoading(true)
         Swal.fire({
             title: 'Are you sure?',
@@ -190,9 +193,12 @@ const OrgInfo = ({ data={}, closePanel, handleEdit, handleInvite, handleDelete }
                     <div className="org-form__rounded-img" style={{backgroundImage: `url(${photo})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center center'}}></div>
                 </div>
                 <div className="org-view__edit">
-                    <button onClick={remove} className="text-red-500 mr-4">
-                        Delete
-                    </button>
+                    {
+                        (typeof handleDelete == "function") &&
+                        <button onClick={remove} className="text-red-500 mr-4">
+                            Delete
+                        </button>
+                    }
                     <button onClick={handleEdit}>
                         <PencilIcon />
                         Edit

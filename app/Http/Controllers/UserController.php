@@ -15,6 +15,7 @@ use App\Organization;
 use App\OrganizationCredential;
 use App\Device;
 use App\CampusUser;
+use App\Otp;
 use Carbon\Carbon;
 use DB;
 
@@ -200,6 +201,8 @@ class UserController extends Controller
                     'mobile_number' => $request->mobile_number,
                 ]);
 
+            Otp::where('user_id', $user->id)->delete();
+
             UserProfile::where('user_id', $user->id)
                 ->update(
                     array_merge(
@@ -277,6 +280,8 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
+            Otp::where('user_id', $user->id)->delete();
+            
             $user->delete();
             
             return response()->json([

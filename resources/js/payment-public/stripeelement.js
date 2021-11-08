@@ -98,7 +98,7 @@ const StripeElement = ({
                         </div>
                         {/* <label className="about mb-1">About</label>
                         <p className="details overflow-ellipsis">{need.description}</p> */}
-                        <div className="progress mb-1">
+                        <div className="progress stripe-progress mb-1">
                             {/* <div className="progress-bar" style={{ width: `${need.raised / (need.goal != 0 ? need.goal : 1)}%` }}></div> */}
                             <div className="progress-bar" style={{ width: progress() }}></div>
                         </div>

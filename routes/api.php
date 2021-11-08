@@ -27,6 +27,7 @@ Route::get('need/categories/{type?}', 'NeedsCategoryController@index');
 Route::get('campus', 'CampusController@index');
 Route::post('register/campus/user', 'CampusController@addUser');
 Route::get('versions', 'AppController@index');
+Route::post('payment/close', 'PaymentController@close');
 
 Route::post('org-create', 'Admin\OrganizationController@openCreate');
 

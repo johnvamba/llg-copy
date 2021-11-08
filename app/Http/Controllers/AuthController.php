@@ -214,7 +214,7 @@ class AuthController extends Controller
      */
     public function authUser(Request $request, User $user)
     {
-        $user['profile'] = UserProfile::where('user_id', $user->id)->first();
+        $user = User::with(['profile', 'campus'])->find($user->id);
         $token = $user->createToken('api')->accessToken;
         $user->getRoleNames();
 
@@ -229,6 +229,7 @@ class AuthController extends Controller
 
         return response()->json($data, 202);
     }
+    
     //override reset link sending response
     protected function sendResetLinkResponse(Request $request, $response)
     {

@@ -327,6 +327,9 @@ class GroupController extends Controller
 
             if ($hasParticipated) {
                 $group = Group::find($hasParticipated->group_id);
+                if (!$group) {
+                    return response()->json($group);
+                }
                 $group['member_status'] = $hasParticipated->status;
             } else {
                 return response()->json($group);
@@ -572,7 +575,7 @@ class GroupController extends Controller
         }
 
         event(new GroupMessageEvent($chat));
-
+        
         $chat->getMedia();
 
         foreach($chat['media'] as $media) {

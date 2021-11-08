@@ -7,6 +7,9 @@ import LoadingScreen from '../components/LoadingScreen'
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content'
 import { loadStripe } from '@stripe/stripe-js';
+
+import { PusherProvider } from '@harelpls/use-pusher';
+
 import {
     // CardElement,
     Elements,
@@ -24,12 +27,14 @@ import CurrencyInput from 'react-currency-input-field';
 import 'pretty-checkbox';
 import StripeElement from './stripeelement'
 import axios from 'axios'
-import io from "socket.io-client";
-const socket = io.connect(process.env.MIX_SOCKETIO_URL, {
-    withCredentials: false,
-    transports: ['polling'],
-    forceNew: true
-});
+import { useChannel, useEvent } from '@harelpls/use-pusher';
+
+// import io from "socket.io-client";
+// const socket = io.connect(process.env.MIX_SOCKETIO_URL, {
+//     withCredentials: false,
+//     transports: ['polling'],
+//     forceNew: true
+// });
 
 import ThankYouImg from '../../assets/images/ThankYou.png';
 
@@ -50,23 +55,24 @@ const PublicPayment = () => {
     const [total, setTotal] = useState(0);
     const [cardHolder, setCardHolder] = useState(null);
     const location = useLocation();
-
-    // const [card, setCard] = useState('');
-    // const stripe = useStripe();
-
-    // const elements = useElements();
-
-    useEffect(() => {
-        socket.on('connect', () => {
-            console.log('socket connected!');
-        });
-    }, [])
+    // const [channel, setChannel] = useState(null);
+    //This actually works now but should not be here if channel basis basis.
+    
+    // useChannel('private-donation.user.1');
+    // useEvent(channel, 'donation-event', ()=>{
+    //     if(window.ReactNativeWebView) {
+    //         window.ReactNativeWebView.postMessage('success donation')
+    //     } else {
+    //         window.close();
+    //     }
+    // });
 
     useEffect(() => {
         // console.log('somethign');
         const url = new URL(window.location.href)
         const need_id = url.searchParams.get('need_id');
         const auth = url.searchParams.get('token') || auth_token;
+
         // console.log('auth', url.searchParams.get('token'), auth_token)
         if (need_id && auth) {
             setAuthToken(auth);
@@ -78,12 +84,6 @@ const PublicPayment = () => {
         //     return ;
         // }
     }, [location])
-
-    // useEffect(()=>{
-    //     if(!stripe) {
-    //         return;
-    //     }
-    // }, [stripe])
 
     const changeDonationType = (charge = 0, type) => {
         if (type == 'percentage') {
@@ -144,17 +144,19 @@ const PublicPayment = () => {
         //need
     }
 
-    const submitPaymentReference = () => {
-
-    }
-
-    const handleGoBack = (status) => {
+    const handleGoBack = async () => {
         const url = new URL(window.location.href);
+        let params = {
+            need: url.searchParams.get('need_id'),
+            user: url.searchParams.get('user')
+        }
 
-        socket.emit('close_payment_screen', {
-            id: url.searchParams.get('need_id'),
-            userId: url.searchParams.get('user')
-        })
+        try {
+            let {data} = await axios.post(`api/payment/close`, params);
+            console.log(data);
+        } catch(err) {
+            console.log(err);
+        }
     }
 
     const presubmit = async (elements) => {
@@ -177,15 +179,6 @@ const PublicPayment = () => {
             }).then(({ data }) => {
                 setSubmitting(false)
                 setSuccess(true)
-
-                const url = new URL(window.location.href);
-
-                socket.emit('success_donation', {
-                    id: url.searchParams.get('need_id'),
-                    invoice: data.data.id,
-                    amount: amount,
-                    userId: url.searchParams.get('user')
-                })
 
                 swal.fire({
                     text: `You successfully donated to need ${need.title}`,
@@ -251,9 +244,7 @@ const PublicPayment = () => {
                     <div>
                         <button
                             className="primary-btn w-full rounded-lg p-2 text-base"
-                            type="button"
-                            onClick={() => handleGoBack('success')}
-                        // disabled={!stripePromise || submitting}
+                            onClick={() => handleGoBack()}
                         >Done</button>
                     </div>
                 </div>
@@ -350,7 +341,7 @@ const PublicPayment = () => {
                     </div>
                     <div className={`create-org-pub__footer create-org-pub__footer-cols-2`}>
                         <div>
-                            <button className="primary-btn" onClick={() => handleGoBack('cancel')}>Go back.</button>
+                            <button className="primary-btn" onClick={() => handleGoBack()}>Go back.</button>
                         </div>
                     </div>
                 </section>
@@ -395,4 +386,27 @@ const PublicPayment = () => {
     )
 }
 
-export default PublicPayment;
+const token = Cookie.get('oToken_admin') || Cookie.get('oToken_org_admin');
+
+const config = {
+  // required config props
+  clientKey: process.env.MIX_PUSHER_APP_KEY,
+  cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+  encrypted: true,
+  // required for private/presence channels
+  // also sends auth headers to trigger endpoint
+  authEndpoint: '/broadcasting/auth',
+  auth: {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  },
+};
+
+const WrappedPayment = () => {
+    return <PusherProvider {...config}>
+        <PublicPayment />
+    </PusherProvider>
+}
+export default WrappedPayment;

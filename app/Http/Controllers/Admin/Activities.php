@@ -15,19 +15,24 @@ class Activities extends Controller
         $date = Carbon::now();
 
         $today = Activity::with('user', 'user.profile', 'model')
+            ->hasMorph('model', 
+                ['*']
+            )
             ->whereDate('created_at', $date)
-            ->latest()
-            ->get();
+            ->latest();
 
         $yesterday = Activity::with('user', 'user.profile', 'model')
+            ->hasMorph('model', 
+                ['*']
+            )
             ->whereDate('created_at', (clone $date)->subDay())
-            ->latest()
-            ->get();
+            ->latest();
+        // dd($date, (clone $date)->subDay());
 
         return response()
 			->json([
-				'today' => ActivityResource::collection($today),
-				'yesterday' => ActivityResource::collection($yesterday)
+				'today' => ActivityResource::collection($today->paginate(20)),
+				'yesterday' => ActivityResource::collection($yesterday->paginate(20))
 			]);
     }
 }
