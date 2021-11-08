@@ -32,11 +32,11 @@ class DonationEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel("donation.user.".$this->params['user_id']);
+        return ['donation-channel'];
     }
 
     public function broadcastAs()
     {
-        return 'donation-event';
+        return 'donation.event';
     }
 }
