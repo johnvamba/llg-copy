@@ -573,8 +573,6 @@ class GroupController extends Controller
                 ->usingFileName($name.'.'.$extension)
                 ->toMediaCollection('photo', env('FILESYSTEM_DRIVER'));
         }
-
-        event(new GroupMessageEvent($chat));
         
         $chat->getMedia();
 
@@ -583,6 +581,8 @@ class GroupController extends Controller
         }
 
         $chat->load('user', 'user.profile');
+
+        event(new GroupMessageEvent($chat));
 
         return response()->json($chat, 202);
     }
