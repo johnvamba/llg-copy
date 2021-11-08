@@ -144,18 +144,18 @@ const PublicPayment = () => {
         //need
     }
 
-    const handleGoBack = () => {
+    const handleGoBack = async () => {
         const url = new URL(window.location.href);
+        let params = {
+            need: url.searchParams.get('need_id'),
+            user: url.searchParams.get('user')
+        }
 
-        // socket.emit('close_payment_screen', {
-        //     id: url.searchParams.get('need_id'),
-        //     userId: url.searchParams.get('user')
-        // })
-
-        if(window.ReactNativeWebView) {
-            window.ReactNativeWebView.postMessage('success donation')
-        } else {
-            window.close();
+        try {
+            let {data} = await axios.post(`api/payment/close`, params);
+            console.log(data);
+        } catch(err) {
+            console.log(err);
         }
     }
 
@@ -179,8 +179,6 @@ const PublicPayment = () => {
             }).then(({ data }) => {
                 setSubmitting(false)
                 setSuccess(true)
-
-                const url = new URL(window.location.href);
 
                 swal.fire({
                     text: `You successfully donated to need ${need.title}`,

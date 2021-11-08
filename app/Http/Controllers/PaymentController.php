@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PaymentCloseEvent;
 use App\Events\DonationEvent;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -273,5 +274,11 @@ class PaymentController extends Controller
         //         'message' => "Server error, Please try again.",
         //     ], 503);
         // }
+    }
+
+    public function close(Request $request)
+    {
+        event(new PaymentCloseEvent($request->all()));
+        return response()->json(['message' => 'Success']);
     }
 }
