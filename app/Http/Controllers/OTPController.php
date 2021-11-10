@@ -94,7 +94,7 @@ class OTPController extends Controller
     {
         $date = Carbon::now();
 
-        $otp = Otp::where('mobile_number', $request->mobileNumber)->first();
+        $otp = Otp::where('mobile_number', $request->mobileNumber)->latest()->first();
 
         if(!$otp) {
             $otp = Otp::select()
@@ -106,6 +106,7 @@ class OTPController extends Controller
 
         if (Hash::check($request->otp, $otp->otp)) {
             if ($date->lessThanOrEqualTo($otp->expiry)) {
+                Otp::find($otp->id)->update(['status' => 'verified']);
                 $user = User::with(['profile', 'campus'])->find($otp->user_id);
 
                 $token = $user->createToken('api')->accessToken;
@@ -152,34 +153,44 @@ class OTPController extends Controller
             ], 422);
         }
 
-        $OTP = Otp::where(function($query) use ($user) {
-                $query->where('user_id', $user->id)
-                    ->where('status', 'pending');
-            })->first();
+        // $OTP = Otp::where(function($query) use ($user) {
+        //         $query->where('user_id', $user->id)
+        //             ->where('status', 'pending');
+        //     })->first();
 
         DB::beginTransaction();
 
         $code = mt_rand(100000, 999999);
 
-        if(!$OTP) {
-            $OTP = Otp::create([
-                'user_id' => $user->id,
-                'mobile_number' => $request->mobileNumber,
-                'otp' => bcrypt($code),
-                'status' => 'pending',
-                'expiry' => Carbon::now()->addMinutes(15)
-            ]);
-        }
+        // if(!$OTP) {
+        //     $OTP = Otp::create([
+        //         'user_id' => $user->id,
+        //         'mobile_number' => $request->mobileNumber,
+        //         'otp' => bcrypt($code),
+        //         'status' => 'pending',
+        //         'expiry' => Carbon::now()->addMinutes(15)
+        //     ]);
+        // }
         
-        $OTP->update([
-                'otp' => bcrypt($code), 
-                'expiry' => Carbon::now()->addMinutes(15)
-            ]);
+        // $OTP->update([
+        //         'otp' => bcrypt($code), 
+        //         'expiry' => Carbon::now()->addMinutes(15)
+        //     ]);
+
+        $OTP = Otp::create([
+            'user_id' => $user->id,
+            'mobile_number' => $request->mobileNumber,
+            'otp' => bcrypt($code),
+            'status' => 'pending',
+            'expiry' => Carbon::now()->addMinutes(15)
+        ]);
+
+        $phoneNumber = str_replace('610','61', $request->mobileNumber);
 
         try {
             $sns->publish([
                 'Message' => "$code is your one time password (OTP) for phone verification.",
-                'PhoneNumber' => "+{$request->mobileNumber}"
+                'PhoneNumber' => "+{$phoneNumber}"
             ]);
             DB::commit();
         } catch(AwsException $e) {
