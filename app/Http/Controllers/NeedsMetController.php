@@ -44,50 +44,68 @@ class NeedsMetController extends Controller
 
     public function getNeedMets(Request $request)
     {
-        $goal = Goal::whereHasMorph(
+        $needsMet = NeedMet::with(
+            'need', 
+            'need.type', 
+            'need.categories', 
+            'need.contribution'
+        )
+        ->whereHasMorph(
             'model',
             ['App\User'],
-            function (Builder $query) {
+            function ($query) {
                 $query->where('model_id', auth()->user()->id);
             }
         )
-        ->where('status', 'in progress')
         ->latest()
-        ->first();
-
-        if (!$goal) {
-            return response()->json([
-                'message' => "You have not set your goal yet."
-            ]);
-        }
-
-        $date = Carbon::parse($goal->created_at);
-
-        $endDate = $goal->term == 'year' 
-            ? $date->copy()->endOfYear()->toDateString()
-            : $date->copy()->endOfMonth()->toDateString();
-        
-        $needsMet = NeedMet::with(
-                'need', 
-                'need.type', 
-                'need.categories', 
-                'need.contribution'
-            )
-            ->whereHasMorph(
-                'model',
-                ['App\User'],
-                function ($query) {
-                    $query->where('model_id', auth()->user()->id);
-                }
-            )
-            ->whereBetween('created_at', [
-                $date->copy()->toDateString(),
-                $endDate
-            ])
-            ->latest()
-            ->get();
+        ->get();
 
         return response()->json($needsMet);
+        
+        // $goal = Goal::whereHasMorph(
+        //     'model',
+        //     ['App\User'],
+        //     function (Builder $query) {
+        //         $query->where('model_id', auth()->user()->id);
+        //     }
+        // )
+        // ->where('status', 'in progress')
+        // ->latest()
+        // ->first();
+
+        // if (!$goal) {
+        //     return response()->json([
+        //         'message' => "You have not set your goal yet."
+        //     ]);
+        // }
+
+        // $date = Carbon::parse($goal->created_at);
+
+        // $endDate = $goal->term == 'year' 
+        //     ? $date->copy()->endOfYear()->toDateString()
+        //     : $date->copy()->endOfMonth()->toDateString();
+        
+        // $needsMet = NeedMet::with(
+        //         'need', 
+        //         'need.type', 
+        //         'need.categories', 
+        //         'need.contribution'
+        //     )
+        //     ->whereHasMorph(
+        //         'model',
+        //         ['App\User'],
+        //         function ($query) {
+        //             $query->where('model_id', auth()->user()->id);
+        //         }
+        //     )
+        //     ->whereBetween('created_at', [
+        //         $date->copy()->toDateString(),
+        //         $endDate
+        //     ])
+        //     ->latest()
+        //     ->get();
+
+        // return response()->json($needsMet);
     }
 
     /**
