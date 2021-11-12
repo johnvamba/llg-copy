@@ -64,7 +64,7 @@ class Need extends Model implements HasMedia
 
     public function organization()
     {
-        return $this->belongsTo('App\Organization', 'organization_id')->withTrashed(true);
+        return $this->belongsTo('App\Organization', 'organization_id');
     }
 
     public function getOnGoingAttribute(){

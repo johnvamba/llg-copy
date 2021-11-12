@@ -48,7 +48,13 @@ class NeedsController extends Controller
                 'organization.credential',
                 'type', 
                 'categories',
-            ]);
+            ])
+            ->whereHas(
+                'organization',
+                function(Builder $query) {
+                    $query->withTrashed(false);
+                }
+            );
 
         if (!empty($filters)) {
             if (array_key_exists('type', $filters) && count($filters['type']) > 0) {
