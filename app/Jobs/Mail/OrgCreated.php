@@ -38,8 +38,7 @@ class OrgCreated implements ShouldQueue
     {
         $organization = $this->organization;
 
-        $users = User::unfilter()
-            ->role('admin')
+        $users = User::role('admin')
             ->orWhereHas('campus', function($camp) use ($organization){
                 $camp->whereHas('organizations', fn($org) => $org->where('organizations.id', $organization->id));
             })->get();

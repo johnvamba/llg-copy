@@ -29,6 +29,7 @@ use App\Jobs\Mail\OrgCreated;
 use App\Jobs\Mail\OrgStatus;
 use App\Jobs\Mail\OrgInvite;
 
+
 use App\OrgInvites;
 
 use DB;
@@ -547,6 +548,7 @@ class OrganizationController extends Controller
 
             // $queryUsers = User::whereIn('email', array_map(fn($item) => $item['email'] ?? '', $users))->get();
             // $queryUsers
+            $chainQueue = [];
             foreach ($users as $key => $user) {
                 $insUser = User::where('email', $user['email'] ?? '')->first();
 
@@ -565,10 +567,12 @@ class OrganizationController extends Controller
                     'phone' => optional($insUser)->mobile_number ?? $user['phone'] ?? '00 0000 0000'
                 ]);
 
-                // dispatch(new JobOrgInvite($insUser, $org, $invite)); //Run this on production but with dispatch //dont send this
+                //Run this on production but with dispatch //dont send this
+                $chainQueue[] = new OrgInvite($insUser, $org, $invite); 
             }
-            
-            dispatch(new OrgCreated($org));
+            //Since after response ang top this should be first.
+            dispatch(new OrgCreated($org))
+                ->chain($chainQueue);
 
             DB::commit();
             return response()->json(['message'=>"Success", 'count' => count($users)], 200);
