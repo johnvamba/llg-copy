@@ -52,15 +52,17 @@ class OrgReportMail extends Mailable
 
         $org = $this->org;
 
-        $allneeds = NeedMet::whereHas('need', fn($need) => $need->where('organization_id', $org->id))
-        ->withCount(['need_type as type_need' => fn($n) => $n->select('needs_types.name')])
+        $allneeds = NeedMet::whereHas('need', function($need) use ($org){ 
+            $need->where('organization_id', $org->id);
+        })
         ->whereBetween('created_at', [$this->startDate, $this->endDate])
+        ->with(['need' => fn($need) => $need->withCount(['type as type_need' => fn($n) => $n->select('needs_types.name')]) ])
         ->get();
 
         return [
-            'donations' => $allneeds->sum(fn($nmet) => $nmet->type_need == 'Donation' ? $nmet->amount : 0) ?? 0,
-            'volunteers' => $allneeds->filter(fn($nmet) => $nmet->type_need == 'Volunteer')->count() ?? 0,
-            'contributions' => $allneeds->filter(fn($nmet)=> $nmet->type_need != 'Volunteer')->count() ?? 0
+            'donations' => $allneeds->sum(fn($nmet) => optional($nmet->need)->type_need == 'Donation' ? $nmet->amount : 0) ?? 0,
+            'volunteers' => $allneeds->filter(fn($nmet) => optional($nmet->need)->type_need == 'Volunteer')->count() ?? 0,
+            'contributions' => $allneeds->filter(fn($nmet)=> optional($nmet->need)->type_need != 'Volunteer')->count() ?? 0
         ];
     }
 }

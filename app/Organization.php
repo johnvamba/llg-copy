@@ -55,7 +55,7 @@ class Organization extends Model implements HasMedia
 
     public function members()
     {
-        return $this->morphedByMany("App\User", "model", 'organization_members');
+        return $this->morphedByMany("App\ScopedUser", "model", 'organization_members');
     }
 
     public function template()
