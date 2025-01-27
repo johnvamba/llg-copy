@@ -545,8 +545,7 @@ input[type=time]::-webkit-calendar-picker-indicator {
 
 .filepond--label-action {
   /*text-decoration-color: #aaa;*/
-  -webkit-text-decoration-color: none;
-          text-decoration-color: none;
+  text-decoration-color: none;
 }
 
 /* the background color of the filepond drop area */
@@ -954,7 +953,6 @@ div.view-map div.google-map{
   margin-right: 5px;
   display: flex;
   align-items: center;
-  width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
 }
